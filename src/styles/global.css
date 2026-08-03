@@ -1,0 +1,649 @@
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/ArialMT.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/Arial-BoldMT.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  color: #111;
+  background: #111;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#game-root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  min-width: 800px;
+  min-height: 600px;
+  place-items: center;
+  overscroll-behavior: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+#game-root {
+  display: grid;
+  place-items: center;
+  user-select: none;
+}
+
+[data-allow-select],
+[data-allow-select] * {
+  user-select: text;
+}
+
+.game-frame {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #555;
+}
+
+.level-screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.level-heading {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.level-heading__number {
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 104px;
+  line-height: 0.9;
+}
+
+.level-heading h1 {
+  margin: 8px 0 0;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.flash-button {
+  padding: 6px 15px;
+  color: #111;
+  background: #efefef;
+  border: 2px outset #ddd;
+  cursor: pointer;
+}
+
+.flash-button:active {
+  border-style: inset;
+}
+
+.title-screen {
+  display: grid;
+  place-items: center;
+  color: #f5f0df;
+  background: radial-gradient(circle at center, #343434 0%, #171717 68%, #0b0b0b 100%);
+}
+
+.title-screen::after {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / 12%) 3px 4px);
+  content: "";
+  pointer-events: none;
+}
+
+.title-screen__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.title-screen__eyebrow {
+  margin: 0 0 12px;
+  color: #aaa;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title-screen h1 {
+  margin: 0 0 48px;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.92;
+}
+
+.title-screen h1 span {
+  color: #ff9900;
+}
+
+.title-screen .flash-button {
+  min-width: 160px;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-weight: 700;
+}
+
+.title-screen__progress {
+  margin: 15px 0 0;
+  color: #999;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 13px;
+}
+
+.main-menu {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  color: #eee9da;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 8%) 1px, transparent 1px) 0 0 / 80px 80px,
+    linear-gradient(rgb(0 0 0 / 8%) 1px, transparent 1px) 0 0 / 80px 80px,
+    #141414;
+  border-color: #3b3b3b;
+}
+
+.main-menu::after {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / 15%) 3px 4px);
+  content: "";
+  pointer-events: none;
+}
+
+.main-menu__glow {
+  position: absolute;
+  top: -280px;
+  left: -230px;
+  width: 680px;
+  height: 680px;
+  background: radial-gradient(circle, rgb(255 153 0 / 26%) 0%, rgb(255 153 0 / 7%) 42%, transparent 70%);
+  pointer-events: none;
+}
+
+.main-menu__identity {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  padding: 0 22px 0 54px;
+}
+
+.main-menu__kicker {
+  margin: 0 0 15px 4px;
+  color: #ff9900;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.main-menu h1 {
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 61px;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.main-menu h1 span {
+  color: #ff9900;
+  white-space: nowrap;
+}
+
+.main-menu__facts {
+  display: grid;
+  gap: 12px;
+  margin: 43px 0 0 4px;
+  font-family: "NELG Courier", Courier, monospace;
+}
+
+.main-menu__facts div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: baseline;
+  border-bottom: 1px solid #383838;
+  padding-bottom: 8px;
+}
+
+.main-menu__facts dt {
+  color: #777;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.main-menu__facts dd {
+  margin: 0;
+  color: #d7d1c2;
+  font-size: 13px;
+}
+
+.main-menu__buttons {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 58px 49px 58px 30px;
+  border-left: 1px solid #2e2e2e;
+}
+
+.menu-button {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-items: center;
+  width: 100%;
+  min-height: 57px;
+  padding: 0 18px;
+  color: #c5c1b6;
+  text-align: left;
+  background: #1c1c1c;
+  border: 1px solid #393939;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: 90ms ease;
+}
+
+.menu-button span {
+  color: #5d5d5d;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.menu-button:hover,
+.menu-button:focus-visible {
+  color: #111;
+  background: #ff9900;
+  border-color: #ffb13b;
+  outline: none;
+  translate: -5px 0;
+}
+
+.menu-button:hover span,
+.menu-button:focus-visible span {
+  color: #714500;
+}
+
+.menu-button--primary {
+  color: #fff4dd;
+  border-color: #8b5709;
+}
+
+.main-menu__save {
+  position: absolute;
+  z-index: 6;
+  bottom: 20px;
+  left: 58px;
+  margin: 0;
+  color: #5d5d5d;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 10px;
+  letter-spacing: 0.11em;
+}
+
+.menu-page {
+  color: #e7e1d3;
+  background:
+    linear-gradient(90deg, transparent 0 70%, rgb(255 153 0 / 4%) 70% 100%),
+    #151515;
+  padding: 62px 72px 58px;
+}
+
+.menu-page__topline {
+  color: #ff9900;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.menu-page > h1 {
+  margin: 13px 0 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 68px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.menu-page__content {
+  margin-top: 42px;
+}
+
+.menu-page__intro {
+  margin: 0 0 20px;
+  color: #8f8b82;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 13px;
+}
+
+.menu-page__back {
+  position: absolute;
+  bottom: 40px;
+  left: 72px;
+  padding: 8px 13px;
+  color: #aaa59a;
+  background: transparent;
+  border: 1px solid #494949;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-weight: 700;
+}
+
+.menu-page__back:hover,
+.menu-page__back:focus-visible {
+  color: #111;
+  background: #ff9900;
+  border-color: #ff9900;
+  outline: none;
+}
+
+.level-jump {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+.level-jump__button {
+  aspect-ratio: 1;
+  color: #ddd7c9;
+  background: #202020;
+  border: 1px solid #434343;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-weight: 700;
+}
+
+.level-jump__button:hover,
+.level-jump__button:focus-visible,
+.level-jump__button.is-current {
+  color: #111;
+  background: #ff9900;
+  border-color: #ffb13b;
+  outline: none;
+}
+
+.credits-list {
+  display: grid;
+  gap: 0;
+  width: 100%;
+  max-width: 560px;
+  border-top: 1px solid #393939;
+}
+
+.credits-list div {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  padding: 17px 0;
+  border-bottom: 1px solid #393939;
+  font-family: "NELG Courier", Courier, monospace;
+}
+
+.credits-list span {
+  color: #777;
+  font-size: 12px;
+}
+
+.credits-list strong {
+  color: #ded8ca;
+  font-size: 13px;
+}
+
+.empty-panel {
+  display: grid;
+  min-height: 180px;
+  place-content: center;
+  text-align: center;
+  border: 1px dashed #3f3f3f;
+}
+
+.empty-panel p {
+  margin: 0 0 10px;
+  color: #ff9900;
+  font-family: "NELG Courier", Courier, monospace;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.empty-panel span {
+  color: #777;
+  font-size: 14px;
+}
+
+.empty-panel code {
+  color: #bbb5a8;
+}
+
+.options-panel {
+  display: grid;
+  gap: 0;
+  width: 430px;
+}
+
+.options-panel label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #3a3a3a;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 13px;
+}
+
+.options-panel input {
+  width: 18px;
+  height: 18px;
+  accent-color: #ff9900;
+}
+
+.danger-button {
+  width: fit-content;
+  margin-top: 30px;
+  padding: 9px 13px;
+  color: #c88;
+  background: transparent;
+  border: 1px solid #743939;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.danger-button:hover:not(:disabled) {
+  color: #fff;
+  background: #8b2929;
+}
+
+#options-feedback {
+  min-height: 18px;
+  color: #8d887e;
+  font-size: 13px;
+}
+
+.level-01 {
+  color: #070707;
+  background: #ff9900;
+}
+
+.level-01__message {
+  position: absolute;
+  top: 250px;
+  left: 103px;
+  margin: 0;
+  font-size: 25px;
+}
+
+.level-01__answer {
+  position: absolute;
+  bottom: 72px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.level-01__answer label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 19px;
+}
+
+.level-01__answer form {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-01__answer input {
+  width: 185px;
+  height: 36px;
+  padding: 3px 7px;
+  background: #fff;
+  border: 2px inset #ddd;
+  font-size: 20px;
+}
+
+.level-01__answer button {
+  height: 31px;
+  padding: 0 8px;
+  background: #ffff00;
+  border: 2px outset #bbb;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#level-01-feedback {
+  min-height: 20px;
+  margin: 7px 0 0;
+  color: #7b0000;
+  font-size: 14px;
+}
+
+.placeholder-level {
+  background: #eee7d5;
+}
+
+.placeholder-level__message {
+  position: absolute;
+  top: 285px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+}
+
+.placeholder-level__button {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.coming-soon {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  background: #eee7d5;
+}
+
+.coming-soon h1 {
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 82px;
+  font-weight: 400;
+}
+
+.coming-soon p {
+  margin: 8px 0 35px;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+}
+
+.debug-controls {
+  position: absolute;
+  z-index: 1000;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  color: #fff;
+  background: rgb(0 0 0 / 75%);
+  font: 12px Arial, sans-serif;
+}
+
+.debug-controls button {
+  cursor: pointer;
+  font-size: 12px;
+}
