@@ -260,10 +260,22 @@ img {
   white-space: nowrap;
 }
 
+.main-menu__description {
+  max-width: 355px;
+  margin: 24px 0 0 4px;
+  color: #969187;
+  font-size: 12px;
+  line-height: 1.48;
+}
+
+.main-menu__description em {
+  color: #bbb5a8;
+}
+
 .main-menu__facts {
   display: grid;
   gap: 12px;
-  margin: 43px 0 0 4px;
+  margin: 25px 0 0 4px;
   font-family: "NELG Courier", Courier, monospace;
 }
 
@@ -339,18 +351,6 @@ img {
 .menu-button--primary {
   color: #fff4dd;
   border-color: #8b5709;
-}
-
-.main-menu__save {
-  position: absolute;
-  z-index: 6;
-  bottom: 20px;
-  left: 58px;
-  margin: 0;
-  color: #5d5d5d;
-  font-family: "NELG Courier", Courier, monospace;
-  font-size: 10px;
-  letter-spacing: 0.11em;
 }
 
 .menu-page {
@@ -508,36 +508,12 @@ img {
   accent-color: #ff9900;
 }
 
-.danger-button {
-  width: fit-content;
-  margin-top: 30px;
-  padding: 9px 13px;
-  color: #c88;
-  background: transparent;
-  border: 1px solid #743939;
-  cursor: pointer;
-  font-family: "NELG Courier", Courier, monospace;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.danger-button:hover:not(:disabled) {
-  color: #fff;
-  background: #8b2929;
-}
-
-#options-feedback {
-  min-height: 18px;
-  color: #8d887e;
-  font-size: 13px;
-}
-
-.level-01 {
+.test-level {
   color: #070707;
   background: #ff9900;
 }
 
-.level-01__message {
+.test-level__message {
   position: absolute;
   top: 250px;
   left: 103px;
@@ -545,7 +521,7 @@ img {
   font-size: 25px;
 }
 
-.level-01__answer {
+.test-level__answer {
   position: absolute;
   bottom: 72px;
   left: 0;
@@ -553,19 +529,19 @@ img {
   text-align: center;
 }
 
-.level-01__answer label {
+.test-level__answer label {
   display: block;
   margin-bottom: 8px;
   font-size: 19px;
 }
 
-.level-01__answer form {
+.test-level__answer form {
   display: flex;
   justify-content: center;
   gap: 12px;
 }
 
-.level-01__answer input {
+.test-level__answer input {
   width: 185px;
   height: 36px;
   padding: 3px 7px;
@@ -574,7 +550,7 @@ img {
   font-size: 20px;
 }
 
-.level-01__answer button {
+.test-level__answer button {
   height: 31px;
   padding: 0 8px;
   background: #ffff00;
@@ -583,11 +559,149 @@ img {
   font-size: 18px;
 }
 
-#level-01-feedback {
+#test-level-feedback {
   min-height: 20px;
   margin: 7px 0 0;
   color: #7b0000;
   font-size: 14px;
+}
+
+.level-01 {
+  color: #080808;
+  background: #ffe600;
+}
+
+.level-01__instructions {
+  position: absolute;
+  top: 205px;
+  left: 90px;
+  width: 620px;
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.level-01__instructions p {
+  margin: 0 0 10px;
+}
+
+.level-01__instructions em {
+  font-weight: 700;
+}
+
+.level-01__continue {
+  position: absolute;
+  bottom: 47px;
+  left: 50%;
+  width: 86px;
+  height: 86px;
+  padding: 0;
+  background: #e01818;
+  border: 5px solid #080808;
+  border-radius: 50%;
+  box-shadow: 0 5px 0 #080808;
+  cursor: pointer;
+  translate: -50% 0;
+  transition: translate 70ms ease, box-shadow 70ms ease, background 70ms ease;
+}
+
+.level-01__continue:hover,
+.level-01__continue:focus-visible {
+  background: #f12727;
+  outline: 3px dashed #080808;
+  outline-offset: 7px;
+}
+
+.level-01__continue:active {
+  box-shadow: 0 1px 0 #080808;
+  translate: -50% 4px;
+}
+
+.level-02 {
+  color: #000;
+  background: #0000ff;
+}
+
+.level-02__heading,
+.level-02__copy,
+.level-02__prompt {
+  z-index: 2;
+}
+
+.level-02__heading {
+  top: 46px;
+}
+
+.level-02__heading h1 {
+  margin-top: 7px;
+  font-size: 27px;
+  font-variant: small-caps;
+}
+
+.level-02__copy {
+  position: absolute;
+  top: 190px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  line-height: 1.02;
+}
+
+.level-02__copy p {
+  margin: 0 0 11px;
+}
+
+.level-02__lead {
+  font-weight: 700;
+}
+
+.level-02__prompt {
+  position: absolute;
+  bottom: 53px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.level-02__orb {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  left: 24px;
+  width: 38px;
+  height: 38px;
+  background: aqua;
+  border: 3px solid #000;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgb(0 255 255 / 72%);
+  animation: level-02-orb-movement 9s linear infinite;
+}
+
+@keyframes level-02-orb-movement {
+  0% {
+    translate: 0 0;
+  }
+  23% {
+    translate: 700px 72px;
+  }
+  51% {
+    translate: 590px 485px;
+  }
+  76% {
+    translate: 72px 410px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-02__orb {
+    animation: none;
+  }
 }
 
 .placeholder-level {

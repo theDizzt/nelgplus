@@ -38,6 +38,9 @@ Create a level module under `src/levels/` and add it to
 events and timers through that context so they are removed automatically when
 the player changes levels.
 
+The original framework input test is preserved as `src/levels/testLevel.ts`
+and is intentionally excluded from the production level registry.
+
 Optional level music and sound effects are available through `context.audio`.
 
 Open `?debug=1` during development to display previous/next level controls.

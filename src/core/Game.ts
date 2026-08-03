@@ -1,28 +1,27 @@
 import { AudioManager } from "./AudioManager";
 import { InteractionGuard } from "./InteractionGuard";
 import { LevelScope } from "./LevelScope";
-import { SaveManager } from "./SaveManager";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "AUGUST 2026 – PRESENT";
+const GAME_VERSION = "1.0.0";
+const VERSION_DATE = "AUGUST 3, 2026";
 const DISCORD_URL = "";
+const JUMPABLE_LEVELS = [
+  8, 14, 19, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 98,
+] as const;
 
 export class Game {
-  private readonly saveManager = new SaveManager();
   private readonly audioManager = new AudioManager();
   private readonly interactionGuard = new InteractionGuard();
   private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
   private currentLevel = 1;
-  private highestLevel = 1;
   private scope?: LevelScope;
   private transitioning = false;
 
   constructor(private readonly root: HTMLElement) {}
 
   start(): void {
-    const save = this.saveManager.load();
-    this.currentLevel = getLevel(save.currentLevel) ? save.currentLevel : 1;
-    this.highestLevel = Math.max(1, save.highestLevel);
     this.interactionGuard.enable();
     this.renderMainMenu();
   }
@@ -36,6 +35,12 @@ export class Game {
         <section class="main-menu__identity">
           <p class="main-menu__kicker">A browser puzzle game</p>
           <h1>Never Ending<br />Level Game <span>++</span></h1>
+          <p class="main-menu__description">
+            This game is a sequel to Clarence Ball’s <em>Never Ending Level Game</em>, which was released in 2005.
+            It was created by blending elements from that game and its fan games (<em>Level Killer</em> and
+            <em>TEDNE</em>) to let players experience the thrill of the original once again. You must complete
+            150 levels while battling against the time and overcoming the game’s ruthless difficulty.
+          </p>
           <dl class="main-menu__facts">
             <div>
               <dt>LEVELS INCLUDED</dt>
@@ -44,6 +49,10 @@ export class Game {
             <div>
               <dt>DEVELOPMENT</dt>
               <dd>${DEVELOPMENT_PERIOD}</dd>
+            </div>
+            <div>
+              <dt>VERSION</dt>
+              <dd>${GAME_VERSION} · ${VERSION_DATE}</dd>
             </div>
           </dl>
         </section>
@@ -68,8 +77,6 @@ export class Game {
             <span>06</span> OPTIONS
           </button>
         </nav>
-
-        <p class="main-menu__save">CURRENT SAVE · LEVEL ${this.currentLevel}</p>
       </main>
     `;
 
@@ -79,7 +86,7 @@ export class Game {
 
       switch (button.dataset.menuAction) {
         case "start":
-          this.showLevel(this.currentLevel);
+          this.showLevel(1);
           break;
         case "jump":
           this.renderLevelJump();
@@ -101,7 +108,7 @@ export class Game {
   }
 
   private renderLevelJump(): void {
-    const levelButtons = registeredLevelNumbers
+    const levelButtons = JUMPABLE_LEVELS
       .map(
         (number) => `
           <button class="level-jump__button${number === this.currentLevel ? " is-current" : ""}"
@@ -121,7 +128,7 @@ export class Game {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-level-number]");
       if (!button) return;
       const levelNumber = Number(button.dataset.levelNumber);
-      if (getLevel(levelNumber)) this.showLevel(levelNumber);
+      if (JUMPABLE_LEVELS.some((number) => number === levelNumber)) this.showLevel(levelNumber);
     });
   }
 
@@ -173,8 +180,6 @@ export class Game {
            <span>SOUND EFFECTS</span>
            <input id="effects-option" type="checkbox" ${this.audioManager.effectsEnabled ? "checked" : ""} />
          </label>
-         <button class="danger-button" id="reset-save" type="button">RESET PROGRESS</button>
-         <p id="options-feedback" role="status"></p>
        </div>`,
     );
 
@@ -183,24 +188,6 @@ export class Game {
     });
     this.root.querySelector<HTMLInputElement>("#effects-option")?.addEventListener("change", (event) => {
       this.audioManager.setEffectsEnabled((event.currentTarget as HTMLInputElement).checked);
-    });
-
-    let resetArmed = false;
-    this.root.querySelector<HTMLButtonElement>("#reset-save")?.addEventListener("click", (event) => {
-      const button = event.currentTarget as HTMLButtonElement;
-      if (!resetArmed) {
-        resetArmed = true;
-        button.textContent = "CLICK AGAIN TO CONFIRM";
-        return;
-      }
-
-      this.saveManager.reset();
-      this.currentLevel = 1;
-      this.highestLevel = 1;
-      button.textContent = "PROGRESS RESET";
-      button.disabled = true;
-      const feedback = this.root.querySelector<HTMLElement>("#options-feedback");
-      if (feedback) feedback.textContent = "Your next game will begin at Level 1.";
     });
   }
 
@@ -230,8 +217,6 @@ export class Game {
     this.audioManager.stopMusic();
     this.transitioning = false;
     this.currentLevel = levelNumber;
-    this.highestLevel = Math.max(this.highestLevel, levelNumber);
-    this.saveManager.save(this.currentLevel, this.highestLevel);
 
     this.root.innerHTML = `
       <main class="game-frame level-frame" data-level="${level.number}">
