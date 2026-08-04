@@ -57,8 +57,7 @@ export const level17: LevelDefinition = {
       const answer = (editableTitle.textContent ?? "")
         .replace(/\u00a0/g, " ")
         .trim()
-        .replace(/\s+/g, " ")
-        .toLowerCase();
+        .replace(/\s+/g, " ");
 
       if (answer === "level 18") complete();
     });

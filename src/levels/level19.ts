@@ -77,7 +77,7 @@ export const level19: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue().trim().toLowerCase() === "nelg level 242") {
+      if (maskedInput.getValue().trim() === "NELG Level 242") {
         complete();
         return;
       }

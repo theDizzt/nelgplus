@@ -41,7 +41,7 @@ export const level05: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue().trim().toLowerCase() === "orange") {
+      if (maskedInput.getValue().trim() === "orange") {
         complete();
         return;
       }
