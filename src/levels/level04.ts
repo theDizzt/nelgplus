@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { attachStarMaskedInput } from "../core/StarMaskedInput";
 
 export const level04: LevelDefinition = {
   number: 4,
@@ -33,6 +34,7 @@ export const level04: LevelDefinition = {
     if (!form || !input || !submitButton) return;
 
     let checking = false;
+    const maskedInput = attachStarMaskedInput(input, listen);
     input.focus();
 
     listen(form, "submit", (event) => {
@@ -41,7 +43,7 @@ export const level04: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      const accepted = input.value.trim() === "16";
+      const accepted = maskedInput.getValue().trim() === "16";
       if (accepted) {
         complete();
         return;
@@ -49,7 +51,7 @@ export const level04: LevelDefinition = {
 
       checking = false;
       submitButton.disabled = false;
-      input.value = "";
+      maskedInput.clear();
       input.classList.add("is-wrong");
       input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);
