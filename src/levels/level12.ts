@@ -29,6 +29,7 @@ export const level12: LevelDefinition = {
       </header>
 
       <p class="level-12__message">DP of BumchiDP means Dark Purple.</p>
+      <p class="level-12__hint">What other names could it have?</p>
 
       <form class="level-12__form" autocomplete="off">
         <input class="nelg-password-input" id="level-12-answer" name="nelg-level-twelve-answer" data-allow-select

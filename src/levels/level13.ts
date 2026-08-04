@@ -16,7 +16,7 @@ const RED_ORDER = [...COLOR_BUTTONS].map(({ red }) => red).sort((a, b) => a - b)
 export const level13: LevelDefinition = {
   number: 13,
   title: "Value",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, timeout }) {
     const buttons = COLOR_BUTTONS.map(
       ({ red, color, left, top }) => `
         <button class="level-13__button" type="button" data-red="${red}"
@@ -37,11 +37,14 @@ export const level13: LevelDefinition = {
         Click the buttons in order from the smallest value to the largest.
       </p>
 
+      <p class="level-13__progress" role="status">Progress: 0 / ${RED_ORDER.length}</p>
+
       <div class="level-13__buttons">${buttons}</div>
     `;
 
     const buttonContainer = screen.querySelector<HTMLElement>(".level-13__buttons");
-    if (!buttonContainer) return;
+    const progress = screen.querySelector<HTMLElement>(".level-13__progress");
+    if (!buttonContainer || !progress) return;
 
     let expectedIndex = 0;
     listen(buttonContainer, "click", (event) => {
@@ -51,10 +54,16 @@ export const level13: LevelDefinition = {
       const redValue = Number(button.dataset.red);
       if (redValue !== RED_ORDER[expectedIndex]) {
         expectedIndex = 0;
+        progress.textContent = `Progress: 0 / ${RED_ORDER.length}`;
+        button.classList.remove("is-wrong");
+        void button.offsetWidth;
+        button.classList.add("is-wrong");
+        timeout(() => button.classList.remove("is-wrong"), 520);
         return;
       }
 
       expectedIndex += 1;
+      progress.textContent = `Progress: ${expectedIndex} / ${RED_ORDER.length}`;
       if (expectedIndex === RED_ORDER.length) complete();
     });
   },

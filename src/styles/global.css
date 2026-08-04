@@ -809,6 +809,7 @@ img {
   top: 190px;
   left: 0;
   width: 100%;
+  color: aqua;
   text-align: center;
   font-size: 24px;
   line-height: 1.02;
@@ -967,6 +968,7 @@ img {
   left: 0;
   width: 100%;
   margin: 0;
+  color: aqua;
   text-align: center;
   font-size: 23px;
   font-weight: 700;
@@ -1509,6 +1511,194 @@ img {
   border: 8px double #111; border-radius: 24% 76% 33% 67% / 70% 23% 77% 30%; rotate: 17deg;
 }
 
+.level-08 {
+  color: #000;
+  background: #ff86b5;
+}
+
+.level-08__heading {
+  top: 43px;
+}
+
+.level-08__number {
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  margin: 0 auto;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.level-08__number span {
+  display: inline-block;
+  flex: none;
+}
+
+.level-08__number span:last-child {
+  margin-left: 0.2em;
+}
+
+.level-08__number span:nth-child(1) { color: #ef2828; }
+.level-08__number span:nth-child(2) { color: #f08a20; }
+.level-08__number span:nth-child(3) { color: #f2d51b; }
+.level-08__number span:nth-child(4) { color: #19a83b; }
+.level-08__number span:nth-child(5) { color: #2475e8; }
+.level-08__number span:nth-child(6) { color: #8c35dd; }
+
+.level-08__heading h1 {
+  margin-top: -5px;
+  color: #000;
+  text-transform: none;
+}
+
+.level-08__mazes {
+  position: absolute;
+  top: 174px;
+  left: 45px;
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  gap: 22px 24px;
+}
+
+.level-08__maze {
+  position: relative;
+  width: 220px;
+  height: 90px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 26%);
+  border: 4px solid #111;
+  box-shadow: 3px 4px 0 rgb(0 0 0 / 25%);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-08__maze.is-dragging {
+  cursor: grabbing;
+}
+
+.level-08__maze.is-complete {
+  box-shadow: 0 0 0 4px var(--maze-color), 3px 4px 0 rgb(0 0 0 / 25%);
+}
+
+.level-08__maze.is-returning .level-08__maze-map {
+  transition: transform 230ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.level-08__maze-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1100px;
+  height: 90px;
+  will-change: transform;
+}
+
+.level-08__maze-map svg {
+  display: block;
+}
+
+.level-08__maze-border,
+.level-08__maze-route {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.level-08__maze-border {
+  stroke: #111;
+  stroke-width: 24px;
+}
+
+.level-08__maze-route {
+  stroke: var(--maze-color);
+  stroke-width: 17px;
+}
+
+.level-08__maze-letter {
+  position: absolute;
+  top: 13px;
+  left: 1034px;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  color: #000;
+  background: var(--maze-color);
+  border: 5px solid #111;
+  border-radius: 50%;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.level-08__maze-letter[hidden] {
+  display: none;
+}
+
+.level-08__form {
+  position: absolute;
+  bottom: 33px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-08__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-08__form input:focus {
+  outline: none;
+}
+
+.level-08__form input.is-wrong {
+  background: #ff6d87;
+  translate: 6px 0;
+}
+
+.level-08__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-08__form button:hover:not(:disabled),
+.level-08__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-08__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-08__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .level-09 {
   color: #000;
   background: #228b22;
@@ -1649,6 +1839,89 @@ img {
   outline: 0;
 }
 
+.level-11 {
+  color: #050505;
+  background: #aaa;
+  isolation: isolate;
+}
+
+.level-11__background {
+  position: absolute;
+  z-index: -1;
+  inset: -90px;
+  background: conic-gradient(
+    from -16deg at 48% 54%,
+    #a9a9a9 0deg 42deg,
+    #ad7900 42deg 91deg,
+    #a6a6a6 91deg 135deg,
+    #780000 135deg 181deg,
+    #cfcfcf 181deg 224deg,
+    #df0000 224deg 270deg,
+    #fff 270deg 310deg,
+    #af0000 310deg 344deg,
+    #777 344deg 360deg
+  );
+  filter: saturate(1.08);
+  transform: rotate(-4deg) scale(1.12);
+}
+
+.level-11__heading {
+  top: 43px;
+}
+
+.level-11__heading h1 {
+  margin-top: 5px;
+  text-transform: none;
+}
+
+.level-11__message {
+  position: absolute;
+  top: 232px;
+  left: 80px;
+  display: grid;
+  justify-items: center;
+  width: 640px;
+  padding: 18px 12px 10px;
+  background: rgb(255 255 255 / 32%);
+  border: 3px solid rgb(0 0 0 / 62%);
+  box-shadow: 7px 7px 0 rgb(0 0 0 / 22%);
+  text-align: center;
+}
+
+.level-11__message p {
+  margin: 0;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.level-11__letters {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 112px;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0.08em;
+  text-shadow:
+    3px 3px 0 #fff,
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+    7px 8px 0 rgb(0 0 0 / 24%);
+}
+
+.level-11__letters span {
+  color: #050505;
+  transition: color 90ms linear, scale 90ms ease;
+}
+
+.level-11__letters span.is-pressed {
+  color: #e00000;
+  scale: 1.08;
+}
+
 .level-12 {
   color: rgb(0 0 0 / 72%);
   background:
@@ -1678,6 +1951,19 @@ img {
   font-size: 31px;
   font-style: italic;
   rotate: 1deg;
+}
+
+.level-12__hint {
+  position: absolute;
+  top: 345px;
+  left: 100px;
+  width: 600px;
+  margin: 0;
+  color: rgb(211 177 225 / 72%);
+  text-align: center;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-style: italic;
 }
 
 .level-12__form {
@@ -1772,6 +2058,22 @@ img {
   line-height: 1.35;
 }
 
+.level-13__progress {
+  position: absolute;
+  z-index: 2;
+  top: 270px;
+  left: 24px;
+  min-width: 150px;
+  margin: 0;
+  padding: 5px 8px;
+  color: #111;
+  background: rgb(255 255 255 / 45%);
+  border: 2px solid #111;
+  font-family: "NELG Courier", "Courier New", monospace;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .level-13__buttons {
   position: absolute;
   inset: 0;
@@ -1793,6 +2095,22 @@ img {
   box-shadow: 3px 3px 0 rgb(0 0 0 / 42%);
   cursor: pointer;
   outline: 0;
+}
+
+.level-13__button.is-wrong {
+  z-index: 3;
+  animation: level-13-wrong-flash 520ms steps(2, end);
+}
+
+@keyframes level-13-wrong-flash {
+  0%, 100% {
+    outline: 0 solid transparent;
+    filter: none;
+  }
+  25%, 75% {
+    outline: 8px solid #ff0015;
+    filter: brightness(1.8) saturate(1.5);
+  }
 }
 
 .level-14 {
@@ -1860,6 +2178,16 @@ img {
   height: 180px;
   cursor: default;
   opacity: 0;
+  translate: -50% 0;
+}
+
+.level-14__trace {
+  position: absolute;
+  top: 255px;
+  left: 50%;
+  width: 700px;
+  height: 180px;
+  pointer-events: none;
   translate: -50% 0;
 }
 

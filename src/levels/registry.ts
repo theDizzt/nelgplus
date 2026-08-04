@@ -7,8 +7,10 @@ import { level04 } from "./level04";
 import { level05 } from "./level05";
 import { level06 } from "./level06";
 import { level07 } from "./level07";
+import { level08 } from "./level08";
 import { level09 } from "./level09";
 import { level10 } from "./level10";
+import { level11 } from "./level11";
 import { level12 } from "./level12";
 import { level13 } from "./level13";
 import { level14 } from "./level14";
@@ -25,10 +27,10 @@ const levels: LevelDefinition[] = [
   level05,
   level06,
   level07,
-  createPlaceholderLevel(8),
+  level08,
   level09,
   level10,
-  createPlaceholderLevel(11),
+  level11,
   level12,
   level13,
   level14,

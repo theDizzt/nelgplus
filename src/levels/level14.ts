@@ -21,6 +21,7 @@ export const level14: LevelDefinition = {
 
       <p class="level-14__message">Can you figure out what is hidden?</p>
       <canvas class="level-14__hidden-word" width="700" height="180" aria-hidden="true"></canvas>
+      <canvas class="level-14__trace" width="700" height="180" aria-hidden="true"></canvas>
 
       <form class="level-14__form" autocomplete="off">
         <input class="nelg-password-input" id="level-14-answer" name="nelg-level-fourteen-answer" data-allow-select
@@ -35,10 +36,13 @@ export const level14: LevelDefinition = {
     const input = screen.querySelector<HTMLInputElement>("#level-14-answer");
     const submitButton = screen.querySelector<HTMLButtonElement>(".level-14__form button");
     const hiddenWord = screen.querySelector<HTMLCanvasElement>(".level-14__hidden-word");
-    if (!form || !input || !submitButton || !hiddenWord) return;
+    const traceCanvas = screen.querySelector<HTMLCanvasElement>(".level-14__trace");
+    if (!form || !input || !submitButton || !hiddenWord || !traceCanvas) return;
 
     const hiddenContext = hiddenWord.getContext("2d", { willReadFrequently: true });
-    if (!hiddenContext) return;
+    const traceContext = traceCanvas.getContext("2d");
+    if (!hiddenContext || !traceContext) return;
+    let traceClearTimeout: number | undefined;
 
     const drawHiddenWord = () => {
       hiddenContext.clearRect(0, 0, hiddenWord.width, hiddenWord.height);
@@ -66,11 +70,33 @@ export const level14: LevelDefinition = {
       );
       const alpha = hiddenContext.getImageData(x, y, 1, 1).data[3] ?? 0;
       hiddenWord.style.cursor = alpha > 0 ? "pointer" : "default";
+      if (alpha > 0) {
+        traceContext.save();
+        traceContext.beginPath();
+        traceContext.arc(x, y, 22, 0, Math.PI * 2);
+        traceContext.clip();
+        traceContext.globalAlpha = 0.38;
+        traceContext.drawImage(hiddenWord, 0, 0);
+        traceContext.restore();
+        if (traceClearTimeout !== undefined) window.clearTimeout(traceClearTimeout);
+        traceClearTimeout = window.setTimeout(() => {
+          traceContext.clearRect(0, 0, traceCanvas.width, traceCanvas.height);
+          traceClearTimeout = undefined;
+        }, 800);
+      }
     });
 
     listen(hiddenWord, "pointerleave", () => {
       hiddenWord.style.cursor = "default";
     });
+
+    const traceFadeInterval = window.setInterval(() => {
+      traceContext.save();
+      traceContext.globalCompositeOperation = "destination-out";
+      traceContext.fillStyle = "rgb(0 0 0 / 8%)";
+      traceContext.fillRect(0, 0, traceCanvas.width, traceCanvas.height);
+      traceContext.restore();
+    }, 70);
 
     const maskedInput = attachStarMaskedInput(input, listen);
     let checking = false;
@@ -100,5 +126,10 @@ export const level14: LevelDefinition = {
       input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);
     });
+
+    return () => {
+      window.clearInterval(traceFadeInterval);
+      if (traceClearTimeout !== undefined) window.clearTimeout(traceClearTimeout);
+    };
   },
 };
