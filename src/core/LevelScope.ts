@@ -6,6 +6,8 @@ interface ScopeOptions {
   levelNumber: number;
   complete: () => void;
   restart: () => void;
+  goToLevel: (levelNumber: number) => void;
+  goToMenu: () => void;
   audio: AudioManager;
 }
 
@@ -23,12 +25,22 @@ export class LevelScope {
       screen: options.screen,
       levelNumber: options.levelNumber,
       audio: {
+        get musicEnabled() {
+          return options.audio.musicEnabled;
+        },
+        get effectsEnabled() {
+          return options.audio.effectsEnabled;
+        },
+        setMusicEnabled: (enabled) => options.audio.setMusicEnabled(enabled),
+        setEffectsEnabled: (enabled) => options.audio.setEffectsEnabled(enabled),
         playMusic: (source, loop) => options.audio.playMusic(source, loop),
         stopMusic: () => options.audio.stopMusic(),
         playEffect: (source) => options.audio.playEffect(source),
       },
       complete: options.complete,
       restart: options.restart,
+      goToLevel: options.goToLevel,
+      goToMenu: options.goToMenu,
       listen: (target, type, listener, eventOptions = {}) => {
         target.addEventListener(type, listener as EventListener, {
           ...eventOptions,

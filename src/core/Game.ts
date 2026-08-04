@@ -294,6 +294,8 @@ export class Game {
       levelNumber,
       complete: () => this.completeCurrentLevel(),
       restart: () => this.showLevel(levelNumber),
+      goToLevel: (targetLevel) => this.showLevel(targetLevel),
+      goToMenu: () => this.renderMainMenu(),
       audio: this.audioManager,
     });
     this.scope.setCustomCleanup(level.mount(this.scope.context));

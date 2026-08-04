@@ -8,12 +8,18 @@ export interface LevelContext {
   readonly screen: HTMLElement;
   readonly levelNumber: number;
   readonly audio: {
+    readonly musicEnabled: boolean;
+    readonly effectsEnabled: boolean;
+    setMusicEnabled: (enabled: boolean) => void;
+    setEffectsEnabled: (enabled: boolean) => void;
     playMusic: (source: string, loop?: boolean) => Promise<void>;
     stopMusic: () => void;
     playEffect: (source: string) => void;
   };
   complete: () => void;
   restart: () => void;
+  goToLevel: (levelNumber: number) => void;
+  goToMenu: () => void;
   listen: <K extends keyof HTMLElementEventMap>(
     target: HTMLElement | Document | Window,
     type: K,
