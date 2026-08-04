@@ -5,6 +5,9 @@ import { level02 } from "./level02";
 import { level03 } from "./level03";
 import { level04 } from "./level04";
 import { level05 } from "./level05";
+import { level17 } from "./level17";
+import { level18 } from "./level18";
+import { level19 } from "./level19";
 
 const levels: LevelDefinition[] = [
   level01,
@@ -12,7 +15,11 @@ const levels: LevelDefinition[] = [
   level03,
   level04,
   level05,
-  ...Array.from({ length: 15 }, (_, index) => createPlaceholderLevel(index + 6)),
+  ...Array.from({ length: 11 }, (_, index) => createPlaceholderLevel(index + 6)),
+  level17,
+  level18,
+  level19,
+  createPlaceholderLevel(20),
 ];
 
 const levelMap = new Map(levels.map((level) => [level.number, level]));
