@@ -19,7 +19,7 @@ export const level04: LevelDefinition = {
 
       <form class="level-04__form" autocomplete="off">
         <label for="level-04-password">Enter password here</label>
-        <input id="level-04-password" name="nelg-level-four-answer" data-allow-select
+        <input class="nelg-password-input" id="level-04-password" name="nelg-level-four-answer" data-allow-select
           data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text" inputmode="numeric"
           maxlength="12" autocomplete="off" autocapitalize="off" aria-autocomplete="none" spellcheck="false" />
         <button type="submit">GO</button>
@@ -37,13 +37,19 @@ export const level04: LevelDefinition = {
     const maskedInput = attachStarMaskedInput(input, listen);
     input.focus();
 
+    listen(input, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     listen(form, "submit", (event) => {
       event.preventDefault();
       if (checking) return;
       checking = true;
       submitButton.disabled = true;
 
-      const accepted = maskedInput.getValue().trim() === "16";
+      const accepted = maskedInput.getValue() === "16";
       if (accepted) {
         complete();
         return;

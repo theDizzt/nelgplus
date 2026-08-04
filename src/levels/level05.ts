@@ -17,7 +17,7 @@ export const level05: LevelDefinition = {
       <form class="level-05__form" autocomplete="off">
         <label for="level-05-answer">Type the background color</label>
         <div class="level-05__controls">
-          <input id="level-05-answer" name="nelg-level-five-answer" data-allow-select
+          <input class="nelg-password-input" id="level-05-answer" name="nelg-level-five-answer" data-allow-select
             data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
             maxlength="24" autocomplete="off" autocapitalize="off" aria-autocomplete="none"
             spellcheck="false" />
@@ -35,13 +35,19 @@ export const level05: LevelDefinition = {
     const maskedInput = attachStarMaskedInput(input, listen);
     input.focus();
 
+    listen(input, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     listen(form, "submit", (event) => {
       event.preventDefault();
       if (checking) return;
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue().trim() === "orange") {
+      if (maskedInput.getValue() === "orange") {
         complete();
         return;
       }

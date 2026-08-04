@@ -7,6 +7,9 @@ const DEVELOPMENT_PERIOD = "AUGUST 2026 – PRESENT";
 const GAME_VERSION = "1.0.0";
 const VERSION_DATE = "AUGUST 3, 2026";
 const DISCORD_URL = "";
+const ADMIN_OPTION_CODE = "melonsoda84";
+const MINIMUM_LEVEL = -8;
+const MAXIMUM_LEVEL = 150;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 98,
 ] as const;
@@ -180,6 +183,15 @@ export class Game {
            <span>SOUND EFFECTS</span>
            <input id="effects-option" type="checkbox" ${this.audioManager.effectsEnabled ? "checked" : ""} />
          </label>
+         <section class="admin-panel" id="admin-panel" hidden>
+           <p>ADMIN LEVEL ACCESS</p>
+           <form id="admin-level-form">
+             <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${MAXIMUM_LEVEL}"
+               step="1" placeholder="-8 to 150" aria-label="Admin level number" autocomplete="off" />
+             <button type="submit">GO</button>
+           </form>
+           <span id="admin-level-feedback" role="status"></span>
+         </section>
        </div>`,
     );
 
@@ -188,6 +200,55 @@ export class Game {
     });
     this.root.querySelector<HTMLInputElement>("#effects-option")?.addEventListener("change", (event) => {
       this.audioManager.setEffectsEnabled((event.currentTarget as HTMLInputElement).checked);
+    });
+
+    const adminPanel = this.root.querySelector<HTMLElement>("#admin-panel");
+    const adminForm = this.root.querySelector<HTMLFormElement>("#admin-level-form");
+    const adminInput = this.root.querySelector<HTMLInputElement>("#admin-level-number");
+    const adminFeedback = this.root.querySelector<HTMLElement>("#admin-level-feedback");
+    const optionsController = new AbortController();
+    let adminCodeBuffer = "";
+
+    window.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.ctrlKey || event.altKey || event.metaKey || event.key.length !== 1) return;
+        adminCodeBuffer = `${adminCodeBuffer}${event.key.toLowerCase()}`.slice(-ADMIN_OPTION_CODE.length);
+        if (adminCodeBuffer !== ADMIN_OPTION_CODE || !adminPanel || !adminInput) return;
+
+        event.preventDefault();
+        adminPanel.hidden = false;
+        adminCodeBuffer = "";
+        adminInput.focus();
+      },
+      { signal: optionsController.signal },
+    );
+
+    this.root.querySelector<HTMLButtonElement>("#menu-back")?.addEventListener(
+      "click",
+      () => optionsController.abort(),
+      { once: true },
+    );
+
+    adminInput?.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      adminForm?.requestSubmit();
+    });
+
+    adminForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!adminInput || !adminFeedback) return;
+
+      const levelNumber = adminInput.valueAsNumber;
+      if (!Number.isInteger(levelNumber) || levelNumber < MINIMUM_LEVEL || levelNumber > MAXIMUM_LEVEL) {
+        adminFeedback.textContent = `ENTER A WHOLE NUMBER FROM ${MINIMUM_LEVEL} TO ${MAXIMUM_LEVEL}.`;
+        adminInput.select();
+        return;
+      }
+
+      optionsController.abort();
+      this.showLevel(levelNumber);
     });
   }
 

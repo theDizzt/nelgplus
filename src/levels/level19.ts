@@ -25,10 +25,12 @@ export const level19: LevelDefinition = {
         <div>y : <span data-coordinate="y">0</span></div>
       </div>
 
+      <p class="level-19__corner-hint">focus on the spcial #</p>
+
       <p class="level-19__passing-clue" hidden>NELG Level 242</p>
 
       <form class="level-19__form" autocomplete="off" hidden>
-        <input id="level-19-answer" name="nelg-level-nineteen-answer" data-allow-select
+        <input class="nelg-password-input" id="level-19-answer" name="nelg-level-nineteen-answer" data-allow-select
           data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
           maxlength="32" autocomplete="off" autocapitalize="off" aria-autocomplete="none"
           aria-label="Password" spellcheck="false" />
@@ -70,6 +72,12 @@ export const level19: LevelDefinition = {
       input.focus();
     });
 
+    listen(input, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     let checking = false;
     listen(form, "submit", (event) => {
       event.preventDefault();
@@ -77,7 +85,7 @@ export const level19: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue().trim() === "NELG Level 242") {
+      if (maskedInput.getValue() === "NELG Level 242") {
         complete();
         return;
       }
