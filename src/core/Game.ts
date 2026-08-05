@@ -33,6 +33,8 @@ const PRELOAD_ASSETS = [
   "/assets/fonts/comicsans/ComicSansMS-Bold.woff2",
   "/assets/images/level16-cafe.png",
   "/assets/images/level18-paint.png",
+  "/assets/images/level20a.png",
+  "/assets/images/level20b.png",
   "/assets/images/warp.png",
   "/assets/sounds/nelgpop.WAV",
   "/assets/sounds/nelgsmack.WAV",

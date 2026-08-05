@@ -1,5 +1,4 @@
 import type { LevelDefinition } from "../core/types";
-import { createPlaceholderLevel } from "./createPlaceholderLevel";
 import { level01 } from "./level01";
 import { level02 } from "./level02";
 import { level03 } from "./level03";
@@ -19,6 +18,7 @@ import { level16 } from "./level16";
 import { level17 } from "./level17";
 import { level18 } from "./level18";
 import { level19 } from "./level19";
+import { level20 } from "./level20";
 
 const levels: LevelDefinition[] = [
   level01,
@@ -40,7 +40,7 @@ const levels: LevelDefinition[] = [
   level17,
   level18,
   level19,
-  createPlaceholderLevel(20),
+  level20,
 ];
 
 const levelMap = new Map(levels.map((level) => [level.number, level]));
