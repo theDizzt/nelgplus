@@ -135,6 +135,22 @@
 }
 
 @font-face {
+  font-family: "NELG Comic Sans";
+  src: url("/assets/fonts/comicsans/ComicSansMS.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Comic Sans";
+  src: url("/assets/fonts/comicsans/ComicSansMS-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "NELG Tahoma";
   src: url("/assets/fonts/tahoma/Tahoma-Bold.woff2") format("woff2");
   font-style: normal;
@@ -298,6 +314,88 @@ img {
   color: #999;
   font-family: "NELG Courier", Courier, "Courier New", monospace;
   font-size: 13px;
+}
+
+.preloader {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #f5f0df;
+  background:
+    radial-gradient(circle at 50% 42%, rgb(255 153 0 / 16%), transparent 34%),
+    linear-gradient(145deg, #24211b 0%, #10100f 62%, #070707 100%);
+}
+
+.preloader::before {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / 18%) 3px 4px);
+  content: "";
+  pointer-events: none;
+}
+
+.preloader__content {
+  position: relative;
+  z-index: 1;
+  width: 540px;
+  text-align: center;
+}
+
+.preloader__kicker {
+  margin: 0 0 -4px;
+  color: #ff9900;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+}
+
+.preloader h1 {
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 76px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.preloader h1 span {
+  color: #ff9900;
+}
+
+.preloader__status {
+  margin: 54px 0 13px;
+  color: #bbb5a8;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.preloader__track {
+  width: 100%;
+  height: 28px;
+  padding: 3px;
+  overflow: hidden;
+  background: #080808;
+  border: 2px solid #8e887c;
+  box-shadow: inset 0 0 0 1px #000, 0 5px 0 rgb(0 0 0 / 38%);
+}
+
+.preloader__bar {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #9e5900, #ff9900 72%, #ffd27d);
+  box-shadow: 0 0 13px rgb(255 153 0 / 50%);
+  transition: width 90ms linear;
+}
+
+.preloader__percentage {
+  display: block;
+  margin-top: 13px;
+  color: #ffb23e;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .main-menu {
@@ -607,6 +705,233 @@ img {
   width: 18px;
   height: 18px;
   accent-color: #ff9900;
+}
+
+.warp-gate {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at center, rgb(15 66 220 / 20%) 0%, rgb(3 22 92 / 48%) 48%, rgb(0 0 0 / 94%) 100%),
+    url("/assets/images/warp.png") center / cover no-repeat;
+}
+
+.warp-gate__heading {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 45%);
+}
+
+.warp-gate__heading h1 {
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 104px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.warp-gate__heading p {
+  margin: 8px 0 0;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.warp-gate__form {
+  position: absolute;
+  bottom: 51px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  translate: -50% 0;
+}
+
+.warp-gate__form input {
+  width: 224px;
+  height: 50px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  opacity: 1;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+}
+
+.warp-gate__form button {
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  opacity: 1;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 29px;
+  line-height: 1;
+}
+
+.warp-gate__form input:disabled,
+.warp-gate__form button:disabled {
+  cursor: default;
+}
+
+.warp-gate__form input.is-wrong {
+  background: #ff9c9c;
+  animation: warp-password-error 180ms linear 2;
+}
+
+.warp-gate__feedback {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  margin: 0;
+  color: #ff8b8b;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  translate: -50% 0;
+}
+
+.warp-gate__back {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 3px 5px rgb(0 0 0 / 55%);
+}
+
+.warp-gate__back:hover,
+.warp-gate__back:focus-visible {
+  color: #ffff00;
+  outline: none;
+}
+
+.warp-checkpoint__message {
+  position: absolute;
+  top: 206px;
+  left: 45px;
+  width: 430px;
+  margin: 0;
+  color: #fff;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  font-size: 22px;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 72%);
+}
+
+.warp-checkpoint__next {
+  position: absolute;
+  top: 318px;
+  right: 52px;
+  width: 230px;
+  height: 122px;
+  padding: 0;
+  color: #050505;
+  background: #ffff00;
+  border: 6px solid #080808;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.warp-checkpoint__next:hover,
+.warp-checkpoint__next:focus-visible {
+  color: #fff;
+  background: #e01919;
+  outline: none;
+}
+
+.warp-checkpoint__next:active {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.warp-checkpoint__password {
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  width: 100%;
+  color: #fff;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  font-size: 66px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 5px #00d9ff, 0 0 14px #00b7ff, 0 0 28px #0088ff;
+}
+
+@keyframes warp-password-error {
+  0%,
+  100% {
+    translate: 0;
+  }
+
+  50% {
+    translate: 7px 0;
+  }
+}
+
+.options-panel__audio-row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.options-panel__audio-row .options-panel__toggle {
+  padding: 0;
+  border: 0;
+}
+
+.options-panel__volume-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-panel input[type="range"] {
+  width: 210px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.options-panel input[type="number"] {
+  width: 58px;
+  height: 30px;
+  padding: 3px 5px;
+  color: #e7e1d3;
+  background: #111;
+  border: 1px solid #625d52;
+  border-radius: 0;
+  outline: none;
+  font-family: "NELG Courier", Courier, monospace;
+  text-align: right;
+}
+
+.options-panel input[type="number"]:focus {
+  border-color: #ff9900;
 }
 
 .admin-panel {
@@ -1770,6 +2095,33 @@ img {
   white-space: pre;
 }
 
+.level-09__volume-menu {
+  position: absolute;
+  z-index: 2;
+  left: calc(100% + 3px);
+  width: 126px;
+  padding: 4px 2px;
+  background: #f4f4f4;
+  border: 1px solid #707070;
+  border-radius: 2px;
+  box-shadow: 3px 4px 10px rgb(0 0 0 / 42%);
+}
+
+.level-09__volume-menu[hidden] {
+  display: none;
+}
+
+.level-09__volume-menu.opens-left {
+  right: calc(100% + 3px);
+  left: auto;
+}
+
+.level-09__volume-menu button[role="menuitemradio"] {
+  height: 24px;
+  padding-left: 8px;
+  white-space: pre;
+}
+
 .level-09__menu-separator {
   height: 1px;
   margin: 4px 5px;
@@ -2252,6 +2604,128 @@ img {
 }
 
 .level-14__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.level-15 {
+  color: #050505;
+  background: #ff5f9b;
+}
+
+.level-15__heading {
+  top: 43px;
+}
+
+.level-15__heading h1 {
+  margin-top: 5px;
+  text-transform: none;
+}
+
+.level-15__boxes {
+  position: absolute;
+  top: 218px;
+  left: 75px;
+  display: flex;
+  gap: 20px;
+}
+
+.level-15__box {
+  display: grid;
+  place-items: center;
+  width: 114px;
+  height: 132px;
+  color: #050505;
+  background: #00eca2;
+  border: 5px solid #111;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: lowercase;
+  transition: color 90ms linear, background 90ms linear, scale 100ms ease;
+}
+
+.level-15__box--different {
+  background: #ad7478;
+}
+
+.level-15__box.is-revealed {
+  color: #d60000;
+  scale: 1.04;
+}
+
+.level-15__message {
+  position: absolute;
+  top: 382px;
+  left: 24px;
+  width: 752px;
+  margin: 0;
+  text-align: center;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.level-15__form {
+  position: absolute;
+  bottom: 34px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-15__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-15__form input:focus {
+  outline: none;
+}
+
+.level-15__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-15__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-15__form button:hover:not(:disabled),
+.level-15__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-15__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-15__form button:disabled {
   cursor: wait;
   opacity: 0.65;
 }

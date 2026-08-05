@@ -10,8 +10,12 @@ export interface LevelContext {
   readonly audio: {
     readonly musicEnabled: boolean;
     readonly effectsEnabled: boolean;
+    readonly musicVolume: number;
+    readonly effectsVolume: number;
     setMusicEnabled: (enabled: boolean) => void;
     setEffectsEnabled: (enabled: boolean) => void;
+    setMusicVolume: (volume: number) => void;
+    setEffectsVolume: (volume: number) => void;
     playMusic: (source: string, loop?: boolean) => Promise<void>;
     stopMusic: () => void;
     playEffect: (source: string) => void;

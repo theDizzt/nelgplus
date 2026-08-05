@@ -22,7 +22,7 @@ const BUTTON_POSITIONS = [
 export const level10: LevelDefinition = {
   number: 10,
   title: "Disappearance",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, audio }) {
     const buttons = BUTTON_POSITIONS.map(
       ([left, top], index) => `
         <button class="level-10__target" type="button" style="left:${left}px;top:${top}px"
@@ -53,6 +53,7 @@ export const level10: LevelDefinition = {
       const target = (event.target as Element).closest<HTMLButtonElement>(".level-10__target");
       if (!target || !targetContainer.contains(target)) return;
 
+      audio.playEffect("/assets/sounds/nelgsmack.WAV");
       target.remove();
       remaining -= 1;
       if (remaining === 0) complete();

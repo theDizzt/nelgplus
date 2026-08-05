@@ -31,8 +31,16 @@ export class LevelScope {
         get effectsEnabled() {
           return options.audio.effectsEnabled;
         },
+        get musicVolume() {
+          return options.audio.musicVolume;
+        },
+        get effectsVolume() {
+          return options.audio.effectsVolume;
+        },
         setMusicEnabled: (enabled) => options.audio.setMusicEnabled(enabled),
         setEffectsEnabled: (enabled) => options.audio.setEffectsEnabled(enabled),
+        setMusicVolume: (volume) => options.audio.setMusicVolume(volume),
+        setEffectsVolume: (volume) => options.audio.setEffectsVolume(volume),
         playMusic: (source, loop) => options.audio.playMusic(source, loop),
         stopMusic: () => options.audio.stopMusic(),
         playEffect: (source) => options.audio.playEffect(source),

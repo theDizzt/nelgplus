@@ -11,7 +11,7 @@ function clamp(value: number, minimum: number, maximum: number): number {
 export const level03: LevelDefinition = {
   number: 3,
   title: "Tutorial III",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, audio }) {
     screen.className = "level-screen level-03";
     screen.innerHTML = `
       <header class="level-heading level-03__heading">
@@ -90,6 +90,9 @@ export const level03: LevelDefinition = {
 
     listen(viewport, "pointerup", finishDragging);
     listen(viewport, "pointercancel", finishDragging);
-    listen(endButton, "click", complete);
+    listen(endButton, "click", () => {
+      audio.playEffect("/assets/sounds/nelgsmack.WAV");
+      complete();
+    });
   },
 };

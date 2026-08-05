@@ -3,7 +3,7 @@ import type { LevelDefinition } from "../core/types";
 export const level01: LevelDefinition = {
   number: 1,
   title: "Tutorial I",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, audio }) {
     screen.className = "level-screen level-01";
     screen.innerHTML = `
       <header class="level-heading">
@@ -28,6 +28,11 @@ export const level01: LevelDefinition = {
     `;
 
     const continueButton = screen.querySelector<HTMLButtonElement>(".level-01__continue");
-    if (continueButton) listen(continueButton, "click", complete);
+    if (continueButton) {
+      listen(continueButton, "click", () => {
+        audio.playEffect("/assets/sounds/nelgsmack.WAV");
+        complete();
+      });
+    }
   },
 };

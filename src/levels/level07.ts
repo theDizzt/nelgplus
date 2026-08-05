@@ -5,7 +5,7 @@ const OBJECT_COUNT = 12;
 export const level07: LevelDefinition = {
   number: 7,
   title: "Tidy Up",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, audio }) {
     screen.className = "level-screen level-07";
     screen.innerHTML = `
       <header class="level-heading level-07__heading">
@@ -112,7 +112,9 @@ export const level07: LevelDefinition = {
     listen(clutter, "pointerup", endDrag);
     listen(clutter, "pointercancel", endDrag);
     listen(finishButton, "click", () => {
-      if (remainingObjects === 0) complete();
+      if (remainingObjects !== 0) return;
+      audio.playEffect("/assets/sounds/nelgsmack.WAV");
+      complete();
     });
   },
 };
