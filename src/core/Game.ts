@@ -37,6 +37,8 @@ const PRELOAD_ASSETS = [
   "/assets/images/level18-paint.png",
   "/assets/images/level20a.png",
   "/assets/images/level20b.png",
+  "/assets/images/level21a.jpg",
+  "/assets/images/level22a.png",
   "/assets/images/warp.png",
   "/assets/sounds/nelgpop.WAV",
   "/assets/sounds/nelgsmack.WAV",
@@ -60,6 +62,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
     message:
       "You have probably encountered quite a few tricky levels by now. But starting with the next level, the true NELG-style levels begin. They will take a great deal of time, and you will have to keep fighting yourself. Good luck...",
     password: "by Clarence",
+  },
+  22: {
+    message:
+      "Level 21 and Level 22 gave you a taste of this game's puzzle style. Even more vicious levels are coming, so be prepared. From now on, the levels will not give you direct hints. Make good use of methods you have learned before and the clues hidden on the screen! If it gets too difficult, visit the Help Section on the Discord server from the main menu...",
+    password: "70.7billion",
   },
 };
 
