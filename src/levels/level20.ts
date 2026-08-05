@@ -299,7 +299,7 @@ export const level20: LevelDefinition = {
             "aqua",
             `
               <img class="level-20__coordinate-image" src="/assets/images/level20b.png" alt="A clue image" />
-              <button class="level-20__coordinate-target" type="button" style="left:339px;top:${targetTop}px"
+              <button class="level-20__coordinate-target" type="button" style="left:335px;top:${targetTop - 4}px"
                 aria-label="Coordinate 339, 716"></button>
               <div class="level-20__coordinates"><div>x : <span data-coordinate="x">0</span></div><div>y : <span data-coordinate="y">0</span></div></div>
             `,
@@ -308,14 +308,31 @@ export const level20: LevelDefinition = {
           const xOutput = screen.querySelector<HTMLElement>('[data-coordinate="x"]');
           const yOutput = screen.querySelector<HTMLElement>('[data-coordinate="y"]');
           const target = screen.querySelector<HTMLButtonElement>(".level-20__coordinate-target");
-          on(screen, "pointermove", (event) => {
+          const getVirtualCoordinates = (event: PointerEvent | MouseEvent) => {
             const bounds = screen.getBoundingClientRect();
-            const x = Math.min(799, Math.max(0, Math.floor(((event.clientX - bounds.left) / bounds.width) * LEVEL_WIDTH)));
-            const y = Math.min(799, Math.max(0, Math.floor(((event.clientY - bounds.top) / bounds.height) * VIRTUAL_SCENE_SEVEN_HEIGHT)));
+            return {
+              x: Math.min(799, Math.max(0, Math.floor(((event.clientX - bounds.left) / bounds.width) * LEVEL_WIDTH))),
+              y: Math.min(
+                799,
+                Math.max(0, Math.floor(((event.clientY - bounds.top) / bounds.height) * VIRTUAL_SCENE_SEVEN_HEIGHT)),
+              ),
+            };
+          };
+          on(screen, "pointermove", (event) => {
+            const { x, y } = getVirtualCoordinates(event);
             if (xOutput) xOutput.textContent = String(x);
             if (yOutput) yOutput.textContent = String(y);
           });
-          if (target) on(target, "click", () => renderScene(8), { once: true });
+          on(screen, "pointerdown", (event) => {
+            const { x, y } = getVirtualCoordinates(event);
+            if (Math.abs(x - 339) <= 1 && Math.abs(y - 716) <= 1) renderScene(8);
+          });
+          if (target) {
+            on(target, "pointerdown", (event) => {
+              event.stopPropagation();
+              renderScene(8);
+            });
+          }
           break;
         }
 

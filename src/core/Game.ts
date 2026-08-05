@@ -1,6 +1,8 @@
 import { AudioManager } from "./AudioManager";
 import { InteractionGuard } from "./InteractionGuard";
 import { LevelScope } from "./LevelScope";
+import { attachStarMaskedInput } from "./StarMaskedInput";
+import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "AUGUST 2026 – PRESENT";
@@ -248,8 +250,10 @@ export class Game {
         </header>
 
         <form class="warp-gate__form" aria-label="Warp password">
-          <input type="password" aria-label="Warp password" autocomplete="off"
-            autocapitalize="off" spellcheck="false" ${checkpoint ? "" : "disabled"} />
+          <input class="nelg-password-input" data-allow-select data-form-type="other"
+            data-lpignore="true" data-1p-ignore="true" type="text" maxlength="32"
+            aria-label="Warp password" autocomplete="off" autocapitalize="off"
+            aria-autocomplete="none" spellcheck="false" ${checkpoint ? "" : "disabled"} />
           <button type="${checkpoint ? "submit" : "button"}" ${checkpoint ? "" : "disabled"}>GO</button>
         </form>
         <p class="warp-gate__feedback" role="status" aria-live="polite"></p>
@@ -262,6 +266,10 @@ export class Game {
       const form = this.root.querySelector<HTMLFormElement>(".warp-gate__form");
       const input = this.root.querySelector<HTMLInputElement>(".warp-gate__form input");
       const feedback = this.root.querySelector<HTMLElement>(".warp-gate__feedback");
+      const gateListen: LevelContext["listen"] = (target, type, listener, options = {}) => {
+        target.addEventListener(type, listener as EventListener, options);
+      };
+      const maskedInput = input ? attachStarMaskedInput(input, gateListen) : undefined;
       input?.addEventListener("keydown", (event) => {
         if (event.key !== "Enter" || event.repeat) return;
         event.preventDefault();
@@ -270,16 +278,17 @@ export class Game {
       form?.addEventListener("submit", (event) => {
         event.preventDefault();
         if (!input) return;
-        if (input.value === checkpoint.password) {
+        if (maskedInput?.getValue() === checkpoint.password) {
           this.renderWarpCheckpoint(levelNumber);
           return;
         }
 
+        maskedInput?.clear();
         input.classList.remove("is-wrong");
         void input.offsetWidth;
         input.classList.add("is-wrong");
         if (feedback) feedback.textContent = "INCORRECT PASSWORD";
-        input.select();
+        input.focus();
       });
     }
 
