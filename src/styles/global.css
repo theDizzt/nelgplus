@@ -3879,7 +3879,7 @@ img {
 
 .level-23 { color: #000; background: #cf0000; overflow: hidden; }
 .level-23__heading {
-  z-index: 20; color: #000; paint-order: stroke fill; -webkit-text-stroke: 2px #fff;
+  z-index: 20; color: #000;
   text-shadow: 3px 3px 0 rgb(75 0 0 / 75%);
 }
 .level-23__heading h1 { text-transform: none; }
@@ -3895,11 +3895,11 @@ img {
 .level-23__bits > * { fill: #ff334e; stroke: #180000; stroke-width: 6px; }
 .level-23__bits circle:nth-child(-n+2) { fill: url("#l23-orb"); }
 .level-23__bits path { fill: none; stroke: #ff6262; stroke-width: 15px; }
-.level-23__rays path { fill: none; stroke: #ffb3b3; stroke-dasharray: 12 9; stroke-width: 7px; }
+.level-23__rays path { fill: none; stroke: #8f0019; stroke-dasharray: 12 9; stroke-width: 7px; }
 .level-23__interactive { position: absolute; z-index: 9; inset: 0; pointer-events: none; transition: filter 180ms ease; }
 .level-23__toy, .level-23__drag { position: absolute; pointer-events: auto; touch-action: none; user-select: none; }
 .level-23__toy { padding: 0; color: #170000; background: #c40024; border: 6px solid #240000; cursor: pointer; }
-.level-23__toy:focus-visible { outline: 3px dotted #ffb0b0; outline-offset: 3px; }
+.level-23__toy:focus-visible { outline: 3px dotted #42000c; outline-offset: 3px; }
 .level-23__toy--eye { top: 287px; left: 87px; width: 88px; height: 48px; border-radius: 55% 10%; rotate: -17deg; }
 .level-23__toy--eye span { position: absolute; inset: 7px 27px; background: radial-gradient(circle, #fff 0 12%, #ff4058 17% 44%, #210000 48%); border-radius: 50%; }
 .level-23__toy--gear { top: 199px; right: 80px; width: 67px; height: 67px; background: #ff3654; clip-path: polygon(35% 0,55% 12%,75% 2%,82% 24%,100% 35%,87% 54%,98% 75%,73% 79%,60% 100%,42% 84%,18% 98%,14% 72%,0 55%,17% 38%,8% 16%,31% 18%); font: 700 53px/1 Arial; }
@@ -3920,7 +3920,7 @@ img {
 .level-23__drag--three { top: 446px; left: 245px; width: 74px; height: 74px; border: 7px solid #220000; border-radius: 50%; background: repeating-linear-gradient(45deg,#4e000a 0 8px,#ff3652 8px 16px); }
 .level-23__drag--four { top: 414px; right: 247px; color: #ff5060; font: 900 106px/1 "NELG Arial", Arial, sans-serif; -webkit-text-stroke: 5px #260000; rotate: 18deg; }
 
-.level-23__decoy { position: absolute; width: 24px; height: 154px; background: #150000; border: 4px solid #ff8890; box-shadow: 6px 6px 0 #760014; pointer-events: none; }
+.level-23__decoy { position: absolute; width: 24px; height: 154px; background: #150000; border: 4px solid #260000; box-shadow: 6px 6px 0 #760014; pointer-events: none; }
 .level-23__decoy--one { top: 226px; left: 341px; rotate: -35deg; }
 .level-23__decoy--two { top: 250px; right: 326px; height: 128px; rotate: 31deg; background: #8a0017; border-color: #210000; }
 .level-23__decoy--three { top: 338px; left: 420px; height: 113px; rotate: 58deg; background: #ff4054; border-color: #350000; }
@@ -3929,15 +3929,15 @@ img {
 .level-23__slash {
   position: absolute; z-index: 12; top: 244px; left: 50%; color: #190000;
   font-family: "NELG Arial", Arial, sans-serif; font-size: 164px; font-weight: 900; line-height: 1;
-  paint-order: stroke fill; pointer-events: none; -webkit-text-stroke: 4px #ff7078;
+  pointer-events: none;
   text-shadow: 6px 7px 0 #5f0010; translate: -50% 0; rotate: 7deg;
 }
 .level-23__effects { position: absolute; z-index: 22; inset: 0; overflow: hidden; pointer-events: none; }
 .level-23__effect-stamp { position: absolute; color: #ff8d94; font: 900 76px/1 "NELG Arial",Arial,sans-serif; -webkit-text-stroke: 4px #270000; animation: level-23-stamp 1.4s ease-out forwards; }
 .level-23__effect-shard { --shard-angle: 0deg; position: absolute; top: 385px; left: 670px; width: 13px; height: 35px; background: #fff; border: 3px solid #240000; rotate: var(--shard-angle); animation: level-23-shard 800ms ease-out forwards; }
-.level-23--inside-out .level-23__chaos, .level-23--inside-out .level-23__interactive { filter: invert(1) hue-rotate(125deg) saturate(2); }
+.level-23--inside-out .level-23__chaos, .level-23--inside-out .level-23__interactive { filter: hue-rotate(145deg) saturate(2.2) brightness(.82); }
 .level-23--quake { animation: level-23-quake 520ms steps(2); }
-.level-23__form { position: absolute; z-index: 25; bottom: 33px; left: 0; width: 100%; }
+.level-23__form { position: absolute; z-index: 25; bottom: 43px; left: 0; width: 100%; }
 .level-23__controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .level-23__form input {
   padding: 4px 8px; color: #000; background: #fff; border: 3px solid #000; border-radius: 0;
@@ -4000,7 +4000,7 @@ img {
 .level-24__form {
   position: absolute;
   z-index: 10;
-  bottom: 40px;
+  bottom: 43px;
   left: 0;
   width: 100%;
 }
@@ -4100,6 +4100,173 @@ img {
   text-align: center;
   text-shadow: 7px 8px 0 #cf9200;
   rotate: -3deg;
+}
+
+.level-26 {
+  color: #000;
+  background: #808080;
+}
+
+.level-26__heading { color: #000; }
+.level-26__heading h1 { text-transform: none; }
+
+.level-26__message {
+  position: absolute;
+  top: 278px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 27px;
+  text-align: center;
+}
+
+.level-26__form {
+  position: absolute;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-26__controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+
+.level-26__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 20%);
+  outline: none;
+  caret-color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-26__form input:focus { border-color: #000; outline: none; }
+.level-26__form input.is-wrong { background: #f4a1a1; animation: level-20-wrong-shake 180ms linear 2; }
+
+.level-26__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #000;
+  background: #ffff00;
+  border: 3px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-26__form button:hover:not(:disabled),
+.level-26__form button:focus-visible:not(:disabled) { color: #fff; background: #000; outline: none; }
+.level-26__form button:active:not(:disabled) { background: radial-gradient(circle, #fff 0 28%, #777 55%, #000 100%); }
+
+.level-27 {
+  color: #7f00ff;
+  background: #800080;
+  overflow: hidden;
+}
+
+.level-27__heading {
+  z-index: 5;
+  color: #7f00ff;
+}
+
+.level-27__heading h1 { text-transform: none; }
+
+.level-27__clues {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  color: #7f00ff;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-weight: 700;
+  opacity: 0.28;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.level-27__clue { position: absolute; white-space: nowrap; }
+.level-27__clue--six { top: 182px; right: 78px; font-size: 31px; rotate: -8deg; }
+.level-27__clue--addition { top: 245px; left: 39px; font-size: 25px; rotate: 13deg; }
+.level-27__clue--subtraction { top: 448px; right: 23px; font-size: 27px; rotate: -17deg; }
+.level-27__clue--multiplication { top: 369px; left: 35px; font-size: 27px; rotate: 7deg; }
+.level-27__clue--division { top: 526px; left: 253px; font-size: 24px; rotate: -4deg; }
+
+.level-27__display {
+  position: absolute;
+  z-index: 4;
+  top: 267px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 390px;
+  height: 164px;
+  color: #7f00ff;
+  background: #170019;
+  border: 9px ridge #7f00ff;
+  box-shadow: 12px 13px 0 rgb(42 0 43 / 58%), inset 0 0 28px #800080;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 122px;
+  font-weight: 700;
+  letter-spacing: 13px;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 15px #7f00ff;
+  translate: -50% 0;
+}
+
+.level-27__display.is-changing { animation: level-27-display-change 150ms steps(2); }
+
+.level-27--error {
+  display: grid;
+  place-items: center;
+  color: #7f00ff;
+  background: #000;
+}
+
+.level-27__heading--error {
+  z-index: 4;
+  color: #7f00ff;
+}
+
+.level-27__error-message {
+  width: 720px;
+  color: #7f00ff;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 66px;
+  font-weight: 700;
+  line-height: 1.04;
+  text-align: center;
+  text-shadow: 0 0 15px rgb(127 0 255 / 72%);
+}
+
+.level-27__back {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  padding: 0;
+  color: #7f00ff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 31px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  translate: -50% 0;
+}
+
+.level-27__back:hover,
+.level-27__back:focus-visible { color: #7f00ff; outline: 2px dotted #7f00ff; outline-offset: 7px; }
+
+@keyframes level-27-display-change {
+  50% { color: #170019; background: #7f00ff; filter: invert(1); }
 }
 
 .placeholder-level {

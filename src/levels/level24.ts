@@ -90,7 +90,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     const closeMenu = () => { menu.hidden = true; };
     updateSettings();
 
-    listen(screen, "keydown", (event) => {
+    listen(document, "keydown", (event) => {
       if (scene !== "puzzle") return;
       if ((event.target as Element).closest("input, button")) return;
       if (event.key.length !== 1 || event.ctrlKey || event.altKey || event.metaKey) return;
@@ -105,8 +105,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       if (scene === "puzzle") showWrong();
     });
 
-    listen(screen, "contextmenu", (event) => {
-      event.preventDefault();
+    const openMenu = (clientX: number, clientY: number) => {
       if (scene !== "puzzle" || !menuUnlocked) return;
       updateSettings();
       menu.hidden = false;
@@ -114,10 +113,21 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       const menuBounds = menu.getBoundingClientRect();
       const scaleX = screen.clientWidth / screenBounds.width;
       const scaleY = screen.clientHeight / screenBounds.height;
-      const requestedX = (event.clientX - screenBounds.left) * scaleX;
-      const requestedY = (event.clientY - screenBounds.top) * scaleY;
+      const requestedX = (clientX - screenBounds.left) * scaleX;
+      const requestedY = (clientY - screenBounds.top) * scaleY;
       menu.style.left = `${Math.max(4, Math.min(requestedX, 800 - menuBounds.width * scaleX - 4))}px`;
       menu.style.top = `${Math.max(4, Math.min(requestedY, 600 - menuBounds.height * scaleY - 4))}px`;
+    };
+
+    listen(screen, "pointerdown", (event) => {
+      if (event.button !== 2) return;
+      event.preventDefault();
+      openMenu(event.clientX, event.clientY);
+    });
+
+    listen(screen, "contextmenu", (event) => {
+      event.preventDefault();
+      openMenu(event.clientX, event.clientY);
     });
 
     listen(menu, "click", (event) => {
@@ -143,7 +153,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     });
 
     listen(document, "pointerdown", (event) => {
-      if (scene === "puzzle" && !menu.hidden && !menu.contains(event.target as Node)) closeMenu();
+      if (event.button !== 2 && scene === "puzzle" && !menu.hidden && !menu.contains(event.target as Node)) closeMenu();
     });
     listen(document, "keydown", (event) => {
       if (event.key === "Escape" && scene === "puzzle") closeMenu();
