@@ -68,6 +68,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
       "Level 21 and Level 22 gave you a taste of this game's puzzle style. Even more vicious levels are coming, so be prepared. From now on, the levels will not give you direct hints. Make good use of methods you have learned before and the clues hidden on the screen! If it gets too difficult, visit the Help Section on the Discord server from the main menu...",
     password: "70.7billion",
   },
+  25: {
+    message:
+      "Did you enjoy the painful maze level? Now I will show you difficulty that will make you want to give up for good. Before that... I prepared some simple puzzles to cool your brain. Since this is a special breather section, nothing should be difficult if you squeeze your brain hard enough. The journey of pain continues...",
+    password: "NTG255",
+  },
 };
 
 export class Game {
