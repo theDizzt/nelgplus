@@ -4627,6 +4627,102 @@ img {
 
 .level-29__controls input.is-wrong { background: #ff8b8b; translate: 6px 0; }
 
+.level-30 {
+  color: #000;
+  background: #c6c6f6;
+}
+
+.level-30__heading {
+  z-index: 8;
+  color: #fff;
+  pointer-events: none;
+}
+
+.level-30__heading h1 { text-transform: none; }
+
+.level-30__clues {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  color: #000;
+}
+
+.level-30__clue { position: absolute; font-size: 24px; white-space: nowrap; }
+.level-30__clue--reverse-one { top: 190px; left: 42px; rotate: -7deg; }
+.level-30__clue--rot-one { top: 205px; left: 690px; rotate: 8deg; }
+.level-30__clue--xor { top: 302px; left: 92px; rotate: 5deg; }
+.level-30__clue--keyword { top: 270px; left: 420px; rotate: -4deg; }
+.level-30__clue--hex { top: 448px; left: 55px; rotate: -9deg; }
+.level-30__clue--base { top: 405px; left: 663px; rotate: 6deg; }
+.level-30__clue--rot-two { top: 408px; left: 270px; rotate: -5deg; }
+.level-30__clue--reverse-two { top: 475px; left: 505px; rotate: 7deg; }
+
+.level-30__form {
+  position: absolute;
+  z-index: 4;
+  bottom: 38px;
+  left: 0;
+  width: 100%;
+}
+
+.level-30__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.level-30__controls input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-30__controls input:focus { border-color: #111; outline: none; }
+.level-30__controls input.is-wrong { background: #ff8b8b; translate: 6px 0; }
+
+.level-30__controls button {
+  height: 40px;
+  padding: 0 9px;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.level-30__controls button:hover:not(:disabled),
+.level-30__controls button:focus-visible:not(:disabled) { background: #f01818; outline: none; }
+
+.level-30__controls button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-30__controls .level-30__reset { background: #fff; }
+.level-30__controls button:disabled { cursor: wait; opacity: 0.65; }
+
+.level-30__darkness {
+  --level-30-light-x: 400px;
+  --level-30-light-y: 350px;
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  background: radial-gradient(circle 72px at var(--level-30-light-x) var(--level-30-light-y), transparent 0 69px, #000 73px);
+  pointer-events: none;
+}
+
 .placeholder-level {
   background: #eee7d5;
 }

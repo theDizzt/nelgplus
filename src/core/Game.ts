@@ -5,10 +5,10 @@ import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
-const DEVELOPMENT_PERIOD = "AUGUST 2026 – PRESENT";
-const GAME_VERSION = "1.0.0";
-const VERSION_DATE = "AUGUST 3, 2026";
-const DISCORD_URL = "";
+const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
+const GAME_VERSION = "1.0.20";
+const VERSION_DATE = "08/03/2026";
+const DISCORD_URL = "https://discord.gg/hZDqe5qCj3";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
