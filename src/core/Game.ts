@@ -73,6 +73,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
       "Did you enjoy the painful maze level? Now I will show you difficulty that will make you want to give up for good. Before that... I prepared some simple puzzles to cool your brain. Since this is a special breather section, nothing should be difficult if you squeeze your brain hard enough. The journey of pain continues...",
     password: "NTG255",
   },
+  29: {
+    message:
+      'The next section will raise you to a state of enlightenment. "The longer you endure, the deeper your inner self becomes, and the more wounds you withstand, the richer the fragrance of your soul grows..."',
+    password: "perhaptation.json",
+  },
 };
 
 export class Game {
