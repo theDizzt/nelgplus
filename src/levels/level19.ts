@@ -25,7 +25,7 @@ export const level19: LevelDefinition = {
         <div>y : <span data-coordinate="y">0</span></div>
       </div>
 
-      <p class="level-19__corner-hint">focus on the spcial #</p>
+      <p class="level-19__corner-hint">focus on the special #</p>
 
       <p class="level-19__passing-clue" hidden>NELG Level 242</p>
 
