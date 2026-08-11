@@ -179,11 +179,17 @@ body,
 }
 
 body {
-  display: grid;
-  min-width: 800px;
-  min-height: 600px;
-  place-items: center;
+  display: block;
+  min-width: 0;
+  min-height: 0;
   overscroll-behavior: none;
+}
+
+#game-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 button,
@@ -241,12 +247,22 @@ img {
 .red-guy[data-facing="left"] .red-guy__sprite { transform: scaleX(-1); }
 
 .game-frame {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
   width: 800px;
   height: 600px;
+
   overflow: hidden;
-  background: #fff;
+  background: #800000;
   border: 1px solid #555;
+
+  transform:
+    translate(-50%, -50%)
+    scale(var(--game-scale, 1));
+
+  transform-origin: top center;
 }
 
 .level-screen {
