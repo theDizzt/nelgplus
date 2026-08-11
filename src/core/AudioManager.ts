@@ -1,4 +1,10 @@
+import { assetUrl } from "./assets";
+
 const AUDIO_SETTINGS_KEY = "nelg-plus-plus-audio";
+
+function resolveAudioSource(source: string): string {
+  return /^\.?\/?assets\//.test(source) ? assetUrl(source) : source;
+}
 
 function normalizeVolume(value: number): number {
   if (!Number.isFinite(value)) return 100;
@@ -76,7 +82,7 @@ export class AudioManager {
   async playMusic(source: string, loop = true): Promise<void> {
     this.stopMusic();
     if (!this.musicAllowed) return;
-    const audio = new Audio(source);
+    const audio = new Audio(resolveAudioSource(source));
     audio.loop = loop;
     audio.preload = "auto";
     audio.volume = this.musicVolumePercent / 100;
@@ -98,7 +104,7 @@ export class AudioManager {
 
   playEffect(source: string): void {
     if (!this.effectsAllowed) return;
-    const audio = new Audio(source);
+    const audio = new Audio(resolveAudioSource(source));
     audio.volume = this.effectsVolumePercent / 100;
     void audio.play().catch(() => undefined);
   }

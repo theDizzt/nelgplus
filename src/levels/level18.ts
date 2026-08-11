@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { assetUrl } from "../core/assets";
 
 export const level18: LevelDefinition = {
   number: 18,
@@ -21,7 +22,7 @@ export const level18: LevelDefinition = {
         <p>reveal a hidden button.</p>
       </div>
 
-      <img class="level-18__paint-icon" src="/assets/images/level18-paint.png" alt="" aria-hidden="true" />
+      <img class="level-18__paint-icon" src="${assetUrl("images/level18-paint.png")}" alt="" aria-hidden="true" />
     `;
 
     const hiddenButton = screen.querySelector<HTMLButtonElement>(".level-18__hidden-button");

@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { assetUrl } from "../core/assets";
 import type { LevelContext, LevelDefinition } from "../core/types";
 
 const SCENE_TWO_OBJECTS = [
@@ -287,7 +288,7 @@ export const level20: LevelDefinition = {
         }
 
         case 6: {
-          renderShell(6, "#ffff00", `<img class="level-20__face" src="/assets/images/level20a.png" alt="A smiling face" />${passwordForm("level-20-scene-6-answer")}`, "blue");
+          renderShell(6, "#ffff00", `<img class="level-20__face" src="${assetUrl("images/level20a.png")}" alt="A smiling face" />${passwordForm("level-20-scene-6-answer")}`, "blue");
           bindPassword("64206", 7);
           break;
         }
@@ -298,7 +299,7 @@ export const level20: LevelDefinition = {
             7,
             "aqua",
             `
-              <img class="level-20__coordinate-image" src="/assets/images/level20b.png" alt="A clue image" />
+              <img class="level-20__coordinate-image" src="${assetUrl("images/level20b.png")}" alt="A clue image" />
               <button class="level-20__coordinate-target" type="button" style="left:335px;top:${targetTop - 4}px"
                 aria-label="Coordinate 339, 716"></button>
               <div class="level-20__coordinates"><div>x : <span data-coordinate="x">0</span></div><div>y : <span data-coordinate="y">0</span></div></div>

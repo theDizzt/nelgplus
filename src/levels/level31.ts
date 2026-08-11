@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { assetUrl } from "../core/assets";
 import type { LevelDefinition } from "../core/types";
 
 const IMAGE_SEQUENCE = [
@@ -59,7 +60,7 @@ export const level31: LevelDefinition = {
       stage += 1;
 
       if (stage <= IMAGE_SEQUENCE.length) {
-        image.src = `/assets/images/${IMAGE_SEQUENCE[stage - 1]}`;
+        image.src = assetUrl(`images/${IMAGE_SEQUENCE[stage - 1]}`);
         image.hidden = false;
         return;
       }

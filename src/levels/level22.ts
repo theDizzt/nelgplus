@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { assetUrl } from "../core/assets";
 import type { LevelDefinition } from "../core/types";
 
 export const level22: LevelDefinition = {
@@ -13,7 +14,7 @@ export const level22: LevelDefinition = {
       </header>
 
       <span class="level-22__face" aria-hidden="true">&gt;:D</span>
-      <img class="level-22__image" src="/assets/images/level22a.png" alt="Mirrored symbol puzzle" />
+      <img class="level-22__image" src="${assetUrl("images/level22a.png")}" alt="Mirrored symbol puzzle" />
 
       <form class="level-22__form" autocomplete="off">
         <div class="level-22__controls">

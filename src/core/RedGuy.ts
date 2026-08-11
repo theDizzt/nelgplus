@@ -1,4 +1,5 @@
 import type { LevelContext } from "./types";
+import { assetUrl } from "./assets";
 
 export interface RedGuyRect {
   readonly x: number;
@@ -39,12 +40,12 @@ export interface RedGuyOptions {
 }
 
 const SPRITES: Readonly<Record<RedGuyState | "walk-alt", string>> = {
-  idle: "/assets/images/red_1.png",
-  walking: "/assets/images/red_2.png",
-  "walk-alt": "/assets/images/red_3.png",
-  jumping: "/assets/images/red_4.png",
-  falling: "/assets/images/red_5.png",
-  crouching: "/assets/images/red_6.png",
+  idle: assetUrl("images/red_1.png"),
+  walking: assetUrl("images/red_2.png"),
+  "walk-alt": assetUrl("images/red_3.png"),
+  jumping: assetUrl("images/red_4.png"),
+  falling: assetUrl("images/red_5.png"),
+  crouching: assetUrl("images/red_6.png"),
 };
 
 const VISUAL_WIDTH = 64;

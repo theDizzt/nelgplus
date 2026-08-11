@@ -1,4 +1,5 @@
 import { AudioManager } from "./AudioManager";
+import { assetUrl } from "./assets";
 import { InteractionGuard } from "./InteractionGuard";
 import { LevelScope } from "./LevelScope";
 import { attachStarMaskedInput } from "./StarMaskedInput";
@@ -60,7 +61,7 @@ const PRELOAD_ASSETS = [
   "/assets/images/warp.png",
   "/assets/sounds/nelgpop.WAV",
   "/assets/sounds/nelgsmack.WAV",
-] as const;
+].map(assetUrl);
 const MINIMUM_PRELOADER_TIME = 700;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 22, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 97,
