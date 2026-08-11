@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "./",
+  base: "/nelgplus/",
   build: {
     outDir: "dist",
     emptyOutDir: true,
