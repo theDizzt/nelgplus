@@ -91,12 +91,13 @@ export const level20: LevelDefinition = {
       `;
     };
 
-    const bindPassword = (answer: string, nextScene: number) => {
+    const bindPassword = (answers: string | readonly string[], nextScene: number) => {
       const form = screen.querySelector<HTMLFormElement>(".level-20__password-form");
       const input = screen.querySelector<HTMLInputElement>(".level-20__password-form input");
       const button = screen.querySelector<HTMLButtonElement>(".level-20__password-form button");
       if (!form || !input || !button) return;
 
+      const acceptedAnswers = new Set(typeof answers === "string" ? [answers] : answers);
       const maskedInput = attachStarMaskedInput(input, on);
       on(input, "keydown", (event) => {
         if (event.key !== "Enter" || event.repeat) return;
@@ -105,7 +106,7 @@ export const level20: LevelDefinition = {
       });
       on(form, "submit", (event) => {
         event.preventDefault();
-        if (maskedInput.getValue() === answer) {
+        if (acceptedAnswers.has(maskedInput.getValue())) {
           renderScene(nextScene);
           return;
         }
@@ -256,7 +257,7 @@ export const level20: LevelDefinition = {
             }, 70);
             sceneTimers.add(fadeTimer);
           }
-          bindPassword("alphabet", 4);
+          bindPassword(["alphabet", "letter", "letters", "text", "character", "english"], 4);
           break;
         }
 
