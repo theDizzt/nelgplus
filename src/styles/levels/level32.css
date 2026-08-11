@@ -5,7 +5,10 @@
 
 .level-32--scene-1,
 .level-32--scene-2,
-.level-32--scene-3 {
+.level-32--scene-3,
+.level-32--scene-4,
+.level-32--scene-5,
+.level-32--scene-6 {
   color: #000;
   background-color: #173e6c;
 }
@@ -132,7 +135,10 @@
 }
 
 .level-32--scene-2::before,
-.level-32--scene-3::before {
+.level-32--scene-3::before,
+.level-32--scene-4::before,
+.level-32--scene-5::before,
+.level-32--scene-6::before {
   position: absolute;
   z-index: 0;
   inset: -18px;
@@ -151,6 +157,99 @@
 .level-32--scene-3::before {
   filter: saturate(1.15) contrast(1.08);
   transform: rotate(180deg) scale(1.07);
+}
+
+.level-32--scene-4::before {
+  filter: saturate(1.1) contrast(1.08);
+  transform: scale(1.03);
+}
+
+.level-32--scene-5::before {
+  filter: saturate(1.18) contrast(1.12) brightness(0.86);
+  transform: scale(1.03);
+}
+
+.level-32--scene-6::before {
+  filter: saturate(1.12) contrast(1.08) brightness(0.94);
+  transform: scale(1.03);
+}
+
+.level-32__walls,
+.level-32__enemies,
+.level-32__falling-blocks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-32__walls { z-index: 17; }
+.level-32__enemies { z-index: 12; }
+.level-32__falling-blocks { z-index: 15; }
+
+.level-32__wall,
+.level-32__falling-block {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+}
+
+.level-32__wall {
+  background: #000;
+}
+
+.level-32__steve {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: rotate(var(--level-32-steve-rotation, 0deg));
+  transform-origin: center bottom;
+}
+
+.level-32__steve--small {
+  object-position: center;
+}
+
+.level-32__falling-block {
+  background: radial-gradient(circle at 55% 45%, #ff4b4b 0 8%, #ed0000 40%, #650000 100%);
+  border: 2px solid #ff2020;
+}
+
+.level-32--scene-4 .level-32__heading {
+  color: #000;
+  text-shadow: none;
+}
+
+.level-32--scene-5 .level-32__enemies {
+  z-index: 3;
+}
+
+.level-32--scene-5 .level-32__steve--large {
+  transform-origin: center center;
+}
+
+.level-32--scene-5 .level-32__heading {
+  color: #c8c8c8;
+  text-shadow:
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff,
+    3px 3px 2px rgb(0 0 0 / 75%);
+}
+
+.level-32--scene-5 .level-heading__number,
+.level-32--scene-5 .level-32__heading h1 {
+  color: transparent;
+  background: linear-gradient(180deg, #fff 0%, #d8d8d8 35%, #777 65%, #e7e7e7 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 1px #fff;
+}
+
+.level-32--scene-6 .level-32__heading {
+  color: aqua;
+  text-shadow: 2px 2px 2px rgb(0 0 0 / 82%);
 }
 
 .level-32--fail {
@@ -179,12 +278,12 @@
   text-shadow: 3px 3px 0 rgb(255 40 40 / 20%);
 }
 
-.level-32--scene-4 {
+.level-32--scene-7 {
   color: #000;
   background: #000;
 }
 
-.level-32--scene-4 .level-32__heading {
+.level-32--scene-7 .level-32__heading {
   color: #000;
   text-shadow: none;
 }

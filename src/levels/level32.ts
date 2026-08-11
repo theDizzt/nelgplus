@@ -25,13 +25,44 @@ interface PortalRect {
   readonly height: number;
 }
 
+interface EnemyRect extends PortalRect {
+  readonly variant?: "large" | "small";
+  readonly rotation?: number;
+  readonly rotationOrigin?: "bottom" | "center";
+  readonly hitboxes?: readonly PortalRect[];
+}
+
+interface FallingBlockLayout {
+  readonly x: number;
+  readonly size: number;
+  readonly speed: number;
+  readonly offset: number;
+}
+
+interface FallingBlockState extends FallingBlockLayout {
+  y: number;
+}
+
+interface EnemyMask {
+  readonly alpha: Uint8ClampedArray;
+  readonly width: number;
+  readonly height: number;
+}
+
 interface PlayerScene {
-  readonly number: 1 | 2 | 3;
+  readonly number: 1 | 2 | 3 | 4 | 5 | 6;
   readonly className: string;
+  readonly backgroundImage: string;
   readonly platforms: readonly PlatformLayout[];
   readonly portal: PortalRect;
   readonly start: { readonly x: number; readonly y: number };
   readonly bounds: RedGuyRect;
+  readonly walls?: readonly RedGuyRect[];
+  readonly enemies?: readonly EnemyRect[];
+  readonly fallingBlocks?: readonly FallingBlockLayout[];
+  readonly portalIsFatal?: boolean;
+  readonly dieAction?: () => void;
+  readonly jumpSpeed?: number;
   readonly next: () => void;
 }
 
@@ -57,6 +88,49 @@ const SCENE_TWO_PLATFORMS: readonly PlatformLayout[] = [
   { x: 0, y: 205, width: 210, height: 28 },
 ];
 
+const SCENE_WALLS: readonly RedGuyRect[] = [
+  { x: -28, y: 0, width: 28, height: 600 },
+  { x: 800, y: 0, width: 28, height: 600 },
+];
+
+const SCENE_FOUR_WALLS: readonly RedGuyRect[] = [
+  { x: -190, y: -140, width: 40, height: 740 },
+  { x: -40, y: 16, width: 40, height: 117 },
+  { x: 800, y: -140, width: 28, height: 740 },
+];
+
+const SCENE_FOUR_PLATFORMS: readonly PlatformLayout[] = [
+  { x: -150, y: 558, width: 950, height: 28 },
+  { x: -40, y: 133, width: 450, height: 28 },
+  { x: -4, y: -28, width: 694, height: 28 },
+];
+
+const SCENE_FIVE_PLATFORMS: readonly PlatformLayout[] = [
+  { x: 180, y: 530, width: 60, height: 28 },
+  { x: 330, y: 485, width: 95, height: 28 },
+  { x: 475, y: 445, width: 110, height: 28 },
+  { x: 630, y: 365, width: 142, height: 28 },
+  { x: 28, y: 270, width: 532, height: 28 },
+];
+
+const SCENE_SIX_PLATFORMS: readonly PlatformLayout[] = [
+  { x: 72, y: 520, width: 150, height: 28 },
+  { x: 185, y: 405, width: 150, height: 28, drops: true },
+  { x: 405, y: 330, width: 150, height: 28 },
+  { x: 610, y: 250, width: 162, height: 28, drops: true },
+  { x: 300, y: 205, width: 145, height: 28, drops: true },
+];
+
+const SCENE_FIVE_BLOCKS: readonly FallingBlockLayout[] = [
+  { x: 72, size: 38, speed: 150, offset: 30 },
+  { x: 170, size: 38, speed: 215, offset: 145 },
+  { x: 268, size: 38, speed: 178, offset: 260 },
+  { x: 366, size: 38, speed: 260, offset: 80 },
+  { x: 464, size: 38, speed: 195, offset: 330 },
+  { x: 562, size: 38, speed: 235, offset: 205 },
+  { x: 660, size: 38, speed: 168, offset: 420 },
+];
+
 function overlaps(
   leftA: number,
   topA: number,
@@ -68,6 +142,38 @@ function overlaps(
   heightB: number,
 ): boolean {
   return leftA < leftB + widthB && leftA + widthA > leftB && topA < topB + heightB && topA + heightA > topB;
+}
+
+function touchesEnemyMask(
+  player: { readonly x: number; readonly y: number },
+  enemy: EnemyRect,
+  mask: EnemyMask,
+): boolean {
+  const radians = ((enemy.rotation ?? 0) * Math.PI) / 180;
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+  const originX = enemy.x + enemy.width / 2;
+  const localOriginY = enemy.rotationOrigin === "center" ? enemy.height / 2 : enemy.height;
+  const originY = enemy.y + localOriginY;
+  const imageScale = Math.min(enemy.width / mask.width, enemy.height / mask.height);
+  const renderedWidth = mask.width * imageScale;
+  const renderedHeight = mask.height * imageScale;
+  const imageOffsetX = (enemy.width - renderedWidth) / 2;
+  const imageOffsetY = enemy.height - renderedHeight;
+
+  for (let sampleY = player.y + 2; sampleY < player.y + PLAYER_HEIGHT - 1; sampleY += 3) {
+    for (let sampleX = player.x + 2; sampleX < player.x + PLAYER_WIDTH - 1; sampleX += 3) {
+      const deltaX = sampleX - originX;
+      const deltaY = sampleY - originY;
+      const localX = cosine * deltaX + sine * deltaY + enemy.width / 2;
+      const localY = -sine * deltaX + cosine * deltaY + localOriginY;
+      const imageX = Math.floor((localX - imageOffsetX) / imageScale);
+      const imageY = Math.floor((localY - imageOffsetY) / imageScale);
+      if (imageX < 0 || imageY < 0 || imageX >= mask.width || imageY >= mask.height) continue;
+      if ((mask.alpha[imageY * mask.width + imageX] ?? 0) > 32) return true;
+    }
+  }
+  return false;
 }
 
 export const level32: LevelDefinition = {
@@ -119,11 +225,11 @@ export const level32: LevelDefinition = {
       </div>
     `;
 
-    const renderPendingSceneFour = () => {
+    const renderPendingSceneSeven = () => {
       clearScene();
-      screen.className = "level-screen level-32 level-32--scene-4";
+      screen.className = "level-screen level-32 level-32--scene-7";
       screen.style.removeProperty("--level-32-background");
-      screen.innerHTML = `${heading()}<div class="level-32__scene-pending" aria-label="Scene 4"></div>`;
+      screen.innerHTML = `${heading()}<div class="level-32__scene-pending" aria-label="Scene 7"></div>`;
     };
 
     const renderFail = () => {
@@ -190,16 +296,35 @@ export const level32: LevelDefinition = {
       element.addEventListener("pointercancel", finishDrag);
     };
 
-    const renderPlayerScene = ({ number, className, platforms: layout, portal, start, bounds, next }: PlayerScene) => {
+    const renderPlayerScene = ({
+      number,
+      className,
+      backgroundImage,
+      platforms: layout,
+      portal,
+      start,
+      bounds,
+      walls = [],
+      enemies = [],
+      fallingBlocks = [],
+      portalIsFatal = false,
+      dieAction = renderFail,
+      jumpSpeed,
+      next,
+    }: PlayerScene) => {
       clearScene();
       screen.className = `level-screen level-32 ${className}`;
-      screen.style.setProperty("--level-32-background", `url("${assetUrl("images/level32bg1.jpg")}")`);
+      screen.style.setProperty("--level-32-background", `url("${assetUrl(`images/${backgroundImage}`)}")`);
 
       const platforms: PlatformState[] = layout.map((platform, id) => ({ ...platform, id, fallSpeed: 0 }));
+      const fallingBlockStates: FallingBlockState[] = fallingBlocks.map((block) => ({ ...block, y: -block.size - block.offset }));
       screen.innerHTML = `
         ${heading()}
         <button class="level-32__die" type="button">DIE</button>
         ${portalMarkup(portal)}
+        <div class="level-32__walls" aria-hidden="true">
+          ${walls.map((wall) => `<i class="level-32__wall" style="left:${wall.x}px;top:${wall.y}px;width:${wall.width}px;height:${wall.height}px"></i>`).join("")}
+        </div>
         <div class="level-32__platforms">
           ${platforms.map((platform) => `
             <div class="level-32__platform${platform.drops ? " level-32__platform--unstable" : ""}${platform.draggable ? " level-32__platform--draggable" : ""}"
@@ -207,9 +332,19 @@ export const level32: LevelDefinition = {
               style="left:${platform.x}px;top:${platform.y}px;width:${platform.width}px;height:${platform.height}px"></div>
           `).join("")}
         </div>
+        <div class="level-32__enemies" aria-hidden="true">
+          ${enemies.map((enemy, index) => `<img class="level-32__steve level-32__steve--${enemy.variant ?? "large"}"
+            data-enemy-index="${index}"
+            src="${assetUrl("images/Steve.gif")}" alt=""
+            style="left:${enemy.x}px;top:${enemy.y}px;width:${enemy.width}px;height:${enemy.height}px;--level-32-steve-rotation:${enemy.rotation ?? 0}deg" />`).join("")}
+        </div>
+        <div class="level-32__falling-blocks" aria-hidden="true">
+          ${fallingBlockStates.map((block, index) => `<i class="level-32__falling-block" data-falling-block="${index}"
+            style="left:${block.x}px;top:${block.y}px;width:${block.size}px;height:${block.size}px"></i>`).join("")}
+        </div>
       `;
 
-      screen.querySelector<HTMLButtonElement>(".level-32__die")?.addEventListener("click", renderFail, { once: true });
+      screen.querySelector<HTMLButtonElement>(".level-32__die")?.addEventListener("click", dieAction, { once: true });
 
       const platformElements = new Map<number, HTMLElement>();
       screen.querySelectorAll<HTMLElement>("[data-platform-id]").forEach((element) => {
@@ -221,6 +356,25 @@ export const level32: LevelDefinition = {
 
       const fallingPlatforms = new Set<number>();
       const triggeredPlatforms = new Set<number>();
+      const fallingBlockElements = [...screen.querySelectorAll<HTMLElement>("[data-falling-block]")];
+      const enemyMasks = new Map<number, EnemyMask>();
+      screen.querySelectorAll<HTMLImageElement>("[data-enemy-index]").forEach((image) => {
+        const captureMask = () => {
+          if (!image.naturalWidth || !image.naturalHeight) return;
+          const canvas = document.createElement("canvas");
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          const canvasContext = canvas.getContext("2d", { willReadFrequently: true });
+          if (!canvasContext) return;
+          canvasContext.drawImage(image, 0, 0);
+          const pixels = canvasContext.getImageData(0, 0, canvas.width, canvas.height).data;
+          const alpha = new Uint8ClampedArray(canvas.width * canvas.height);
+          for (let index = 0; index < alpha.length; index += 1) alpha[index] = pixels[index * 4 + 3] ?? 0;
+          enemyMasks.set(Number(image.dataset.enemyIndex), { alpha, width: canvas.width, height: canvas.height });
+        };
+        if (image.complete) captureMask();
+        else image.addEventListener("load", captureMask, { once: true });
+      });
       let lastFrame = performance.now();
       let transitioning = false;
 
@@ -231,7 +385,9 @@ export const level32: LevelDefinition = {
         bodyWidth: PLAYER_WIDTH,
         bodyHeight: PLAYER_HEIGHT,
         platforms: () => platforms as readonly RedGuyRect[],
+        solidObstacles: walls,
         oneWayPlatforms: true,
+        jumpSpeed,
         bounds,
       });
 
@@ -250,6 +406,13 @@ export const level32: LevelDefinition = {
           if (element) element.style.top = `${platform.y}px`;
         });
 
+        fallingBlockStates.forEach((block, index) => {
+          block.y += block.speed * deltaSeconds;
+          if (block.y > 610) block.y = -block.size - block.offset;
+          const element = fallingBlockElements[index];
+          if (element) element.style.top = `${block.y}px`;
+        });
+
         const player = activeRedGuy.getSnapshot();
         if (player.y > 610) {
           transitioning = true;
@@ -257,13 +420,30 @@ export const level32: LevelDefinition = {
           return;
         }
 
-        if (overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, portal.x, portal.y, portal.width, portal.height)) {
+        const hitEnemy = enemies.some((enemy, index) => {
+          const mask = enemyMasks.get(index);
+          if (mask) return touchesEnemyMask(player, enemy, mask);
+          return (enemy.hitboxes ?? [enemy]).some((hitbox) =>
+            overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, hitbox.x, hitbox.y, hitbox.width, hitbox.height),
+          );
+        });
+        const hitFallingBlock = fallingBlockStates.some((block) =>
+          overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, block.x, block.y, block.size, block.size),
+        );
+        if (hitEnemy || hitFallingBlock) {
           transitioning = true;
-          next();
+          renderFail();
           return;
         }
 
-        if (number !== 1 || !player.grounded) return;
+        if (overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, portal.x, portal.y, portal.width, portal.height)) {
+          transitioning = true;
+          if (portalIsFatal) renderFail();
+          else next();
+          return;
+        }
+
+        if ((number !== 1 && number !== 6) || !player.grounded) return;
         for (const platform of platforms) {
           if (!platform.drops || triggeredPlatforms.has(platform.id)) continue;
           const standingOnPlatform =
@@ -287,6 +467,7 @@ export const level32: LevelDefinition = {
       renderPlayerScene({
         number: 1,
         className: "level-32--scene-1",
+        backgroundImage: "level32bg1.jpg",
         platforms: SCENE_ONE_PLATFORMS,
         portal: { x: 650, y: 47, width: 58, height: 58 },
         start: { x: 690, y: 518 - PLAYER_HEIGHT },
@@ -299,6 +480,7 @@ export const level32: LevelDefinition = {
       renderPlayerScene({
         number: 2,
         className: "level-32--scene-2",
+        backgroundImage: "level32bg1.jpg",
         platforms: SCENE_TWO_PLATFORMS,
         portal: { x: 42, y: 112, width: 58, height: 58 },
         start: { x: 82, y: 535 - PLAYER_HEIGHT },
@@ -311,11 +493,94 @@ export const level32: LevelDefinition = {
       renderPlayerScene({
         number: 3,
         className: "level-32--scene-3",
+        backgroundImage: "level32bg1.jpg",
         platforms: [],
         portal: { x: 260, y: 512, width: 58, height: 58 },
         start: { x: 430, y: -105 },
         bounds: { x: 0, y: -140, width: 800, height: 900 },
-        next: renderPendingSceneFour,
+        next: renderSceneFour,
+      });
+    }
+
+    function renderSceneFour() {
+      renderPlayerScene({
+        number: 4,
+        className: "level-32--scene-4",
+        backgroundImage: "level32bg2.jpg",
+        platforms: SCENE_FOUR_PLATFORMS,
+        portal: { x: 22, y: 430, width: 58, height: 58 },
+        start: { x: 36, y: 133 - PLAYER_HEIGHT },
+        bounds: { x: -190, y: -140, width: 1_018, height: 880 },
+        walls: SCENE_FOUR_WALLS,
+        jumpSpeed: 700,
+        enemies: [{
+          x: 400,
+          y: 125,
+          width: 440,
+          height: 435,
+          variant: "large",
+          hitboxes: [
+            { x: 510, y: 180, width: 210, height: 125 },
+            { x: 495, y: 305, width: 235, height: 220 },
+            { x: 425, y: 285, width: 82, height: 150 },
+            { x: 725, y: 275, width: 75, height: 185 },
+          ],
+        }],
+        next: renderSceneFive,
+      });
+    }
+
+    function renderSceneFive() {
+      renderPlayerScene({
+        number: 5,
+        className: "level-32--scene-5",
+        backgroundImage: "level32bg3.jpg",
+        platforms: SCENE_FIVE_PLATFORMS,
+        portal: { x: 180, y: 190, width: 58, height: 58 },
+        start: { x: 190, y: 530 - PLAYER_HEIGHT },
+        bounds: { x: 0, y: 0, width: 800, height: 760 },
+        walls: SCENE_WALLS,
+        enemies: [
+          {
+            x: 600,
+            y: 430,
+            width: 225,
+            height: 190,
+            variant: "large",
+            rotation: 40,
+            rotationOrigin: "center",
+            hitboxes: [
+              { x: 620, y: 468, width: 150, height: 105 },
+              { x: 755, y: 455, width: 42, height: 78 },
+            ],
+          },
+          {
+            x: 704,
+            y: 290,
+            width: 68,
+            height: 62,
+            variant: "small",
+            hitboxes: [{ x: 714, y: 300, width: 44, height: 44 }],
+          },
+        ],
+        fallingBlocks: SCENE_FIVE_BLOCKS,
+        next: renderSceneSix,
+      });
+    }
+
+    function renderSceneSix() {
+      renderPlayerScene({
+        number: 6,
+        className: "level-32--scene-6",
+        backgroundImage: "level32bg4.jpg",
+        platforms: SCENE_SIX_PLATFORMS,
+        portal: { x: 22, y: 16, width: 58, height: 58 },
+        start: { x: 86, y: 520 - PLAYER_HEIGHT },
+        bounds: { x: 0, y: 0, width: 800, height: 760 },
+        walls: SCENE_WALLS,
+        portalIsFatal: true,
+        dieAction: renderPendingSceneSeven,
+        next: renderFail,
       });
     }
 

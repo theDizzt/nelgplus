@@ -26,6 +26,7 @@ export interface RedGuyOptions {
   readonly x: number;
   readonly y: number;
   readonly platforms: readonly RedGuyRect[] | (() => readonly RedGuyRect[]);
+  readonly solidObstacles?: readonly RedGuyRect[] | (() => readonly RedGuyRect[]);
   readonly oneWayPlatforms?: boolean;
   readonly bounds?: RedGuyRect;
   readonly bodyWidth?: number;
@@ -191,6 +192,12 @@ export class RedGuyController {
     return typeof this.options.platforms === "function" ? this.options.platforms() : this.options.platforms;
   }
 
+  private getSolidObstacles(): readonly RedGuyRect[] {
+    const obstacles = this.options.solidObstacles;
+    if (!obstacles) return [];
+    return typeof obstacles === "function" ? obstacles() : obstacles;
+  }
+
   private bindControls(): void {
     this.context.listen(document, "keydown", (event) => {
       if (!this.enabled || isEditableTarget(event.target)) return;
@@ -265,16 +272,17 @@ export class RedGuyController {
     const bodyTop = this.y;
     const bodyBottom = this.y + this.bodyHeight;
 
-    if (!this.oneWayPlatforms) {
-      for (const platform of this.getPlatforms()) {
-        if (!overlaps(bodyTop, bodyBottom, platform.y, platform.y + platform.height)) continue;
-        if (distance > 0 && previousX + this.bodyWidth <= platform.x && nextX + this.bodyWidth > platform.x) {
-          nextX = Math.min(nextX, platform.x - this.bodyWidth);
-          this.velocityX = 0;
-        } else if (distance < 0 && previousX >= platform.x + platform.width && nextX < platform.x + platform.width) {
-          nextX = Math.max(nextX, platform.x + platform.width);
-          this.velocityX = 0;
-        }
+    const horizontalObstacles = this.oneWayPlatforms
+      ? this.getSolidObstacles()
+      : [...this.getPlatforms(), ...this.getSolidObstacles()];
+    for (const platform of horizontalObstacles) {
+      if (!overlaps(bodyTop, bodyBottom, platform.y, platform.y + platform.height)) continue;
+      if (distance > 0 && previousX + this.bodyWidth <= platform.x && nextX + this.bodyWidth > platform.x) {
+        nextX = Math.min(nextX, platform.x - this.bodyWidth);
+        this.velocityX = 0;
+      } else if (distance < 0 && previousX >= platform.x + platform.width && nextX < platform.x + platform.width) {
+        nextX = Math.max(nextX, platform.x + platform.width);
+        this.velocityX = 0;
       }
     }
 
@@ -311,6 +319,27 @@ export class RedGuyController {
         nextY <= platform.y + platform.height
       ) {
         nextY = Math.max(nextY, platform.y + platform.height);
+        this.velocityY = 0;
+      }
+    }
+
+    for (const obstacle of this.getSolidObstacles()) {
+      if (!overlaps(bodyLeft, bodyRight, obstacle.x, obstacle.x + obstacle.width)) continue;
+      if (
+        distance >= 0 &&
+        previousY + this.bodyHeight <= obstacle.y + 0.5 &&
+        nextY + this.bodyHeight >= obstacle.y
+      ) {
+        nextY = Math.min(nextY, obstacle.y - this.bodyHeight);
+        impactSpeed = Math.max(impactSpeed, this.velocityY);
+        this.velocityY = 0;
+        landed = true;
+      } else if (
+        distance < 0 &&
+        previousY >= obstacle.y + obstacle.height &&
+        nextY <= obstacle.y + obstacle.height
+      ) {
+        nextY = Math.max(nextY, obstacle.y + obstacle.height);
         this.velocityY = 0;
       }
     }
