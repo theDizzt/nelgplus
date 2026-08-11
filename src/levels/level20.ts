@@ -122,22 +122,32 @@ export const level20: LevelDefinition = {
     const makeObjectsDraggable = () => {
       screen.querySelectorAll<HTMLElement>("[data-level-20-draggable]").forEach((object) => {
         let pointerId: number | undefined;
-        let offsetX = 0;
-        let offsetY = 0;
+        let startPointerX = 0;
+        let startPointerY = 0;
+        let startLeft = 0;
+        let startTop = 0;
         on(object, "pointerdown", (event) => {
-          const bounds = object.getBoundingClientRect();
+          const screenBounds = screen.getBoundingClientRect();
+          const scaleX = screen.clientWidth / screenBounds.width;
+          const scaleY = screen.clientHeight / screenBounds.height;
           pointerId = event.pointerId;
-          offsetX = event.clientX - bounds.left;
-          offsetY = event.clientY - bounds.top;
+          startPointerX = (event.clientX - screenBounds.left) * scaleX;
+          startPointerY = (event.clientY - screenBounds.top) * scaleY;
+          startLeft = object.offsetLeft;
+          startTop = object.offsetTop;
           object.setPointerCapture(event.pointerId);
           object.classList.add("is-dragging");
           event.preventDefault();
         });
         on(object, "pointermove", (event) => {
           if (pointerId !== event.pointerId) return;
-          const bounds = screen.getBoundingClientRect();
-          object.style.left = `${event.clientX - bounds.left - offsetX}px`;
-          object.style.top = `${event.clientY - bounds.top - offsetY}px`;
+          const screenBounds = screen.getBoundingClientRect();
+          const scaleX = screen.clientWidth / screenBounds.width;
+          const scaleY = screen.clientHeight / screenBounds.height;
+          const pointerX = (event.clientX - screenBounds.left) * scaleX;
+          const pointerY = (event.clientY - screenBounds.top) * scaleY;
+          object.style.left = `${startLeft + pointerX - startPointerX}px`;
+          object.style.top = `${startTop + pointerY - startPointerY}px`;
           event.preventDefault();
         });
         const finishDrag = (event: PointerEvent) => {

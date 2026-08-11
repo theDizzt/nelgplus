@@ -23,6 +23,11 @@
   white-space: pre-wrap;
 }
 
+.level-24__source code {
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font: inherit;
+}
+
 .level-24__heading {
   z-index: 5;
   color: #000;

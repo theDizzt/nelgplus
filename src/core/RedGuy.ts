@@ -31,6 +31,7 @@ export interface RedGuyOptions {
   readonly bodyHeight?: number;
   readonly moveAcceleration?: number;
   readonly groundDeceleration?: number;
+  readonly crouchDeceleration?: number;
   readonly maximumMoveSpeed?: number;
   readonly jumpSpeed?: number;
   readonly gravity?: number;
@@ -79,6 +80,7 @@ export class RedGuyController {
   private readonly bodyHeight: number;
   private readonly moveAcceleration: number;
   private readonly groundDeceleration: number;
+  private readonly crouchDeceleration: number;
   private readonly maximumMoveSpeed: number;
   private readonly jumpSpeed: number;
   private readonly gravity: number;
@@ -109,12 +111,13 @@ export class RedGuyController {
     this.bounds = options.bounds ?? { x: 0, y: 0, width: 800, height: 600 };
     this.bodyWidth = options.bodyWidth ?? 38;
     this.bodyHeight = options.bodyHeight ?? 72;
-    this.moveAcceleration = options.moveAcceleration ?? 1_700;
-    this.groundDeceleration = options.groundDeceleration ?? 720;
-    this.maximumMoveSpeed = options.maximumMoveSpeed ?? 230;
-    this.jumpSpeed = options.jumpSpeed ?? 510;
-    this.gravity = options.gravity ?? 1_450;
-    this.maximumFallSpeed = options.maximumFallSpeed ?? 760;
+    this.moveAcceleration = options.moveAcceleration ?? 820;
+    this.groundDeceleration = options.groundDeceleration ?? 180;
+    this.crouchDeceleration = options.crouchDeceleration ?? 1_500;
+    this.maximumMoveSpeed = options.maximumMoveSpeed ?? 240;
+    this.jumpSpeed = options.jumpSpeed ?? 520;
+    this.gravity = options.gravity ?? 1_050;
+    this.maximumFallSpeed = options.maximumFallSpeed ?? 590;
 
     this.element = document.createElement("div");
     this.element.className = "red-guy";
@@ -219,7 +222,11 @@ export class RedGuyController {
         this.moveAcceleration * airControl * deltaSeconds,
       );
     } else {
-      const deceleration = this.grounded ? this.groundDeceleration : this.groundDeceleration * 0.08;
+      const deceleration = this.grounded
+        ? crouching
+          ? this.crouchDeceleration
+          : this.groundDeceleration
+        : this.groundDeceleration * 0.08;
       this.velocityX = approach(this.velocityX, 0, deceleration * deltaSeconds);
     }
 

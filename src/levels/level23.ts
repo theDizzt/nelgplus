@@ -60,26 +60,27 @@ export const level23: LevelDefinition = {
 
     let dragged: HTMLElement | undefined;
     let activePointer: number | undefined;
-    let offsetX = 0;
-    let offsetY = 0;
+    let startPointerX = 0;
+    let startPointerY = 0;
+    let startLeft = 0;
+    let startTop = 0;
 
     listen(interactive, "pointerdown", (event) => {
       const object = (event.target as Element).closest<HTMLElement>(".level-23__drag");
       if (!object) return;
       const screenBounds = screen.getBoundingClientRect();
-      const objectBounds = object.getBoundingClientRect();
       const scaleX = screen.clientWidth / screenBounds.width;
       const scaleY = screen.clientHeight / screenBounds.height;
       dragged = object;
       activePointer = event.pointerId;
-      offsetX = (event.clientX - objectBounds.left) * scaleX;
-      offsetY = (event.clientY - objectBounds.top) * scaleY;
-      object.style.left = `${(objectBounds.left - screenBounds.left) * scaleX}px`;
-      object.style.top = `${(objectBounds.top - screenBounds.top) * scaleY}px`;
+      startPointerX = (event.clientX - screenBounds.left) * scaleX;
+      startPointerY = (event.clientY - screenBounds.top) * scaleY;
+      startLeft = object.offsetLeft;
+      startTop = object.offsetTop;
+      object.style.left = `${startLeft}px`;
+      object.style.top = `${startTop}px`;
       object.style.right = "auto";
       object.style.bottom = "auto";
-      object.style.transform = "none";
-      object.style.rotate = "0deg";
       object.classList.add("is-dragging");
       object.setPointerCapture(event.pointerId);
       event.preventDefault();
@@ -90,8 +91,10 @@ export const level23: LevelDefinition = {
       const bounds = screen.getBoundingClientRect();
       const scaleX = screen.clientWidth / bounds.width;
       const scaleY = screen.clientHeight / bounds.height;
-      dragged.style.left = `${(event.clientX - bounds.left) * scaleX - offsetX}px`;
-      dragged.style.top = `${(event.clientY - bounds.top) * scaleY - offsetY}px`;
+      const pointerX = (event.clientX - bounds.left) * scaleX;
+      const pointerY = (event.clientY - bounds.top) * scaleY;
+      dragged.style.left = `${startLeft + pointerX - startPointerX}px`;
+      dragged.style.top = `${startTop + pointerY - startPointerY}px`;
       event.preventDefault();
     });
 
