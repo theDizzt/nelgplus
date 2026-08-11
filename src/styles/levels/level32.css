@@ -1,114 +1,209 @@
 .level-32 {
-  color: #f4f7ff;
-  background:
-    linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px),
-    linear-gradient(180deg, #273750 0%, #182238 58%, #101726 100%);
-  background-size: 40px 40px, 40px 40px, auto;
+  overflow: hidden;
   font-family: "NELG Courier", Courier, "Courier New", monospace;
 }
 
-.level-32__heading {
-  position: absolute;
-  z-index: 3;
-  top: 23px;
-  left: 27px;
-  color: #fff;
-  text-shadow: 3px 3px 0 #07101f;
-  pointer-events: none;
+.level-32--scene-1,
+.level-32--scene-2,
+.level-32--scene-3 {
+  color: #000;
+  background-color: #173e6c;
 }
 
-.level-32__heading > div {
-  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
-  font-size: 64px;
-  line-height: 0.9;
+.level-32--scene-1 {
+  background-image:
+    linear-gradient(rgb(5 21 49 / 10%), rgb(0 0 0 / 8%)),
+    var(--level-32-background);
+  background-position: center;
+  background-size: cover;
+}
+
+.level-32__heading {
+  z-index: 20;
+  color: #fff;
+  pointer-events: none;
+  text-shadow: 3px 3px 2px rgb(0 0 0 / 72%);
 }
 
 .level-32__heading h1 {
-  margin: 7px 0 0 5px;
-  color: #ff5b53;
-  font: 700 21px/1 "NELG Courier", Courier, monospace;
-  letter-spacing: 1px;
+  text-transform: none;
 }
 
-.level-32__help,
-.level-32__status {
+.level-32__platforms {
   position: absolute;
   z-index: 4;
-  top: 22px;
-  padding: 11px 14px;
-  border: 2px solid #8fa4c5;
-  background: rgb(5 12 24 / 78%);
-  box-shadow: 4px 4px 0 rgb(0 0 0 / 35%);
-  font-size: 13px;
-}
-
-.level-32__help {
-  right: 22px;
-  display: grid;
-  gap: 7px;
-  width: 205px;
-}
-
-.level-32__help strong { color: #ffda45; font-size: 15px; }
-.level-32__help span { display: flex; align-items: center; gap: 5px; }
-.level-32__help kbd {
-  min-width: 22px;
-  padding: 2px 4px;
-  color: #101726;
-  background: #eaf0fa;
-  border: 2px outset #fff;
-  text-align: center;
-  font: 700 13px/1 Arial, sans-serif;
-}
-
-.level-32__status {
-  top: 145px;
-  right: 22px;
-  display: grid;
-  gap: 6px;
-  width: 205px;
-  color: #9badc8;
-}
-
-.level-32__status span { display: flex; justify-content: space-between; gap: 12px; }
-.level-32__status b { color: #59f0a6; font-weight: 700; }
-
-.level-32__reset {
-  position: absolute;
-  z-index: 30;
-  top: 238px;
-  right: 22px;
-  width: 92px;
-  height: 34px;
-  color: #fff;
-  background: #b8292f;
-  border: 3px outset #ef6767;
-  cursor: pointer;
-  font: 700 15px/1 "NELG Courier", Courier, monospace;
-}
-
-.level-32__reset:active { border-style: inset; }
-.level-32__start-label {
-  position: absolute;
-  z-index: 2;
-  top: 497px;
-  left: 44px;
-  color: #8fa4c5;
-  font: 700 12px/1 "NELG Courier", Courier, monospace;
+  inset: 0;
   pointer-events: none;
 }
 
 .level-32__platform {
   position: absolute;
-  z-index: 2;
-  background: linear-gradient(180deg, #88a4c8 0 6px, #3f5676 6px 100%);
-  border: 2px solid #0a1220;
-  box-shadow: inset 0 -5px 0 rgb(0 0 0 / 18%);
+  box-sizing: border-box;
+  background:
+    linear-gradient(90deg, transparent 0 14%, rgb(255 255 255 / 22%) 28%, transparent 44% 68%, rgb(255 255 255 / 18%) 82%, transparent),
+    linear-gradient(180deg, #c2cad3 0%, #8995a5 43%, #4b5668 48%, #8792a0 100%);
+  border: 3px solid #050505;
+  box-shadow: inset 0 0 10px rgb(255 255 255 / 48%);
+}
+
+.level-32__platform--unstable::after {
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgb(53 11 11 / 45%);
+  content: "";
+  opacity: 0;
+}
+
+.level-32__platform--unstable.is-triggered::after {
+  opacity: 1;
+  animation: level-32-platform-warning 60ms steps(2, end) infinite;
+}
+
+.level-32__platform.is-falling {
+  filter: brightness(0.82);
+}
+
+.level-32__platform--draggable {
+  z-index: 7;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-32__platform--draggable.is-dragging {
+  cursor: grabbing;
+  filter: brightness(1.22);
+}
+
+.level-32__portal {
+  position: absolute;
+  z-index: 8;
+  box-sizing: border-box;
+  background: #10ff00;
+  border: 4px solid #050505;
+  box-shadow: 0 0 0 2px #ffff00;
+  animation: level-32-portal-flash 220ms steps(1, end) infinite;
+}
+
+.level-32__portal i {
+  position: absolute;
+  box-sizing: border-box;
+  border: 4px solid #0b0b0b;
+}
+
+.level-32__portal i:nth-child(1) { inset: 5px; border-color: #ffff00; }
+.level-32__portal i:nth-child(2) { inset: 12px; border-color: #0b0b0b; }
+.level-32__portal i:nth-child(3) { inset: 19px; border-color: #ffff00; }
+.level-32__portal i:nth-child(4) { inset: 25px; background: #0b0b0b; border: 0; }
+
+.level-32__portal i:nth-child(1),
+.level-32__portal i:nth-child(3) {
+  animation: level-32-portal-rings 220ms steps(1, end) infinite;
+}
+
+.level-32__die {
+  position: absolute;
+  z-index: 40;
+  top: 18px;
+  right: 18px;
+  width: 58px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-32__die:hover,
+.level-32__die:focus-visible {
+  background: #f01818;
+  outline: none;
+}
+
+.level-32__die:active {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-32--scene-2::before,
+.level-32--scene-3::before {
+  position: absolute;
+  z-index: 0;
+  inset: -18px;
+  background-image: var(--level-32-background);
+  background-position: center;
+  background-size: cover;
+  content: "";
   pointer-events: none;
 }
 
-.level-32__platform--0 {
-  background: linear-gradient(180deg, #77d188 0 7px, #354b42 7px 100%);
-  border-width: 3px 0 0;
+.level-32--scene-2::before {
+  filter: saturate(1.28) contrast(1.12) brightness(0.9);
+  transform: scale(1.06);
+}
+
+.level-32--scene-3::before {
+  filter: saturate(1.15) contrast(1.08);
+  transform: rotate(180deg) scale(1.07);
+}
+
+.level-32--fail {
+  color: #000;
+  background: radial-gradient(circle at 50% 58%, #f10000 0%, #a40000 42%, #260000 78%, #000 120%);
+}
+
+.level-32--fail .level-32__heading {
+  color: #000;
+  text-shadow: 2px 2px 0 rgb(255 0 0 / 30%);
+}
+
+.level-32__death-message {
+  position: absolute;
+  z-index: 4;
+  top: 225px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 116px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 3px 3px 0 rgb(255 40 40 / 20%);
+}
+
+.level-32--scene-4 {
+  color: #000;
+  background: #000;
+}
+
+.level-32--scene-4 .level-32__heading {
+  color: #000;
+  text-shadow: none;
+}
+
+.level-32__scene-pending {
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes level-32-portal-flash {
+  0%, 49% { background: #10ff00; filter: none; }
+  50%, 100% { background: #ffff00; filter: none; }
+}
+
+@keyframes level-32-portal-rings {
+  0%, 49% { border-color: #ffff00; }
+  50%, 100% { border-color: #10ff00; }
+}
+
+@keyframes level-32-platform-warning {
+  50% { border-color: #ff1b00; opacity: 0.2; }
 }

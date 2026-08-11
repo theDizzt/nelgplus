@@ -2,7 +2,6 @@
 @import "./base.css";
 @import "./components/password-input.css";
 @import "./components/red-guy.css";
-@import "./components/level-heading.css";
 @import "./components/buttons.css";
 @import "./menu.css";
 @import "./warp-zone.css";
@@ -39,3 +38,4 @@
 @import "./levels/level30.css";
 @import "./levels/level31.css";
 @import "./levels/level32.css";
+@import "./components/level-heading.css";
