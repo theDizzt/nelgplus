@@ -1,0 +1,121 @@
+.level-15 {
+  color: #050505;
+  background: #ff5f9b;
+}
+
+.level-15__heading {
+  top: 43px;
+}
+
+.level-15__heading h1 {
+  margin-top: 5px;
+  text-transform: none;
+}
+
+.level-15__boxes {
+  position: absolute;
+  top: 218px;
+  left: 75px;
+  display: flex;
+  gap: 20px;
+}
+
+.level-15__box {
+  display: grid;
+  place-items: center;
+  width: 114px;
+  height: 132px;
+  color: #050505;
+  background: #00eca2;
+  border: 5px solid #111;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: lowercase;
+  transition: color 90ms linear, background 90ms linear, scale 100ms ease;
+}
+
+.level-15__box--different {
+  background: #ad7478;
+}
+
+.level-15__box.is-revealed {
+  color: #d60000;
+  scale: 1.04;
+}
+
+.level-15__message {
+  position: absolute;
+  top: 382px;
+  left: 24px;
+  width: 752px;
+  margin: 0;
+  text-align: center;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.level-15__form {
+  position: absolute;
+  bottom: 34px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-15__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-15__form input:focus {
+  outline: none;
+}
+
+.level-15__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-15__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-15__form button:hover:not(:disabled),
+.level-15__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-15__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-15__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

@@ -1,0 +1,211 @@
+.level-25 {
+  color: #000;
+  overflow: hidden;
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-weight: 700;
+}
+
+.level-25--puzzle {
+  background: #20ff00;
+}
+
+.level-25__heading {
+  z-index: 8;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-25__heading .level-heading__number {
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-weight: 400;
+}
+
+.level-25__heading h1 {
+  font-family: "NELG Courier", Courier, monospace;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.level-25__maze {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 800px;
+  height: 600px;
+  pointer-events: none;
+}
+
+.level-25__patrol-path {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.level-25__maze-shape {
+  fill: url("#level-25-maze-rainbow");
+  stroke: #000;
+  stroke-width: 2px;
+  stroke-linejoin: miter;
+}
+
+.level-25__route-hit {
+  fill: transparent;
+  stroke: none;
+}
+
+.level-25__patrol-path { stroke: transparent; stroke-width: 1px; }
+
+.level-25__dice-buttons,
+.level-25__patrol-boxes {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-25__patrol-boxes { z-index: 3; }
+
+.level-25__dice {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  appearance: none;
+  background: #064edb;
+  border: 4px solid #001847;
+  border-radius: 7px;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+  pointer-events: auto;
+}
+
+.level-25__dice:hover,
+.level-25__dice:focus-visible { background: #064edb; border-color: #001847; outline: none; }
+
+.level-25__dice--pressed,
+.level-25__dice--pressed:hover,
+.level-25__dice--pressed:focus-visible {
+  background: #fff;
+  border-color: #001847;
+}
+
+.level-25__dice--pressed i { background: #064edb; }
+
+.level-25__dice i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+
+.level-25__dice i:nth-child(1) { top: 9px; left: 9px; }
+.level-25__dice i:nth-child(2) { right: 2px; bottom: 2px; }
+.level-25__dice--1 i:nth-child(1),
+.level-25__dice--3 i:nth-child(2),
+.level-25__dice--5 i:nth-child(3) { top: 50%; left: 50%; right: auto; bottom: auto; }
+.level-25__dice--2 i:nth-child(2),
+.level-25__dice--3 i:nth-child(3),
+.level-25__dice--4 i:nth-child(4),
+.level-25__dice--5 i:nth-child(5),
+.level-25__dice--6 i:nth-child(6) { top: auto; right: 2px; bottom: 2px; left: auto; }
+.level-25__dice--4 i:nth-child(2),
+.level-25__dice--5 i:nth-child(2),
+.level-25__dice--6 i:nth-child(2) { top: 9px; right: 2px; bottom: auto; left: auto; }
+.level-25__dice--4 i:nth-child(3),
+.level-25__dice--5 i:nth-child(4),
+.level-25__dice--6 i:nth-child(5) { top: auto; bottom: 2px; left: 9px; right: auto; }
+.level-25__dice--6 i:nth-child(3) { top: 50%; left: 9px; }
+.level-25__dice--6 i:nth-child(4) { top: 50%; right: 2px; left: auto; }
+
+.level-25__patrol-box {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 42px;
+  height: 42px;
+  color: #00ff03;
+  background: #00ff00;
+  border: 3px solid #000;
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  rotate: 0deg;
+  box-shadow: none;
+}
+
+.level-25__password-prompt {
+  position: absolute;
+  z-index: 10;
+  top: 180px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 7px 0;
+  color: #000;
+  background: rgb(255 255 255 / 72%);
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.level-25__password-prompt[hidden] { display: none; }
+
+.level-25--error { color: var(--level-25-error-heading); }
+.level-25--error-wall { background: #00a829; }
+.level-25--error-escape { background: radial-gradient(circle, #ef1111 0 18%, #730000 47%, #000 100%); }
+.level-25--error-order { background: radial-gradient(circle, #146cff 0 18%, #001c6d 49%, #000 100%); }
+.level-25--error-box { background: #000; }
+.level-25__heading--error { color: var(--level-25-error-heading); }
+
+.level-25__error-message {
+  position: absolute;
+  top: 245px;
+  left: 45px;
+  width: 710px;
+  margin: 0;
+  color: var(--level-25-error-heading);
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.12;
+  text-align: center;
+}
+
+.level-25--error-order .level-25__error-message {
+  top: 232px;
+  left: 75px;
+  width: 650px;
+  font-size: 29px;
+  line-height: 1.08;
+}
+
+.level-25--error-order .level-25__try-again { top: 350px; }
+
+.level-25__try-again {
+  position: absolute;
+  top: 330px;
+  left: 345px;
+  width: 110px;
+  height: 44px;
+  color: var(--level-25-error-heading);
+  background: transparent;
+  border: 3px solid currentColor;
+  cursor: pointer;
+  font-family: "NELG Perpetua", Perpetua, serif;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.level-25__try-again:hover,
+.level-25__try-again:focus-visible {
+  color: #fff;
+  background: var(--level-25-error-heading);
+  outline: none;
+}

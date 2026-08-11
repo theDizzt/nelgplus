@@ -1,0 +1,147 @@
+.level-21 {
+  color: #00ff00;
+}
+
+.level-21--puzzle {
+  background:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 34%)),
+    url("/assets/images/level21a.jpg") center / cover no-repeat;
+}
+
+.level-21__heading {
+  z-index: 5;
+  color: #00ff00;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+}
+
+.level-21__heading h1 {
+  text-transform: none;
+}
+
+.level-21__message {
+  position: absolute;
+  top: 278px;
+  left: 55px;
+  width: 690px;
+  margin: 0;
+  color: #ffff00;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 29px;
+  font-style: italic;
+  font-weight: 700;
+  text-align: center;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+  rotate: -2deg;
+}
+
+.level-21__form {
+  position: absolute;
+  bottom: 64px;
+  left: 0;
+  width: 100%;
+}
+
+.level-21__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-21__form input {
+  padding: 4px 8px;
+  color: #7cfc00;
+  background: #228b22;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 3px rgb(0 0 0 / 45%);
+  outline: none;
+  caret-color: #7cfc00;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-21__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-21__form input.is-wrong {
+  background: #8b2222;
+  animation: level-20-wrong-shake 180ms linear 2;
+}
+
+.level-21__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #7cfc00;
+  background: #228b22;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-21__form button:hover,
+.level-21__form button:focus-visible {
+  color: #111;
+  background: #7cfc00;
+  outline: none;
+}
+
+.level-21--failure {
+  background: #228b22;
+}
+
+.level-21__heading--failure {
+  text-shadow: none;
+}
+
+.level-21__no {
+  position: absolute;
+  top: 205px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #00ff00;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 210px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.level-21__back {
+  position: absolute;
+  bottom: 53px;
+  left: 50%;
+  width: 176px;
+  height: 58px;
+  color: #003d16;
+  background: #25c95a;
+  border: 4px solid #003d16;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  translate: -50% 0;
+}
+
+.level-21__back:hover,
+.level-21__back:focus-visible {
+  color: #25c95a;
+  background: #003d16;
+  outline: none;
+}

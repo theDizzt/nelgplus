@@ -1,0 +1,204 @@
+.warp-gate {
+  position: absolute;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at center, rgb(15 66 220 / 20%) 0%, rgb(3 22 92 / 48%) 48%, rgb(0 0 0 / 94%) 100%),
+    url("/assets/images/warp.png") center / cover no-repeat;
+}
+
+.warp-gate__heading {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 45%);
+}
+
+.warp-gate__heading h1 {
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 104px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.warp-gate__heading p {
+  margin: 8px 0 0;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.warp-gate__form {
+  position: absolute;
+  bottom: 51px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  translate: -50% 0;
+}
+
+.warp-gate__form input {
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  opacity: 1;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.warp-gate__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.warp-gate__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  opacity: 1;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.warp-gate__form button:hover:not(:disabled),
+.warp-gate__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.warp-gate__form button:active:not(:disabled) {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.warp-gate__form input:disabled,
+.warp-gate__form button:disabled {
+  cursor: default;
+}
+
+.warp-gate__form input.is-wrong {
+  background: #ff9c9c;
+  animation: warp-password-error 180ms linear 2;
+}
+
+.warp-gate__feedback {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  margin: 0;
+  color: #ff8b8b;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  translate: -50% 0;
+}
+
+.warp-gate__back {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 3px 5px rgb(0 0 0 / 55%);
+}
+
+.warp-gate__back:hover,
+.warp-gate__back:focus-visible {
+  color: #ffff00;
+  outline: none;
+}
+
+.warp-checkpoint__message {
+  position: absolute;
+  top: 206px;
+  left: 45px;
+  width: 430px;
+  margin: 0;
+  color: #fff;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  font-size: 22px;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 72%);
+}
+
+.warp-checkpoint__next {
+  position: absolute;
+  top: 318px;
+  right: 52px;
+  width: 230px;
+  height: 122px;
+  padding: 0;
+  color: #050505;
+  background: #ffff00;
+  border: 6px solid #080808;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.warp-checkpoint__next:hover,
+.warp-checkpoint__next:focus-visible {
+  color: #fff;
+  background: #e01919;
+  outline: none;
+}
+
+.warp-checkpoint__next:active {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.warp-checkpoint__password {
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  width: 100%;
+  color: #fff;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  font-size: 66px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 5px #00d9ff, 0 0 14px #00b7ff, 0 0 28px #0088ff;
+}
+
+@keyframes warp-password-error {
+  0%,
+  100% {
+    translate: 0;
+  }
+
+  50% {
+    translate: 7px 0;
+  }
+}

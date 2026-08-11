@@ -1,0 +1,168 @@
+.level-07 {
+  color: #050505;
+  background: #00ffff;
+  overflow: hidden;
+}
+
+.level-07__heading {
+  z-index: 30;
+  top: 43px;
+  pointer-events: none;
+}
+
+.level-07__heading h1 {
+  margin-top: -5px;
+  text-transform: none;
+}
+
+.level-07__message {
+  position: absolute;
+  z-index: 30;
+  top: 185px;
+  left: 70px;
+  width: 660px;
+  margin: 0;
+  text-align: center;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.level-07__finish {
+  position: absolute;
+  z-index: 2;
+  top: 54%;
+  left: 50%;
+  width: 112px;
+  height: 112px;
+  padding: 0;
+  background: #e01818;
+  border: 5px solid #080808;
+  border-radius: 50%;
+  box-shadow: 0 5px 0 #080808;
+  cursor: default;
+  translate: -50% -50%;
+  transition: translate 70ms ease, box-shadow 70ms ease, background 70ms ease;
+}
+
+.level-07__finish:disabled {
+  opacity: 1;
+}
+
+.level-07__finish.is-ready {
+  z-index: 20;
+  cursor: pointer;
+}
+
+.level-07__finish.is-ready:hover,
+.level-07__finish.is-ready:focus-visible {
+  background: #f12727;
+  outline: none;
+}
+
+.level-07__finish.is-ready:active {
+  box-shadow: 0 1px 0 #080808;
+  translate: -50% calc(-50% + 4px);
+}
+
+.level-07__clutter {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+}
+
+.level-07__object {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  filter: drop-shadow(5px 7px 0 rgb(0 0 0 / 30%));
+}
+
+.level-07__object.is-dragging {
+  z-index: 100;
+  cursor: grabbing;
+}
+
+.level-07__object.is-cleared {
+  display: none;
+}
+
+.level-07__object--1 {
+  top: 260px; left: 250px; width: 145px; height: 105px;
+  background: repeating-linear-gradient(45deg, #ff20a8 0 14px, #ffe600 14px 28px);
+  border: 8px ridge #6000a0; rotate: -16deg;
+}
+
+.level-07__object--2 {
+  top: 230px; left: 365px; width: 122px; height: 122px;
+  background: radial-gradient(circle at 35% 30%, #fff 0 9%, #54ee55 10% 31%, #073f00 32% 50%, #ff7a00 51%);
+  border: 7px double #001d5c; border-radius: 50%;
+}
+
+.level-07__object--3 {
+  top: 250px; left: 455px; width: 160px; height: 120px;
+  background: #8c35ff; border: 8px solid #151515;
+  clip-path: polygon(50% 0, 61% 31%, 96% 18%, 70% 50%, 100% 73%, 62% 70%, 50% 100%, 38% 70%, 0 75%, 30% 50%, 4% 18%, 39% 31%);
+  rotate: 12deg;
+}
+
+.level-07__object--4 {
+  top: 330px; left: 225px; width: 175px; height: 78px;
+  background: linear-gradient(90deg, #101010 0 14%, #e7e7e7 14% 28%, #101010 28% 42%, #e7e7e7 42% 56%, #101010 56% 70%, #e7e7e7 70% 84%, #101010 84%);
+  border: 6px solid #ff3b00; border-radius: 48% 12% 45% 8%; rotate: 21deg;
+}
+
+.level-07__object--5 {
+  top: 335px; left: 340px; width: 134px; height: 118px;
+  background: conic-gradient(#f00, #ff0, #00ff61, #00bdff, #3214ff, #ff00cb, #f00);
+  border: 9px dotted #111; border-radius: 30% 70% 62% 38% / 47% 32% 68% 53%; rotate: -9deg;
+}
+
+.level-07__object--6 {
+  top: 325px; left: 440px; width: 170px; height: 105px;
+  background: #ffe600; border: 7px solid #0047d9;
+  clip-path: polygon(0 22%, 27% 22%, 35% 0, 48% 27%, 100% 27%, 73% 55%, 100% 100%, 45% 77%, 20% 100%, 24% 60%, 0 52%);
+  rotate: 7deg;
+}
+
+.level-07__object--7 {
+  top: 400px; left: 250px; width: 118px; height: 126px;
+  background: linear-gradient(135deg, #00fff2 0 47%, #00383a 48% 54%, #ff4a12 55%);
+  border: 8px outset #dedede; border-radius: 65% 35% 18% 82% / 33% 70% 30% 67%; rotate: -20deg;
+}
+
+.level-07__object--8 {
+  top: 410px; left: 345px; width: 150px; height: 86px;
+  background: repeating-radial-gradient(circle at 15px 15px, #ffed00 0 7px, #ed1818 8px 14px, #281050 15px 22px);
+  border: 8px dashed #fff; border-radius: 14px; rotate: 14deg;
+}
+
+.level-07__object--9 {
+  top: 390px; left: 470px; width: 125px; height: 130px;
+  background: #ff6ea9; border: 8px solid #46001e;
+  clip-path: polygon(50% 0, 63% 30%, 100% 19%, 78% 50%, 100% 80%, 63% 70%, 50% 100%, 36% 70%, 0 81%, 22% 50%, 0 20%, 37% 30%);
+  rotate: 25deg;
+}
+
+.level-07__object--10 {
+  top: 465px; left: 290px; width: 142px; height: 90px;
+  background: linear-gradient(25deg, #3d00a3 0 28%, #ff8200 29% 61%, #00d84c 62%);
+  border: 9px groove #ffe8c4; border-radius: 50% 15% 50% 15%; rotate: 8deg;
+}
+
+.level-07__object--11 {
+  top: 470px; left: 400px; width: 92px; height: 112px;
+  background: repeating-linear-gradient(90deg, #c4ff00 0 9px, #191919 9px 18px);
+  border: 7px solid #d600ff; clip-path: polygon(50% 0, 100% 100%, 0 100%); rotate: -13deg;
+}
+
+.level-07__object--12 {
+  top: 448px; left: 480px; width: 120px; height: 108px;
+  background: radial-gradient(ellipse at center, #fff 0 12%, #0070ff 13% 28%, #101010 29% 40%, #ffdd00 41% 64%, #d11cff 65%);
+  border: 8px double #111; border-radius: 24% 76% 33% 67% / 70% 23% 77% 30%; rotate: 17deg;
+}

@@ -1,0 +1,62 @@
+.level-26 {
+  color: #000;
+  background: #808080;
+}
+
+.level-26__heading { color: #000; }
+.level-26__heading h1 { text-transform: none; }
+
+.level-26__message {
+  position: absolute;
+  top: 278px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 27px;
+  text-align: center;
+}
+
+.level-26__form {
+  position: absolute;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-26__controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+
+.level-26__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 20%);
+  outline: none;
+  caret-color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-26__form input:focus { border-color: #000; outline: none; }
+.level-26__form input.is-wrong { background: #f4a1a1; animation: level-20-wrong-shake 180ms linear 2; }
+
+.level-26__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #000;
+  background: #ffff00;
+  border: 3px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-26__form button:hover:not(:disabled),
+.level-26__form button:focus-visible:not(:disabled) { color: #fff; background: #000; outline: none; }
+.level-26__form button:active:not(:disabled) { background: radial-gradient(circle, #fff 0 28%, #777 55%, #000 100%); }

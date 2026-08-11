@@ -1,0 +1,25 @@
+.red-guy {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 64px;
+  height: 82px;
+  pointer-events: none;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.red-guy__sprite {
+  display: block;
+  max-width: 64px;
+  max-height: 82px;
+  image-rendering: pixelated;
+  transform: scaleX(1);
+  transform-origin: center bottom;
+}
+
+.red-guy[data-facing="left"] .red-guy__sprite { transform: scaleX(-1); }

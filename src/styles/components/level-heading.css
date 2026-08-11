@@ -1,0 +1,20 @@
+.level-heading {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.level-heading__number {
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 104px;
+  line-height: 0.9;
+}
+
+.level-heading h1 {
+  margin: 8px 0 0;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 25px;
+  line-height: 1;
+}

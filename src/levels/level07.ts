@@ -78,14 +78,16 @@ export const level07: LevelDefinition = {
       const object = (event.target as Element).closest<HTMLElement>(".level-07__object");
       if (!object || !clutter.contains(object) || object.classList.contains("is-cleared")) return;
 
-      const screenBounds = screen.getBoundingClientRect();
+      const clutterBounds = clutter.getBoundingClientRect();
       const objectBounds = object.getBoundingClientRect();
+      const scaleX = clutter.clientWidth / clutterBounds.width;
+      const scaleY = clutter.clientHeight / clutterBounds.height;
       draggedObject = object;
       activePointer = event.pointerId;
-      pointerOffsetX = event.clientX - objectBounds.left;
-      pointerOffsetY = event.clientY - objectBounds.top;
-      object.style.left = `${objectBounds.left - screenBounds.left}px`;
-      object.style.top = `${objectBounds.top - screenBounds.top}px`;
+      pointerOffsetX = (event.clientX - objectBounds.left) * scaleX;
+      pointerOffsetY = (event.clientY - objectBounds.top) * scaleY;
+      object.style.left = `${(objectBounds.left - clutterBounds.left) * scaleX}px`;
+      object.style.top = `${(objectBounds.top - clutterBounds.top) * scaleY}px`;
       object.style.rotate = "none";
       object.style.transform = "none";
       object.classList.add("is-dragging");
@@ -95,14 +97,16 @@ export const level07: LevelDefinition = {
 
     listen(clutter, "pointermove", (event) => {
       if (!draggedObject || event.pointerId !== activePointer) return;
-      const screenBounds = screen.getBoundingClientRect();
-      draggedObject.style.left = `${event.clientX - screenBounds.left - pointerOffsetX}px`;
-      draggedObject.style.top = `${event.clientY - screenBounds.top - pointerOffsetY}px`;
+      const clutterBounds = clutter.getBoundingClientRect();
+      const scaleX = clutter.clientWidth / clutterBounds.width;
+      const scaleY = clutter.clientHeight / clutterBounds.height;
+      draggedObject.style.left = `${(event.clientX - clutterBounds.left) * scaleX - pointerOffsetX}px`;
+      draggedObject.style.top = `${(event.clientY - clutterBounds.top) * scaleY - pointerOffsetY}px`;
 
       const objectBounds = draggedObject.getBoundingClientRect();
       if (
-        objectBounds.left < screenBounds.left || objectBounds.right > screenBounds.right ||
-        objectBounds.top < screenBounds.top || objectBounds.bottom > screenBounds.bottom
+        objectBounds.left < clutterBounds.left || objectBounds.right > clutterBounds.right ||
+        objectBounds.top < clutterBounds.top || objectBounds.bottom > clutterBounds.bottom
       ) {
         clearObject(draggedObject, event.pointerId);
       }

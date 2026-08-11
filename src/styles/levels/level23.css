@@ -1,0 +1,86 @@
+.level-23 { color: #000; background: #cf0000; overflow: hidden; }
+.level-23__heading {
+  z-index: 20; color: #000;
+  text-shadow: 3px 3px 0 rgb(75 0 0 / 75%);
+}
+.level-23__heading h1 { text-transform: none; }
+.level-23__chaos { position: absolute; z-index: 2; top: 150px; left: 0; width: 800px; height: 410px; pointer-events: none; }
+.level-23__polygons path { stroke: #180000; stroke-linejoin: bevel; stroke-width: 7px; filter: drop-shadow(5px 6px 2px #240000); }
+.level-23__polygons path:nth-child(5n+1) { fill: #580000; }
+.level-23__polygons path:nth-child(5n+2) { fill: #ff1744; }
+.level-23__polygons path:nth-child(5n+3) { fill: #ff7166; }
+.level-23__polygons path:nth-child(5n+4) { fill: #8b0015; }
+.level-23__polygons path:nth-child(5n+5) { fill: #ff406c; }
+.level-23__scribbles path { fill: none; stroke: #320000; stroke-linecap: square; stroke-linejoin: bevel; stroke-width: 8px; }
+.level-23__arrows path { fill: url("#l23-metal"); stroke: #180000; stroke-linejoin: bevel; stroke-width: 7px; filter: drop-shadow(4px 5px 1px #360000); }
+.level-23__bits > * { fill: #ff334e; stroke: #180000; stroke-width: 6px; }
+.level-23__bits circle:nth-child(-n+2) { fill: url("#l23-orb"); }
+.level-23__bits path { fill: none; stroke: #ff6262; stroke-width: 15px; }
+.level-23__rays path { fill: none; stroke: #8f0019; stroke-dasharray: 12 9; stroke-width: 7px; }
+.level-23__interactive { position: absolute; z-index: 9; inset: 0; pointer-events: none; transition: filter 180ms ease; }
+.level-23__toy, .level-23__drag { position: absolute; pointer-events: auto; touch-action: none; user-select: none; }
+.level-23__toy { padding: 0; color: #170000; background: #c40024; border: 6px solid #240000; cursor: pointer; }
+.level-23__toy:focus-visible { outline: 3px dotted #42000c; outline-offset: 3px; }
+.level-23__toy--eye { top: 287px; left: 87px; width: 88px; height: 48px; border-radius: 55% 10%; rotate: -17deg; }
+.level-23__toy--eye span { position: absolute; inset: 7px 27px; background: radial-gradient(circle, #fff 0 12%, #ff4058 17% 44%, #210000 48%); border-radius: 50%; }
+.level-23__toy--gear { top: 199px; right: 80px; width: 67px; height: 67px; background: #ff3654; clip-path: polygon(35% 0,55% 12%,75% 2%,82% 24%,100% 35%,87% 54%,98% 75%,73% 79%,60% 100%,42% 84%,18% 98%,14% 72%,0 55%,17% 38%,8% 16%,31% 18%); font: 700 53px/1 Arial; }
+.level-23__toy--switch { top: 190px; left: 216px; width: 55px; height: 78px; background: linear-gradient(145deg,#ff7a70,#8d0016); transform: skew(-12deg); font: 700 43px/1.5 Arial; }
+.level-23__toy--orb { top: 353px; right: 96px; width: 70px; height: 70px; border-radius: 50%; background: repeating-radial-gradient(circle,#fff 0 3px,#ff334f 4px 9px,#510000 10px 15px); }
+.level-23__toy--stamp { top: 431px; left: 42px; width: 61px; height: 61px; color: #ffb0b0; background: #600010; transform: rotate(22deg); font: 900 43px/1 Arial; }
+.level-23__toy--spin.is-active { animation: level-23-spin 600ms cubic-bezier(.2,.8,.2,1); }
+.level-23__toy--gear.is-active { animation: level-23-spin 600ms cubic-bezier(.2,.8,.2,1); }
+.level-23__toy--eye.is-active { animation: level-23-blink 600ms steps(3); }
+.level-23__toy--switch.is-active { filter: invert(1); }
+.level-23__toy--orb.is-active { animation: level-23-orb 650ms ease-out; }
+.level-23__toy--stamp.is-active { transform: scale(.72) rotate(-20deg); }
+
+.level-23__drag { z-index: 4; cursor: grab; filter: drop-shadow(5px 6px 0 #510000); }
+.level-23__drag.is-dragging { z-index: 40; cursor: grabbing; filter: drop-shadow(10px 12px 3px #210000); }
+.level-23__drag--one { top: 322px; left: 151px; width: 75px; height: 75px; background: #ff5664; border: 7px solid #260000; rotate: 45deg; }
+.level-23__drag--two { top: 286px; right: 166px; width: 123px; height: 76px; border: 20px solid #630012; border-top-color: transparent; border-left-color: #ff3850; transform: skew(17deg) rotate(-12deg); }
+.level-23__drag--three { top: 446px; left: 245px; width: 74px; height: 74px; border: 7px solid #220000; border-radius: 50%; background: repeating-linear-gradient(45deg,#4e000a 0 8px,#ff3652 8px 16px); }
+.level-23__drag--four { top: 414px; right: 247px; color: #ff5060; font: 900 106px/1 "NELG Arial", Arial, sans-serif; -webkit-text-stroke: 5px #260000; rotate: 18deg; }
+
+.level-23__decoy { position: absolute; width: 24px; height: 154px; background: #150000; border: 4px solid #260000; box-shadow: 6px 6px 0 #760014; pointer-events: none; }
+.level-23__decoy--one { top: 226px; left: 341px; rotate: -35deg; }
+.level-23__decoy--two { top: 250px; right: 326px; height: 128px; rotate: 31deg; background: #8a0017; border-color: #210000; }
+.level-23__decoy--three { top: 338px; left: 420px; height: 113px; rotate: 58deg; background: #ff4054; border-color: #350000; }
+.level-23__decoy--four { top: 231px; right: 224px; height: 92px; rotate: -56deg; background: #42000c; }
+
+.level-23__slash {
+  position: absolute; z-index: 12; top: 244px; left: 50%; color: #190000;
+  font-family: "NELG Arial", Arial, sans-serif; font-size: 164px; font-weight: 900; line-height: 1;
+  pointer-events: none;
+  text-shadow: 6px 7px 0 #5f0010; translate: -50% 0; rotate: 7deg;
+}
+.level-23__effects { position: absolute; z-index: 22; inset: 0; overflow: hidden; pointer-events: none; }
+.level-23__effect-stamp { position: absolute; color: #ff8d94; font: 900 76px/1 "NELG Arial",Arial,sans-serif; -webkit-text-stroke: 4px #270000; animation: level-23-stamp 1.4s ease-out forwards; }
+.level-23__effect-shard { --shard-angle: 0deg; position: absolute; top: 385px; left: 670px; width: 13px; height: 35px; background: #fff; border: 3px solid #240000; rotate: var(--shard-angle); animation: level-23-shard 800ms ease-out forwards; }
+.level-23--inside-out .level-23__chaos, .level-23--inside-out .level-23__interactive { filter: hue-rotate(145deg) saturate(2.2) brightness(.82); }
+.level-23--quake { animation: level-23-quake 520ms steps(2); }
+.level-23__form { position: absolute; z-index: 25; bottom: 43px; left: 0; width: 100%; }
+.level-23__controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.level-23__form input {
+  padding: 4px 8px; color: #000; background: #fff; border: 3px solid #000; border-radius: 0;
+  box-shadow: 4px 4px 0 #6e0000; outline: none; caret-color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif; font-size: 25px;
+}
+.level-23__form input:focus { border-color: #000; outline: none; }
+.level-23__form input.is-wrong { background: #ff8a80; animation: level-20-wrong-shake 180ms linear 2; }
+.level-23__form button {
+  width: 52px; height: 40px; padding: 0; color: #000; background: #ff3b3b; border: 3px solid #000;
+  border-radius: 0; box-shadow: 4px 4px 0 #6e0000; cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif; font-size: 25px; line-height: 1;
+  paint-order: stroke fill; -webkit-text-stroke: 1px #fff;
+}
+.level-23__form button:hover:not(:disabled), .level-23__form button:focus-visible:not(:disabled) {
+  color: #fff; background: #760000; outline: none; -webkit-text-stroke: 1px #000;
+}
+.level-23__form button:active:not(:disabled) { background: radial-gradient(circle, #fff 0 25%, #e00000 48%, #240000 100%); }
+
+@keyframes level-23-spin { to { rotate: 720deg; scale: .72; } }
+@keyframes level-23-blink { 50% { scale: 1 .08; filter: invert(1); } }
+@keyframes level-23-orb { 45% { scale: 2.1; filter: hue-rotate(180deg); } 100% { scale: 1; } }
+@keyframes level-23-stamp { 0% { scale: 3; opacity: 0; } 20% { scale: 1; opacity: 1; } 78% { opacity: 1; } 100% { scale: .7; opacity: 0; } }
+@keyframes level-23-shard { to { translate: calc(cos(var(--shard-angle)) * 180px) calc(sin(var(--shard-angle)) * 180px); rotate: calc(var(--shard-angle) + 240deg); opacity: 0; } }
+@keyframes level-23-quake { 0%,100% { translate: 0; } 20% { translate: -9px 6px; } 40% { translate: 7px -8px; } 60% { translate: -5px -4px; } 80% { translate: 8px 5px; } }

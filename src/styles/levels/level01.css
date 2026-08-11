@@ -1,0 +1,48 @@
+.level-01 {
+  color: #080808;
+  background: #ffe600;
+}
+
+.level-01__instructions {
+  position: absolute;
+  top: 205px;
+  left: 90px;
+  width: 620px;
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.level-01__instructions p {
+  margin: 0 0 10px;
+}
+
+.level-01__instructions em {
+  font-weight: 700;
+}
+
+.level-01__continue {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  width: 112px;
+  height: 112px;
+  padding: 0;
+  background: #e01818;
+  border: 5px solid #080808;
+  border-radius: 50%;
+  box-shadow: 0 5px 0 #080808;
+  cursor: pointer;
+  translate: -50% 0;
+  transition: translate 70ms ease, box-shadow 70ms ease, background 70ms ease;
+}
+
+.level-01__continue:hover,
+.level-01__continue:focus-visible {
+  background: #f12727;
+  outline: none;
+}
+
+.level-01__continue:active {
+  box-shadow: 0 1px 0 #080808;
+  translate: -50% 4px;
+}

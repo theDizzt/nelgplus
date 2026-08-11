@@ -1,0 +1,88 @@
+.level-02 {
+  color: #000;
+  background: #0000ff;
+}
+
+.level-02__heading,
+.level-02__copy,
+.level-02__prompt {
+  z-index: 2;
+}
+
+.level-02__heading {
+  top: 46px;
+}
+
+.level-02__heading h1 {
+  margin-top: 7px;
+  font-size: 27px;
+  font-variant: small-caps;
+}
+
+.level-02__copy {
+  position: absolute;
+  top: 190px;
+  left: 0;
+  width: 100%;
+  color: aqua;
+  text-align: center;
+  font-size: 24px;
+  line-height: 1.02;
+}
+
+.level-02__copy p {
+  margin: 0 0 11px;
+}
+
+.level-02__lead {
+  font-weight: 700;
+}
+
+.level-02__prompt {
+  position: absolute;
+  bottom: 53px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.level-02__orb {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  left: 24px;
+  width: 38px;
+  height: 38px;
+  background: aqua;
+  border: 3px solid #000;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgb(0 255 255 / 72%);
+  animation: level-02-orb-movement 9s linear infinite;
+}
+
+@keyframes level-02-orb-movement {
+  0% {
+    translate: 0 0;
+  }
+  23% {
+    translate: 700px 72px;
+  }
+  51% {
+    translate: 590px 485px;
+  }
+  76% {
+    translate: 72px 410px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-02__orb {
+    animation: none;
+  }
+}

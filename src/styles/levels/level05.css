@@ -1,0 +1,97 @@
+.level-05 {
+  color: #000;
+  background: #ff9900;
+}
+
+.level-05__heading {
+  top: 47px;
+}
+
+.level-05__heading h1 {
+  margin-top: 4px;
+  font-size: 25px;
+  text-transform: none;
+}
+
+.level-05__message {
+  position: absolute;
+  top: 244px;
+  left: 102px;
+  margin: 0;
+  font-size: 25px;
+}
+
+.level-05__form {
+  position: absolute;
+  bottom: 43px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+}
+
+.level-05__form label {
+  font-size: 19px;
+}
+
+.level-05__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-05__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-05__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-05__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-05__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-05__form button:hover:not(:disabled),
+.level-05__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-05__form button:active:not(:disabled) {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-05__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

@@ -1,0 +1,142 @@
+.level-14 {
+  color: #000;
+  background: #087b78;
+  isolation: isolate;
+}
+
+.level-14__background,
+.level-14__shape {
+  position: absolute;
+  inset: 0;
+}
+
+.level-14__background {
+  z-index: -1;
+  pointer-events: none;
+}
+
+.level-14__shape--navy {
+  background: #050572;
+  clip-path: polygon(0 0, 136px 0, 0 290px);
+}
+
+.level-14__shape--red {
+  background: #b40000;
+  clip-path: polygon(438px 0, 800px 0, 800px 176px);
+}
+
+.level-14__shape--brown {
+  background: #ae3600;
+  clip-path: polygon(0 417px, 385px 600px, 0 600px);
+}
+
+.level-14__shape--blue {
+  background: #06068d;
+  clip-path: polygon(800px 300px, 800px 600px, 655px 600px);
+}
+
+.level-14__heading {
+  top: 43px;
+}
+
+.level-14__heading h1 {
+  margin-top: 7px;
+  text-transform: none;
+}
+
+.level-14__message {
+  position: absolute;
+  top: 220px;
+  left: 70px;
+  width: 660px;
+  margin: 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.level-14__hidden-word {
+  position: absolute;
+  top: 255px;
+  left: 50%;
+  width: 700px;
+  height: 180px;
+  cursor: default;
+  opacity: 0;
+  translate: -50% 0;
+}
+
+.level-14__trace {
+  position: absolute;
+  top: 255px;
+  left: 50%;
+  width: 700px;
+  height: 180px;
+  pointer-events: none;
+  translate: -50% 0;
+}
+
+.level-14__form {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.level-14__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-14__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-14__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-14__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-14__form button:hover:not(:disabled),
+.level-14__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-14__form button:active:not(:disabled) {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-14__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

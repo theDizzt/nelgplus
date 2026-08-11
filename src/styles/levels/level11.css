@@ -1,0 +1,82 @@
+.level-11 {
+  color: #050505;
+  background: #aaa;
+  isolation: isolate;
+}
+
+.level-11__background {
+  position: absolute;
+  z-index: -1;
+  inset: -90px;
+  background: conic-gradient(
+    from -16deg at 48% 54%,
+    #a9a9a9 0deg 42deg,
+    #ad7900 42deg 91deg,
+    #a6a6a6 91deg 135deg,
+    #780000 135deg 181deg,
+    #cfcfcf 181deg 224deg,
+    #df0000 224deg 270deg,
+    #fff 270deg 310deg,
+    #af0000 310deg 344deg,
+    #777 344deg 360deg
+  );
+  filter: saturate(1.08);
+  transform: rotate(-4deg) scale(1.12);
+}
+
+.level-11__heading {
+  top: 43px;
+}
+
+.level-11__heading h1 {
+  margin-top: 5px;
+  text-transform: none;
+}
+
+.level-11__message {
+  position: absolute;
+  top: 232px;
+  left: 80px;
+  display: grid;
+  justify-items: center;
+  width: 640px;
+  padding: 18px 12px 10px;
+  background: rgb(255 255 255 / 32%);
+  border: 3px solid rgb(0 0 0 / 62%);
+  box-shadow: 7px 7px 0 rgb(0 0 0 / 22%);
+  text-align: center;
+}
+
+.level-11__message p {
+  margin: 0;
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.level-11__letters {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 112px;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0.08em;
+  text-shadow:
+    3px 3px 0 #fff,
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+    7px 8px 0 rgb(0 0 0 / 24%);
+}
+
+.level-11__letters span {
+  color: #050505;
+  transition: color 90ms linear, scale 90ms ease;
+}
+
+.level-11__letters span.is-pressed {
+  color: #e00000;
+  scale: 1.08;
+}

@@ -1,0 +1,11 @@
+.flash-button {
+  padding: 6px 15px;
+  color: #111;
+  background: #efefef;
+  border: 2px outset #ddd;
+  cursor: pointer;
+}
+
+.flash-button:active {
+  border-style: inset;
+}

@@ -1,0 +1,187 @@
+.level-08 {
+  color: #000;
+  background: #ff86b5;
+}
+
+.level-08__heading {
+  top: 43px;
+}
+
+.level-08__number {
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  margin: 0 auto;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.level-08__number span {
+  display: inline-block;
+  flex: none;
+}
+
+.level-08__number span:last-child {
+  margin-left: 0.2em;
+}
+
+.level-08__number span:nth-child(1) { color: #ef2828; }
+.level-08__number span:nth-child(2) { color: #f08a20; }
+.level-08__number span:nth-child(3) { color: #f2d51b; }
+.level-08__number span:nth-child(4) { color: #19a83b; }
+.level-08__number span:nth-child(5) { color: #2475e8; }
+.level-08__number span:nth-child(6) { color: #8c35dd; }
+
+.level-08__heading h1 {
+  margin-top: -5px;
+  color: #000;
+  text-transform: none;
+}
+
+.level-08__mazes {
+  position: absolute;
+  top: 174px;
+  left: 45px;
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  gap: 22px 24px;
+}
+
+.level-08__maze {
+  position: relative;
+  width: 220px;
+  height: 90px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 26%);
+  border: 4px solid #111;
+  box-shadow: 3px 4px 0 rgb(0 0 0 / 25%);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-08__maze.is-dragging {
+  cursor: grabbing;
+}
+
+.level-08__maze.is-complete {
+  box-shadow: 0 0 0 4px var(--maze-color), 3px 4px 0 rgb(0 0 0 / 25%);
+}
+
+.level-08__maze.is-returning .level-08__maze-map {
+  transition: transform 230ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.level-08__maze-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1100px;
+  height: 90px;
+  will-change: transform;
+}
+
+.level-08__maze-map svg {
+  display: block;
+}
+
+.level-08__maze-border,
+.level-08__maze-route {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.level-08__maze-border {
+  stroke: #111;
+  stroke-width: 24px;
+}
+
+.level-08__maze-route {
+  stroke: var(--maze-color);
+  stroke-width: 17px;
+}
+
+.level-08__maze-letter {
+  position: absolute;
+  top: 13px;
+  left: 1034px;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  color: #000;
+  background: var(--maze-color);
+  border: 5px solid #111;
+  border-radius: 50%;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.level-08__maze-letter[hidden] {
+  display: none;
+}
+
+.level-08__form {
+  position: absolute;
+  bottom: 33px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-08__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-08__form input:focus {
+  outline: none;
+}
+
+.level-08__form input.is-wrong {
+  background: #ff6d87;
+  translate: 6px 0;
+}
+
+.level-08__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-08__form button:hover:not(:disabled),
+.level-08__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-08__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-08__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

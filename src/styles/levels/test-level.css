@@ -1,0 +1,57 @@
+.test-level {
+  color: #070707;
+  background: #ff9900;
+}
+
+.test-level__message {
+  position: absolute;
+  top: 250px;
+  left: 103px;
+  margin: 0;
+  font-size: 25px;
+}
+
+.test-level__answer {
+  position: absolute;
+  bottom: 72px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.test-level__answer label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 19px;
+}
+
+.test-level__answer form {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.test-level__answer input {
+  width: 185px;
+  height: 36px;
+  padding: 3px 7px;
+  background: #fff;
+  border: 2px inset #ddd;
+  font-size: 20px;
+}
+
+.test-level__answer button {
+  height: 31px;
+  padding: 0 8px;
+  background: #ffff00;
+  border: 2px outset #bbb;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#test-level-feedback {
+  min-height: 20px;
+  margin: 7px 0 0;
+  color: #7b0000;
+  font-size: 14px;
+}

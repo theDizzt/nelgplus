@@ -1,0 +1,137 @@
+.level-24 {
+  color: #000;
+  background: #efbf04;
+  overflow: hidden;
+}
+
+.level-24__source {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  left: 20px;
+  width: 760px;
+  height: 545px;
+  margin: 0;
+  color: #ffe35b;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.42;
+  opacity: 0.76;
+  overflow: hidden;
+  text-shadow: 1px 1px 0 rgb(119 72 0 / 18%);
+  white-space: pre-wrap;
+}
+
+.level-24__heading {
+  z-index: 5;
+  color: #000;
+  text-shadow: 2px 2px 0 rgb(255 231 99 / 70%);
+}
+
+.level-24__heading h1 { text-transform: none; }
+
+.level-24__form {
+  position: absolute;
+  z-index: 10;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-24__controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+
+.level-24__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff7c4;
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #946c00;
+  outline: none;
+  caret-color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-24__form input:focus { border-color: #000; outline: none; }
+
+.level-24__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #000;
+  background: #fff04a;
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #946c00;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-24__form button:hover,
+.level-24__form button:focus-visible { color: #efbf04; background: #000; outline: none; }
+
+.level-24__context-menu {
+  position: absolute;
+  z-index: 100;
+  width: 246px;
+  padding: 4px 2px;
+  color: #111;
+  background: #f4f4f4;
+  border: 1px solid #707070;
+  border-radius: 2px;
+  box-shadow: 3px 4px 10px rgb(0 0 0 / 48%);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  user-select: none;
+}
+
+.level-24__context-menu[hidden] { display: none; }
+
+.level-24__context-menu button {
+  display: block;
+  width: 100%;
+  height: 28px;
+  padding: 2px 26px;
+  color: #111;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: default;
+  text-align: left;
+  font: inherit;
+}
+
+.level-24__context-menu button[role="menuitemcheckbox"] { padding-left: 8px; white-space: pre; }
+.level-24__context-menu button:hover,
+.level-24__context-menu button:focus-visible { color: #fff; background: #316ac5; outline: none; }
+.level-24__menu-separator { height: 1px; margin: 4px 5px; background: #aaa; border-bottom: 1px solid #fff; }
+.level-24__player-label { padding: 4px 10px 3px; color: #777; font-size: 12px; text-align: right; }
+
+.level-24__unlock-flash {
+  position: absolute;
+  z-index: 8;
+  right: 18px;
+  bottom: 12px;
+  color: #000;
+  font: 700 12px/1 "NELG Courier", Courier, monospace;
+  opacity: 0;
+  transition: opacity 120ms linear;
+}
+
+.level-24__unlock-flash.is-visible { opacity: 0.45; }
+
+.level-24--wrong { display: grid; place-items: center; }
+.level-24__wrong {
+  color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 145px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 7px 8px 0 #cf9200;
+  rotate: -3deg;
+}

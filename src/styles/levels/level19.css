@@ -1,0 +1,177 @@
+.level-19 {
+  color: #000;
+  background: #fff;
+}
+
+.level-19__heading {
+  top: 46px;
+  color: #999;
+}
+
+.level-19__heading h1 {
+  margin-top: 5px;
+  color: #999;
+  text-transform: none;
+}
+
+.level-19__coordinates {
+  position: absolute;
+  bottom: 17px;
+  left: 25px;
+  color: #000;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.level-19__coordinates span {
+  font-weight: 400;
+}
+
+.level-19__corner-hint {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  margin: 0;
+  color: #999;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.level-19__pixel-button,
+.level-19__pixel-button:hover,
+.level-19__pixel-button:focus,
+.level-19__pixel-button:focus-visible,
+.level-19__pixel-button:active {
+  position: absolute;
+  z-index: 3;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: transparent;
+  cursor: default;
+  outline: 0;
+}
+
+.level-19__pixel-button--first {
+  top: 19px;
+  left: 19px;
+}
+
+.level-19__pixel-button--second {
+  top: 242px;
+  left: 242px;
+}
+
+.level-19__pixel-button:hover {
+  background: #999;
+}
+
+.level-19__passing-clue {
+  position: absolute;
+  z-index: 1;
+  bottom: 71px;
+  left: 0;
+  width: max-content;
+  margin: 0;
+  color: #999;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 23px;
+  opacity: 0;
+  pointer-events: none;
+  animation: level-19-clue-pass 8s linear 1 both;
+}
+
+@keyframes level-19-clue-pass {
+  0% {
+    opacity: 0;
+    translate: 800px 0;
+  }
+  8%,
+  92% {
+    opacity: 0.24;
+  }
+  100% {
+    opacity: 0;
+    translate: -180px 0;
+  }
+}
+
+.level-19__form {
+  position: absolute;
+  z-index: 2;
+  top: 348px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 100%;
+}
+
+.level-19__form[hidden] {
+  display: none;
+}
+
+.level-19__form input {
+  padding: 4px 8px;
+  color: #999;
+  background: #fff;
+  border: 3px solid #999;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-19__form input:focus {
+  border-color: #999;
+  outline: none;
+}
+
+.level-19__form input.is-wrong {
+  background: #eee;
+  translate: 6px 0;
+}
+
+.level-19__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #999;
+  background: #fff;
+  border: 3px solid #999;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-19__form button:hover:not(:disabled),
+.level-19__form button:focus-visible:not(:disabled) {
+  color: #666;
+  background: #eee;
+  outline: none;
+}
+
+.level-19__form button:active:not(:disabled) {
+  background: #ddd;
+}
+
+.level-19__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

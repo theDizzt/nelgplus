@@ -1,0 +1,159 @@
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua-Italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Perpetua";
+  src: url("/assets/fonts/perpetua/Perpetua-BoldItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd-Oblique.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Courier";
+  src: url("/assets/fonts/courier/CourierStd-BoldOblique.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/ArialMT.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/Arial-BoldMT.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/Arial-ItalicMT.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial";
+  src: url("/assets/fonts/arial/Arial-BoldItalicMT.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial Narrow";
+  src: url("/assets/fonts/arial/ArialNarrow.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial Narrow";
+  src: url("/assets/fonts/arial/ArialNarrow-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial Narrow";
+  src: url("/assets/fonts/arial/ArialNarrow-Italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Arial Narrow";
+  src: url("/assets/fonts/arial/ArialNarrow-BoldItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Tahoma";
+  src: url("/assets/fonts/tahoma/Tahoma.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Comic Sans";
+  src: url("/assets/fonts/comicsans/ComicSansMS.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Comic Sans";
+  src: url("/assets/fonts/comicsans/ComicSansMS-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Tahoma";
+  src: url("/assets/fonts/tahoma/Tahoma-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}

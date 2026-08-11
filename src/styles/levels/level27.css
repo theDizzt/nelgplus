@@ -1,0 +1,103 @@
+.level-27 {
+  color: #7f00ff;
+  background: #800080;
+  overflow: hidden;
+}
+
+.level-27__heading {
+  z-index: 5;
+  color: #7f00ff;
+}
+
+.level-27__heading h1 { text-transform: none; }
+
+.level-27__clues {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  color: #7f00ff;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-weight: 700;
+  opacity: 0.28;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.level-27__clue { position: absolute; white-space: nowrap; }
+.level-27__clue--six { top: 182px; right: 78px; font-size: 31px; rotate: -8deg; }
+.level-27__clue--addition { top: 245px; left: 39px; font-size: 25px; rotate: 13deg; }
+.level-27__clue--subtraction { top: 448px; right: 23px; font-size: 27px; rotate: -17deg; }
+.level-27__clue--multiplication { top: 369px; left: 35px; font-size: 27px; rotate: 7deg; }
+.level-27__clue--division { top: 526px; left: 253px; font-size: 24px; rotate: -4deg; }
+
+.level-27__display {
+  position: absolute;
+  z-index: 4;
+  top: 267px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 390px;
+  height: 164px;
+  color: #7f00ff;
+  background: #170019;
+  border: 9px ridge #7f00ff;
+  box-shadow: 12px 13px 0 rgb(42 0 43 / 58%), inset 0 0 28px #800080;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 122px;
+  font-weight: 700;
+  letter-spacing: 13px;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 15px #7f00ff;
+  translate: -50% 0;
+}
+
+.level-27__display.is-changing { animation: level-27-display-change 150ms steps(2); }
+
+.level-27--error {
+  display: grid;
+  place-items: center;
+  color: #7f00ff;
+  background: #000;
+}
+
+.level-27__heading--error {
+  z-index: 4;
+  color: #7f00ff;
+}
+
+.level-27__error-message {
+  width: 720px;
+  color: #7f00ff;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 66px;
+  font-weight: 700;
+  line-height: 1.04;
+  text-align: center;
+  text-shadow: 0 0 15px rgb(127 0 255 / 72%);
+}
+
+.level-27__back {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  padding: 0;
+  color: #7f00ff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 31px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  translate: -50% 0;
+}
+
+.level-27__back:hover,
+.level-27__back:focus-visible { color: #7f00ff; outline: 2px dotted #7f00ff; outline-offset: 7px; }
+
+@keyframes level-27-display-change {
+  50% { color: #170019; background: #7f00ff; filter: invert(1); }
+}
