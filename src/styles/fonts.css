@@ -135,6 +135,14 @@
 }
 
 @font-face {
+  font-family: "NELG Papyrus";
+  src: url("/assets/fonts/papyrus/Papyrus V2.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "NELG Comic Sans";
   src: url("/assets/fonts/comicsans/ComicSansMS.woff2") format("woff2");
   font-style: normal;

@@ -8,7 +8,10 @@
 .level-32--scene-3,
 .level-32--scene-4,
 .level-32--scene-5,
-.level-32--scene-6 {
+.level-32--scene-6,
+.level-32--scene-7,
+.level-32--scene-8,
+.level-32--scene-9 {
   color: #000;
   background-color: #173e6c;
 }
@@ -79,6 +82,10 @@
   filter: brightness(1.22);
 }
 
+.level-32__platform--invisible {
+  visibility: hidden;
+}
+
 .level-32__portal {
   position: absolute;
   z-index: 8;
@@ -138,7 +145,10 @@
 .level-32--scene-3::before,
 .level-32--scene-4::before,
 .level-32--scene-5::before,
-.level-32--scene-6::before {
+.level-32--scene-6::before,
+.level-32--scene-7::before,
+.level-32--scene-8::before,
+.level-32--scene-9::before {
   position: absolute;
   z-index: 0;
   inset: -18px;
@@ -171,6 +181,21 @@
 
 .level-32--scene-6::before {
   filter: saturate(1.12) contrast(1.08) brightness(0.94);
+  transform: scale(1.03);
+}
+
+.level-32--scene-7::before {
+  filter: saturate(0.78) contrast(1.24) brightness(0.68);
+  transform: scale(1.03);
+}
+
+.level-32--scene-8::before {
+  filter: saturate(1.15) contrast(1.12) brightness(0.76);
+  transform: scale(1.03);
+}
+
+.level-32--scene-9::before {
+  filter: saturate(0.82) contrast(1.08) brightness(0.72);
   transform: scale(1.03);
 }
 
@@ -241,10 +266,12 @@
 .level-32--scene-5 .level-heading__number,
 .level-32--scene-5 .level-32__heading h1 {
   color: transparent;
-  background: linear-gradient(180deg, #fff 0%, #d8d8d8 35%, #777 65%, #e7e7e7 100%);
+  background: linear-gradient(180deg, #f2f2f2 0%, #a9afb6 27%, #555d66 56%, #c7ccd1 78%, #737b84 100%);
   background-clip: text;
   -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 1px #fff;
+  text-shadow: 2px 2px 2px rgb(0 0 0 / 72%);
 }
 
 .level-32--scene-6 .level-32__heading {
@@ -278,14 +305,59 @@
   text-shadow: 3px 3px 0 rgb(255 40 40 / 20%);
 }
 
-.level-32--scene-7 {
-  color: #000;
-  background: #000;
+.level-32--scene-7 .level-32__heading {
+  color: #fff;
+  text-shadow: 3px 3px 2px rgb(0 0 0 / 82%);
 }
 
-.level-32--scene-7 .level-32__heading {
-  color: #000;
-  text-shadow: none;
+.level-32--scene-8 .level-32__heading {
+  color: #92278f;
+  text-shadow: 3px 3px 2px rgb(0 0 0 / 82%);
+}
+
+.level-32--scene-9 {
+  color: #ff69b4;
+  background-color: #342439;
+  transition: filter 1.4s ease, opacity 1.4s ease;
+}
+
+.level-32--scene-9 .level-32__heading {
+  color: #ff69b4;
+  text-shadow: 3px 3px 2px rgb(0 0 0 / 78%);
+}
+
+.level-32__tower {
+  position: absolute;
+  z-index: 1;
+  bottom: 30px;
+  left: 50%;
+  width: 360px;
+  height: 510px;
+  object-fit: contain;
+  object-position: center bottom;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.level-32__prophecy {
+  position: absolute;
+  z-index: 18;
+  top: 260px;
+  left: 65px;
+  width: 670px;
+  margin: 0;
+  color: #ff69b4;
+  font-family: "NELG Papyrus", Papyrus, fantasy;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  text-shadow: 2px 2px 2px #000;
+}
+
+.level-32--scene-9.is-warping {
+  filter: brightness(2.4) blur(5px);
+  opacity: 0;
 }
 
 .level-32__scene-pending {

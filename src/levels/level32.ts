@@ -9,6 +9,7 @@ interface PlatformLayout {
   readonly height: number;
   readonly drops?: boolean;
   readonly draggable?: boolean;
+  readonly invisible?: boolean;
 }
 
 interface PlatformState extends PlatformLayout {
@@ -50,11 +51,11 @@ interface EnemyMask {
 }
 
 interface PlayerScene {
-  readonly number: 1 | 2 | 3 | 4 | 5 | 6;
+  readonly number: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   readonly className: string;
   readonly backgroundImage: string;
   readonly platforms: readonly PlatformLayout[];
-  readonly portal: PortalRect;
+  readonly portal?: PortalRect;
   readonly start: { readonly x: number; readonly y: number };
   readonly bounds: RedGuyRect;
   readonly walls?: readonly RedGuyRect[];
@@ -63,6 +64,9 @@ interface PlayerScene {
   readonly portalIsFatal?: boolean;
   readonly dieAction?: () => void;
   readonly jumpSpeed?: number;
+  readonly content?: string;
+  readonly crouchHoldDuration?: number;
+  readonly onCrouchComplete?: () => void;
   readonly next: () => void;
 }
 
@@ -129,6 +133,52 @@ const SCENE_FIVE_BLOCKS: readonly FallingBlockLayout[] = [
   { x: 464, size: 38, speed: 195, offset: 330 },
   { x: 562, size: 38, speed: 235, offset: 205 },
   { x: 660, size: 38, speed: 168, offset: 420 },
+];
+
+const SCENE_SEVEN_PLATFORMS: readonly PlatformLayout[] = [
+  { x: 0, y: 558, width: 180, height: 28 },
+  { x: 230, y: 542, width: 165, height: 28 },
+  { x: 365, y: 462, width: 86, height: 22 },
+  { x: 285, y: 405, width: 165, height: 28 },
+  { x: 185, y: 352, width: 82, height: 22 },
+  { x: 92, y: 300, width: 178, height: 28 },
+  { x: -65, y: 205, width: 165, height: 28 },
+  { x: -36, y: 92, width: 205, height: 28 },
+  { x: 169, y: 92, width: 511, height: 28, invisible: true },
+  { x: -42, y: -42, width: 715, height: 28 },
+];
+
+const SCENE_SEVEN_WALLS: readonly RedGuyRect[] = [
+  { x: -42, y: -120, width: 28, height: 720 },
+  { x: 650, y: 20, width: 28, height: 580 },
+];
+
+const SCENE_SEVEN_BLOCKS: readonly FallingBlockLayout[] = [
+  { x: 62, size: 38, speed: 165, offset: 45 },
+  { x: 176, size: 38, speed: 220, offset: 180 },
+  { x: 292, size: 38, speed: 188, offset: 315 },
+  { x: 408, size: 38, speed: 252, offset: 95 },
+  { x: 524, size: 38, speed: 205, offset: 245 },
+];
+
+const SCENE_EIGHT_PLATFORMS: readonly PlatformLayout[] = [
+  { x: 0, y: 558, width: 150, height: 28 },
+  { x: 202, y: 558, width: 150, height: 28, draggable: true },
+  { x: 420, y: 558, width: 175, height: 28 },
+  { x: -12, y: -42, width: 770, height: 28 },
+];
+
+const SCENE_EIGHT_WALLS: readonly RedGuyRect[] = [
+  { x: -28, y: -130, width: 28, height: 730 },
+  { x: 135, y: -95, width: 28, height: 420 },
+  { x: 650, y: 105, width: 28, height: 495 },
+  { x: 800, y: -130, width: 28, height: 730 },
+];
+
+const SCENE_EIGHT_BLOCKS: readonly FallingBlockLayout[] = [
+  { x: 205, size: 38, speed: 180, offset: 60 },
+  { x: 430, size: 38, speed: 238, offset: 235 },
+  { x: 645, size: 38, speed: 202, offset: 390 },
 ];
 
 function overlaps(
@@ -225,13 +275,6 @@ export const level32: LevelDefinition = {
       </div>
     `;
 
-    const renderPendingSceneSeven = () => {
-      clearScene();
-      screen.className = "level-screen level-32 level-32--scene-7";
-      screen.style.removeProperty("--level-32-background");
-      screen.innerHTML = `${heading()}<div class="level-32__scene-pending" aria-label="Scene 7"></div>`;
-    };
-
     const renderFail = () => {
       clearScene();
       screen.className = "level-screen level-32 level-32--fail";
@@ -310,6 +353,9 @@ export const level32: LevelDefinition = {
       portalIsFatal = false,
       dieAction = renderFail,
       jumpSpeed,
+      content = "",
+      crouchHoldDuration,
+      onCrouchComplete,
       next,
     }: PlayerScene) => {
       clearScene();
@@ -321,13 +367,14 @@ export const level32: LevelDefinition = {
       screen.innerHTML = `
         ${heading()}
         <button class="level-32__die" type="button">DIE</button>
-        ${portalMarkup(portal)}
+        ${portal ? portalMarkup(portal) : ""}
+        ${content}
         <div class="level-32__walls" aria-hidden="true">
           ${walls.map((wall) => `<i class="level-32__wall" style="left:${wall.x}px;top:${wall.y}px;width:${wall.width}px;height:${wall.height}px"></i>`).join("")}
         </div>
         <div class="level-32__platforms">
           ${platforms.map((platform) => `
-            <div class="level-32__platform${platform.drops ? " level-32__platform--unstable" : ""}${platform.draggable ? " level-32__platform--draggable" : ""}"
+            <div class="level-32__platform${platform.drops ? " level-32__platform--unstable" : ""}${platform.draggable ? " level-32__platform--draggable" : ""}${platform.invisible ? " level-32__platform--invisible" : ""}"
               data-platform-id="${platform.id}" ${platform.draggable ? 'data-allow-drag role="button" aria-label="Draggable platform"' : 'aria-hidden="true"'}
               style="left:${platform.x}px;top:${platform.y}px;width:${platform.width}px;height:${platform.height}px"></div>
           `).join("")}
@@ -377,6 +424,7 @@ export const level32: LevelDefinition = {
       });
       let lastFrame = performance.now();
       let transitioning = false;
+      let crouchStartedAt: number | undefined;
 
       activeRedGuy = createRedGuy(context, {
         parent: screen,
@@ -414,6 +462,18 @@ export const level32: LevelDefinition = {
         });
 
         const player = activeRedGuy.getSnapshot();
+        if (crouchHoldDuration && onCrouchComplete) {
+          if (player.grounded && player.state === "crouching") {
+            crouchStartedAt ??= now;
+            if (now - crouchStartedAt >= crouchHoldDuration) {
+              transitioning = true;
+              onCrouchComplete();
+              return;
+            }
+          } else {
+            crouchStartedAt = undefined;
+          }
+        }
         if (player.y > 610) {
           transitioning = true;
           renderFail();
@@ -436,7 +496,7 @@ export const level32: LevelDefinition = {
           return;
         }
 
-        if (overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, portal.x, portal.y, portal.width, portal.height)) {
+        if (portal && overlaps(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT, portal.x, portal.y, portal.width, portal.height)) {
           transitioning = true;
           if (portalIsFatal) renderFail();
           else next();
@@ -579,7 +639,81 @@ export const level32: LevelDefinition = {
         bounds: { x: 0, y: 0, width: 800, height: 760 },
         walls: SCENE_WALLS,
         portalIsFatal: true,
-        dieAction: renderPendingSceneSeven,
+        dieAction: renderSceneSeven,
+        next: renderFail,
+      });
+    }
+
+    function renderSceneSeven() {
+      renderPlayerScene({
+        number: 7,
+        className: "level-32--scene-7",
+        backgroundImage: "level32bg5.jpg",
+        platforms: SCENE_SEVEN_PLATFORMS,
+        portal: { x: 704, y: 500, width: 58, height: 58 },
+        start: { x: 72, y: 558 - PLAYER_HEIGHT },
+        bounds: { x: -42, y: -120, width: 870, height: 880 },
+        walls: SCENE_SEVEN_WALLS,
+        enemies: [
+          {
+            x: 245,
+            y: 478,
+            width: 82,
+            height: 70,
+            variant: "small",
+            hitboxes: [{ x: 258, y: 490, width: 55, height: 48 }],
+          },
+          {
+            x: 18,
+            y: 232,
+            width: 76,
+            height: 66,
+            variant: "small",
+            hitboxes: [{ x: 30, y: 243, width: 51, height: 45 }],
+          },
+        ],
+        fallingBlocks: SCENE_SEVEN_BLOCKS,
+        next: renderSceneEight,
+      });
+    }
+
+    function renderSceneEight() {
+      renderPlayerScene({
+        number: 8,
+        className: "level-32--scene-8",
+        backgroundImage: "spacebg.png",
+        platforms: SCENE_EIGHT_PLATFORMS,
+        portal: { x: 704, y: 500, width: 58, height: 58 },
+        start: { x: 38, y: 28 },
+        bounds: { x: -28, y: -130, width: 856, height: 890 },
+        walls: SCENE_EIGHT_WALLS,
+        fallingBlocks: SCENE_EIGHT_BLOCKS,
+        next: renderSceneNine,
+      });
+    }
+
+    function renderSceneNine() {
+      renderPlayerScene({
+        number: 9,
+        className: "level-32--scene-9",
+        backgroundImage: "level32bg6.jpg",
+        platforms: [{ x: 0, y: 536, width: 800, height: 34 }],
+        start: { x: 92, y: 536 - PLAYER_HEIGHT },
+        bounds: { x: 0, y: 0, width: 800, height: 760 },
+        content: `
+          <img class="level-32__tower" src="${assetUrl("images/level32bg7.png")}" alt="" aria-hidden="true" />
+          <p class="level-32__prophecy">
+            WORSHIP... PRAISE... REJOICE!<br />
+            A MIRACLE SHALL UNFOLD AT 2:42:39 A.M...<br />
+            BOW YOUR HEAD... O CHOSEN ONE...
+          </p>
+        `,
+        crouchHoldDuration: 16_000,
+        onCrouchComplete: () => {
+          activeRedGuy?.setEnabled(false);
+          screen.classList.add("is-warping");
+          sceneTimeout(context.complete, 1_400);
+        },
         next: renderFail,
       });
     }

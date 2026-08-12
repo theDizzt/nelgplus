@@ -34,6 +34,7 @@ const PRELOAD_ASSETS = [
   "/assets/fonts/tahoma/Tahoma-Bold.woff2",
   "/assets/fonts/comicsans/ComicSansMS.woff2",
   "/assets/fonts/comicsans/ComicSansMS-Bold.woff2",
+  "/assets/fonts/papyrus/Papyrus V2.woff2",
   "/assets/images/level16-cafe.png",
   "/assets/images/level18-paint.png",
   "/assets/images/level20a.png",
@@ -107,6 +108,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
     message:
       'The next section will raise you to a state of enlightenment. "The longer you endure, the deeper your inner self becomes, and the more wounds you withstand, the richer the fragrance of your soul grows..."',
     password: "perhaptation.json",
+  },
+  32: {
+    message:
+      "Congratulations! You have completed your first platformer level. Your next destination is the second Reunion level. Extremely difficult and cryptic levels are waiting for you, so prepare yourself to enjoy the anguish...",
+    password: "cacophony",
   },
 };
 
