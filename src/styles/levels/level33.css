@@ -1,0 +1,114 @@
+.level-33 {
+  overflow: hidden;
+  color: #000;
+  background: salmon;
+}
+
+.level-33__heading {
+  z-index: 30;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-33__formula-stage {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  background: rgb(250 128 114 / 0.1%);
+  cursor: default;
+  touch-action: none;
+}
+
+.level-33__formula {
+  position: absolute;
+  width: 980px;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.level-33__formula.is-dragging {
+  filter: drop-shadow(4px 5px 0 rgb(0 0 0 / 20%));
+}
+
+.level-33__final-hint {
+  position: absolute;
+  z-index: 26;
+  top: 420px;
+  left: 80px;
+  width: 640px;
+  margin: 0;
+  padding: 8px 12px;
+  color: #000;
+  background: rgb(250 128 114 / 88%);
+  border: 2px solid #000;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.level-33__form {
+  position: absolute;
+  z-index: 32;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-33__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-33__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+}
+
+.level-33__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-33__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-33__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-33__form button:hover:not(:disabled),
+.level-33__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-33__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
