@@ -40,6 +40,12 @@ export interface RedGuyOptions {
   readonly maximumFallSpeed?: number;
   readonly onLand?: (impactSpeed: number) => void;
   readonly onStateChange?: (state: RedGuyState) => void;
+  readonly controls?: {
+    readonly left: readonly string[];
+    readonly right: readonly string[];
+    readonly up: readonly string[];
+    readonly down: readonly string[];
+  };
 }
 
 const SPRITES: Readonly<Record<RedGuyState | "walk-alt", string>> = {
@@ -199,22 +205,28 @@ export class RedGuyController {
   }
 
   private bindControls(): void {
+    const controls = this.options.controls ?? {
+      left: ["ArrowLeft"],
+      right: ["ArrowRight"],
+      up: ["ArrowUp"],
+      down: ["ArrowDown"],
+    };
+    const matches = (event: KeyboardEvent, keys: readonly string[]) => keys.includes(event.key) || keys.includes(event.code);
     this.context.listen(document, "keydown", (event) => {
       if (!this.enabled || isEditableTarget(event.target)) return;
-      if (!event.key.startsWith("Arrow")) return;
+      if (![...controls.left, ...controls.right, ...controls.up, ...controls.down].some((key) => key === event.key || key === event.code)) return;
       event.preventDefault();
 
-      if (event.key === "ArrowLeft") this.keys.left = true;
-      if (event.key === "ArrowRight") this.keys.right = true;
-      if (event.key === "ArrowDown") this.keys.down = true;
-      if (event.key === "ArrowUp" && !event.repeat) this.jumpQueuedAt = performance.now();
+      if (matches(event, controls.left)) this.keys.left = true;
+      if (matches(event, controls.right)) this.keys.right = true;
+      if (matches(event, controls.down)) this.keys.down = true;
+      if (matches(event, controls.up) && !event.repeat) this.jumpQueuedAt = performance.now();
     });
 
     this.context.listen(document, "keyup", (event) => {
-      if (!event.key.startsWith("Arrow")) return;
-      if (event.key === "ArrowLeft") this.keys.left = false;
-      if (event.key === "ArrowRight") this.keys.right = false;
-      if (event.key === "ArrowDown") this.keys.down = false;
+      if (matches(event, controls.left)) this.keys.left = false;
+      if (matches(event, controls.right)) this.keys.right = false;
+      if (matches(event, controls.down)) this.keys.down = false;
     });
 
     this.context.listen(window, "blur", () => {

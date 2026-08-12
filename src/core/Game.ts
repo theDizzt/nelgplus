@@ -71,6 +71,13 @@ const PRELOAD_ASSETS = [
   "/assets/images/level33i.png",
   "/assets/images/level33j.png",
   "/assets/images/level33k.png",
+  "/assets/images/level35bg1.png",
+  "/assets/images/level35phase4a.png",
+  "/assets/images/level35phase4b.png",
+  "/assets/images/level35phase4c.png",
+  "/assets/images/level35phase4d.png",
+  "/assets/images/level35phase4e.png",
+  "/assets/images/level35phase10.png",
   "/assets/sounds/nelgpop.WAV",
   "/assets/sounds/nelgsmack.WAV",
 ].map(assetUrl);
@@ -113,6 +120,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
     message:
       "Congratulations! You have completed your first platformer level. Your next destination is the second Reunion level. Extremely difficult and cryptic levels are waiting for you, so prepare yourself to enjoy the anguish...",
     password: "cacophony",
+  },
+  35: {
+    message:
+      "Perfect... Wonderful... Beautiful!! But for those of you who are not satisfied even with puzzles this difficult, I have prepared levels in even stranger forms! From now on, I will truly show you the full extent of my wasted time...",
+    password: "*philodox*",
   },
 };
 

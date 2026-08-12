@@ -1,0 +1,38 @@
+.level-35 { overflow: hidden; background: #000; }
+.level-35__heading { z-index: 20; color: #ff69b4; text-shadow: 2px 2px 2px #000; }
+.level-35__counter { position: absolute; z-index: 30; right: 12px; bottom: 8px; color: #ff69b4; font: 14px "NELG Courier", monospace; }
+.level-35--space::before { position: absolute; z-index: 0; inset: -170px; background: var(--level-35-space) center/cover; content: ""; animation: level-35-space-spin 1.4s steps(4,end) infinite; }
+.level-35__form { position: absolute; z-index: 35; bottom: 43px; left: 0; display: flex; justify-content: center; gap: 10px; width: 100%; }
+.level-35__form input { box-sizing: border-box; width: 171px; height: 40px; padding: 4px 8px; color: #16000d; background: rgb(255 105 180 / 16%); border: 3px solid #c33c81; border-radius: 0; outline: 0; font: 25px "NELG Perpetua",serif; }
+.level-35__form button { height: 40px; padding: 0 10px; color: #4f0028; background: #ff9dcc; border: 3px solid #a62e6a; border-radius: 0; font: 23px "NELG Arial",sans-serif; cursor: pointer; }
+.level-35__form--plain input { color: #ff69b4; }
+.level-35--scene-2 .level-35__heading { color: #ff69b4; }
+.level-35__code { position: absolute; top: 205px; left: 70px; width: 660px; margin: 0; color: #ff69b4; font: 20px/1.55 "NELG Courier",monospace; white-space: pre-wrap; }
+.level-35--ocean { background: var(--level-35-ocean) center/cover; }
+.level-35--ocean .level-35__heading { color: red; }
+.level-35--near-black { background: #000; }
+.level-35--near-black .level-35__heading { color: #333; text-shadow: none; }
+.level-35--near-black .level-35__form input { color: #000003; background: #000003; border-color: #0b0b0b; }
+.level-35__phase-four { position: absolute; z-index: 4; inset: 170px 70px 100px; width: 660px; height: 330px; object-fit: contain; }
+.level-35--math { color: aqua; background: #001cff; }
+.level-35--math .level-35__heading { color: aqua; }
+.level-35__nine { position: absolute; top: 235px; left: 55px; margin: 0; color: aqua; font: 700 42px "NELG Arial",sans-serif; transform: scaleX(-1); }
+.level-35__display { position: absolute; top: 285px; left: 200px; width: 400px; color: aqua; font: 150px/1 "NELG Courier",monospace; text-align: center; }
+.level-35__runners { position: absolute; z-index: 10; inset: 0; }
+.level-35__runner { position: absolute; width: 60px; height: 60px; padding: 0; background: radial-gradient(circle,#ff8585,#e00000 65%,#620000); border: 4px solid #310000; border-radius: 50%; transition: translate 130ms linear; }
+.level-35--yellow { background: #ffe600; }
+.level-35--yellow .level-35__heading { color: #000; text-shadow: none; }
+.level-35__remember { position: absolute; top: 250px; left: 0; width: 100%; margin: 0; color: #000; font: 700 42px "NELG Comic Sans",sans-serif; text-align: center; }
+.level-35__platform { position: absolute; z-index: 8; box-sizing: border-box; height: 28px; background: linear-gradient(#d8dee7,#657181 50%,#adb6c0); border: 3px solid #000; }
+.level-35__platform--drag { cursor: grab; pointer-events: auto; touch-action: none; }
+.level-35__portal { position: absolute; z-index: 12; box-sizing: border-box; width: 58px; height: 58px; background: #0f0; border: 4px solid #000; box-shadow: 0 0 0 2px #ff0; animation: level-35-portal 220ms steps(1) infinite; }
+.level-35__portal i { position: absolute; inset: 7px; border: 4px solid #ff0; }
+.level-35__portal i:nth-child(2) { inset: 15px; border-color:#000; }.level-35__portal i:nth-child(3) { inset:23px; border-color:#ff0; }
+.level-35__fallers { position:absolute;z-index:15;inset:0;pointer-events:none}.level-35__fallers i{position:absolute;top:-50px;width:38px;height:38px;background:radial-gradient(circle,#ff5555,#d40000 60%,#510000);border:2px solid red}
+.level-35__walls{position:absolute;z-index:11;inset:0;pointer-events:none}.level-35__walls i{position:absolute;display:block;background:#000}
+.level-35__audio-warning { position:absolute;z-index:15;top:210px;left:35px;width:730px;margin:0;color:#ff69b4;font:700 46px/1.05 "NELG Arial",sans-serif;text-align:center;text-shadow:2px 2px #000; }
+.level-35__audio-controls { right:25px;bottom:16px; }
+.level-35__final-clue { position:absolute;top:205px;left:65px;width:670px;margin:0;color:#ff69b4;font:27px/1.35 "NELG Comic Sans",sans-serif;text-align:center; }.level-35__final-image{position:absolute;top:350px;left:275px;width:250px;height:130px;object-fit:contain}
+.level-35--softlock { background: var(--level-35-space) center/cover; }.level-35__fatal{position:absolute;top:145px;left:55px;width:690px;color:#fff;font-family:"NELG Perpetua",serif;font-weight:700;text-align:center;text-shadow:3px 3px #000}.level-35__fatal strong{font-size:92px}.level-35__fatal p{font-size:39px;line-height:1.35}
+@keyframes level-35-space-spin { 0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg)}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)} }
+@keyframes level-35-portal { 50%{background:#ff0;box-shadow:0 0 0 2px #0f0} }
