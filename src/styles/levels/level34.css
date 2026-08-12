@@ -1,0 +1,161 @@
+.level-34 {
+  overflow: hidden;
+  color: transparent;
+  background: radial-gradient(circle at 50% 50%, #f8f8f8 0%, #d5d5d5 34%, #a8a8a8 70%, #707070 115%);
+  animation: level-34-silver-pulse 3.2s ease-in-out infinite;
+}
+
+.level-34__heading {
+  z-index: 10;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #777;
+  text-shadow: none;
+}
+
+.level-34__form {
+  position: absolute;
+  z-index: 10;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-34__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-34__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: transparent;
+  border: 3px solid #777;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+}
+
+.level-34__form input:focus {
+  border-color: #777;
+  outline: none;
+}
+
+.level-34__form input.is-wrong {
+  background: rgb(255 110 110 / 40%);
+  translate: 6px 0;
+}
+
+.level-34__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #333;
+  background: #d8d8d8;
+  border: 3px solid #777;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-34__form button:hover:not(:disabled),
+.level-34__form button:focus-visible:not(:disabled) {
+  background: #eee;
+  outline: none;
+}
+
+.level-34__audio-controls {
+  position: absolute;
+  z-index: 12;
+  right: 22px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-34__audio-button {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.level-34__audio-button:hover,
+.level-34__audio-button:focus-visible {
+  filter: brightness(1.18) drop-shadow(0 0 4px rgb(255 255 255 / 80%));
+  outline: none;
+}
+
+.level-34__audio-button--play span {
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  width: 48px;
+  height: 52px;
+  background: #000;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.level-34__audio-button--play span::after {
+  position: absolute;
+  inset: 4px 6px 4px 4px;
+  background: radial-gradient(circle at 35% 42%, #baffc2 0%, #20dc45 38%, #00841b 76%, #003c0c 100%);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  content: "";
+}
+
+.level-34__audio-button--pause span,
+.level-34__audio-button--pause span::after {
+  position: absolute;
+  top: 5px;
+  width: 15px;
+  height: 48px;
+  background: radial-gradient(circle at 42% 38%, #b9ddff 0%, #318cf0 42%, #0757b5 76%, #01275b 100%);
+  box-shadow: 0 0 0 3px #000;
+  content: "";
+}
+
+.level-34__audio-button--pause span { left: 9px; }
+.level-34__audio-button--pause span::after { top: 0; left: 25px; }
+
+.level-34__audio-button--stop span {
+  position: absolute;
+  inset: 5px;
+  background: radial-gradient(circle at 42% 38%, #ffb4b4 0%, #f02b2b 40%, #ae0808 76%, #520000 100%);
+  box-shadow: 0 0 0 3px #000;
+}
+
+.level-34__audio-status {
+  position: absolute;
+  z-index: 12;
+  right: 22px;
+  bottom: 82px;
+  max-width: 220px;
+  margin: 0;
+  color: transparent;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 12px;
+  text-align: right;
+  text-shadow:
+    -1px 0 #777,
+    1px 0 #777,
+    0 -1px #777,
+    0 1px #777;
+}
+
+@keyframes level-34-silver-pulse {
+  0%, 100% { filter: brightness(0.94) contrast(1); }
+  50% { filter: brightness(1.08) contrast(1.06); }
+}
