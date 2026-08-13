@@ -64,7 +64,7 @@ export const level35: LevelDefinition = {
     const shell = (scene: number, content: string, className = "") => {
       clearScene();
       screen.className = `level-screen level-35 level-35--scene-${scene} ${className}`;
-      screen.style.setProperty("--level-35-space", `url("${assetUrl("images/spacebg.png")}")`);
+      screen.style.setProperty("--level-35-space", `url("${assetUrl("images/spacebg.png?v=20260813")}")`);
       screen.style.setProperty("--level-35-ocean", `url("${assetUrl("images/level35bg1.png")}")`);
       screen.innerHTML = `${heading()}${content}<span class="level-35__counter">${String(scene).padStart(2, "0")} / 10</span>`;
     };
@@ -79,7 +79,7 @@ export const level35: LevelDefinition = {
     const softlock = () => {
       clearScene();
       screen.className = "level-screen level-35 level-35--softlock";
-      screen.style.setProperty("--level-35-space", `url("${assetUrl("images/spacebg.png")}")`);
+      screen.style.setProperty("--level-35-space", `url("${assetUrl("images/spacebg.png?v=20260813")}")`);
       screen.innerHTML = `
         <div class="level-35__fatal"><strong>FATAL ERROR!</strong><p>YOU HAVE BEEN BANISHED FOR FAILING LEVEL 35...<br />RETURNING TO THE BEGINNING.</p></div>
         <div class="level-35__softlock-track" role="progressbar" aria-label="Returning to Scene 1"
@@ -181,7 +181,17 @@ export const level35: LevelDefinition = {
           bindPassword("blue", 2);
           break;
         case 2:
-          shell(2, `<pre class="level-35__code">const cipher = encrypt("hide", secretKey);\nconst fruit = "apple";\nconst herb = "mint";\nconst secretKey = fruit + herb;\nfunction validate(raw) {\n  return raw === mask(cipher);\n}</pre>${formMarkup(true)}`);
+          shell(2, `<pre class="level-35__code"><span class="is-decoy">const password = "oceanblue";</span>
+const cipher = encrypt("hide", secretKey);
+<span class="is-decoy">const secretKey = "peppermint";</span>
+const fruit = "apple";
+<span class="is-decoy">const maskCharacter = "#";</span>
+const herb = "mint";
+const secretKey = fruit + herb;
+<span class="is-decoy">const visibleAnswer = decrypt(cipher, "melon");</span>
+function validate(raw) {
+  return raw === mask(cipher);
+}</pre>${formMarkup(true)}`);
           bindPassword("****", 3, { plain: true });
           break;
         case 3:
@@ -210,7 +220,10 @@ export const level35: LevelDefinition = {
           break;
         }
         case 5: {
-          shell(5, `<p class="level-35__nine">NINE</p><output class="level-35__display">0</output>`, "level-35--math");
+          const nineClues = Array.from({ length: 18 }, (_, index) =>
+            `<span style="left:${18 + (index % 6) * 137}px;top:${175 + Math.floor(index / 6) * 142}px;rotate:${-18 + (index * 13) % 37}deg">NINE</span>`,
+          ).join("");
+          shell(5, `<div class="level-35__nines" aria-hidden="true">${nineClues}</div><output class="level-35__display">0</output>`, "level-35--math");
           let value = 0; let presses = 0;
           on(document, "keydown", (event) => {
             if (event.repeat || !["9", "+", "-", "*", "/"].includes(event.key)) return;

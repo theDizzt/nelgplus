@@ -1,5 +1,6 @@
 import type { LevelDefinition } from "../core/types";
 import { localElementBounds, positionFloatingElement } from "../core/floatingPosition";
+import { assetUrl } from "../core/assets";
 
 export const level09: LevelDefinition = {
   number: 9,
@@ -13,6 +14,7 @@ export const level09: LevelDefinition = {
       </header>
 
       <p class="level-09__message">You can use the menu by right-clicking.</p>
+      <img class="level-09__background-menu" src="${assetUrl("images/level9a.png")}" alt="" aria-hidden="true" />
 
       <div class="level-09__context-menu" role="menu" aria-label="Flash player menu" hidden>
         <button type="button" role="menuitemcheckbox" data-menu-command="music"></button>

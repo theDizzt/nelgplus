@@ -24,6 +24,24 @@
   font-weight: 700;
 }
 
+.level-09__background-menu {
+  position: absolute;
+  z-index: 0;
+  top: 118px;
+  left: 50%;
+  width: 470px;
+  height: 465px;
+  object-fit: contain;
+  opacity: 0.2;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.level-09__heading,
+.level-09__message {
+  z-index: 2;
+}
+
 .level-09__context-menu {
   position: absolute;
   z-index: 100;

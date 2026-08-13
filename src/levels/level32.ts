@@ -681,7 +681,7 @@ export const level32: LevelDefinition = {
       renderPlayerScene({
         number: 8,
         className: "level-32--scene-8",
-        backgroundImage: "spacebg.png",
+        backgroundImage: "spacebg.png?v=20260813",
         platforms: SCENE_EIGHT_PLATFORMS,
         portal: { x: 704, y: 500, width: 58, height: 58 },
         start: { x: 38, y: 28 },

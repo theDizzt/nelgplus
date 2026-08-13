@@ -9,7 +9,7 @@ import { getLevel, registeredLevelNumbers } from "../levels/registry";
 const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
 const GAME_VERSION = "1.0.20";
 const VERSION_DATE = "08/03/2026";
-const DISCORD_URL = "https://discord.gg/hZDqe5qCj3";
+const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
@@ -37,10 +37,14 @@ const PRELOAD_ASSETS = [
   "/assets/fonts/papyrus/Papyrus V2.woff2",
   "/assets/images/level16-cafe.png",
   "/assets/images/level18-paint.png",
+  "/assets/images/level9a.png",
   "/assets/images/level20a.png",
   "/assets/images/level20b.png",
   "/assets/images/level21a.jpg",
   "/assets/images/level22a.png",
+  "/assets/images/level25a.png",
+  "/assets/images/level25b.png",
+  "/assets/images/level25c.png",
   "/assets/images/level31a.png",
   "/assets/images/level31b.png",
   "/assets/images/level31c.png",
@@ -60,6 +64,7 @@ const PRELOAD_ASSETS = [
   "/assets/images/red_5.png",
   "/assets/images/red_6.png",
   "/assets/images/warp.png",
+  "/assets/images/spacebg.png?v=20260813",
   "/assets/images/level33a.png",
   "/assets/images/level33b.png",
   "/assets/images/level33c.png",
@@ -397,9 +402,36 @@ export class Game {
     this.renderMenuPage(
       "Credits",
       `<div class="credits-list">
-         <div><span>GAME DESIGN</span><strong>TO BE ANNOUNCED</strong></div>
-         <div><span>DEVELOPMENT</span><strong>TO BE ANNOUNCED</strong></div>
-         <div><span>FONTS</span><strong>PERPETUA · COURIER · ARIAL</strong></div>
+         <section class="credits-section">
+           <h2>CREATORS</h2>
+           <article class="credits-person"><h3>Dizzt <span>(dizzt3942)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
+           <article class="credits-person"><h3>Perhaptation <span>(highstrike300)</span></h3><p>Former winner of NELG Level 300 and creator of TEDNE.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
+         </section>
+         <section class="credits-section">
+           <h2>SPECIAL THANKS</h2>
+           <article class="credits-person"><h3>C-Tall Ball</h3><p>The original creator of NELG, who kindly allowed derivative works. Most of this game's designs and ideas pay homage to NELG, making him a truly extraordinary person!</p></article>
+           <article class="credits-person"><h3>Dapur <span>(bumchiDP)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although he could not participate in NELG++, some levels still feature his puzzles!</p></article>
+           <article class="credits-person"><h3>NTG</h3><p>Former winner of NELG Level 300.</p><p>Although he could not participate in NELG++, he tested Level Killer and TEDNE and contributed ideas long ago. Some of his unrealized ideas have finally appeared in NELG++.</p></article>
+           <article class="credits-person"><h3>ArgentumB <span>(dmsql3935)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although she could not participate in NELG++, some levels still feature her vicious puzzles!</p></article>
+           <article class="credits-person"><h3>Kukui <span>(kukui91)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although she could not participate in NELG++, some levels still feature her vicious puzzles!</p></article>
+         </section>
+         <section class="credits-section">
+           <h2>BETA TESTERS</h2>
+           <ul class="credits-names">
+             <li>ArgentumB <span>(dmsql3935)</span></li>
+             <li>Kukui <span>(kukui91)</span></li>
+             <li>decing <span>(jw29674)</span></li>
+             <li>Bin <span>(monteeplayer)</span></li>
+             <li>Confringo</li>
+             <li>Sierra</li>
+             <li>Lunaris</li>
+             <li>mutsuki</li>
+           </ul>
+         </section>
+         <section class="credits-section">
+           <h2>MUSIC USED</h2>
+           <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly</strong></article>
+         </section>
        </div>`,
     );
   }

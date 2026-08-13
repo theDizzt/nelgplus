@@ -105,6 +105,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       if (scene === "wrong") {
         if (event.code !== "Space" || event.repeat) return;
         event.preventDefault();
+        audio.playEffect("sounds/nelgsmack.WAV");
         punishmentPresses += 1;
         const track = screen.querySelector<HTMLElement>(".level-24__punishment-track");
         const fill = track?.querySelector<HTMLElement>("i");

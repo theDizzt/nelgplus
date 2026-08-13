@@ -48,7 +48,7 @@ export const level20: LevelDefinition = {
   number: 20,
   title: "Reunion I",
   mount(context) {
-    const { screen, complete } = context;
+    const { screen, complete, audio } = context;
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -186,7 +186,10 @@ export const level20: LevelDefinition = {
             "radial",
           );
           const begin = screen.querySelector<HTMLButtonElement>(".level-20__begin");
-          if (begin) on(begin, "click", () => renderScene(2), { once: true });
+          if (begin) on(begin, "click", () => {
+            audio.playEffect("sounds/nelgsmack.WAV");
+            renderScene(2);
+          }, { once: true });
           break;
         }
 
@@ -269,6 +272,8 @@ export const level20: LevelDefinition = {
             `<p class="level-20__catch-message">Catch me, if you can.</p><button class="level-20__z-button" type="button" aria-label="Moving white button"></button>`,
             "black",
           );
+          const movingButton = screen.querySelector<HTMLButtonElement>(".level-20__z-button");
+          if (movingButton) on(movingButton, "click", () => audio.playEffect("sounds/nelgsmack.WAV"));
           on(document, "keydown", (event) => {
             if (event.repeat || event.key.toLowerCase() !== "z") return;
             renderScene(5);

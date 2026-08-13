@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { assetUrl } from "../core/assets";
 
 type Scene = "puzzle" | "wall" | "escape" | "order" | "box";
 
@@ -26,6 +27,37 @@ function dicePips(value: number): string {
   return Array.from({ length: value }, () => "<i></i>").join("");
 }
 
+function shatteredImageMarkup(): string {
+  const columns = 3;
+  const rows = 4;
+  const startX = 250;
+  const startY = 88;
+  const pieceWidth = 100;
+  const pieceHeight = 112.25;
+
+  return `<div class="level-25__shattered-image" aria-label="The shattered remains of the mouse">${Array.from(
+    { length: columns * rows },
+    (_, index) => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      const rotation = ((index * 17) % 25) - 12;
+      return `<span class="level-25__image-piece" data-level-25-piece data-allow-drag
+        style="left:${startX + column * pieceWidth}px;top:${startY + row * pieceHeight}px;
+        width:${pieceWidth}px;height:${pieceHeight}px;
+        --piece-image:url('${assetUrl("images/level25a.png")}');
+        --piece-x:${-column * pieceWidth}px;--piece-y:${-row * pieceHeight}px;
+        --piece-rotation:${rotation}deg" role="img" aria-label="Draggable image fragment ${index + 1}"></span>`;
+    },
+  ).join("")}</div>`;
+}
+
+function errorArtworkMarkup(errorScene: Exclude<Scene, "puzzle">): string {
+  if (errorScene === "wall") return shatteredImageMarkup();
+  const source = errorScene === "box" ? "level25a.png" : errorScene === "order" ? "level25b.png" : "level25c.png";
+  return `<img class="level-25__error-art level-25__error-art--${errorScene}"
+    src="${assetUrl(`images/${source}`)}" alt="" aria-hidden="true" draggable="false" />`;
+}
+
 export const level25: LevelDefinition = {
   number: 25,
   title: "Trial I",
@@ -41,6 +73,9 @@ export const level25: LevelDefinition = {
     let boxes: HTMLElement[] = [];
     let puzzleStartedAt = performance.now();
     let boxCollisionGraceUntil = performance.now();
+    let draggedPiece: HTMLElement | undefined;
+    let draggedPiecePointer = -1;
+    let draggedPieceOffset = { x: 0, y: 0 };
 
     const renderPuzzle = (startArmed = false) => {
       scene = "puzzle";
@@ -107,6 +142,7 @@ export const level25: LevelDefinition = {
       screen.className = `level-screen level-25 level-25--error level-25--error-${errorScene}`;
       screen.style.setProperty("--level-25-error-heading", headingColor);
       screen.innerHTML = `
+        ${errorArtworkMarkup(errorScene)}
         <header class="level-heading level-25__heading level-25__heading--error">
           <div class="level-heading__number">Level 25</div>
           <h1>Trial I</h1>
@@ -119,6 +155,14 @@ export const level25: LevelDefinition = {
       boxes = [];
     };
 
+    const gamePoint = (event: PointerEvent) => {
+      const bounds = screen.getBoundingClientRect();
+      return {
+        x: ((event.clientX - bounds.left) / bounds.width) * 800,
+        y: ((event.clientY - bounds.top) / bounds.height) * 600,
+      };
+    };
+
     const pointerInLane = (x: number, y: number) => {
       const point = new DOMPoint(x, y);
       return hitPaths.some((path) => path.isPointInFill(point));
@@ -127,6 +171,14 @@ export const level25: LevelDefinition = {
     renderPuzzle();
 
     listen(screen, "pointermove", (event) => {
+      if (draggedPiece && event.pointerId === draggedPiecePointer) {
+        const point = gamePoint(event);
+        const width = draggedPiece.offsetWidth;
+        const height = draggedPiece.offsetHeight;
+        draggedPiece.style.left = `${Math.max(-width * 0.7, Math.min(800 - width * 0.3, point.x - draggedPieceOffset.x))}px`;
+        draggedPiece.style.top = `${Math.max(-height * 0.7, Math.min(600 - height * 0.3, point.y - draggedPieceOffset.y))}px`;
+        return;
+      }
       if (scene !== "puzzle" || awaitingPassword) return;
       const bounds = screen.getBoundingClientRect();
       const x = ((event.clientX - bounds.left) / bounds.width) * 800;
@@ -179,6 +231,27 @@ export const level25: LevelDefinition = {
         if (prompt) prompt.hidden = false;
       }
     });
+
+    listen(screen, "pointerdown", (event) => {
+      const piece = (event.target as Element).closest<HTMLElement>("[data-level-25-piece]");
+      if (!piece || scene !== "wall") return;
+      const point = gamePoint(event);
+      draggedPiece = piece;
+      draggedPiecePointer = event.pointerId;
+      draggedPieceOffset = { x: point.x - piece.offsetLeft, y: point.y - piece.offsetTop };
+      piece.classList.add("level-25__image-piece--dragging");
+      piece.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
+
+    const stopPieceDrag = (event: PointerEvent) => {
+      if (!draggedPiece || event.pointerId !== draggedPiecePointer) return;
+      draggedPiece.classList.remove("level-25__image-piece--dragging");
+      draggedPiece = undefined;
+      draggedPiecePointer = -1;
+    };
+    listen(screen, "pointerup", stopPieceDrag);
+    listen(screen, "pointercancel", stopPieceDrag);
 
     listen(document, "keydown", (event) => {
       if (scene !== "puzzle" || !awaitingPassword || event.repeat || event.key.length !== 1) return;

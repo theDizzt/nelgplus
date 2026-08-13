@@ -190,8 +190,11 @@
 }
 
 .level-32--scene-8::before {
+  inset: 0;
+  background-position: center center;
+  background-size: cover;
   filter: saturate(1.15) contrast(1.12) brightness(0.76);
-  transform: scale(1.03);
+  transform: none;
 }
 
 .level-32--scene-9::before {

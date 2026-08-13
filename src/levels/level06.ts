@@ -3,7 +3,7 @@ import type { LevelDefinition } from "../core/types";
 export const level06: LevelDefinition = {
   number: 6,
   title: "Catch",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, listen, audio }) {
     screen.className = "level-screen level-06";
     screen.innerHTML = `
       <header class="level-heading level-06__heading">
@@ -25,6 +25,7 @@ export const level06: LevelDefinition = {
     listen(buttonContainer, "click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>(".level-06__button");
       if (!button || !buttonContainer.contains(button)) return;
+      audio.playEffect("sounds/nelgsmack.WAV");
 
       const clickedNumber = Number(button.dataset.number);
       if (clickedNumber !== expectedNumber) {
