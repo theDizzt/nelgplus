@@ -1,5 +1,6 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 type Point = readonly [x: number, y: number];
 
@@ -69,7 +70,7 @@ export const level29: LevelDefinition = {
         runner.style.left = `${originX + pointX}px`;
         runner.style.top = `${originY + pointY}px`;
       });
-      listen(runner, "click", () => audio.playEffect("/assets/sounds/nelgsmack.WAV"));
+      listen(runner, "click", () => audio.playEffect(SOUND_EFFECTS.smack));
     });
 
     const maskedInput = attachStarMaskedInput(input, listen);

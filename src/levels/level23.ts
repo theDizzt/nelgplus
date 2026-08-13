@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { SOUND_EFFECTS } from "../core/assets";
 import type { LevelDefinition } from "../core/types";
 
 export const level23: LevelDefinition = {
@@ -111,7 +112,7 @@ export const level23: LevelDefinition = {
     listen(interactive, "click", (event) => {
       const toy = (event.target as Element).closest<HTMLButtonElement>(".level-23__toy");
       if (!toy) return;
-      audio.playEffect("sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
       const effect = toy.dataset.effect;
       toy.classList.remove("is-active");
       void toy.offsetWidth;
@@ -152,7 +153,7 @@ export const level23: LevelDefinition = {
     });
     listen(form, "submit", (event) => {
       event.preventDefault();
-      audio.playEffect("sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
       if (masked.getValue() === "/") { button.disabled = true; complete(); return; }
       masked.clear();
       input.classList.remove("is-wrong"); void input.offsetWidth; input.classList.add("is-wrong"); input.focus();

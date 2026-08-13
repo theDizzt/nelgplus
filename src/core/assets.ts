@@ -7,3 +7,9 @@ export function assetUrl(path: string): string {
   const relativePath = path.replace(/^\.?\/?(?:assets\/)?/, "");
   return new URL(relativePath, ASSET_PREFIX).href;
 }
+
+/** Canonical effect paths. Use these instead of spelling asset URLs inside levels. */
+export const SOUND_EFFECTS = {
+  pop: "sounds/nelgpop.WAV",
+  smack: "sounds/nelgsmack.WAV",
+} as const;

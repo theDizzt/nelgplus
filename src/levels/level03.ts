@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 const MAP_WIDTH = 2500;
 const MAP_HEIGHT = 230;
@@ -91,7 +92,7 @@ export const level03: LevelDefinition = {
     listen(viewport, "pointerup", finishDragging);
     listen(viewport, "pointercancel", finishDragging);
     listen(endButton, "click", () => {
-      audio.playEffect("/assets/sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
       complete();
     });
   },

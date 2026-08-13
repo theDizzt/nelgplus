@@ -1,5 +1,5 @@
 import { AudioManager } from "./AudioManager";
-import { assetUrl } from "./assets";
+import { assetUrl, SOUND_EFFECTS } from "./assets";
 import { InteractionGuard } from "./InteractionGuard";
 import { LevelScope } from "./LevelScope";
 import { attachStarMaskedInput } from "./StarMaskedInput";
@@ -13,7 +13,7 @@ const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
-const PRELOAD_ASSETS = [
+const PRELOAD_FONTS = [
   "/assets/fonts/perpetua/Perpetua.woff2",
   "/assets/fonts/perpetua/Perpetua-Bold.woff2",
   "/assets/fonts/perpetua/Perpetua-Italic.woff2",
@@ -35,6 +35,20 @@ const PRELOAD_ASSETS = [
   "/assets/fonts/comicsans/ComicSansMS.woff2",
   "/assets/fonts/comicsans/ComicSansMS-Bold.woff2",
   "/assets/fonts/papyrus/Papyrus V2.woff2",
+  "/assets/fonts/vivaldi/Vivaldi.woff2",
+  "/assets/fonts/vivaldi/Vivaldi_Bold.woff2",
+] as const;
+const PRELOAD_FONT_REQUESTS = [
+  '400 32px "NELG Perpetua"', '700 32px "NELG Perpetua"', 'italic 400 32px "NELG Perpetua"',
+  '400 24px "NELG Courier"', '700 24px "NELG Courier"', 'italic 400 24px "NELG Courier"',
+  '400 24px "NELG Arial"', '700 24px "NELG Arial"', 'italic 400 24px "NELG Arial"',
+  '400 24px "NELG Arial Narrow"', '700 24px "NELG Arial Narrow"',
+  '400 24px "NELG Tahoma"', '700 24px "NELG Tahoma"',
+  '400 24px "NELG Comic Sans"', '700 24px "NELG Comic Sans"',
+  '400 24px "NELG Papyrus"', '700 24px "NELG Papyrus"',
+  '400 32px "NELG Vivaldi"', '700 32px "NELG Vivaldi"',
+] as const;
+const PRELOAD_IMAGES = [
   "/assets/images/level16-cafe.png",
   "/assets/images/level18-paint.png",
   "/assets/images/level9a.png",
@@ -45,6 +59,11 @@ const PRELOAD_ASSETS = [
   "/assets/images/level25a.png",
   "/assets/images/level25b.png",
   "/assets/images/level25c.png",
+  "/assets/images/132.jpg",
+  "/assets/images/cheesus.gif",
+  "/assets/images/clippy.gif",
+  "/assets/images/Mr_gear.gif",
+  "/assets/images/sirchair.png",
   "/assets/images/level31a.png",
   "/assets/images/level31b.png",
   "/assets/images/level31c.png",
@@ -63,6 +82,14 @@ const PRELOAD_ASSETS = [
   "/assets/images/red_4.png",
   "/assets/images/red_5.png",
   "/assets/images/red_6.png",
+  "/assets/images/Steve.gif",
+  "/assets/images/level32bg1.jpg",
+  "/assets/images/level32bg2.jpg",
+  "/assets/images/level32bg3.jpg",
+  "/assets/images/level32bg4.jpg",
+  "/assets/images/level32bg5.jpg",
+  "/assets/images/level32bg6.jpg",
+  "/assets/images/level32bg7.png",
   "/assets/images/warp.png",
   "/assets/images/spacebg.png?v=20260813",
   "/assets/images/level33a.png",
@@ -83,9 +110,8 @@ const PRELOAD_ASSETS = [
   "/assets/images/level35phase4d.png",
   "/assets/images/level35phase4e.png",
   "/assets/images/level35phase10.png",
-  "/assets/sounds/nelgpop.WAV",
-  "/assets/sounds/nelgsmack.WAV",
 ].map(assetUrl);
+const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack] as const;
 const MINIMUM_PRELOADER_TIME = 700;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 22, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 97,
@@ -170,28 +196,55 @@ export class Game {
     let loadedAssets = 0;
 
     const updateProgress = () => {
-      const value = Math.round((loadedAssets / PRELOAD_ASSETS.length) * 100);
+      const totalAssets = PRELOAD_FONTS.length + PRELOAD_IMAGES.length + PRELOAD_EFFECTS.length;
+      const value = Math.round((loadedAssets / totalAssets) * 100);
       if (progress) progress.setAttribute("aria-valuenow", String(value));
       if (bar) bar.style.width = `${value}%`;
       if (percentage) percentage.value = `${value}%`;
     };
 
-    const preloadAssets = Promise.all(
-      PRELOAD_ASSETS.map(async (source) => {
+    const markLoaded = () => {
+      loadedAssets += 1;
+      updateProgress();
+    };
+
+    const preloadFontFiles = Promise.all(
+      PRELOAD_FONTS.map(async (source) => {
         try {
-          const response = await fetch(source, { cache: "force-cache" });
+          const response = await fetch(assetUrl(source), { cache: "force-cache" });
           if (response.ok) await response.arrayBuffer();
         } catch {
-          // A missing optional asset should not prevent the game from starting.
+          // A missing optional font should not prevent the game from starting.
         } finally {
-          loadedAssets += 1;
-          updateProgress();
+          markLoaded();
         }
       }),
     );
+
+    const preloadImages = Promise.all(
+      PRELOAD_IMAGES.map(async (source) => {
+        try {
+          const image = new Image();
+          image.decoding = "async";
+          image.src = source;
+          await image.decode();
+        } catch {
+          // A missing optional image should not prevent the game from starting.
+        } finally {
+          markLoaded();
+        }
+      }),
+    );
+
+    const preloadEffects = this.audioManager.preloadEffects(PRELOAD_EFFECTS).finally(() => {
+      loadedAssets += PRELOAD_EFFECTS.length;
+      updateProgress();
+    });
     const minimumDisplayTime = new Promise<void>((resolve) => window.setTimeout(resolve, MINIMUM_PRELOADER_TIME));
 
-    await Promise.all([preloadAssets, minimumDisplayTime]);
+    await Promise.all([preloadFontFiles, preloadImages, preloadEffects]);
+    await Promise.all(PRELOAD_FONT_REQUESTS.map((font) => document.fonts.load(font)));
+    await Promise.all([document.fonts.ready, minimumDisplayTime]);
     this.renderMainMenu();
   }
 

@@ -1,5 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
-import { assetUrl } from "../core/assets";
+import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import type { LevelContext, LevelDefinition } from "../core/types";
 import { positionFloatingElement } from "../core/floatingPosition";
 
@@ -187,7 +187,7 @@ export const level20: LevelDefinition = {
           );
           const begin = screen.querySelector<HTMLButtonElement>(".level-20__begin");
           if (begin) on(begin, "click", () => {
-            audio.playEffect("sounds/nelgsmack.WAV");
+            audio.playEffect(SOUND_EFFECTS.smack);
             renderScene(2);
           }, { once: true });
           break;
@@ -273,7 +273,7 @@ export const level20: LevelDefinition = {
             "black",
           );
           const movingButton = screen.querySelector<HTMLButtonElement>(".level-20__z-button");
-          if (movingButton) on(movingButton, "click", () => audio.playEffect("sounds/nelgsmack.WAV"));
+          if (movingButton) on(movingButton, "click", () => audio.playEffect(SOUND_EFFECTS.smack));
           on(document, "keydown", (event) => {
             if (event.repeat || event.key.toLowerCase() !== "z") return;
             renderScene(5);

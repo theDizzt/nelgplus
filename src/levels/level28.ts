@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 const BUTTON_SIZE = 78;
 const SCREEN_WIDTH = 800;
@@ -44,7 +45,7 @@ export const level28: LevelDefinition = {
     let expectedIndex = 0;
 
     levelButtons.forEach((button) => {
-      listen(button, "pointerenter", () => audio.playEffect("/assets/sounds/nelgpop.WAV"));
+      listen(button, "pointerenter", () => audio.playEffect(SOUND_EFFECTS.pop));
     });
 
     listen(buttonContainer, "click", (event) => {

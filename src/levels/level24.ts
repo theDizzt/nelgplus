@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { SOUND_EFFECTS } from "../core/assets";
 import type { LevelDefinition } from "../core/types";
 import { positionFloatingElement } from "../core/floatingPosition";
 
@@ -105,7 +106,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       if (scene === "wrong") {
         if (event.code !== "Space" || event.repeat) return;
         event.preventDefault();
-        audio.playEffect("sounds/nelgsmack.WAV");
+        audio.playEffect(SOUND_EFFECTS.smack);
         punishmentPresses += 1;
         const track = screen.querySelector<HTMLElement>(".level-24__punishment-track");
         const fill = track?.querySelector<HTMLElement>("i");

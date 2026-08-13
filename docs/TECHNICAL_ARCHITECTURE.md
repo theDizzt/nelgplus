@@ -15,11 +15,12 @@
 
 ## 공통 기능
 
-- `AudioManager`: Music과 SFX 활성화 및 볼륨
+- `AudioManager`: Music과 SFX 활성화·볼륨 및 짧은 효과음 오디오 풀
 - `StarMaskedInput`: 실제 값을 별표로 표시하는 암호 입력
 - `RedGuy`: 가속·관성·점프·일방통행 발판·장면별 키 매핑
 - `floatingPosition`: 가변 크기 화면에서 메뉴와 부유 UI의 좌표 변환
 - `assetUrl`: GitHub Pages 같은 하위 경로 배포에서도 안전한 에셋 URL
+- `SOUND_EFFECTS`: 프리로드와 레벨 호출이 같은 효과음 URL을 사용하게 하는 공용 경로 목록
 - `InteractionGuard`: 허용된 요소 외 선택·드래그 방지
 
 두 레벨 이상에서 같은 좌표 계산이나 상호작용이 반복되면 `core`의 작은 유틸리티로 분리한다. 반대로 한 레벨의 연출에만 필요한 코드는 해당 레벨 모듈과 CSS에 둔다.

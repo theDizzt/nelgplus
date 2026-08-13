@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 export const level06: LevelDefinition = {
   number: 6,
@@ -25,7 +26,7 @@ export const level06: LevelDefinition = {
     listen(buttonContainer, "click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>(".level-06__button");
       if (!button || !buttonContainer.contains(button)) return;
-      audio.playEffect("sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
 
       const clickedNumber = Number(button.dataset.number);
       if (clickedNumber !== expectedNumber) {

@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 const BUTTON_POSITIONS = [
   [66, 273],
@@ -53,7 +54,7 @@ export const level10: LevelDefinition = {
       const target = (event.target as Element).closest<HTMLButtonElement>(".level-10__target");
       if (!target || !targetContainer.contains(target)) return;
 
-      audio.playEffect("/assets/sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
       target.remove();
       remaining -= 1;
       if (remaining === 0) complete();

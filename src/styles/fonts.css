@@ -159,6 +159,22 @@
 }
 
 @font-face {
+  font-family: "NELG Vivaldi";
+  src: url("/assets/fonts/vivaldi/Vivaldi.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NELG Vivaldi";
+  src: url("/assets/fonts/vivaldi/Vivaldi_Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "NELG Tahoma";
   src: url("/assets/fonts/tahoma/Tahoma-Bold.woff2") format("woff2");
   font-style: normal;

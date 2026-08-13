@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 export const level01: LevelDefinition = {
   number: 1,
@@ -30,7 +31,7 @@ export const level01: LevelDefinition = {
     const continueButton = screen.querySelector<HTMLButtonElement>(".level-01__continue");
     if (continueButton) {
       listen(continueButton, "click", () => {
-        audio.playEffect("/assets/sounds/nelgsmack.WAV");
+        audio.playEffect(SOUND_EFFECTS.smack);
         complete();
       });
     }

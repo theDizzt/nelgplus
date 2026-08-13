@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { SOUND_EFFECTS } from "../core/assets";
 
 const OBJECT_COUNT = 12;
 
@@ -117,7 +118,7 @@ export const level07: LevelDefinition = {
     listen(clutter, "pointercancel", endDrag);
     listen(finishButton, "click", () => {
       if (remainingObjects !== 0) return;
-      audio.playEffect("/assets/sounds/nelgsmack.WAV");
+      audio.playEffect(SOUND_EFFECTS.smack);
       complete();
     });
   },
