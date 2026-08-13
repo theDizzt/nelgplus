@@ -29,6 +29,12 @@
   rotate: 1deg;
 }
 
+.level-12__message strong {
+  color: #8b36b5;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgb(180 92 220 / 48%);
+}
+
 .level-12__hint {
   position: absolute;
   top: 345px;

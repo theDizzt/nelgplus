@@ -140,3 +140,34 @@
   text-shadow: 7px 8px 0 #cf9200;
   rotate: -3deg;
 }
+
+.level-24__punishment {
+  position: absolute;
+  top: 385px;
+  left: 50px;
+  width: 700px;
+  margin: 0;
+  color: #000;
+  font: 700 27px "NELG Courier", Courier, monospace;
+  text-align: center;
+}
+
+.level-24__punishment-track {
+  position: absolute;
+  top: 445px;
+  left: 125px;
+  width: 550px;
+  height: 36px;
+  overflow: hidden;
+  background: #6c4b00;
+  border: 4px solid #000;
+  box-shadow: 5px 5px 0 #cf9200;
+}
+
+.level-24__punishment-track i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ffea00, #ff6a00, #f00000);
+  transition: width 55ms linear;
+}

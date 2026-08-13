@@ -30,7 +30,7 @@ const FORMULA_IMAGES = [
 ] as const;
 
 const STEP_ANSWERS = ["84", "39", "123", "666", "13082", "29767936", "298080", "60466176", "apery's constant", "5"] as const;
-const FINAL_PASSWORD = "212308773";
+const FINAL_PASSWORD = "212097273";
 const INITIAL_POSITIONS = [
   { x: -88, y: 112 },
   { x: -35, y: 78 },
@@ -44,6 +44,14 @@ const INITIAL_POSITIONS = [
   { x: -116, y: 66 },
   { x: -64, y: 104 },
 ] as const;
+
+function normalizeLooseAperyAnswer(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
 
 function captureAlphaMask(image: HTMLImageElement): AlphaMask | undefined {
   if (!image.naturalWidth || !image.naturalHeight) return undefined;
@@ -205,7 +213,12 @@ export const level33: LevelDefinition = {
         return;
       }
 
-      if (expectedStep < STEP_ANSWERS.length && answer === STEP_ANSWERS[expectedStep]) {
+      const expectedAnswer = STEP_ANSWERS[expectedStep];
+      const matchesExpected =
+        expectedStep === 8
+          ? normalizeLooseAperyAnswer(answer) === "aperysconstant"
+          : answer === expectedAnswer;
+      if (expectedStep < STEP_ANSWERS.length && matchesExpected) {
         expectedStep += 1;
         addFormula(expectedStep);
         if (expectedStep === STEP_ANSWERS.length) hint.hidden = false;

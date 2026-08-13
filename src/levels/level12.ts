@@ -73,7 +73,7 @@ export const level12: LevelDefinition = {
         <h1>Name</h1>
       </header>
 
-      <p class="level-12__message">DP of BumchiDP means Dark Purple.</p>
+      <p class="level-12__message">DP of BumchiDP means <strong>Dark Purple</strong>.</p>
       <p class="level-12__hint">What other names could it have?</p>
 
       <form class="level-12__form" autocomplete="off">

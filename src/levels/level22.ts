@@ -14,6 +14,7 @@ export const level22: LevelDefinition = {
       </header>
 
       <span class="level-22__face" aria-hidden="true">&gt;:D</span>
+      <p class="level-22__hint">THE MIRROR KNOWS THE ANSWER.</p>
       <img class="level-22__image" src="${assetUrl("images/level22a.png")}" alt="Mirrored symbol puzzle" />
 
       <form class="level-22__form" autocomplete="off">

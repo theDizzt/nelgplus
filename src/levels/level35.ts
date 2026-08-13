@@ -80,7 +80,18 @@ export const level35: LevelDefinition = {
       clearScene();
       screen.className = "level-screen level-35 level-35--softlock";
       screen.style.setProperty("--level-35-space", `url("${assetUrl("images/spacebg.png")}")`);
-      screen.innerHTML = `<div class="level-35__fatal"><strong>FATAL ERROR!</strong><p>YOU HAVE BEEN BANISHED FOR FAILING LEVEL 35...<br />START AGAIN FROM THE BEGINNING.</p></div>`;
+      screen.innerHTML = `
+        <div class="level-35__fatal"><strong>FATAL ERROR!</strong><p>YOU HAVE BEEN BANISHED FOR FAILING LEVEL 35...<br />RETURNING TO THE BEGINNING.</p></div>
+        <div class="level-35__softlock-track" role="progressbar" aria-label="Returning to Scene 1"
+          aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"><i></i></div>
+      `;
+      const track = screen.querySelector<HTMLElement>(".level-35__softlock-track");
+      const startedAt = performance.now();
+      every(() => {
+        const elapsed = Math.min(8_000, performance.now() - startedAt);
+        track?.setAttribute("aria-valuenow", String(Math.floor(elapsed / 1_000)));
+      }, 250);
+      later(() => renderScene(1), 8_000);
     };
 
     const bindPassword = (answer: string, next: number, options: { plain?: boolean; forbiddenKey?: string } = {}) => {

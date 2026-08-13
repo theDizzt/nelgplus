@@ -7,15 +7,25 @@ const UNLOCK_SEQUENCE = "hidden";
 export const level24: LevelDefinition = {
   number: 24,
   title: "Script",
-  mount({ screen, complete, listen, audio }) {
+  mount({ screen, complete, restart, listen, audio }) {
     let scene: "puzzle" | "wrong" = "puzzle";
     let keyBuffer = "";
     let menuUnlocked = false;
+    let punishmentPresses = 0;
+    const requiredPunishmentPresses = 35;
 
     const showWrong = () => {
       scene = "wrong";
+      punishmentPresses = 0;
       screen.className = "level-screen level-24 level-24--wrong";
-      screen.innerHTML = `<div class="level-24__wrong" role="alert">WRONG :(</div>`;
+      screen.innerHTML = `
+        <div class="level-24__wrong" role="alert">WRONG :(</div>
+        <p class="level-24__punishment">AS PUNISHMENT, MASH THE SPACE BAR!</p>
+        <div class="level-24__punishment-track" role="progressbar" aria-label="Space bar punishment progress"
+          aria-valuemin="0" aria-valuemax="${requiredPunishmentPresses}" aria-valuenow="0">
+          <i></i>
+        </div>
+      `;
     };
 
     screen.className = "level-screen level-24 level-24--puzzle";
@@ -92,6 +102,18 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     updateSettings();
 
     listen(document, "keydown", (event) => {
+      if (scene === "wrong") {
+        if (event.code !== "Space" || event.repeat) return;
+        event.preventDefault();
+        punishmentPresses += 1;
+        const track = screen.querySelector<HTMLElement>(".level-24__punishment-track");
+        const fill = track?.querySelector<HTMLElement>("i");
+        const progress = Math.min(1, punishmentPresses / requiredPunishmentPresses);
+        if (fill) fill.style.width = `${progress * 100}%`;
+        track?.setAttribute("aria-valuenow", String(punishmentPresses));
+        if (punishmentPresses >= requiredPunishmentPresses) restart();
+        return;
+      }
       if (scene !== "puzzle") return;
       if ((event.target as Element).closest("input, button")) return;
       if (event.key.length !== 1 || event.ctrlKey || event.altKey || event.metaKey) return;

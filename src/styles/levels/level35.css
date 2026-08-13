@@ -1,5 +1,5 @@
 .level-35 { overflow: hidden; background: #000; }
-.level-35__heading { z-index: 20; color: #ff69b4; text-shadow: 2px 2px 2px #000; }
+.level-35__heading { z-index: 20; color: #ff69b4; text-shadow: none; }
 .level-35__counter { position: absolute; z-index: 30; right: 12px; bottom: 8px; color: #ff69b4; font: 14px "NELG Courier", monospace; }
 .level-35--space::before { position: absolute; z-index: 0; inset: -170px; background: var(--level-35-space) center/cover; content: ""; animation: level-35-space-spin 1.4s steps(4,end) infinite; }
 .level-35__form { position: absolute; z-index: 35; bottom: 43px; left: 0; display: flex; justify-content: center; gap: 10px; width: 100%; }
@@ -34,6 +34,8 @@
 .level-35__audio-warning { position:absolute;z-index:15;top:210px;left:35px;width:730px;margin:0;color:#ff69b4;font:700 46px/1.05 "NELG Arial",sans-serif;text-align:center;text-shadow:2px 2px #000; }
 .level-35__audio-controls { right:25px;bottom:16px; }
 .level-35__final-clue { position:absolute;top:205px;left:65px;width:670px;margin:0;color:#ff69b4;font:27px/1.35 "NELG Comic Sans",sans-serif;text-align:center; }.level-35__final-image{position:absolute;top:350px;left:275px;width:250px;height:130px;object-fit:contain}
-.level-35--softlock { background: var(--level-35-space) center/cover; }.level-35__fatal{position:absolute;top:145px;left:55px;width:690px;color:#fff;font-family:"NELG Perpetua",serif;font-weight:700;text-align:center;text-shadow:3px 3px #000}.level-35__fatal strong{font-size:92px}.level-35__fatal p{font-size:39px;line-height:1.35}
+.level-35--softlock { background: var(--level-35-space) center/cover; }.level-35__fatal{position:absolute;top:110px;left:55px;width:690px;color:#fff;font-family:"NELG Perpetua",serif;font-weight:700;text-align:center;text-shadow:3px 3px #000}.level-35__fatal strong{font-size:82px}.level-35__fatal p{font-size:35px;line-height:1.35}
+.level-35__softlock-track{position:absolute;left:100px;bottom:70px;width:600px;height:38px;overflow:hidden;background:rgb(0 0 0 / 72%);border:4px solid #fff;box-shadow:0 0 15px #ff69b4}.level-35__softlock-track i{display:block;width:0;height:100%;background:linear-gradient(90deg,#721044,#ff69b4,#fff);animation:level-35-softlock-fill 8s linear forwards}
 @keyframes level-35-space-spin { 0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg)}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)} }
 @keyframes level-35-portal { 50%{background:#ff0;box-shadow:0 0 0 2px #0f0} }
+@keyframes level-35-softlock-fill { to { width: 100%; } }

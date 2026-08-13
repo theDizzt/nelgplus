@@ -258,7 +258,7 @@ export const level20: LevelDefinition = {
             }, 70);
             sceneTimers.add(fadeTimer);
           }
-          bindPassword(["alphabet", "letter", "letters", "text", "character", "english"], 4);
+          bindPassword(["alphabet", "letter", "letters", "text", "character", "english", "white"], 4);
           break;
         }
 

@@ -25,6 +25,17 @@
   transform-origin: center;
 }
 
+.level-22__hint {
+  position: absolute;
+  z-index: 9;
+  top: 185px;
+  left: 36px;
+  margin: 0;
+  color: #ff00ff;
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+  font-size: 21px;
+}
+
 .level-22__image {
   position: absolute;
   top: 225px;
