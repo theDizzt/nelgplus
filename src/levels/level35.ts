@@ -184,8 +184,16 @@ export const level35: LevelDefinition = {
           form.hidden = true; let phase = 0;
           on(screen, "click", (event) => {
             if ((event.target as Element).closest("form")) return;
-            if (phase < PHASE_FOUR_IMAGES.length) { image.src = assetUrl(`images/${PHASE_FOUR_IMAGES[phase++]}`); image.hidden = false; }
-            else { image.hidden = true; form.hidden = false; form.querySelector<HTMLInputElement>("input")?.focus(); }
+            phase = (phase + 1) % (PHASE_FOUR_IMAGES.length + 2);
+            image.hidden = true;
+            form.hidden = true;
+            if (phase > 0 && phase <= PHASE_FOUR_IMAGES.length) {
+              image.src = assetUrl(`images/${PHASE_FOUR_IMAGES[phase - 1]}`);
+              image.hidden = false;
+            } else if (phase === PHASE_FOUR_IMAGES.length + 1) {
+              form.hidden = false;
+              form.querySelector<HTMLInputElement>("input")?.focus();
+            }
           });
           bindPassword("AXIOM", 5);
           break;

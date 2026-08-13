@@ -55,18 +55,19 @@ export const level31: LevelDefinition = {
     if (!image || !form || !input || !submitButton) return;
 
     let stage = 0;
-    listen(screen, "click", () => {
-      if (stage > IMAGE_SEQUENCE.length) return;
-      stage += 1;
+    listen(screen, "click", (event) => {
+      if ((event.target as Element).closest(".level-31__form")) return;
+      stage = (stage + 1) % (IMAGE_SEQUENCE.length + 2);
+      image.hidden = true;
+      form.hidden = true;
 
-      if (stage <= IMAGE_SEQUENCE.length) {
+      if (stage > 0 && stage <= IMAGE_SEQUENCE.length) {
         image.src = assetUrl(`images/${IMAGE_SEQUENCE[stage - 1]}`);
         image.hidden = false;
-        return;
+      } else if (stage === IMAGE_SEQUENCE.length + 1) {
+        form.hidden = false;
+        input.focus();
       }
-
-      image.hidden = true;
-      form.hidden = false;
     });
 
     const maskedInput = attachStarMaskedInput(input, listen);

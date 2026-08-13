@@ -1,5 +1,6 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { positionFloatingElement } from "../core/floatingPosition";
 
 const UNLOCK_SEQUENCE = "hidden";
 
@@ -109,14 +110,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       if (scene !== "puzzle" || !menuUnlocked) return;
       updateSettings();
       menu.hidden = false;
-      const screenBounds = screen.getBoundingClientRect();
-      const menuBounds = menu.getBoundingClientRect();
-      const scaleX = screen.clientWidth / screenBounds.width;
-      const scaleY = screen.clientHeight / screenBounds.height;
-      const requestedX = (clientX - screenBounds.left) * scaleX;
-      const requestedY = (clientY - screenBounds.top) * scaleY;
-      menu.style.left = `${Math.max(4, Math.min(requestedX, 800 - menuBounds.width * scaleX - 4))}px`;
-      menu.style.top = `${Math.max(4, Math.min(requestedY, 600 - menuBounds.height * scaleY - 4))}px`;
+      positionFloatingElement(screen, menu, clientX, clientY);
     };
 
     listen(screen, "pointerdown", (event) => {

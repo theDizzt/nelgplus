@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { localElementBounds, positionFloatingElement } from "../core/floatingPosition";
 
 export const level09: LevelDefinition = {
   number: 9,
@@ -71,18 +72,17 @@ export const level09: LevelDefinition = {
       volumeMenu.setAttribute("aria-label", kind === "music" ? "Music volume" : "SFX volume");
       updateSettings();
       volumeMenu.hidden = false;
-      const screenBounds = screen.getBoundingClientRect();
-      const menuBounds = menu.getBoundingClientRect();
-      const submenuBounds = volumeMenu.getBoundingClientRect();
-      const menuLeft = menuBounds.left - screenBounds.left;
-      const menuTop = menuBounds.top - screenBounds.top;
+      const menuBounds = localElementBounds(screen, menu);
+      const submenuBounds = localElementBounds(screen, volumeMenu);
+      const menuLeft = menuBounds.left;
+      const menuTop = menuBounds.top;
       const activeItem = kind === "music" ? musicVolumeItem : effectsVolumeItem;
       const preferredTop = activeItem.offsetTop;
-      const maximumTop = screenBounds.height - menuTop - submenuBounds.height - 4;
+      const maximumTop = screen.clientHeight - menuTop - submenuBounds.height - 4;
       volumeMenu.style.top = `${Math.max(-menuTop + 4, Math.min(preferredTop, maximumTop))}px`;
       volumeMenu.classList.toggle(
         "opens-left",
-        menuLeft + menuBounds.width + submenuBounds.width > screenBounds.width - 4,
+        menuLeft + menuBounds.width + submenuBounds.width > screen.clientWidth - 4,
       );
     };
 
@@ -94,12 +94,7 @@ export const level09: LevelDefinition = {
       volumeMenu.hidden = true;
       menu.hidden = false;
 
-      const screenBounds = screen.getBoundingClientRect();
-      const menuBounds = menu.getBoundingClientRect();
-      const requestedX = event.clientX - screenBounds.left;
-      const requestedY = event.clientY - screenBounds.top;
-      menu.style.left = `${Math.max(4, Math.min(requestedX, screenBounds.width - menuBounds.width - 4))}px`;
-      menu.style.top = `${Math.max(4, Math.min(requestedY, screenBounds.height - menuBounds.height - 4))}px`;
+      positionFloatingElement(screen, menu, event.clientX, event.clientY);
     });
 
     listen(menu, "click", (event) => {

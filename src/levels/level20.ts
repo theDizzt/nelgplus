@@ -1,6 +1,7 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { assetUrl } from "../core/assets";
 import type { LevelContext, LevelDefinition } from "../core/types";
+import { positionFloatingElement } from "../core/floatingPosition";
 
 const SCENE_TWO_OBJECTS = [
   { letter: "h", size: 44, left: 88, top: 294, kind: "gear" },
@@ -399,12 +400,7 @@ export const level20: LevelDefinition = {
           on(screen, "contextmenu", (event) => {
             event.preventDefault();
             menu.hidden = false;
-            const bounds = screen.getBoundingClientRect();
-            const menuBounds = menu.getBoundingClientRect();
-            const x = event.clientX - bounds.left;
-            const y = event.clientY - bounds.top;
-            menu.style.left = `${Math.max(4, Math.min(x, bounds.width - menuBounds.width - 4))}px`;
-            menu.style.top = `${Math.max(4, Math.min(y, bounds.height - menuBounds.height - 4))}px`;
+            positionFloatingElement(screen, menu, event.clientX, event.clientY);
           });
           on(menu, "click", (event) => {
             const item = (event.target as Element).closest<HTMLButtonElement>("button[data-command]");
