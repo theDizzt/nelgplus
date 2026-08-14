@@ -19,8 +19,12 @@ const RUNNER_PATHS = [
 export const level35: LevelDefinition = {
   number: 35,
   title: "Reunion II",
+  scenes: [
+    ...Array.from({ length: 10 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
+    { id: "softlock", label: "Softlock screen" },
+  ],
   mount(context) {
-    const { screen, complete, audio } = context;
+    const { screen, complete, audio, initialScene } = context;
     let controller = new AbortController();
     const timers = new Set<number>();
     let redGuy: RedGuyController | undefined;
@@ -177,7 +181,19 @@ export const level35: LevelDefinition = {
     const renderScene = (scene: number): void => {
       switch (scene) {
         case 1:
-          shell(1, formMarkup(), "level-35--space");
+          shell(1, `
+            <div class="level-35__scene-one-copy">
+              <p>Welcome to the second Reunion level.</p>
+              <p>To solve this level, you will need clues from every level since Level 20.</p>
+              <p>Think carefully and answer cautiously.</p>
+              <strong>ONE WRONG ANSWER WILL SEND YOU ALL THE WAY BACK TO THE BEGINNING!!!</strong>
+            </div>
+            <div class="level-35__scene-one-doors" aria-label="Three gray doors; the middle door is marked with a question mark">
+              <span class="level-35__scene-one-door" aria-hidden="true"></span>
+              <span class="level-35__scene-one-door level-35__scene-one-door--question" aria-hidden="true">?</span>
+              <span class="level-35__scene-one-door" aria-hidden="true"></span>
+            </div>
+            ${formMarkup()}`, "level-35--space");
           bindPassword("blue", 2);
           break;
         case 2:
@@ -199,22 +215,28 @@ function validate(raw) {
           bindPassword("c", 4, { forbiddenKey: "c" });
           break;
         case 4: {
-          shell(4, `<img class="level-35__phase-four" hidden alt="" />${formMarkup()}`, "level-35--near-black");
+          shell(4, `<img class="level-35__phase-four-secret" src="${assetUrl("images/level35phase4f.png")}" alt="" aria-hidden="true" /><img class="level-35__phase-four" hidden alt="" />${formMarkup()}`, "level-35--near-black");
           const image = screen.querySelector<HTMLImageElement>(".level-35__phase-four")!;
           const form = screen.querySelector<HTMLFormElement>(".level-35__form")!;
-          form.hidden = true; let phase = 0;
-          on(screen, "click", (event) => {
-            if ((event.target as Element).closest("form")) return;
-            phase = (phase + 1) % (PHASE_FOUR_IMAGES.length + 2);
+          const phases = ["blank", ...PHASE_FOUR_IMAGES, "form"] as const;
+          let phase = 0;
+          const showPhase = () => {
+            const current = phases[phase]!;
             image.hidden = true;
             form.hidden = true;
-            if (phase > 0 && phase <= PHASE_FOUR_IMAGES.length) {
-              image.src = assetUrl(`images/${PHASE_FOUR_IMAGES[phase - 1]}`);
+            if (current.endsWith(".png")) {
+              image.src = assetUrl(`images/${current}`);
               image.hidden = false;
-            } else if (phase === PHASE_FOUR_IMAGES.length + 1) {
+            } else if (current === "form") {
               form.hidden = false;
               form.querySelector<HTMLInputElement>("input")?.focus();
             }
+          };
+          showPhase();
+          on(screen, "click", (event) => {
+            if ((event.target as Element).closest("form")) return;
+            phase = (phase + 1) % phases.length;
+            showPhase();
           });
           bindPassword("AXIOM", 5);
           break;
@@ -281,7 +303,11 @@ function validate(raw) {
       }
     };
 
-    renderScene(1);
+    if (initialScene === "softlock") softlock();
+    else {
+      const requestedScene = Number(initialScene);
+      renderScene(Number.isInteger(requestedScene) && requestedScene >= 1 && requestedScene <= 10 ? requestedScene : 1);
+    }
     return clearScene;
   },
 };

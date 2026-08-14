@@ -47,8 +47,9 @@ function passwordForm(id: string): string {
 export const level20: LevelDefinition = {
   number: 20,
   title: "Reunion I",
+  scenes: Array.from({ length: 10 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
   mount(context) {
-    const { screen, complete, audio } = context;
+    const { screen, complete, audio, initialScene } = context;
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -445,7 +446,8 @@ export const level20: LevelDefinition = {
       }
     };
 
-    renderScene(1);
+    const requestedScene = Number(initialScene);
+    renderScene(Number.isInteger(requestedScene) && requestedScene >= 1 && requestedScene <= 10 ? requestedScene : 1);
     return clearScene;
   },
 };

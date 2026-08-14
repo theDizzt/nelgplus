@@ -8,7 +8,11 @@ const UNLOCK_SEQUENCE = "hidden";
 export const level24: LevelDefinition = {
   number: 24,
   title: "Script",
-  mount({ screen, complete, restart, listen, audio }) {
+  scenes: [
+    { id: "1", label: "Scene 1 - Puzzle" },
+    { id: "2", label: "Scene 2 - Punishment" },
+  ],
+  mount({ screen, complete, restart, listen, audio, initialScene }) {
     let scene: "puzzle" | "wrong" = "puzzle";
     let keyBuffer = "";
     let menuUnlocked = false;
@@ -176,5 +180,6 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     listen(document, "keydown", (event) => {
       if (event.key === "Escape" && scene === "puzzle") closeMenu();
     });
+    if (initialScene === "2") showWrong();
   },
 };

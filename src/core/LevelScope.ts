@@ -4,6 +4,7 @@ import type { AudioManager } from "./AudioManager";
 interface ScopeOptions {
   screen: HTMLElement;
   levelNumber: number;
+  initialScene?: string;
   complete: () => void;
   restart: () => void;
   goToLevel: (levelNumber: number) => void;
@@ -24,6 +25,7 @@ export class LevelScope {
     this.context = {
       screen: options.screen,
       levelNumber: options.levelNumber,
+      initialScene: options.initialScene,
       audio: {
         get musicEnabled() {
           return options.audio.musicEnabled;

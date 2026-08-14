@@ -11,7 +11,13 @@ const ERROR_MESSAGES: Record<Exclude<Scene, "puzzle">, string> = {
 export const level27: LevelDefinition = {
   number: 27,
   title: "Arithmatic",
-  mount({ screen, complete, listen }) {
+  scenes: [
+    { id: "1", label: "Scene 1 - Puzzle" },
+    { id: "2", label: "Scene 2 - Too many keys" },
+    { id: "3", label: "Scene 3 - Negative value" },
+    { id: "4", label: "Scene 4 - Overflow" },
+  ],
+  mount({ screen, complete, listen, initialScene }) {
     let scene: Scene = "puzzle";
     let value = 0;
     let operations = 0;
@@ -63,7 +69,14 @@ export const level27: LevelDefinition = {
       display.classList.add("is-changing");
     };
 
-    renderPuzzle();
+    const initialErrors: Readonly<Record<string, Exclude<Scene, "puzzle">>> = {
+      "2": "too-many",
+      "3": "negative",
+      "4": "overflow",
+    };
+    const initialError = initialScene ? initialErrors[initialScene] : undefined;
+    if (initialError) showError(initialError);
+    else renderPuzzle();
 
     listen(document, "keydown", (event) => {
       if (scene !== "puzzle" || event.repeat) return;

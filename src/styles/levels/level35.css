@@ -22,6 +22,64 @@
 .level-35--scene-6 .level-35__form input,
 .level-35--scene-9 .level-35__form input,
 .level-35--scene-10 .level-35__form input { color: #ff69b4; }
+.level-35__scene-one-copy {
+  position: absolute;
+  z-index: 5;
+  top: 174px;
+  left: 72px;
+  box-sizing: border-box;
+  width: 656px;
+  padding: 9px 16px;
+  color: #fff;
+  background: rgb(0 0 0 / 64%);
+  border: 1px solid rgb(255 105 180 / 42%);
+  font: 15px/1.22 "NELG Arial", Arial, sans-serif;
+  text-align: center;
+  text-shadow: 0 1px 3px #000;
+}
+.level-35__scene-one-copy p { margin: 2px 0; }
+.level-35__scene-one-copy strong {
+  display: block;
+  margin: 7px -8px;
+  color: #ff1b1b;
+  font-size: 20px;
+  line-height: 1.05;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 0 0 8px #6d0000;
+}
+.level-35__scene-one-doors {
+  position: absolute;
+  z-index: 6;
+  top: 338px;
+  left: 50%;
+  display: flex;
+  gap: 28px;
+  translate: -50% 0;
+}
+.level-35__scene-one-door {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 55px;
+  height: 91px;
+  color: #fff;
+  background: linear-gradient(90deg, #575757, #8b8b8b 48%, #666);
+  border: 4px solid #080808;
+  box-shadow: 4px 6px 0 rgb(0 0 0 / 45%);
+  font: 700 53px/1 "NELG Perpetua", Perpetua, serif;
+}
+.level-35__scene-one-door::after {
+  position: absolute;
+  top: 42px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  background: #d8d8d8;
+  border: 1px solid #111;
+  border-radius: 50%;
+  content: "";
+}
+.level-35__scene-one-door--question { text-shadow: 1px 2px 0 #222; }
 .level-35--scene-2 .level-35__heading { color: #ff69b4; }
 .level-35__code { position: absolute; top: 178px; left: 70px; width: 660px; margin: 0; color: #ff69b4; font: 17px/1.38 "NELG Courier",monospace; white-space: pre-wrap; }
 .level-35__code .is-decoy { color: #9a3b72; opacity: .78; }
@@ -50,8 +108,12 @@
 .level-35--scene-3 .level-35__form .level-35__go:active { background: radial-gradient(circle at center,#fff 0 30%,#777 54%,#111 76%,#000 100%); }
 .level-35--near-black { background: #000; }
 .level-35--near-black .level-35__heading { color: #333; text-shadow: none; }
-.level-35--near-black .level-35__form input { color: #000003; background: #000003; border-color: #0b0b0b; }
+.level-35--near-black .level-35__form input { color: #000003; background: #000003; border-color: #000003; }
+.level-35--scene-4 .level-35__form button { color: #000003; background: #000; border-color: #000003; }
+.level-35--scene-4 .level-35__phase-four[hidden],
+.level-35--scene-4 .level-35__form[hidden] { display: none; }
 .level-35__phase-four { position: absolute; z-index: 4; inset: 170px 70px 100px; width: 660px; height: 330px; object-fit: contain; }
+.level-35__phase-four-secret { position: absolute; z-index: 3; top: 8px; left: 8px; width: 200px; height: auto; pointer-events: none; user-select: none; }
 .level-35--math { color: aqua; background: #001cff; }
 .level-35--math .level-35__heading { color: aqua; }
 .level-35__nines { position: absolute; z-index: 1; inset: 0; color: aqua; opacity: .24; pointer-events: none; transform: scaleX(-1); }

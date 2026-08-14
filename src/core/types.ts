@@ -1,12 +1,19 @@
 export interface LevelDefinition {
   readonly number: number;
   readonly title: string;
+  readonly scenes?: readonly AdminSceneDefinition[];
   readonly mount: (context: LevelContext) => void | (() => void);
+}
+
+export interface AdminSceneDefinition {
+  readonly id: string;
+  readonly label: string;
 }
 
 export interface LevelContext {
   readonly screen: HTMLElement;
   readonly levelNumber: number;
+  readonly initialScene?: string;
   readonly audio: {
     readonly musicEnabled: boolean;
     readonly effectsEnabled: boolean;

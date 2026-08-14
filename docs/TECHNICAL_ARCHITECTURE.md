@@ -1,40 +1,47 @@
-# 기술 구조
+# Technical Architecture
 
-## 실행 구조
+## Runtime Structure
 
-- `src/core/Game.ts`: 메인 메뉴, 옵션, Warp Zone, 레벨 진입과 완료 처리
-- `src/core/LevelScope.ts`: 레벨 이벤트·타이머·정리 생명주기
-- `src/levels/registry.ts`: 실제 게임에 포함되는 레벨 등록
-- `src/levels/levelNN.ts`: 레벨별 상태와 상호작용
-- `src/styles/levels/levelNN.css`: 레벨별 시각 디자인
-- `public/assets/`: 브라우저가 그대로 제공하는 이미지·폰트·음원
+- `src/core/Game.ts`: Main menu, Options, Warp Zone, level entry, and level completion
+- `src/core/LevelScope.ts`: Level event, timer, and cleanup lifecycle
+- `src/levels/registry.ts`: Registration of levels included in the game
+- `src/levels/levelNN.ts`: Per-level state and interactions
+- `src/styles/levels/levelNN.css`: Per-level visual design
+- `public/assets/`: Images, fonts, and audio served directly by the browser
 
-## 생명주기
+## Lifecycle
 
-레벨은 `mount(context)`에서 DOM을 만들고 정리 함수를 반환한다. 전역 이벤트와 타이머는 가능한 한 `context.listen`, `context.timeout`, `context.interval`을 사용한다. 여러 Scene을 가진 레벨은 Scene 전환마다 자체 AbortController와 타이머 집합을 정리한다. Audio 객체, Red Guy 컨트롤러, 드래그 포인터 캡처도 Scene 종료 시 해제한다.
+A level creates its DOM in `mount(context)` and returns a cleanup function. Use `context.listen`, `context.timeout`, and `context.interval` for global events and timers whenever possible. A multi-scene level must clear its own `AbortController` and timer collection during every scene transition. Audio objects, Red Guy controllers, and drag pointer capture must also be released when a scene ends.
 
-## 공통 기능
+## Shared Systems
 
-- `AudioManager`: Music과 SFX 활성화·볼륨 및 짧은 효과음 오디오 풀
-- `StarMaskedInput`: 실제 값을 별표로 표시하는 암호 입력
-- `RedGuy`: 가속·관성·점프·일방통행 발판·장면별 키 매핑
-- `floatingPosition`: 가변 크기 화면에서 메뉴와 부유 UI의 좌표 변환
-- `assetUrl`: GitHub Pages 같은 하위 경로 배포에서도 안전한 에셋 URL
-- `SOUND_EFFECTS`: 프리로드와 레벨 호출이 같은 효과음 URL을 사용하게 하는 공용 경로 목록
-- `InteractionGuard`: 허용된 요소 외 선택·드래그 방지
+- `AudioManager`: Music and SFX enabled state, volume, and the short-effect audio pool
+- `StarMaskedInput`: Password entry that displays the real value as stars
+- `RedGuy`: Acceleration, inertia, jumping, one-way platforms, and per-scene key mapping
+- `floatingPosition`: Coordinate conversion for menus and floating UI at variable display sizes
+- `assetUrl`: Deployment-safe asset URLs for repository subpaths such as GitHub Pages
+- `SOUND_EFFECTS`: Canonical shared paths that keep preload and playback effect URLs identical
+- `HallOfFameService`: Data layer that reads, validates, and sorts the deployed static JSON file
+- `InteractionGuard`: Selection and dragging prevention outside explicitly allowed elements
 
-두 레벨 이상에서 같은 좌표 계산이나 상호작용이 반복되면 `core`의 작은 유틸리티로 분리한다. 반대로 한 레벨의 연출에만 필요한 코드는 해당 레벨 모듈과 CSS에 둔다.
+The browser never writes Hall of Fame records. Follow `docs/HALL_OF_FAME.md` for the JSON format and manual editing procedure.
 
-## Scene 상태 원칙
+When coordinate calculations or interactions are repeated by two or more levels, extract a small utility under `core`. Keep presentation logic used by only one level inside that level's module and CSS file.
 
-Scene 렌더 함수는 이전 Scene을 정리한 뒤 전체 화면을 다시 만든다. DOM 참조를 Scene 밖에서 재사용하지 않는다. 성공과 실패 전환에는 중복 실행 방지 플래그를 둔다. 반복 클릭 퍼즐은 상태 범위를 명시하고 모듈러 연산으로 `빈 화면 → 단계들 → 입력창 → 빈 화면` 순환을 구현한다.
+## Scene State Rules
 
-## 확장 방향
+A scene-rendering function must clean up the previous scene before recreating the full screen. Do not reuse DOM references across scenes. Success and failure transitions require duplicate-execution guards. A repeating click puzzle should define its complete state range and use modular arithmetic to implement a cycle such as `empty screen → phases → input field → empty screen`.
 
-레벨 수가 늘어나면 다음 순서로 구조를 확장한다.
+Multi-scene levels expose their administrator entry points through the optional `LevelDefinition.scenes` metadata. Each scene has a stable string `id` and a human-readable `label`. `Game.showLevel` passes the selected id as `LevelContext.initialScene`; the level validates it and falls back to its normal first scene when the value is missing or unsupported. Add this metadata and initial dispatch whenever a new multi-scene level is created so the Options administrator console updates automatically.
 
-1. 암호 폼, Flash식 메뉴, Warp 체크포인트 데이터의 독립 컴포넌트화
-2. 플랫폼 장면 레이아웃을 데이터 객체로 분리
-3. 레벨별 에셋 목록을 등록해 선택적 프리로드
-4. 개발 전용 Scene 점프 및 충돌 박스 표시 기능
-5. 자동화 가능한 정답·오답·Enter·정리 동작 테스트
+Administrator heading-font overrides are applied at the game root with CSS custom properties and `!important` selectors limited to level and Warp Zone headings. Selecting `Default` removes the property so each level's authored typography is restored. Add a font to `fonts.css`, the preload lists, and `ADMIN_FONT_OPTIONS` together; never expose an unregistered font in the administrator selector.
+
+## Expansion Direction
+
+As the number of levels grows, extend the architecture in this order:
+
+1. Extract password forms, Flash-style menus, and Warp checkpoint data into independent components.
+2. Move platform-scene layouts into data objects.
+3. Register per-level asset lists for selective preloading.
+4. Extend the existing administrator scene navigation and add collision-box visualization.
+5. Add automated tests for correct answers, incorrect answers, Enter behavior, and cleanup.

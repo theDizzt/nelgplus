@@ -29,3 +29,14 @@
   height: 105px;
   font-size: 116px;
 }
+
+.admin-title-font-override .level-heading__number,
+.admin-title-font-override .level-20__editable-title,
+.admin-title-font-override .warp-gate__heading h1 {
+  font-family: var(--admin-level-title-font) !important;
+}
+
+.admin-subtitle-font-override .level-heading h1,
+.admin-subtitle-font-override .warp-gate__heading p {
+  font-family: var(--admin-level-subtitle-font) !important;
+}

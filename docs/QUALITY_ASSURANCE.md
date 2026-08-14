@@ -1,53 +1,66 @@
-# 품질 보증 기준
+# Quality Assurance Standards
 
-## 레벨별 필수 테스트
+## Required Tests for Every Level
 
-1. 정상 정답으로 다음 Scene 또는 다음 레벨에 이동한다.
-2. 오답, 대소문자 차이와 앞뒤 공백이 명세대로 처리된다.
-3. GO와 Enter가 동일하게 동작하거나 의도적으로 다르게 동작한다.
-4. 레벨 재진입 시 이전 Scene의 타이머·오디오·이벤트가 남지 않는다.
-5. Music 0~100, SFX 0~100 및 활성화 설정을 따른다.
-6. 마우스 드래그와 클릭 좌표가 여러 표시 크기에서 일치한다.
-7. 모든 이미지·폰트·오디오가 개발 서버와 GitHub Pages 하위 경로에서 로드된다.
-8. 클릭 직후 Scene이 전환되더라도 해당 클릭 효과음이 재생된다.
-9. 같은 효과음을 빠르게 연타해도 앞의 재생 때문에 다음 재생이 누락되지 않는다.
+1. The correct solution opens the next scene or level.
+2. Incorrect answers, capitalization differences, and leading or trailing spaces behave exactly as specified.
+3. GO and Enter either behave identically or differ intentionally according to the specification.
+4. Re-entering a level leaves no timers, audio, or events from the previous scene.
+5. Music and SFX respect their enabled state and volume range from 0 to 100.
+6. Drag and click coordinates remain accurate at multiple rendered sizes.
+7. Every image, font, and audio file loads on both the development server and a GitHub Pages repository subpath.
+8. A click sound still plays when its click immediately transitions to another scene.
+9. Rapidly repeating the same effect does not cause later playback to be dropped behind an earlier instance.
 
-## 효과음 회귀 테스트
+## Font Regression Tests
 
-공용 효과음 변경 후에는 Options에서 SFX를 켜고 볼륨을 100으로 설정한 다음 아래 지점을 직접 확인한다.
+After adding or changing a font, verify the following:
 
-- Level 6 숫자 버튼
+- The `font-family`, `font-weight`, and `font-style` in `@font-face` exactly match the real file and its consuming CSS selector.
+- Static font files do not declare variable weight ranges.
+- Screen-critical font file URLs and CSS requests are present in `PRELOAD_FONTS` and `PRELOAD_FONT_REQUESTS`, respectively.
+- A console check such as `document.fonts.check('700 34px "NELG Vivaldi"')` returns `true` for the actual requested weight.
+- Font requests return HTTP 200 on the development server and GitHub Pages, with no 404 or capitalization mismatch in the Network panel.
+- The same glyph shape is visible immediately after the preloader and after a refresh, without a fallback-font flash.
+
+Test the Level 25 failure-screen body separately to ensure that it uses `NELG Vivaldi` at weight `700`. Its level title and subtitle must retain the shared Perpetua and Courier rules.
+
+## Sound Effect Regression Tests
+
+After changing a shared sound effect, enable SFX in Options, set its volume to 100, and manually verify these interactions:
+
+- Level 6 number buttons
 - Level 20 Scene 1 `BEGIN`
-- Level 20 Scene 4 움직이는 버튼
-- Level 23 상호작용 오브젝트와 `GO`
-- Level 24 실패 화면의 스페이스바 연타
+- Level 20 Scene 4 moving button
+- Level 23 interactive objects and `GO`
+- Level 24 failure-screen Space-bar presses
 
-브라우저 Network 탭에서 효과음 요청이 현재 배포 base 아래의 `/assets/sounds/`로 향하고 HTTP 200을 반환하는지 확인한다. 코드 검색에서 `playEffect("...` 형태의 직접 문자열 호출이 남아 있지 않아야 하며, 모든 호출은 `SOUND_EFFECTS` 상수를 사용해야 한다.
+In the browser Network panel, confirm that sound requests target `/assets/sounds/` under the current deployment base and return HTTP 200. A code search must find no raw `playEffect("...` string calls. Every call must use a `SOUND_EFFECTS` constant.
 
-## 화면 크기 테스트
+## Screen Size Tests
 
-최소 세 가지 크기에서 검사한다.
+Test at least these three sizes:
 
-- 800×600 또는 그와 가까운 기본 크기
-- 넓은 데스크톱 임베드
-- 작은 블로그·Newgrounds 임베드
+- 800×600 or a close baseline size
+- A wide desktop embed
+- A small blog or Newgrounds embed
 
-게임 화면은 비율을 유지하며 중앙 정렬되어야 한다. 화면 좌표 기반 메뉴는 네 모서리에서 열어도 잘리지 않아야 한다. 드래그 오브젝트는 포인터와 같은 논리 좌표를 따라야 한다.
+The game must preserve its aspect ratio and remain centered. Coordinate-based menus must stay within the viewport when opened near any corner. Draggable objects must follow the pointer in the same logical coordinate system.
 
-## 플랫폼 레벨 테스트
+## Platform Level Tests
 
-- 모든 발판 간격이 현재 점프 속도로 도달 가능하다.
-- 일방통행 발판은 위에서 착지할 때만 고체다.
-- 이동·드래그 발판 위의 캐릭터가 의도한 방향으로 함께 이동한다.
-- 투명 이미지 부분은 적 충돌로 처리되지 않는다.
-- 화면 밖 퍼즐 공간과 탈출 방지 벽이 화면에 노출되지 않는다.
-- 실패 후 음악과 캐릭터 루프가 중복되지 않는다.
+- Every platform gap is reachable with the current jump speed.
+- One-way platforms are solid only when the character lands from above.
+- Characters standing on moving or draggable platforms travel in the intended direction with them.
+- Transparent image regions do not count as enemy collisions.
+- Off-screen puzzle spaces and containment walls do not become visible in the viewport.
+- Music and character loops do not duplicate after a failure restart.
 
-## 배포 전 명령
+## Pre-deployment Commands
 
 ```powershell
 npm.cmd run build
 git diff --check
 ```
 
-빌드 후 `dist/`에서 주요 에셋 요청이 HTTP 200인지 확인한다. 브라우저 콘솔 오류, 누락된 파일, 무한 타이머, 중복 오디오가 없어야 한다. 새 레벨을 등록하면 메인 화면의 포함 레벨 수와 Warp Zone 번호도 확인한다.
+After building, confirm that major asset requests from `dist/` return HTTP 200. The browser console must contain no errors, and the game must have no missing files, infinite timers, or duplicated audio. After registering a new level, also verify the included-level count on the main menu and its Warp Zone number.

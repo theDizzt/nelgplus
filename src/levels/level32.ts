@@ -229,8 +229,12 @@ function touchesEnemyMask(
 export const level32: LevelDefinition = {
   number: 32,
   title: "Wormhole",
+  scenes: [
+    ...Array.from({ length: 9 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
+    { id: "fail", label: "Fail screen" },
+  ],
   mount(context) {
-    const { screen, audio } = context;
+    const { screen, audio, initialScene } = context;
     let activeRedGuy: RedGuyController | undefined;
     const sceneTimeouts = new Set<number>();
     const sceneIntervals = new Set<number>();
@@ -718,7 +722,21 @@ export const level32: LevelDefinition = {
       });
     }
 
-    renderSceneOne();
+    const sceneRenderers: Readonly<Record<string, () => void>> = {
+      "1": renderSceneOne,
+      "2": renderSceneTwo,
+      "3": renderSceneThree,
+      "4": renderSceneFour,
+      "5": renderSceneFive,
+      "6": renderSceneSix,
+      "7": renderSceneSeven,
+      "8": renderSceneEight,
+      "9": renderSceneNine,
+      fail: renderFail,
+    };
+    const initialRenderer = initialScene ? sceneRenderers[initialScene] : undefined;
+    if (initialRenderer) initialRenderer();
+    else renderSceneOne();
     return () => {
       clearScene();
       audio.stopMusic();

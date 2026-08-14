@@ -1,30 +1,30 @@
-# 제품 방향
+# Product Direction
 
-## 목표
+## Goal
 
-Never Ending Level Game ++는 2000년대 Flash 퍼즐 게임의 불친절하고 기괴한 감각을 HTML5로 재해석한 데스크톱 웹 게임이다. 최종 범위는 Level -8부터 Level 150까지 총 159개 레벨이며, Newgrounds·itch.io·개인 웹사이트에서 별도 플러그인 없이 실행되는 것을 목표로 한다.
+Never Ending Level Game ++ is a desktop web game that reinterprets the hostile and bizarre character of 2000s Flash puzzle games in HTML5. The final scope is 159 levels, ranging from Level -8 through Level 150. The game should run on Newgrounds, itch.io, and personal websites without requiring a separate plugin.
 
-## 핵심 경험
+## Core Experience
 
-1. 플레이어가 화면의 모든 요소를 의심하게 만든다.
-2. 마우스, 키보드, 드래그, 우클릭, 복사·붙여넣기, 이미지·오디오 분석 등 브라우저와 외부 도구를 퍼즐의 일부로 사용한다.
-3. 이전 레벨에서 학습한 해결법을 이후 레벨에서 변형하거나 배반한다.
-4. Perpetua 제목, Courier 부제목, 800×600 논리 좌표와 의도적으로 낡은 UI로 Flash 시대의 분위기를 유지한다.
-5. 난도가 높더라도 정답에 도달한 뒤에는 단서와 해결법의 연결을 설명할 수 있어야 한다.
+1. Make the player distrust every element on the screen.
+2. Treat the mouse, keyboard, dragging, right-click menus, copy and paste, and image or audio analysis as parts of the puzzle system.
+3. Transform or betray solutions learned in earlier levels when they return later.
+4. Preserve the Flash-era atmosphere through Perpetua titles, Courier subtitles, an 800×600 logical canvas, and deliberately dated UI design.
+5. Even at high difficulty, the relationship between the clues and the solution should be explainable after the answer is discovered.
 
-## 개발 우선순위
+## Development Priorities
 
-1. 진행 불가능 버그와 좌표·입력 오류 제거
-2. 레벨의 해결 조건과 실패 조건 정확성
-3. 가변 크기 사이트에서 800×600 논리 화면의 일관성
-4. 에셋 로딩과 오디오 제어 안정성
-5. 원작 감성에 맞는 시각적 연출
-6. 신규 레벨 제작 속도
+1. Eliminate progression-blocking bugs and coordinate or input errors.
+2. Preserve exact success and failure conditions.
+3. Keep the 800×600 logical screen consistent across variable embed sizes.
+4. Make asset loading and audio controls reliable.
+5. Preserve visual presentation consistent with the original game's atmosphere.
+6. Maintain an efficient new-level production workflow.
 
-## 의도적 불편함과 버그의 구분
+## Intentional Friction vs. Bugs
 
-소프트락, 숨은 버튼, 보이지 않는 커서처럼 기획에 명시된 불편함은 퍼즐이다. 클릭 좌표가 어긋나거나 정답을 입력해도 진행되지 않는 현상, 화면 크기에 따라 조작이 달라지는 현상은 버그다. 의도적인 실패 상태는 코드에서 이름이 있는 Scene으로 구현하고 공략 문서에 진입 조건을 기록한다.
+Softlocks, hidden buttons, and invisible cursors are puzzles when explicitly included in the design. Misaligned click coordinates, valid answers that fail to progress, and controls that behave differently at different viewport sizes are bugs. Implement intentional failure states as named scenes in code and record their entry conditions in the walkthrough.
 
-## 저장 정책
+## Save Policy
 
-일반 레벨 진행은 저장하지 않는다. `START GAME`은 항상 Level 1에서 시작한다. Music·SFX 설정처럼 진행과 무관한 사용자 환경 설정만 보존할 수 있다. Warp Zone과 관리자 이동은 테스트 및 재진입 수단이지 자동 진행 저장 기능이 아니다.
+Do not save normal level progress. `START GAME` must always begin at Level 1. Only player preferences unrelated to progression, such as Music and SFX settings, may persist. Warp Zones and administrator navigation are testing and re-entry tools, not automatic progress saves.

@@ -61,7 +61,14 @@ function errorArtworkMarkup(errorScene: Exclude<Scene, "puzzle">): string {
 export const level25: LevelDefinition = {
   number: 25,
   title: "Trial I",
-  mount({ screen, complete, listen, interval }) {
+  scenes: [
+    { id: "1", label: "Scene 1 - Maze" },
+    { id: "2", label: "Scene 2 - Wall failure" },
+    { id: "3", label: "Scene 3 - Cheat failure" },
+    { id: "4", label: "Scene 4 - Order failure" },
+    { id: "5", label: "Scene 5 - Obstacle failure" },
+  ],
+  mount({ screen, complete, listen, interval, initialScene }) {
     let scene: Scene = "puzzle";
     let armed = false;
     let awaitingPassword = false;
@@ -168,7 +175,15 @@ export const level25: LevelDefinition = {
       return hitPaths.some((path) => path.isPointInFill(point));
     };
 
-    renderPuzzle();
+    const initialErrors: Readonly<Record<string, Exclude<Scene, "puzzle">>> = {
+      "2": "wall",
+      "3": "escape",
+      "4": "order",
+      "5": "box",
+    };
+    const initialError = initialScene ? initialErrors[initialScene] : undefined;
+    if (initialError) showError(initialError);
+    else renderPuzzle();
 
     listen(screen, "pointermove", (event) => {
       if (draggedPiece && event.pointerId === draggedPiecePointer) {

@@ -30,13 +30,28 @@ if not exist "node_modules\" (
   )
 )
 
+if not exist "node_modules\.bin\vercel.cmd" (
+  echo Installing the Vercel development server...
+  call npm.cmd install
+  if errorlevel 1 (
+    echo [ERROR] Package installation failed.
+    pause
+    exit /b 1
+  )
+)
+
 echo.
 echo Starting Never Ending Level Game ++...
-echo The browser will open automatically.
-echo Press Ctrl+C in this window to stop the game server.
+echo The game and Vercel Function will run together at:
+echo http://127.0.0.1:5173
+echo.
+echo On the first run, Vercel may ask you to log in and link this folder.
+echo Press Ctrl+C in this window to stop both servers.
 echo.
 
-call npm.cmd run dev -- --host 127.0.0.1 --open
+start "" powershell.exe -NoProfile -WindowStyle Hidden -Command "$url='http://127.0.0.1:5173'; for($attempt=0; $attempt -lt 120; $attempt++){ try { $response=Invoke-WebRequest -UseBasicParsing -Uri $url -TimeoutSec 1; if($response.StatusCode -ge 200){ Start-Process $url; break } } catch {}; Start-Sleep -Milliseconds 500 }"
+
+call npm.cmd run dev:full
 
 if errorlevel 1 (
   echo.

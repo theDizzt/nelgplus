@@ -1,36 +1,47 @@
-# 콘텐츠와 에셋 관리
+# Content and Asset Management
 
-## 디렉터리
+## Directories
 
-- 이미지: `public/assets/images/`
-- 배경음악과 긴 음성: `public/assets/music/`
-- 짧은 효과음: `public/assets/sounds/`
-- 웹폰트: `public/assets/fonts/<family>/`
+- Images: `public/assets/images/`
+- Background music and long voice recordings: `public/assets/music/`
+- Short sound effects: `public/assets/sounds/`
+- Web fonts: `public/assets/fonts/<family>/`
 
-파일명은 영문 소문자와 숫자, 하이픈을 권장한다. 기존 레벨 명명 규칙을 유지해야 할 때는 `level32bg5.jpg`, `level35phase4a.png`처럼 레벨 번호와 역할이 드러나게 한다.
+Use lowercase English letters, numbers, and hyphens for file names whenever possible. When an existing level naming convention must be preserved, make the level number and purpose obvious, as in `level32bg5.jpg` or `level35phase4a.png`.
 
-## URL과 배포
+## URLs and Deployment
 
-TypeScript에서 에셋을 참조할 때는 `assetUrl("images/...")`를 사용한다. CSS에서 직접 절대 경로를 쓰면 GitHub Pages의 저장소 하위 경로에서 실패할 수 있으므로, 동적 CSS 변수에 `assetUrl` 결과를 전달하거나 공통 배포 기준을 확인한다.
+Use `assetUrl("images/...")` when referencing assets from TypeScript. Absolute paths written directly in CSS may fail when the game is deployed under a repository subpath on GitHub Pages. Pass the result of `assetUrl` through a dynamic CSS variable or verify that the path follows the shared deployment rules.
 
-## 이미지
+## Images
 
-투명 PNG와 GIF의 충돌 판정은 사각형 전체가 아니라 알파 마스크 또는 명시된 작은 hitbox를 사용한다. 거대한 원본은 표시 크기에 맞춰 최적화하되 퍼즐이 픽셀 색 차이에 의존한다면 손실 압축을 사용하지 않는다. 숨은 색 퍼즐의 RGB 값은 문서와 코드에서 정확히 일치시킨다.
+Collision detection for transparent PNG and GIF files should use an alpha mask or an explicitly defined smaller hitbox instead of the full rectangular image bounds. Optimize oversized source files for their rendered dimensions, but do not use lossy compression when a puzzle relies on exact pixel color differences. RGB values used in hidden-color puzzles must match exactly between the documentation and code.
 
-## 오디오
+## Audio
 
-Music과 SFX 볼륨을 구분한다. 레벨 전용 배경음악은 레벨 종료까지 반복하고 cleanup에서 정지한다. 긴 음성은 초기 전체 프리로더에 넣지 않고 해당 레벨에서 메타데이터 또는 사용자 재생 시 로드한다. 재생 버튼은 브라우저의 사용자 상호작용 이후 `play()`를 호출하고 실패 상태를 표시한다.
+Keep Music and SFX volume controls separate. Level-specific background music should loop until the level ends and must stop during cleanup. Do not add long voice recordings to the global initial preloader. Load their metadata when the relevant level opens or load them after the player presses a playback button. Call `play()` only after a browser-recognized user interaction and display a failure state if playback cannot begin.
 
-짧은 공용 효과음은 레벨 파일에 `"sounds/..."` 또는 `"/assets/sounds/..."` 문자열을 직접 적지 않는다. 반드시 `src/core/assets.ts`의 `SOUND_EFFECTS`를 import하고 `audio.playEffect(SOUND_EFFECTS.smack)`처럼 호출한다. 이렇게 해야 개발 서버, GitHub Pages의 저장소 하위 경로, 프리로드 오디오 풀에서 모두 동일한 URL 키를 사용한다.
+Do not write raw `"sounds/..."` or `"/assets/sounds/..."` strings in level modules for shared short sound effects. Import `SOUND_EFFECTS` from `src/core/assets.ts` and call effects through a canonical value such as `audio.playEffect(SOUND_EFFECTS.smack)`. This ensures that the development server, GitHub Pages repository subpaths, and the preloaded audio pool all use the same URL key.
 
-새 공용 효과음을 추가할 때는 다음 세 곳을 함께 수정한다.
+When adding a shared sound effect, update all applicable locations:
 
-1. 파일을 `public/assets/sounds/`에 넣는다.
-2. `SOUND_EFFECTS`에 이름과 상대 경로를 등록한다.
-3. 초기부터 자주 쓰는 효과음이라면 `Game.ts`의 `PRELOAD_EFFECTS`에도 같은 상수를 등록한다.
+1. Place the file in `public/assets/sounds/`.
+2. Register its name and relative path in `SOUND_EFFECTS`.
+3. If the effect is used frequently from the beginning of the game, add the same constant to `PRELOAD_EFFECTS` in `Game.ts`.
 
-효과음 호출 경로와 프리로드 경로가 한 글자라도 다르면 준비된 오디오 풀을 재사용하지 못할 수 있다. 파일 확장자의 대소문자도 실제 파일과 일치시킨다.
+If the playback path differs from the preload path by even one character, the prepared audio pool may not be reused. The capitalization of the file extension must also match the real file.
 
-## 폰트
+## Fonts
 
-폰트 파일을 추가하면 `src/styles/fonts.css`에 `@font-face`를 등록하고 필요하면 초기 프리로드 목록에도 추가한다. 제목은 Perpetua, 부제목은 Courier가 기본이며 Arial, Tahoma, Comic Sans, Papyrus 등은 레벨 명세에 지정된 경우만 사용한다.
+When adding a font file, register it with `@font-face` in `src/styles/fonts.css` and add it to the initial preload lists when necessary. Perpetua is the default title font and Courier is the default subtitle font. Arial, Tahoma, Comic Sans, Papyrus, and other families should only be used when required by a level specification.
+
+A static font file must declare exactly one `font-weight` and `font-style` matching the real file. For example, register `Vivaldi_Bold.woff2` with `font-weight: 700` and request weight `700` from its consuming selector. Do not declare a range such as `700 900` for a file that is not a variable font, and do not request an unregistered weight such as `900`. If the browser cannot find a matching face, it may silently substitute a fallback font.
+
+For a dedicated font that must be visible before gameplay starts, update all of the following:
+
+1. Add the file under `public/assets/fonts/<family>/`.
+2. Register `@font-face` in `src/styles/fonts.css` with the exact family, weight, and style.
+3. Add the real file URL to `PRELOAD_FONTS` in `Game.ts`.
+4. Add a matching family-and-weight request to `PRELOAD_FONT_REQUESTS`.
+
+Screen-critical fonts awaited by the initial preloader may use `font-display: block` to prevent a brief fallback-font flash. Ordinary body fonts may retain `swap`, depending on their loading policy.

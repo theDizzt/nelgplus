@@ -1,16 +1,36 @@
 import { AudioManager } from "./AudioManager";
 import { assetUrl, SOUND_EFFECTS } from "./assets";
 import { InteractionGuard } from "./InteractionGuard";
+import { HallOfFameService, type HallOfFameEntry } from "./HallOfFameService";
 import { LevelScope } from "./LevelScope";
 import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
-const GAME_VERSION = "1.0.20";
-const VERSION_DATE = "08/03/2026";
+const GAME_VERSION = "1.0.39";
+const VERSION_DATE = "08/14/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
+const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
+const ADMIN_FONT_OPTIONS = [
+  { id: "", label: "Default (level design)", family: "" },
+  { id: "perpetua", label: "Perpetua", family: '"NELG Perpetua", Perpetua, serif' },
+  { id: "courier", label: "Courier", family: '"NELG Courier", Courier, monospace' },
+  { id: "arial", label: "Arial", family: '"NELG Arial", Arial, sans-serif' },
+  { id: "arial-narrow", label: "Arial Narrow", family: '"NELG Arial Narrow", Arial, sans-serif' },
+  { id: "tahoma", label: "Tahoma", family: '"NELG Tahoma", Tahoma, sans-serif' },
+  { id: "comic-sans", label: "Comic Sans", family: '"NELG Comic Sans", "Comic Sans MS", cursive' },
+  { id: "papyrus", label: "Papyrus", family: '"NELG Papyrus", Papyrus, fantasy' },
+  { id: "vivaldi", label: "Vivaldi", family: '"NELG Vivaldi", Vivaldi, cursive' },
+  { id: "rockwell", label: "Rockwell", family: '"NELG Rockwell", Rockwell, serif' },
+  { id: "cherry-bomb-one", label: "Cherry Bomb One", family: '"NELG Cherry Bomb One", fantasy' },
+  { id: "outfit", label: "Outfit", family: '"NELG Outfit", sans-serif' },
+  { id: "gowun-batang", label: "Gowun Batang", family: '"NELG Gowun Batang", serif' },
+  { id: "itc-kristen", label: "ITC Kristen", family: '"NELG ITC Kristen", cursive' },
+  { id: "nexa", label: "Nexa", family: '"NELG Nexa", sans-serif' },
+  { id: "wanted-sans", label: "Wanted Sans", family: '"NELG Wanted Sans", sans-serif' },
+] as const;
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
 const PRELOAD_FONTS = [
@@ -37,6 +57,18 @@ const PRELOAD_FONTS = [
   "/assets/fonts/papyrus/Papyrus V2.woff2",
   "/assets/fonts/vivaldi/Vivaldi.woff2",
   "/assets/fonts/vivaldi/Vivaldi_Bold.woff2",
+  "/assets/fonts/rockwell/Rockwell-Regular.woff2",
+  "/assets/fonts/rockwell/Rockwell-Bold.woff2",
+  "/assets/fonts/cherrybombone/cherry-bomb-one-latin-regular.woff2",
+  "/assets/fonts/outfit/outfit-v15-latin-regular.woff2",
+  "/assets/fonts/outfit/outfit-v15-latin-700.woff2",
+  "/assets/fonts/gowunbatang/gowun-batang-v12-latin-regular.woff2",
+  "/assets/fonts/gowunbatang/gowun-batang-v12-latin-700.woff2",
+  "/assets/fonts/kristenict/ITC Kristen.woff2",
+  "/assets/fonts/nexa/Nexa-Regular.woff2",
+  "/assets/fonts/nexa/Nexa-Bold.woff2",
+  "/assets/fonts/wantedsans/WantedSansStd-Regular.woff2",
+  "/assets/fonts/wantedsans/WantedSansStd-Bold.woff2",
 ] as const;
 const PRELOAD_FONT_REQUESTS = [
   '400 32px "NELG Perpetua"', '700 32px "NELG Perpetua"', 'italic 400 32px "NELG Perpetua"',
@@ -47,6 +79,13 @@ const PRELOAD_FONT_REQUESTS = [
   '400 24px "NELG Comic Sans"', '700 24px "NELG Comic Sans"',
   '400 24px "NELG Papyrus"', '700 24px "NELG Papyrus"',
   '400 32px "NELG Vivaldi"', '700 32px "NELG Vivaldi"',
+  '400 32px "NELG Rockwell"', '700 32px "NELG Rockwell"',
+  '400 32px "NELG Cherry Bomb One"',
+  '400 32px "NELG Outfit"', '700 32px "NELG Outfit"',
+  '400 32px "NELG Gowun Batang"', '700 32px "NELG Gowun Batang"',
+  '400 32px "NELG ITC Kristen"',
+  '400 32px "NELG Nexa"', '700 32px "NELG Nexa"',
+  '400 32px "NELG Wanted Sans"', '700 32px "NELG Wanted Sans"',
 ] as const;
 const PRELOAD_IMAGES = [
   "/assets/images/level16-cafe.png",
@@ -109,6 +148,7 @@ const PRELOAD_IMAGES = [
   "/assets/images/level35phase4c.png",
   "/assets/images/level35phase4d.png",
   "/assets/images/level35phase4e.png",
+  "/assets/images/level35phase4f.png",
   "/assets/images/level35phase10.png",
 ].map(assetUrl);
 const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack] as const;
@@ -161,11 +201,14 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
 
 export class Game {
   private readonly audioManager = new AudioManager();
+  private readonly hallOfFame = new HallOfFameService();
   private readonly interactionGuard = new InteractionGuard();
   private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
   private currentLevel = 1;
   private scope?: LevelScope;
   private transitioning = false;
+  private adminTitleFont = "";
+  private adminSubtitleFont = "";
 
   constructor(private readonly root: HTMLElement) {}
 
@@ -255,7 +298,7 @@ export class Game {
       <main class="game-frame main-menu" aria-label="Never Ending Level Game Plus Plus main menu">
         <div class="main-menu__glow" aria-hidden="true"></div>
         <section class="main-menu__identity">
-          <p class="main-menu__kicker">A browser puzzle game</p>
+          <p class="main-menu__kicker">WELCOME TO THE</p>
           <h1>Never Ending<br />Level Game <span>++</span></h1>
           <p class="main-menu__description">
             This game is a sequel to Clarence Ball’s <em>Never Ending Level Game</em>, which was released in 2005.
@@ -266,7 +309,7 @@ export class Game {
           <dl class="main-menu__facts">
             <div>
               <dt>LEVELS INCLUDED</dt>
-              <dd>${registeredLevelNumbers.length}</dd>
+              <dd>${registeredLevelNumbers.length} / ${MAXIMUM_LEVEL}</dd>
             </div>
             <div>
               <dt>DEVELOPMENT</dt>
@@ -281,22 +324,22 @@ export class Game {
 
         <nav class="main-menu__buttons" aria-label="Main menu">
           <button class="menu-button menu-button--primary" data-menu-action="start" type="button">
-            <span>01</span> START GAME
+            START GAME
           </button>
           <button class="menu-button" data-menu-action="warp" type="button">
-            <span>02</span> WARP ZONE
+            WARP ZONE
           </button>
           <button class="menu-button" data-menu-action="credits" type="button">
-            <span>03</span> CREDITS
+            CREDITS
           </button>
           <button class="menu-button" data-menu-action="hall" type="button">
-            <span>04</span> HALL OF FAME
+            HALL OF FAME
           </button>
           <button class="menu-button" data-menu-action="discord" type="button">
-            <span>05</span> DISCORD
+            DISCORD
           </button>
           <button class="menu-button" data-menu-action="options" type="button">
-            <span>06</span> OPTIONS
+            OPTIONS
           </button>
         </nav>
       </main>
@@ -448,7 +491,10 @@ export class Game {
 
     this.root
       .querySelector<HTMLButtonElement>(".warp-checkpoint__next")
-      ?.addEventListener("click", () => this.showLevel(levelNumber + 1), { once: true });
+      ?.addEventListener("click", () => {
+        if (levelNumber === 35) this.renderLevel35Winner();
+        else this.showLevel(levelNumber + 1);
+      }, { once: true });
   }
 
   private renderCredits(): void {
@@ -492,11 +538,123 @@ export class Game {
   private renderHallOfFame(): void {
     this.renderMenuPage(
       "Hall of Fame",
-      `<div class="empty-panel">
-         <p>NO ENTRIES YET</p>
-         <span>The first champions will appear here.</span>
-       </div>`,
+      `<p class="menu-page__intro">Ranked by the time each winner reached the finish.</p>
+       <div class="hall-list" id="hall-list" aria-live="polite"><p>LOADING...</p></div>`,
     );
+    const list = this.root.querySelector<HTMLElement>("#hall-list");
+    void this.hallOfFame.list().then((entries) => {
+      if (!list?.isConnected) return;
+      this.populateHallOfFame(list, entries);
+    }).catch((error: unknown) => {
+      if (list?.isConnected) list.textContent = error instanceof Error ? error.message : "Unable to load the Hall of Fame.";
+    });
+  }
+
+  private populateHallOfFame(container: HTMLElement, entries: HallOfFameEntry[]): void {
+    container.replaceChildren();
+    if (entries.length === 0) {
+      const empty = document.createElement("p");
+      empty.textContent = "NO ENTRIES YET";
+      container.append(empty);
+      return;
+    }
+    entries.forEach((entry, index) => {
+      const article = document.createElement("article");
+      article.className = "hall-entry";
+      const rank = document.createElement("strong");
+      rank.className = "hall-entry__rank";
+      rank.textContent = `#${index + 1}`;
+      const body = document.createElement("div");
+      const name = document.createElement("h2");
+      name.textContent = entry.nickname;
+      const time = document.createElement("time");
+      time.dateTime = entry.achievedAt;
+      time.textContent = this.formatUtcTimestamp(new Date(entry.achievedAt));
+      const message = document.createElement("p");
+      message.textContent = entry.message || "—";
+      body.append(name, time, message);
+      article.append(rank, body);
+      container.append(article);
+    });
+  }
+
+  private renderLevel35Winner(): void {
+    this.disposeCurrentLevel();
+    this.audioManager.stopMusic();
+    const arrivedAt = new Date();
+    this.root.innerHTML = `
+      <main class="game-frame winner-screen" aria-label="Level 35 Winner">
+        <p class="winner-screen__kicker">LEVEL 35 WINNER</p>
+        <h1>Congratulations!</h1>
+        <div class="winner-screen__message">
+          <p>Congratulations!!! You have won all <strong class="winner-screen__level-count">35</strong> levels in this game. Complete the short form below to submit your name to the Hall of Fame. Please note that it may take some time for your entry to appear in an update.</p>
+          <p>Enter your nickname and a message you would like to leave, and they may be permanently preserved in the Hall of Fame!</p>
+          <p>To discourage bug abuse, a secret password has been hidden somewhere you can discover naturally while playing the game. Please enter it in the Hidden Password field.</p>
+          <p>More levels will be added in the future, so take a well-earned break and meet us again after the next update. Thank you from the bottom of our hearts for playing this game!!!</p>
+        </div>
+        <form class="winner-report" autocomplete="off">
+          <label>Nickname
+            <input name="nickname" maxlength="32" required data-allow-select autocomplete="off" />
+          </label>
+          <label>Arrival time (UTC)
+            <input value="${this.formatUtcTimestamp(arrivedAt)}" readonly tabindex="-1" />
+          </label>
+          <label>Game version
+            <input value="${GAME_VERSION}" readonly tabindex="-1" />
+          </label>
+          <label class="winner-report__secret">Hidden password
+            <input name="hiddenPassword" type="password" maxlength="64" required data-allow-select
+              data-form-type="other" data-lpignore="true" data-1p-ignore="true"
+              autocomplete="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <label class="winner-report__message">Message
+            <textarea name="message" maxlength="240" rows="3" data-allow-select></textarea>
+          </label>
+          <button type="submit">SEND WINNER REPORT</button>
+          <p class="winner-report__status" role="status" aria-live="polite"></p>
+        </form>
+        <button class="winner-screen__hall" type="button">VIEW HALL OF FAME</button>
+        <button class="winner-screen__menu" type="button">MAIN MENU</button>
+      </main>`;
+    const reportForm = this.root.querySelector<HTMLFormElement>(".winner-report");
+    const reportStatus = this.root.querySelector<HTMLElement>(".winner-report__status");
+    reportForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const submit = reportForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const data = new FormData(reportForm);
+      if (submit) submit.disabled = true;
+      if (reportStatus) reportStatus.textContent = "SENDING...";
+      void fetch(WINNER_REPORT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          nickname: String(data.get("nickname") ?? ""),
+          gameVersion: GAME_VERSION,
+          hiddenPassword: String(data.get("hiddenPassword") ?? ""),
+          message: String(data.get("message") ?? ""),
+        }),
+      }).then(async (response) => {
+        const payload = await response.json().catch(() => ({})) as { message?: string };
+        if (!response.ok) {
+          const missingLocalApi = response.status === 404 && /^https?:\/\/(?:127\.0\.0\.1|localhost):5173\b/.test(location.origin);
+          throw new Error(payload.message || (missingLocalApi
+            ? "WINNER REPORT API IS NOT RUNNING. USE VERCEL DEV OR SET VITE_WINNER_REPORT_API_URL."
+            : `Report failed (${response.status}).`));
+        }
+        if (reportStatus?.isConnected) reportStatus.textContent = "REPORT SENT. THE ADMINISTRATOR WILL REVIEW IT.";
+        reportForm.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea").forEach((field) => { field.disabled = true; });
+      }).catch((error: unknown) => {
+        if (submit?.isConnected) submit.disabled = false;
+        if (reportStatus?.isConnected) reportStatus.textContent = error instanceof Error ? error.message : "REPORT FAILED.";
+      });
+    });
+    this.root.querySelector<HTMLButtonElement>(".winner-screen__hall")?.addEventListener("click", () => this.renderHallOfFame(), { once: true });
+    this.root.querySelector<HTMLButtonElement>(".winner-screen__menu")?.addEventListener("click", () => this.renderMainMenu(), { once: true });
+  }
+
+  private formatUtcTimestamp(value: Date): string {
+    const pad = (number: number) => String(number).padStart(2, "0");
+    return `${pad(value.getUTCMonth() + 1)}/${pad(value.getUTCDate())}/${value.getUTCFullYear()} ${pad(value.getUTCHours())}:${pad(value.getUTCMinutes())}:${pad(value.getUTCSeconds())}`;
   }
 
   private openDiscord(): void {
@@ -515,6 +673,9 @@ export class Game {
   }
 
   private renderOptions(): void {
+    const fontOptions = (selected: string) => ADMIN_FONT_OPTIONS.map((font) =>
+      `<option value="${font.id}"${font.id === selected ? " selected" : ""}>${font.label}</option>`,
+    ).join("");
     this.renderMenuPage(
       "Options",
       `<div class="options-panel">
@@ -545,16 +706,33 @@ export class Game {
            </span>
          </div>
          <section class="admin-panel" id="admin-panel" hidden>
-           <p>ADMIN LEVEL ACCESS</p>
+           <p>ADMIN CONSOLE</p>
            <form id="admin-level-form">
-             <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${MAXIMUM_LEVEL}"
-               step="1" placeholder="-8 to 150" aria-label="Admin level number" autocomplete="off" />
+             <label><span>LEVEL</span>
+               <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${MAXIMUM_LEVEL}"
+                 step="1" placeholder="-8 to 150" aria-label="Admin level number" autocomplete="off" />
+             </label>
+             <label><span>SCENE</span>
+               <select id="admin-scene" aria-label="Admin scene" disabled>
+                 <option value="">Default</option>
+               </select>
+             </label>
              <button type="submit">GO</button>
            </form>
            <span id="admin-level-feedback" role="status"></span>
+           <div class="admin-panel__fonts">
+             <p>HEADING FONT OVERRIDE</p>
+             <label><span>LEVEL TITLE</span>
+               <select id="admin-title-font" aria-label="Admin level title font">${fontOptions(this.adminTitleFont)}</select>
+             </label>
+             <label><span>SUBTITLE</span>
+               <select id="admin-subtitle-font" aria-label="Admin subtitle font">${fontOptions(this.adminSubtitleFont)}</select>
+             </label>
+           </div>
          </section>
        </div>`,
     );
+    this.root.querySelector<HTMLElement>(".menu-page")?.classList.add("menu-page--options");
 
     this.root.querySelector<HTMLInputElement>("#music-option")?.addEventListener("change", (event) => {
       this.audioManager.setMusicEnabled((event.currentTarget as HTMLInputElement).checked);
@@ -591,7 +769,10 @@ export class Game {
     const adminPanel = this.root.querySelector<HTMLElement>("#admin-panel");
     const adminForm = this.root.querySelector<HTMLFormElement>("#admin-level-form");
     const adminInput = this.root.querySelector<HTMLInputElement>("#admin-level-number");
+    const adminScene = this.root.querySelector<HTMLSelectElement>("#admin-scene");
     const adminFeedback = this.root.querySelector<HTMLElement>("#admin-level-feedback");
+    const adminTitleFont = this.root.querySelector<HTMLSelectElement>("#admin-title-font");
+    const adminSubtitleFont = this.root.querySelector<HTMLSelectElement>("#admin-subtitle-font");
     const optionsController = new AbortController();
     let adminCodeBuffer = "";
 
@@ -622,6 +803,38 @@ export class Game {
       adminForm?.requestSubmit();
     });
 
+    const updateAdminScenes = () => {
+      if (!adminInput || !adminScene) return;
+      const scenes = Number.isInteger(adminInput.valueAsNumber)
+        ? getLevel(adminInput.valueAsNumber)?.scenes ?? []
+        : [];
+      adminScene.replaceChildren();
+      if (scenes.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No scene selection";
+        adminScene.append(option);
+      } else {
+        scenes.forEach((scene) => {
+          const option = document.createElement("option");
+          option.value = scene.id;
+          option.textContent = scene.label;
+          adminScene.append(option);
+        });
+      }
+      adminScene.disabled = scenes.length === 0;
+    };
+    adminInput?.addEventListener("input", updateAdminScenes);
+    adminInput?.addEventListener("change", updateAdminScenes);
+
+    const changeFont = () => {
+      this.adminTitleFont = adminTitleFont?.value ?? "";
+      this.adminSubtitleFont = adminSubtitleFont?.value ?? "";
+      this.applyAdminFontOverrides();
+    };
+    adminTitleFont?.addEventListener("change", changeFont);
+    adminSubtitleFont?.addEventListener("change", changeFont);
+
     adminForm?.addEventListener("submit", (event) => {
       event.preventDefault();
       if (!adminInput || !adminFeedback) return;
@@ -634,8 +847,19 @@ export class Game {
       }
 
       optionsController.abort();
-      this.showLevel(levelNumber);
+      this.showLevel(levelNumber, adminScene?.value || undefined);
     });
+  }
+
+  private applyAdminFontOverrides(): void {
+    const title = ADMIN_FONT_OPTIONS.find((font) => font.id === this.adminTitleFont)?.family ?? "";
+    const subtitle = ADMIN_FONT_OPTIONS.find((font) => font.id === this.adminSubtitleFont)?.family ?? "";
+    if (title) this.root.style.setProperty("--admin-level-title-font", title);
+    else this.root.style.removeProperty("--admin-level-title-font");
+    if (subtitle) this.root.style.setProperty("--admin-level-subtitle-font", subtitle);
+    else this.root.style.removeProperty("--admin-level-subtitle-font");
+    this.root.classList.toggle("admin-title-font-override", Boolean(title));
+    this.root.classList.toggle("admin-subtitle-font-override", Boolean(subtitle));
   }
 
   private renderMenuPage(title: string, content: string): void {
@@ -653,7 +877,7 @@ export class Game {
       ?.addEventListener("click", () => this.renderMainMenu(), { once: true });
   }
 
-  private showLevel(levelNumber: number): void {
+  private showLevel(levelNumber: number, initialScene?: string): void {
     const level = getLevel(levelNumber);
     if (!level) {
       this.renderComingSoon(levelNumber);
@@ -678,8 +902,9 @@ export class Game {
     this.scope = new LevelScope({
       screen,
       levelNumber,
+      initialScene,
       complete: () => this.completeCurrentLevel(),
-      restart: () => this.showLevel(levelNumber),
+      restart: () => this.showLevel(levelNumber, initialScene),
       goToLevel: (targetLevel) => this.showLevel(targetLevel),
       goToMenu: () => this.renderMainMenu(),
       audio: this.audioManager,

@@ -4,7 +4,11 @@ import type { LevelContext, LevelDefinition } from "../core/types";
 export const level21: LevelDefinition = {
   number: 21,
   title: "Homophone",
-  mount({ screen, complete }) {
+  scenes: [
+    { id: "1", label: "Scene 1 - Puzzle" },
+    { id: "2", label: "Scene 2 - Failure" },
+  ],
+  mount({ screen, complete, initialScene }) {
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -102,7 +106,8 @@ export const level21: LevelDefinition = {
       input.focus();
     };
 
-    renderSceneOne();
+    if (initialScene === "2") renderSceneTwo();
+    else renderSceneOne();
     return clearScene;
   },
 };

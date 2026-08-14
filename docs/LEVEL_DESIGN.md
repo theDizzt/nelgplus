@@ -1,44 +1,44 @@
-# 레벨 설계 규칙
+# Level Design Rules
 
-## 기본 레벨 명세
+## Basic Level Specification
 
-각 레벨은 최소한 다음 항목을 설계한다.
+Every level must define at least the following:
 
-- 레벨 번호와 부제목
-- Scene 수
-- 제목·부제목·본문 색과 폰트
-- 배경과 사용 에셋
-- 등장 오브젝트
-- 입력 방식과 정확한 성공 조건
-- 실패 조건과 실패 후 이동
-- 오디오 시작·반복·종료 시점
-- Warp Zone 여부와 암호
-- 공략과 플레이어가 단서를 유추하는 논리
+- Level number and subtitle
+- Number of scenes
+- Title, subtitle, and body text colors and fonts
+- Background and required assets
+- Interactive objects
+- Input method and exact success condition
+- Failure conditions and failure destinations
+- Audio start, loop, and stop timing
+- Whether the level has a Warp Zone and its password
+- Walkthrough logic explaining how the player can infer the solution from the clues
 
-## 화면과 좌표
+## Screen and Coordinates
 
-게임의 논리 화면은 800×600이다. CSS 픽셀 좌표로 배치하되 브라우저 포인터 좌표는 반드시 `getBoundingClientRect()`와 논리 화면 배율을 이용해 변환한다. 우클릭 메뉴, 드래그, 보이지 않는 좌표 버튼은 공통 좌표 유틸리티를 사용한다. 화면 밖 공간을 쓰는 퍼즐은 플레이 가능 경계와 실제 표시 영역을 별도로 명시한다.
+The logical game resolution is 800×600. Place elements in CSS pixel coordinates, but always convert browser pointer coordinates using `getBoundingClientRect()` and the logical-screen scale. Context menus, draggable elements, and invisible coordinate buttons must use the shared coordinate utility. Puzzles that use off-screen space must define their playable bounds separately from the visible viewport.
 
-## 입력과 암호
+## Input and Passwords
 
-- 암호는 기본적으로 대소문자와 앞뒤 공백을 엄격하게 검사한다.
-- 별표 입력창은 `attachStarMaskedInput`을 사용한다.
-- 직접 키 입력과 붙여넣기를 구분하는 퍼즐은 `keydown`, `beforeinput`, `paste`의 역할을 명확히 나눈다.
-- 모든 일반 암호 입력창은 Level 5의 입력창 크기와 GO 버튼 크기(52×40)를 기준으로 한다.
-- Enter 제출 여부는 레벨 명세에 기록하며, 허용할 경우 GO와 동일한 검증 경로를 사용한다.
+- Passwords are case-sensitive and preserve leading and trailing whitespace unless a level explicitly says otherwise.
+- Use `attachStarMaskedInput` for star-masked password fields.
+- Puzzles that distinguish direct typing from paste input must clearly separate the roles of `keydown`, `beforeinput`, and `paste`.
+- All ordinary password fields use the Level 5 field dimensions and the 52×40 GO button as their baseline.
+- Record whether Enter submits the form in the level specification. When allowed, Enter and GO must use the same validation path.
 
-## 반복과 복합 레벨
+## Repetition and Composite Levels
 
-Reunion 레벨은 과거 기법을 단순 복사하지 않고 두 가지 이상을 조합하거나 조작법을 바꾼다. 이전 레벨 지식만으로 논리적 추론이 가능해야 하며, 재등장한 기법과 재등장하지 않은 기법 모두 단서가 될 수 있다. 여러 Scene은 하나의 레벨 모듈 안에서 상태를 전환하고 Scene 변경 시 이벤트, 타이머, 오디오와 캐릭터를 정리한다.
+Reunion levels should not merely copy earlier mechanics. Combine at least two techniques or alter the controls. The solution must remain logically inferable from knowledge acquired in earlier levels. Both techniques that return and techniques that do not return may serve as clues. A multi-scene level should switch state inside one level module and clean up events, timers, audio, and characters whenever the scene changes.
 
 ## Warp Zone
 
-Warp Zone 대상 레벨은 메인 목록의 순서에 따라 두 자리 번호를 가진다. 레벨을 정상 통과하면 암호와 메시지를 보여주는 체크포인트로 이동하고, 메인 메뉴에서 해당 암호를 정확히 입력해 같은 체크포인트로 돌아올 수 있다. `Next`는 다음 레벨로 이동한다.
+Each Warp Zone target receives a two-digit number based on its order in the main Warp Zone list. Completing a target level normally opens a checkpoint that displays its password and message. Entering the same password from the main menu returns the player to that checkpoint. `Next` normally opens the following level. Level-specific terminal checkpoints, such as Level 35, may route to a dedicated completion screen instead.
 
-## 난이도와 공정성
+## Difficulty and Fairness
 
-- 핵심 단서는 최소 한 번은 관찰 가능한 형태로 제공한다.
-- 픽셀 단위 클릭은 좌표 힌트나 마우스오버 반응 등 검증 수단을 제공한다.
-- 장시간 대기나 긴 오디오는 진행 중임을 알 수 있는 상태 표시를 제공한다.
-- 실패가 소프트락이라면 그것이 의도된 결과임을 명확한 전용 화면으로 표현한다.
-- 조작 난도가 높은 플랫폼 장면은 실제 캐릭터 점프 높이와 가속도로 완주 가능한지 검증한다.
+- Present every critical clue in an observable form at least once.
+- Pixel-precise clicks must provide a verification aid such as coordinate hints or hover feedback.
+- Long waits and long audio segments must provide visible progress or playback state.
+- If failure intentionally creates a softlock, communicate it through a clearly dedicated failure screen.
+- Verify that platforming scenes are completable with the current character jump height and acceleration.

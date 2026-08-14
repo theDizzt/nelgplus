@@ -1,0 +1,10 @@
+{
+  "entries": [
+    {
+      "id": 0,
+      "nickname": "Enter the winner's nickname here (maximum 32 characters).",
+      "message": "Enter a short message or completion comment here (maximum 240 characters).",
+      "achievedAt": "2026-08-14T05:52:39.000Z"
+    }
+  ]
+}
