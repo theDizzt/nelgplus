@@ -206,6 +206,7 @@ export class Game {
   private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
   private currentLevel = 1;
   private scope?: LevelScope;
+  private mainMenuCleanup?: () => void;
   private transitioning = false;
   private adminTitleFont = "";
   private adminSubtitleFont = "";
@@ -221,8 +222,8 @@ export class Game {
     this.root.innerHTML = `
       <main class="game-frame preloader" aria-label="Loading Never Ending Level Game Plus Plus">
         <div class="preloader__content">
-          <p class="preloader__kicker">NEVER ENDING</p>
-          <h1>Level Game <span>++</span></h1>
+          <p class="preloader__kicker">WELCOME TO THE</p>
+          <h1>Never Ending Level Game <span>++</span></h1>
           <p class="preloader__status">LOADING GAME ASSETS</p>
           <div class="preloader__track" role="progressbar" aria-label="Loading progress"
             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -299,12 +300,17 @@ export class Game {
         <div class="main-menu__glow" aria-hidden="true"></div>
         <section class="main-menu__identity">
           <p class="main-menu__kicker">WELCOME TO THE</p>
-          <h1>Never Ending<br />Level Game <span>++</span></h1>
+          <h1>Never Ending Level Game <span>++</span></h1>
+          <div class="main-menu__parade" aria-hidden="true"></div>
           <p class="main-menu__description">
             This game is a sequel to Clarence Ball’s <em>Never Ending Level Game</em>, which was released in 2005.
             It was created by blending elements from that game and its fan games (<em>Level Killer</em> and
             <em>TEDNE</em>) to let players experience the thrill of the original once again. You must complete
             150 levels while battling against the time and overcoming the game’s ruthless difficulty.
+          </p>
+          <p class="main-menu__continuation">
+            This game is a continuation of the test of knowledge, patience and perhaps more stuff and I am
+            reflecting myself for making the difficulty of the things ruthless, of the puzzles, or not puzzles...
           </p>
           <dl class="main-menu__facts">
             <div>
@@ -335,7 +341,7 @@ export class Game {
           <button class="menu-button" data-menu-action="hall" type="button">
             HALL OF FAME
           </button>
-          <button class="menu-button" data-menu-action="discord" type="button">
+          <button class="menu-button menu-button--discord" data-menu-action="discord" type="button">
             DISCORD
           </button>
           <button class="menu-button" data-menu-action="options" type="button">
@@ -344,6 +350,8 @@ export class Game {
         </nav>
       </main>
     `;
+
+    this.startMainMenuParade();
 
     this.root.querySelector<HTMLElement>(".main-menu__buttons")?.addEventListener("click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-menu-action]");
@@ -370,6 +378,115 @@ export class Game {
           break;
       }
     });
+  }
+
+  private startMainMenuParade(): void {
+    const parade = this.root.querySelector<HTMLElement>(".main-menu__parade");
+    if (!parade) return;
+
+    const sprites = [
+      { source: "images/Steve.gif", label: "Steve", reverseFacing: true },
+      { source: "images/Mr_gear.gif", label: "Mr. Gear", rolls: true },
+      { source: "images/sirchair.png", label: "Sir Chair" },
+      { source: "images/red_2.png", alternateSource: "images/red_3.png", label: "Red Guy" },
+      { source: "images/cheesus.gif", label: "Cheesus", reverseFacing: true },
+      { source: "images/clippy.gif", label: "Clippy" },
+      { source: "images/level18-paint.png", label: "Paint" },
+      { source: "images/level25a.png", label: "Puzzle piece" },
+    ] as const;
+    const timeoutIds = new Set<number>();
+    const intervalIds = new Set<number>();
+    const animations = new Set<Animation>();
+    let disposed = false;
+
+    const removeSprite = (item: HTMLElement, animation?: Animation, frameTimer?: number): void => {
+      if (animation) animations.delete(animation);
+      if (frameTimer !== undefined) {
+        window.clearInterval(frameTimer);
+        intervalIds.delete(frameTimer);
+      }
+      item.remove();
+    };
+
+    const spawnSprite = (): void => {
+      if (disposed) return;
+      const sprite = sprites[Math.floor(Math.random() * sprites.length)] ?? sprites[0];
+      const item = document.createElement("span");
+      const image = document.createElement("img");
+      const movingRight = Math.random() >= 0.5;
+      const facingRight = "reverseFacing" in sprite ? !movingRight : movingRight;
+      const spriteHeight = 38 + Math.round(Math.random() * 14);
+
+      item.className = "main-menu__parade-item";
+      item.style.bottom = `${Math.round(Math.random() * 6)}px`;
+      image.src = assetUrl(sprite.source);
+      image.alt = sprite.label;
+      image.draggable = false;
+      image.style.height = `${spriteHeight}px`;
+      image.style.setProperty("--main-menu-sprite-facing", facingRight ? "1" : "-1");
+      if ("rolls" in sprite) {
+        item.classList.add("main-menu__parade-item--gear");
+        image.style.setProperty("--main-menu-gear-rotation", movingRight ? "1turn" : "-1turn");
+      }
+      item.append(image);
+      parade.append(item);
+
+      let frameTimer: number | undefined;
+      if ("alternateSource" in sprite) {
+        let alternateFrame = false;
+        frameTimer = window.setInterval(() => {
+          alternateFrame = !alternateFrame;
+          image.src = assetUrl(alternateFrame ? sprite.alternateSource : sprite.source);
+        }, 180);
+        intervalIds.add(frameTimer);
+      }
+
+      const padding = 72;
+      const start = movingRight ? -padding : parade.clientWidth + padding;
+      const end = movingRight ? parade.clientWidth + padding : -padding;
+      const duration = 4800 + Math.round(Math.random() * 4000);
+      const animation = item.animate(
+        [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
+        { duration, easing: "linear" },
+      );
+      animations.add(animation);
+      void animation.finished
+        .then(() => removeSprite(item, animation, frameTimer))
+        .catch(() => removeSprite(item, animation, frameTimer));
+    };
+
+    const scheduleNextSprite = (): void => {
+      if (disposed) return;
+      const timeoutId = window.setTimeout(() => {
+        timeoutIds.delete(timeoutId);
+        spawnSprite();
+        scheduleNextSprite();
+      }, 1800 + Math.round(Math.random() * 1600));
+      timeoutIds.add(timeoutId);
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const image = document.createElement("img");
+      const sprite = sprites[Math.floor(Math.random() * sprites.length)] ?? sprites[0];
+      image.className = "main-menu__parade-static";
+      image.src = assetUrl(sprite.source);
+      image.alt = sprite.label;
+      parade.append(image);
+    } else {
+      spawnSprite();
+      scheduleNextSprite();
+    }
+
+    this.mainMenuCleanup = () => {
+      disposed = true;
+      timeoutIds.forEach((id) => window.clearTimeout(id));
+      intervalIds.forEach((id) => window.clearInterval(id));
+      animations.forEach((animation) => animation.cancel());
+      timeoutIds.clear();
+      intervalIds.clear();
+      animations.clear();
+      parade.replaceChildren();
+    };
   }
 
   private renderWarpZone(): void {
@@ -973,6 +1090,8 @@ export class Game {
   }
 
   private disposeCurrentLevel(): void {
+    this.mainMenuCleanup?.();
+    this.mainMenuCleanup = undefined;
     this.scope?.dispose();
     this.scope = undefined;
   }
