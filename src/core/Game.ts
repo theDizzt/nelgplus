@@ -506,11 +506,19 @@ export class Game {
        <div class="level-jump">${levelButtons}</div>`,
     );
 
+    let warpSelectionPending = false;
     this.root.querySelector<HTMLElement>(".level-jump")?.addEventListener("click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-level-number]");
-      if (!button) return;
+      if (!button || warpSelectionPending) return;
       const levelNumber = Number(button.dataset.levelNumber);
-      if (JUMPABLE_LEVELS.some((number) => number === levelNumber)) this.renderWarpGate(levelNumber);
+      if (!JUMPABLE_LEVELS.some((number) => number === levelNumber)) return;
+
+      warpSelectionPending = true;
+      button.classList.add("is-activating");
+      const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 220;
+      window.setTimeout(() => {
+        if (button.isConnected) this.renderWarpGate(levelNumber);
+      }, delay);
     });
   }
 
