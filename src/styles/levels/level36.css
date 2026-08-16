@@ -1,0 +1,287 @@
+.level-36 {
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+}
+
+.level-36__heading {
+  z-index: 4;
+  color: #fff;
+}
+
+.level-36__heading h1 {
+  text-transform: none;
+}
+
+.level-36--lobby {
+  background: #080016 var(--level-36-warp) center / cover no-repeat;
+}
+
+.level-36--lobby::before {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 820px;
+  height: 820px;
+  background: var(--level-36-magic) center / contain no-repeat;
+  content: "";
+  animation: level-36-quarter-turn 1.15s steps(1, end) infinite;
+}
+
+.level-36--lobby::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(circle at center, rgb(170 68 255 / 28%) 0 18%, rgb(103 16 155 / 50%) 54%, rgb(27 0 53 / 72%) 100%);
+  content: "";
+  pointer-events: none;
+}
+
+@keyframes level-36-quarter-turn {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) rotate(90deg); }
+  50% { transform: translate(-50%, -50%) rotate(180deg); }
+  75% { transform: translate(-50%, -50%) rotate(270deg); }
+}
+
+.level-36__intro {
+  position: absolute;
+  z-index: 3;
+  top: 174px;
+  left: 70px;
+  width: 660px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 4px #000, 0 0 8px #47106c;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 20px;
+  line-height: 1.12;
+}
+
+.level-36__intro p {
+  margin: 2px 0;
+}
+
+.level-36__drink-grid {
+  position: absolute;
+  z-index: 3;
+  top: 276px;
+  left: 74px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 24px;
+  width: 652px;
+}
+
+.level-36__drink-choice,
+.level-36__drink-focus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  perspective: 500px;
+}
+
+.level-36__drink-choice {
+  height: 136px;
+}
+
+.level-36__drink-choice img {
+  width: auto;
+  height: 122px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 4px rgb(0 0 0 / 55%));
+  transform: rotateY(0deg) scale(1);
+  transition: transform 190ms ease;
+}
+
+.level-36__drink-choice.is-hovered img {
+  transform: rotateY(180deg) scale(1.09);
+}
+
+.level-36--choice {
+  background: #1155cc;
+}
+
+.level-36--choice .level-36__heading,
+.level-36--killed .level-36__heading {
+  color: inherit;
+}
+
+.level-36__choice-message {
+  position: absolute;
+  top: 190px;
+  left: 35px;
+  width: 730px;
+  margin: 0;
+  text-align: center;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 31px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.level-36__chosen-letter {
+  color: #ff00ff;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+}
+
+.level-36__drink-focus {
+  position: absolute;
+  top: 260px;
+  left: 250px;
+  width: 300px;
+  height: 260px;
+}
+
+.level-36__drink-focus img {
+  width: auto;
+  max-width: 260px;
+  height: 240px;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 3px rgb(0 0 0 / 45%));
+  user-select: none;
+}
+
+.level-36__drink-focus.is-hit img {
+  animation: level-36-hit 120ms ease;
+}
+
+@keyframes level-36-hit {
+  50% { transform: scale(.92) rotate(-2deg); }
+}
+
+.level-36__back {
+  position: absolute;
+  z-index: 5;
+  right: 24px;
+  bottom: 20px;
+  padding: 0;
+  color: #f00;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 31px;
+  font-weight: 700;
+}
+
+.level-36__back:hover,
+.level-36__back:focus-visible {
+  color: #fff;
+  outline: 0;
+  text-decoration: underline;
+}
+
+.level-36--pepsi { color: #ff0; background: #0647c2; }
+.level-36--lime { color: #39ff14; background: #000; }
+.level-36--cola { color: #000; background: #e31619; }
+.level-36--dew { color: #000; background: #72f33a; }
+.level-36--bull { color: #ef2525; background: #07174d; }
+.level-36--fanta { color: #0756d8; background: #ff8a00; }
+.level-36--pepper { color: #fff; background: #680a11; }
+.level-36--monster { color: #000; background: #12872b; }
+
+.level-36--lime .level-36__back { color: #ff0; }
+.level-36--cola .level-36__back,
+.level-36--bull .level-36__back { color: #fff; }
+.level-36--fanta .level-36__back { color: #087c1c; }
+.level-36--monster .level-36__heading,
+.level-36--monster .level-36__back { color: #66ff33; }
+.level-36--dew .level-36__heading,
+.level-36--fanta .level-36__heading { color: #000; }
+
+.level-36--cola .level-36__chosen-letter { color: #fff; }
+.level-36--dew .level-36__chosen-letter { color: #fff; }
+.level-36--bull .level-36__chosen-letter { color: #0ff; }
+.level-36--fanta .level-36__chosen-letter { color: #fff; }
+.level-36--monster .level-36__chosen-letter { color: #ff0; }
+
+.level-36--killed {
+  color: #000;
+  background: radial-gradient(circle at 50% 48%, #ff4c4c 0 18%, #d10000 54%, #4b0000 100%);
+}
+
+.level-36__death-message {
+  position: absolute;
+  z-index: 3;
+  top: 174px;
+  left: 25px;
+  width: 750px;
+  margin: 0;
+  text-align: center;
+  font-family: "NELG Papyrus", Papyrus, fantasy;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.level-36__dead-drink {
+  position: absolute;
+  z-index: 1;
+  top: 224px;
+  left: 270px;
+  width: 260px;
+  height: 250px;
+  object-fit: contain;
+  filter: contrast(.88) brightness(.78) drop-shadow(0 8px 4px rgb(0 0 0 / 50%));
+  transform: rotate(180deg);
+}
+
+.level-36__form {
+  position: absolute;
+  z-index: 4;
+  bottom: 35px;
+  left: 0;
+  width: 100%;
+}
+
+.level-36__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-36__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-36__form input.is-wrong {
+  background: #ff8b8b;
+}
+
+.level-36__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+}
+
+.level-36__form button:hover,
+.level-36__form button:focus-visible {
+  background: #f01818;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-36--lobby::before { animation: none; }
+  .level-36__drink-choice img { transition: none; }
+}

@@ -42,6 +42,7 @@ const ADMIN_FONT_OPTIONS = [
 ] as const;
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
+const PUBLIC_LEVEL_COUNT = 35;
 const PRELOAD_FONTS = [
   "/assets/fonts/perpetua/Perpetua.woff2",
   "/assets/fonts/perpetua/Perpetua-Bold.woff2",
@@ -159,6 +160,15 @@ const PRELOAD_IMAGES = [
   "/assets/images/level35phase4e.png",
   "/assets/images/level35phase4f.png",
   "/assets/images/level35phase10.png",
+  "/assets/images/level36bg.png",
+  "/assets/images/level36a.png",
+  "/assets/images/level36b.png",
+  "/assets/images/level36c.png",
+  "/assets/images/level36d.png",
+  "/assets/images/level36e.png",
+  "/assets/images/level36f.png",
+  "/assets/images/level36g.png",
+  "/assets/images/level36h.png",
 ].map(assetUrl);
 const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack] as const;
 const MINIMUM_PRELOADER_TIME = 700;
@@ -337,7 +347,7 @@ export class Game {
           <dl class="main-menu__facts">
             <div>
               <dt>LEVELS INCLUDED</dt>
-              <dd>${registeredLevelNumbers.length} / ${MAXIMUM_LEVEL}</dd>
+              <dd>${PUBLIC_LEVEL_COUNT} / ${MAXIMUM_LEVEL}</dd>
             </div>
             <div>
               <dt>DEVELOPMENT</dt>
