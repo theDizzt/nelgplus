@@ -59,7 +59,7 @@
     {
       "id": 8,
       "secret": false,
-      "name": "Finally, I Can Rest",
+      "name": "Totally Newbie",
       "condition": "Reach the first Warp Zone (beat Level 8).",
       "inputCodes": "5740-2210-8649"
     },
@@ -73,14 +73,14 @@
     {
       "id": 10,
       "secret": true,
-      "name": "I Want to Go Back",
+      "name": "The Great Progress Reset",
       "condition": "Click 'back' or 'rewind' in the Level 9 menu.",
       "inputCodes": "3553-2954-7496"
     },
     {
       "id": 11,
       "secret": true,
-      "name": "I Prefer It Stock",
+      "name": "OEM is Best",
       "condition": "Enter 'dark purple' in Level 12.",
       "inputCodes": "3986-0039-3230"
     },
@@ -108,7 +108,7 @@
     {
       "id": 15,
       "secret": true,
-      "name": "SKIP",
+      "name": "SKIP +1",
       "condition": "Attempt to move to another level from Level 17. (Try to visit a strange level instead of the next one.)",
       "inputCodes": "3053-4598-0543"
     },
@@ -157,14 +157,14 @@
     {
       "id": 22,
       "secret": true,
-      "name": "Stop Denying Reality",
+      "name": "NELG LOVER",
       "condition": "Click the button at (20, 20) or (242, 242) in Level 20, Scene 7.",
       "inputCodes": "3813-1696-8277"
     },
     {
       "id": 23,
       "secret": true,
-      "name": "Missing the Old Days",
+      "name": "リセマラ",
       "condition": "Click 'back' or 'rewind' in the Level 20, Scene 9 menu.",
       "inputCodes": "6425-8680-7986"
     },
@@ -178,7 +178,7 @@
     {
       "id": 25,
       "secret": true,
-      "name": "Typing Was Always a Chore",
+      "name": "Finger Princess",
       "condition": "Use copy and paste to enter '3' in Level 21 before pressing '3' on the keyboard.",
       "inputCodes": "9223-0460-6095"
     },
