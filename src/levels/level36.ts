@@ -151,6 +151,7 @@ export const level36: LevelDefinition = {
       if (!form || !input) return;
       const maskedInput = attachStarMaskedInput(input, context.listen);
       input.focus();
+      on(input, "animationend", () => input.classList.remove("is-wrong"));
       on(input, "keydown", (event) => {
         if (event.key !== "Enter" || event.repeat) return;
         event.preventDefault();
@@ -161,8 +162,9 @@ export const level36: LevelDefinition = {
         if (maskedInput.getValue() === "continue") complete();
         else {
           maskedInput.clear();
+          input.classList.remove("is-wrong");
+          void input.offsetWidth;
           input.classList.add("is-wrong");
-          window.setTimeout(() => input.classList.remove("is-wrong"), 360);
           input.focus();
         }
       });

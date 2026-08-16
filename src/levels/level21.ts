@@ -1,6 +1,8 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelContext, LevelDefinition } from "../core/types";
 
+const NO_SCREEN_VISITED_FLAG = "level-21-no-screen-visited";
+
 export const level21: LevelDefinition = {
   number: 21,
   title: "Homophone",
@@ -8,7 +10,7 @@ export const level21: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Failure" },
   ],
-  mount({ screen, complete, unlockAchievement, initialScene }) {
+  mount({ screen, complete, unlockAchievement, initialScene, session }) {
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -35,6 +37,7 @@ export const level21: LevelDefinition = {
     };
 
     const renderSceneTwo = () => {
+      session.setFlag(NO_SCREEN_VISITED_FLAG);
       clearScene();
       screen.className = "level-screen level-21 level-21--failure";
       screen.innerHTML = `
@@ -78,10 +81,9 @@ export const level21: LevelDefinition = {
       if (!form || !input || !submitButton) return;
 
       const maskedInput = attachStarMaskedInput(input, on);
+      let pastedThree = false;
       on(input, "paste", (event) => {
-        if ((event as ClipboardEvent).clipboardData?.getData("text").trim() === "3") {
-          unlockAchievement(25);
-        }
+        pastedThree = (event as ClipboardEvent).clipboardData?.getData("text") === "3";
       });
       let keyboardTrapArmed = false;
       sceneTimeout(() => {
@@ -97,6 +99,7 @@ export const level21: LevelDefinition = {
       on(form, "submit", (event) => {
         event.preventDefault();
         if (maskedInput.getValue() === "3") {
+          if (pastedThree && !session.hasFlag(NO_SCREEN_VISITED_FLAG)) unlockAchievement(25);
           complete();
           return;
         }

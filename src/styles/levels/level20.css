@@ -394,6 +394,31 @@
   outline: none;
 }
 
+.level-20__context-menu button[role="menuitemcheckbox"] {
+  padding-left: 8px;
+  white-space: pre;
+}
+
+.level-20__volume-menu {
+  position: absolute;
+  z-index: 2;
+  left: calc(100% + 3px);
+  width: 126px;
+  padding: 4px 2px;
+  background: #f4f4f4;
+  border: 1px solid #707070;
+  border-radius: 2px;
+  box-shadow: 3px 4px 10px rgb(0 0 0 / 42%);
+}
+
+.level-20__volume-menu[hidden] { display: none; }
+.level-20__volume-menu.opens-left { right: calc(100% + 3px); left: auto; }
+.level-20__volume-menu button[role="menuitemradio"] {
+  height: 24px;
+  padding-left: 8px;
+  white-space: pre;
+}
+
 .level-20__menu-separator {
   height: 1px;
   margin: 4px 5px;

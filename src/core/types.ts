@@ -27,6 +27,10 @@ export interface LevelContext {
     stopMusic: () => void;
     playEffect: (source: string) => void;
   };
+  readonly session: {
+    hasFlag: (flag: string) => boolean;
+    setFlag: (flag: string) => void;
+  };
   complete: () => void;
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;

@@ -235,6 +235,7 @@ export class Game {
   private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
   private readonly completedAchievementIds = this.loadCompletedAchievementIds();
   private readonly pendingAchievementIds = new Set<number>();
+  private readonly sessionFlags = new Set<string>();
   private currentLevel = 1;
   private scope?: LevelScope;
   private achievementDataPromise?: Promise<AchievementData[]>;
@@ -908,6 +909,8 @@ export class Game {
       </main>
     `;
 
+    this.unlockAchievement(9);
+
     if (checkpoint) {
       const form = this.root.querySelector<HTMLFormElement>(".warp-gate__form");
       const input = this.root.querySelector<HTMLInputElement>(".warp-gate__form input");
@@ -925,7 +928,6 @@ export class Game {
         event.preventDefault();
         if (!input) return;
         if (maskedInput?.getValue() === checkpoint.password) {
-          this.unlockAchievement(9);
           this.renderWarpCheckpoint(levelNumber);
           return;
         }
@@ -1396,6 +1398,8 @@ export class Game {
       goToLevel: (targetLevel) => this.showLevel(targetLevel),
       goToMenu: () => this.renderMainMenu(),
       audio: this.audioManager,
+      hasSessionFlag: (flag) => this.sessionFlags.has(flag),
+      setSessionFlag: (flag) => this.sessionFlags.add(flag),
     });
     this.scope.setCustomCleanup(level.mount(this.scope.context));
     this.bindDebugControls();

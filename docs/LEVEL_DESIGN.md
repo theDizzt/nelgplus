@@ -42,3 +42,7 @@ Each Warp Zone target receives a two-digit number based on its order in the main
 - Long waits and long audio segments must provide visible progress or playback state.
 - If failure intentionally creates a softlock, communicate it through a clearly dedicated failure screen.
 - Verify that platforming scenes are completable with the current character jump height and acceleration.
+
+## Level 37 Stateful Restart Pattern
+
+Level 37 deliberately turns the Flash-style `Rewind` command into part of the puzzle. After the exact case-sensitive repair password is accepted, keep the screen in a troubleshooting state for 60 seconds. Only then may the custom context menu expose an effective `Rewind` action. That action stores the repaired-portal flag in the in-memory game session and returns to the main menu. Re-entering Level 37 during the same page session must show the repaired portal; a full browser reload intentionally clears the repair. Browser context-menu coordinates must be converted through the shared floating-position utility so scaled embeds remain aligned.

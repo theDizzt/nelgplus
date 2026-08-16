@@ -260,6 +260,13 @@
 
 .level-36__form input.is-wrong {
   background: #ff8b8b;
+  animation: level-36-wrong-shake 90ms linear 4;
+}
+
+@keyframes level-36-wrong-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
 }
 
 .level-36__form button {

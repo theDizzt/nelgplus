@@ -11,6 +11,17 @@
 7. Every image, font, and audio file loads on both the development server and a GitHub Pages repository subpath.
 8. A click sound still plays when its click immediately transitions to another scene.
 9. Rapidly repeating the same effect does not cause later playback to be dropped behind an earlier instance.
+10. An incorrect password visibly restarts its feedback animation on every submission, including rapid repeated submissions.
+
+## Achievement Regression Tests
+
+Achievement triggers must be tested from a clean completion state and at the exact interaction described in `public/assets/data/achievements.json`.
+
+- Achievement 7: In Level 7, clear only enough clutter to expose part of the red button, then click it while at least one object remains. The full-screen clutter layer must not intercept clicks through its empty areas.
+- Achievement 9: Open Warp Zone, select any numbered destination, and verify that entering its gate unlocks the achievement. Merely opening the Warp Zone list does not count.
+- Achievement 25: Start a fresh page session, paste exactly `3` into Level 21, and submit it without visiting the NO screen. Verify that the achievement unlocks only on successful submission. Then reload the page, visit NO once, return with BACK, paste and submit `3`, and verify that the achievement remains locked until another full page/game restart.
+
+For achievements with a “without failing during this run” condition, keep the disqualifying state in `LevelContext.session`. Do not store it inside a level mount because revisiting the level would reset it, and do not persist it to local or session storage because a full game restart must clear it.
 
 ## Font Regression Tests
 

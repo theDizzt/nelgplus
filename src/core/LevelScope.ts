@@ -11,6 +11,8 @@ interface ScopeOptions {
   goToLevel: (levelNumber: number) => void;
   goToMenu: () => void;
   audio: AudioManager;
+  hasSessionFlag: (flag: string) => boolean;
+  setSessionFlag: (flag: string) => void;
 }
 
 export class LevelScope {
@@ -47,6 +49,10 @@ export class LevelScope {
         playMusic: (source, loop) => options.audio.playMusic(source, loop),
         stopMusic: () => options.audio.stopMusic(),
         playEffect: (source) => options.audio.playEffect(source),
+      },
+      session: {
+        hasFlag: (flag) => options.hasSessionFlag(flag),
+        setFlag: (flag) => options.setSessionFlag(flag),
       },
       complete: options.complete,
       unlockAchievement: options.unlockAchievement,

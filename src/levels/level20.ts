@@ -1,7 +1,7 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import type { LevelContext, LevelDefinition } from "../core/types";
-import { positionFloatingElement } from "../core/floatingPosition";
+import { localElementBounds, positionFloatingElement } from "../core/floatingPosition";
 
 const SCENE_TWO_OBJECTS = [
   { letter: "h", size: 44, left: 88, top: 294, kind: "gear" },
@@ -411,6 +411,14 @@ export const level20: LevelDefinition = {
             "#000",
             `
               <div class="level-20__context-menu" role="menu" aria-label="Flash player menu" hidden>
+                <button type="button" role="menuitemcheckbox" data-command="music"></button>
+                <button type="button" role="menuitemcheckbox" data-command="effects"></button>
+                <button type="button" role="menuitem" data-command="music-volume" aria-haspopup="menu"></button>
+                <button type="button" role="menuitem" data-command="effects-volume" aria-haspopup="menu"></button>
+                <div class="level-20__volume-menu" role="menu" aria-label="Volume" hidden>
+                  ${Array.from({ length: 11 }, (_, index) => `<button type="button" role="menuitemradio" data-volume="${index * 10}"></button>`).join("")}
+                </div>
+                <div class="level-20__menu-separator" role="separator"></div>
                 <button type="button" role="menuitem" data-command="forward">Forward</button>
                 <button type="button" role="menuitem" data-command="back">Back</button>
                 <button type="button" role="menuitem" data-command="rewind">Rewind</button>
@@ -421,15 +429,87 @@ export const level20: LevelDefinition = {
             "black",
           );
           const menu = screen.querySelector<HTMLElement>(".level-20__context-menu");
-          if (!menu) break;
+          const musicItem = menu?.querySelector<HTMLButtonElement>("[data-command='music']");
+          const effectsItem = menu?.querySelector<HTMLButtonElement>("[data-command='effects']");
+          const musicVolumeItem = menu?.querySelector<HTMLButtonElement>("[data-command='music-volume']");
+          const effectsVolumeItem = menu?.querySelector<HTMLButtonElement>("[data-command='effects-volume']");
+          const volumeMenu = menu?.querySelector<HTMLElement>(".level-20__volume-menu");
+          if (!menu || !musicItem || !effectsItem || !musicVolumeItem || !effectsVolumeItem || !volumeMenu) break;
+          let activeVolumeKind: "music" | "effects" = "music";
+
+          const updateSettings = () => {
+            musicItem.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
+            effectsItem.textContent = `${audio.effectsEnabled ? "✓" : ""}  Sound Effects`;
+            musicVolumeItem.textContent = `   Music Volume: ${audio.musicVolume}%  ▶`;
+            effectsVolumeItem.textContent = `   SFX Volume: ${audio.effectsVolume}%  ▶`;
+            musicItem.setAttribute("aria-checked", String(audio.musicEnabled));
+            effectsItem.setAttribute("aria-checked", String(audio.effectsEnabled));
+            volumeMenu.querySelectorAll<HTMLButtonElement>("[data-volume]").forEach((option) => {
+              const value = Number(option.dataset.volume);
+              const selected = value === (activeVolumeKind === "music" ? audio.musicVolume : audio.effectsVolume);
+              option.textContent = `${selected ? "✓" : ""}  ${value}%`;
+              option.setAttribute("aria-checked", String(selected));
+            });
+          };
+          const closeMenu = () => {
+            menu.hidden = true;
+            volumeMenu.hidden = true;
+          };
+          const positionVolumeMenu = (kind: "music" | "effects") => {
+            activeVolumeKind = kind;
+            volumeMenu.setAttribute("aria-label", kind === "music" ? "Music volume" : "SFX volume");
+            updateSettings();
+            volumeMenu.hidden = false;
+            const menuBounds = localElementBounds(screen, menu);
+            const submenuBounds = localElementBounds(screen, volumeMenu);
+            const activeItem = kind === "music" ? musicVolumeItem : effectsVolumeItem;
+            const maximumTop = screen.clientHeight - menuBounds.top - submenuBounds.height - 4;
+            volumeMenu.style.top = `${Math.max(-menuBounds.top + 4, Math.min(activeItem.offsetTop, maximumTop))}px`;
+            volumeMenu.classList.toggle(
+              "opens-left",
+              menuBounds.left + menuBounds.width + submenuBounds.width > screen.clientWidth - 4,
+            );
+          };
+          updateSettings();
           on(screen, "contextmenu", (event) => {
             event.preventDefault();
+            updateSettings();
+            volumeMenu.hidden = true;
             menu.hidden = false;
             positionFloatingElement(screen, menu, event.clientX, event.clientY);
           });
           on(menu, "click", (event) => {
+            const volumeOption = (event.target as Element).closest<HTMLButtonElement>("button[data-volume]");
+            if (volumeOption && volumeMenu.contains(volumeOption)) {
+              const volume = Number(volumeOption.dataset.volume);
+              if (activeVolumeKind === "music") audio.setMusicVolume(volume);
+              else audio.setEffectsVolume(volume);
+              updateSettings();
+              volumeMenu.hidden = true;
+              return;
+            }
             const item = (event.target as Element).closest<HTMLButtonElement>("button[data-command]");
             if (!item) return;
+            if (item.dataset.command === "music") {
+              audio.setMusicEnabled(!audio.musicEnabled);
+              updateSettings();
+              return;
+            }
+            if (item.dataset.command === "effects") {
+              audio.setEffectsEnabled(!audio.effectsEnabled);
+              updateSettings();
+              return;
+            }
+            if (item.dataset.command === "music-volume") {
+              if (volumeMenu.hidden || activeVolumeKind !== "music") positionVolumeMenu("music");
+              else volumeMenu.hidden = true;
+              return;
+            }
+            if (item.dataset.command === "effects-volume") {
+              if (volumeMenu.hidden || activeVolumeKind !== "effects") positionVolumeMenu("effects");
+              else volumeMenu.hidden = true;
+              return;
+            }
             if (item.dataset.command === "forward") renderScene(10);
             if (item.dataset.command === "back") {
               unlockAchievement(23);
@@ -441,7 +521,10 @@ export const level20: LevelDefinition = {
             }
           });
           on(document, "pointerdown", (event) => {
-            if (!menu.hidden && !menu.contains(event.target as Node)) menu.hidden = true;
+            if (!menu.hidden && !menu.contains(event.target as Node)) closeMenu();
+          });
+          on(document, "keydown", (event) => {
+            if (event.key === "Escape") closeMenu();
           });
           break;
         }
