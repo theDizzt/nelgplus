@@ -7,7 +7,7 @@ const LEVEL_HEIGHT = 600;
 export const level19: LevelDefinition = {
   number: 19,
   title: "Coordinate",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-19";
     screen.innerHTML = `
       <header class="level-heading level-19__heading">
@@ -18,7 +18,7 @@ export const level19: LevelDefinition = {
       <button class="level-19__pixel-button level-19__pixel-button--first" type="button"
         aria-label="Coordinate 19, 19"></button>
       <button class="level-19__pixel-button level-19__pixel-button--second" type="button"
-        aria-label="Coordinate 242, 242" hidden></button>
+        aria-label="Coordinate 242, 242"></button>
 
       <div class="level-19__coordinates" aria-live="off">
         <div>x : <span data-coordinate="x">0</span></div>
@@ -58,15 +58,17 @@ export const level19: LevelDefinition = {
       yOutput.textContent = String(y);
     });
 
+    let firstCoordinateClicked = false;
     listen(firstButton, "click", () => {
+      firstCoordinateClicked = true;
       firstButton.hidden = true;
-      secondButton.hidden = false;
       passingClue.hidden = false;
     });
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
     listen(secondButton, "click", () => {
+      if (!firstCoordinateClicked) unlockAchievement(16);
       secondButton.hidden = true;
       form.hidden = false;
       input.focus();

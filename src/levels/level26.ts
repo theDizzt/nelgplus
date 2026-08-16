@@ -5,7 +5,7 @@ const ANSWER = "******";
 export const level26: LevelDefinition = {
   number: 26,
   title: "Awkwardness",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-26";
     screen.innerHTML = `
       <header class="level-heading level-26__heading">
@@ -46,7 +46,9 @@ export const level26: LevelDefinition = {
       checking = true;
       button.disabled = true;
 
-      if (input.value === ANSWER) {
+      const answer = input.value;
+      if (answer === "hidden." || answer === "*******") unlockAchievement(32);
+      if (answer === ANSWER) {
         complete();
         return;
       }

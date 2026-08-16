@@ -24,7 +24,7 @@ export const level35: LevelDefinition = {
     { id: "softlock", label: "Softlock screen" },
   ],
   mount(context) {
-    const { screen, complete, audio, initialScene } = context;
+    const { screen, complete, unlockAchievement, audio, initialScene } = context;
     let controller = new AbortController();
     const timers = new Set<number>();
     let redGuy: RedGuyController | undefined;
@@ -98,7 +98,15 @@ export const level35: LevelDefinition = {
       later(() => renderScene(1), 8_000);
     };
 
-    const bindPassword = (answer: string, next: number, options: { plain?: boolean; forbiddenKey?: string } = {}) => {
+    const bindPassword = (
+      answer: string,
+      next: number,
+      options: {
+        plain?: boolean;
+        forbiddenKey?: string;
+        achievementAnswers?: Readonly<Record<string, number>>;
+      } = {},
+    ) => {
       const form = screen.querySelector<HTMLFormElement>(".level-35__form");
       const input = form?.querySelector<HTMLInputElement>("input");
       if (!form || !input) return;
@@ -117,6 +125,8 @@ export const level35: LevelDefinition = {
       on(form, "submit", (event) => {
         event.preventDefault();
         const value = masked?.getValue() ?? input.value;
+        const achievementId = options.achievementAnswers?.[value];
+        if (achievementId) unlockAchievement(achievementId);
         if (value === answer) renderScene(next);
         else softlock();
       });
@@ -208,7 +218,7 @@ const secretKey = fruit + herb;
 function validate(raw) {
   return raw === mask(cipher);
 }</pre>${formMarkup(true)}`);
-          bindPassword("****", 3, { plain: true });
+          bindPassword("****", 3, { plain: true, achievementAnswers: { "*********": 40 } });
           break;
         case 3:
           shell(3, formMarkup(false, "", false, 1), "level-35--ocean");
@@ -238,7 +248,7 @@ function validate(raw) {
             phase = (phase + 1) % phases.length;
             showPhase();
           });
-          bindPassword("AXIOM", 5);
+          bindPassword("AXIOM", 5, { achievementAnswers: { pedestrian: 41 } });
           break;
         }
         case 5: {
@@ -254,6 +264,7 @@ function validate(raw) {
             if (event.key === "+") value += 9; if (event.key === "-") value -= 9;
             if (event.key === "*") value *= 9; if (event.key === "/") value = Math.trunc(value / 9);
             screen.querySelector(".level-35__display")!.textContent = String(value);
+            if (value === 16) unlockAchievement(42);
             if (value === 35) renderScene(6);
           });
           break;
@@ -273,7 +284,10 @@ function validate(raw) {
           shell(7, `<p class="level-35__remember">DO YOU STILL REMEMBER?</p>${formMarkup(true, CIPHER, true)}`, "level-35--yellow");
           const input = screen.querySelector<HTMLInputElement>(".level-35__form input")!;
           on(screen.querySelector<HTMLButtonElement>(".level-35__reset")!, "click", () => { input.value = CIPHER; input.focus(); });
-          bindPassword("creamsoda59", 8, { plain: true });
+          bindPassword("creamsoda59", 8, {
+            plain: true,
+            achievementAnswers: { "DO YOU STILL REMEMBER?": 43 },
+          });
           break;
         }
         case 8:
@@ -286,7 +300,10 @@ function validate(raw) {
           later(() => { warning.textContent = "CAN YOU DRAW A PICTURE WITH AN AUDIO FILE?"; }, 60_000);
           screen.querySelectorAll<HTMLButtonElement>("[data-audio]").forEach((button) => on(button, "click", () => {
             if (!recording) return;
-            if (button.dataset.audio === "play") void recording.play();
+            if (button.dataset.audio === "play") {
+              if (audio.musicVolume === 0) unlockAchievement(44);
+              void recording.play();
+            }
             if (button.dataset.audio === "pause") recording.pause();
             if (button.dataset.audio === "stop") { recording.pause(); recording.currentTime = 0; }
           }));

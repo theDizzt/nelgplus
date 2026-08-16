@@ -65,7 +65,7 @@ const ACCEPTED_NAMES = new Set([
 export const level12: LevelDefinition = {
   number: 12,
   title: "Name",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-12";
     screen.innerHTML = `
       <header class="level-heading level-12__heading">
@@ -106,7 +106,9 @@ export const level12: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (ACCEPTED_NAMES.has(maskedInput.getValue())) {
+      const answer = maskedInput.getValue();
+      if (answer === "dark purple") unlockAchievement(11);
+      if (ACCEPTED_NAMES.has(answer)) {
         complete();
         return;
       }

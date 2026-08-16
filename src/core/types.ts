@@ -28,6 +28,7 @@ export interface LevelContext {
     playEffect: (source: string) => void;
   };
   complete: () => void;
+  unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number) => void;
   goToMenu: () => void;

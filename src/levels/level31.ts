@@ -27,7 +27,7 @@ const ANSWERS = new Set(["WEIẞ", "WEISS"]);
 export const level31: LevelDefinition = {
   number: 31,
   title: "BLANC",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-31";
     screen.innerHTML = `
       <header class="level-heading level-31__heading">
@@ -79,7 +79,9 @@ export const level31: LevelDefinition = {
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (ANSWERS.has(maskedInput.getValue())) {
+      const answer = maskedInput.getValue();
+      if (answer === "WEIB") unlockAchievement(36);
+      if (ANSWERS.has(answer)) {
         submitButton.disabled = true;
         complete();
         return;

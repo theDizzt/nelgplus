@@ -17,7 +17,7 @@ const CLUES = [
 export const level30: LevelDefinition = {
   number: 30,
   title: "Decode",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     const clues = CLUES.map(
       ({ text, className }) => `<span class="level-30__clue ${className}">${text}</span>`,
     ).join("");
@@ -75,6 +75,7 @@ export const level30: LevelDefinition = {
 
     listen(form, "submit", (event) => {
       event.preventDefault();
+      if (input.value === "THIRTY") unlockAchievement(35);
       if (input.value === ANSWER) {
         goButton.disabled = true;
         resetButton.disabled = true;

@@ -12,7 +12,7 @@ export const level24: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Punishment" },
   ],
-  mount({ screen, complete, restart, listen, audio, initialScene }) {
+  mount({ screen, complete, unlockAchievement, restart, listen, audio, initialScene }) {
     let scene: "puzzle" | "wrong" = "puzzle";
     let keyBuffer = "";
     let menuUnlocked = false;
@@ -95,7 +95,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     const effectsItem = menu?.querySelector<HTMLButtonElement>("[data-menu-command='effects']");
     if (!form || !input || !menu || !unlockFlash || !musicItem || !effectsItem) return;
 
-    attachStarMaskedInput(input, listen);
+    const maskedInput = attachStarMaskedInput(input, listen);
 
     const updateSettings = () => {
       musicItem.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
@@ -131,7 +131,9 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (scene === "puzzle") showWrong();
+      if (scene !== "puzzle") return;
+      if (maskedInput.getValue() === "hidden") unlockAchievement(29);
+      showWrong();
     });
 
     const openMenu = (clientX: number, clientY: number) => {

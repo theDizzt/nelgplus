@@ -68,7 +68,7 @@ export const level25: LevelDefinition = {
     { id: "4", label: "Scene 4 - Order failure" },
     { id: "5", label: "Scene 5 - Obstacle failure" },
   ],
-  mount({ screen, complete, listen, interval, initialScene }) {
+  mount({ screen, complete, unlockAchievement, listen, interval, initialScene }) {
     let scene: Scene = "puzzle";
     let armed = false;
     let awaitingPassword = false;
@@ -269,10 +269,12 @@ export const level25: LevelDefinition = {
     listen(screen, "pointercancel", stopPieceDrag);
 
     listen(document, "keydown", (event) => {
-      if (scene !== "puzzle" || !awaitingPassword || event.repeat || event.key.length !== 1) return;
+      if (scene !== "puzzle" || event.repeat || event.key.length !== 1) return;
       if (event.ctrlKey || event.altKey || event.metaKey) return;
       passwordBuffer = `${passwordBuffer}${event.key}`.slice(-6);
-      if (passwordBuffer === "hidden") complete();
+      if (passwordBuffer !== "hidden") return;
+      if (awaitingPassword) complete();
+      else unlockAchievement(30);
     });
 
     interval(() => {

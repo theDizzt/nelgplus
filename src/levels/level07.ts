@@ -6,7 +6,7 @@ const OBJECT_COUNT = 12;
 export const level07: LevelDefinition = {
   number: 7,
   title: "Tidy Up",
-  mount({ screen, complete, listen, audio }) {
+  mount({ screen, complete, unlockAchievement, listen, audio }) {
     screen.className = "level-screen level-07";
     screen.innerHTML = `
       <header class="level-heading level-07__heading">
@@ -16,7 +16,7 @@ export const level07: LevelDefinition = {
 
       <p class="level-07__message">Get all this useless junk off the screen.</p>
 
-      <button class="level-07__finish" type="button" aria-label="Continue to Level 8" disabled></button>
+      <button class="level-07__finish" type="button" aria-label="Continue to Level 8" aria-disabled="true"></button>
 
       <div class="level-07__clutter" aria-label="Objects covering the button">
         ${Array.from(
@@ -46,7 +46,7 @@ export const level07: LevelDefinition = {
       object.classList.add("is-cleared");
       remainingObjects -= 1;
       if (remainingObjects === 0) {
-        finishButton.disabled = false;
+        finishButton.setAttribute("aria-disabled", "false");
         finishButton.classList.add("is-ready");
       }
       draggedObject = undefined;
@@ -117,7 +117,10 @@ export const level07: LevelDefinition = {
     listen(clutter, "pointerup", endDrag);
     listen(clutter, "pointercancel", endDrag);
     listen(finishButton, "click", () => {
-      if (remainingObjects !== 0) return;
+      if (remainingObjects !== 0) {
+        unlockAchievement(7);
+        return;
+      }
       audio.playEffect(SOUND_EFFECTS.smack);
       complete();
     });

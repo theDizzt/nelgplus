@@ -5,7 +5,7 @@ import { assetUrl } from "../core/assets";
 export const level09: LevelDefinition = {
   number: 9,
   title: "Menu",
-  mount({ screen, complete, goToLevel, goToMenu, audio, listen }) {
+  mount({ screen, complete, unlockAchievement, goToLevel, goToMenu, audio, listen }) {
     screen.className = "level-screen level-09";
     screen.innerHTML = `
       <header class="level-heading level-09__heading">
@@ -134,9 +134,11 @@ export const level09: LevelDefinition = {
           complete();
           return;
         case "back":
+          unlockAchievement(10);
           goToLevel(8);
           return;
         case "rewind":
+          unlockAchievement(10);
           goToMenu();
           return;
       }

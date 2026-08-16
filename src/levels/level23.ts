@@ -5,7 +5,7 @@ import type { LevelDefinition } from "../core/types";
 export const level23: LevelDefinition = {
   number: 23,
   title: "Symbol",
-  mount({ screen, complete, listen, timeout, audio }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout, audio }) {
     screen.className = "level-screen level-23";
     screen.innerHTML = `
       <header class="level-heading level-23__heading">
@@ -154,7 +154,9 @@ export const level23: LevelDefinition = {
     listen(form, "submit", (event) => {
       event.preventDefault();
       audio.playEffect(SOUND_EFFECTS.smack);
-      if (masked.getValue() === "/") { button.disabled = true; complete(); return; }
+      const answer = masked.getValue();
+      if (answer === "?") unlockAchievement(28);
+      if (answer === "/") { button.disabled = true; complete(); return; }
       masked.clear();
       input.classList.remove("is-wrong"); void input.offsetWidth; input.classList.add("is-wrong"); input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);

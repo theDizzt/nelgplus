@@ -8,11 +8,20 @@ import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
-const GAME_VERSION = "1.0.39";
-const VERSION_DATE = "08/14/2026";
+const GAME_VERSION = "1.0.42";
+const VERSION_DATE = "08/16/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
+const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
+interface AchievementData {
+  id: number;
+  secret: boolean;
+  name: string;
+  condition: string;
+  inputCodes: string;
+}
+
 const ADMIN_FONT_OPTIONS = [
   { id: "", label: "Default (level design)", family: "" },
   { id: "perpetua", label: "Perpetua", family: '"NELG Perpetua", Perpetua, serif' },
@@ -198,14 +207,27 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
     password: "*philodox*",
   },
 };
+const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
+  8: 8,
+  14: 12,
+  19: 17,
+  22: 27,
+  25: 31,
+  29: 34,
+  32: 38,
+  35: 45,
+};
 
 export class Game {
   private readonly audioManager = new AudioManager();
   private readonly hallOfFame = new HallOfFameService();
   private readonly interactionGuard = new InteractionGuard();
   private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
+  private readonly completedAchievementIds = this.loadCompletedAchievementIds();
+  private readonly pendingAchievementIds = new Set<number>();
   private currentLevel = 1;
   private scope?: LevelScope;
+  private achievementDataPromise?: Promise<AchievementData[]>;
   private mainMenuCleanup?: () => void;
   private transitioning = false;
   private adminTitleFont = "";
@@ -335,8 +357,8 @@ export class Game {
           <button class="menu-button" data-menu-action="warp" type="button">
             WARP ZONE
           </button>
-          <button class="menu-button" data-menu-action="credits" type="button">
-            CREDITS
+          <button class="menu-button" data-menu-action="achievements" type="button">
+            ACHIEVEMENTS
           </button>
           <button class="menu-button" data-menu-action="hall" type="button">
             HALL OF FAME
@@ -346,6 +368,9 @@ export class Game {
           </button>
           <button class="menu-button" data-menu-action="options" type="button">
             OPTIONS
+          </button>
+          <button class="menu-button" data-menu-action="credits" type="button">
+            CREDITS
           </button>
         </nav>
       </main>
@@ -364,6 +389,9 @@ export class Game {
         case "warp":
           this.renderWarpZone();
           break;
+        case "achievements":
+          this.renderAchievements();
+          break;
         case "credits":
           this.renderCredits();
           break;
@@ -378,6 +406,323 @@ export class Game {
           break;
       }
     });
+  }
+
+  private renderAchievements(): void {
+    this.renderMenuPage(
+      "Achievements",
+      `<div class="achievements-layout">
+         <section class="achievement-detail" id="achievement-detail" aria-live="polite">
+           <div class="achievement-detail__field achievement-detail__field--number">
+             <span>NUMBER</span>
+             <strong id="achievement-detail-number">—</strong>
+           </div>
+           <div class="achievement-detail__field achievement-detail__field--name">
+             <span>NAME</span>
+             <h2 id="achievement-detail-name">SELECT AN ACHIEVEMENT</h2>
+           </div>
+           <div class="achievement-detail__field achievement-detail__field--condition">
+             <span>CONDITION</span>
+             <p id="achievement-detail-condition">Choose a numbered tile to view its details.</p>
+           </div>
+           <div class="achievement-detail__field achievement-detail__field--status">
+             <span>STATUS</span>
+             <div class="achievement-detail__status-content" id="achievement-detail-status">
+               <strong>NOT SELECTED</strong>
+             </div>
+           </div>
+         </section>
+         <section class="achievement-browser" aria-label="Achievement list">
+           <p class="achievement-browser__heading">ACHIEVEMENT LIST</p>
+           <nav class="achievement-grid" id="achievement-grid" aria-label="Achievement numbers">
+             <p class="achievement-grid__status">LOADING...</p>
+           </nav>
+         </section>
+       </div>
+       <section class="achievement-progress" aria-label="Achievement completion rate">
+         <span>ACHIEVEMENT PROGRESS</span>
+         <div class="achievement-progress__track" id="achievement-progress-track"
+           role="progressbar" aria-label="Achievement completion rate" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+           <i id="achievement-progress-fill"></i>
+         </div>
+         <strong id="achievement-progress-value">0 / 0 · 0%</strong>
+       </section>`,
+    );
+
+    const detail = this.root.querySelector<HTMLElement>("#achievement-detail");
+    const grid = this.root.querySelector<HTMLElement>("#achievement-grid");
+    const detailNumber = this.root.querySelector<HTMLElement>("#achievement-detail-number");
+    const detailName = this.root.querySelector<HTMLElement>("#achievement-detail-name");
+    const detailCondition = this.root.querySelector<HTMLElement>("#achievement-detail-condition");
+    const detailStatus = this.root.querySelector<HTMLElement>("#achievement-detail-status");
+    const progressTrack = this.root.querySelector<HTMLElement>("#achievement-progress-track");
+    const progressFill = this.root.querySelector<HTMLElement>("#achievement-progress-fill");
+    const progressValue = this.root.querySelector<HTMLElement>("#achievement-progress-value");
+    if (!detail || !grid || !detailNumber || !detailName || !detailCondition || !detailStatus
+      || !progressTrack || !progressFill || !progressValue) return;
+
+    const renderProgress = (achievements: AchievementData[]): void => {
+      const total = achievements.length;
+      const completed = achievements.reduce(
+        (count, achievement) => count + Number(this.completedAchievementIds.has(achievement.id)),
+        0,
+      );
+      const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+      progressValue.textContent = `${completed} / ${total} · ${percentage}%`;
+      progressFill.style.width = `${percentage}%`;
+      progressTrack.setAttribute("aria-valuemax", String(total));
+      progressTrack.setAttribute("aria-valuenow", String(completed));
+      progressTrack.setAttribute("aria-valuetext", `${percentage}% completed`);
+    };
+
+    const renderStatus = (label: string, className = ""): void => {
+      const status = document.createElement("strong");
+      status.className = className;
+      status.textContent = label;
+      detailStatus.replaceChildren(status);
+    };
+
+    const showAchievement = (achievement: AchievementData, button: HTMLButtonElement): void => {
+      grid.querySelectorAll(".achievement-number.is-selected").forEach((selected) => {
+        selected.classList.remove("is-selected");
+      });
+      button.classList.add("is-selected");
+      const completed = this.completedAchievementIds.has(achievement.id);
+      detailNumber.textContent = `#${achievement.id}`;
+      renderStatus(completed ? "COMPLETED" : "NOT COMPLETED", completed ? "is-completed" : "is-incomplete");
+      if (completed) {
+        const codeRow = document.createElement("div");
+        codeRow.className = "achievement-detail__code";
+        const code = document.createElement("code");
+        code.textContent = achievement.inputCodes;
+        const copy = document.createElement("button");
+        copy.type = "button";
+        copy.textContent = "COPY";
+        copy.setAttribute("aria-label", `Copy code for achievement ${achievement.id}`);
+        copy.addEventListener("click", () => {
+          void this.copyAchievementCode(achievement.inputCodes).then((copied) => {
+            if (!copy.isConnected) return;
+            copy.textContent = copied ? "COPIED" : "FAILED";
+            copy.classList.toggle("is-copied", copied);
+          });
+        });
+        codeRow.append(code, copy);
+        detailStatus.append(codeRow);
+      }
+      if (achievement.secret && !completed) {
+        detail.classList.add("is-secret");
+        detailName.textContent = "SECRET ACHIEVEMENT";
+        detailCondition.textContent = "The achievement name and completion condition will be revealed after it is completed.";
+      } else {
+        detail.classList.remove("is-secret");
+        detailName.textContent = achievement.name;
+        detailCondition.textContent = achievement.condition;
+      }
+    };
+
+    void this.loadAchievementData()
+      .then((achievements) => {
+        if (!grid.isConnected || !detail.isConnected) return;
+        renderProgress(achievements);
+        grid.replaceChildren();
+        if (achievements.length === 0) {
+          const status = document.createElement("p");
+          status.className = "achievement-grid__status";
+          status.textContent = "COMING SOON";
+          grid.append(status);
+          detailNumber.textContent = "—";
+          detailName.textContent = "NO ACHIEVEMENTS YET";
+          detailCondition.textContent = "New challenges will appear here in a future update.";
+          renderStatus("UNAVAILABLE");
+          return;
+        }
+
+        achievements.forEach((achievement) => {
+          const button = document.createElement("button");
+          const completed = this.completedAchievementIds.has(achievement.id);
+          button.className = `achievement-number${completed ? " is-completed" : ""}`;
+          button.type = "button";
+          button.textContent = String(achievement.id);
+          button.setAttribute("aria-label", `Achievement ${achievement.id}${completed ? ", completed" : ""}`);
+          button.addEventListener("click", () => showAchievement(achievement, button));
+          grid.append(button);
+        });
+      })
+      .catch((error: unknown) => {
+        if (!grid.isConnected || !detail.isConnected) return;
+        grid.replaceChildren();
+        const status = document.createElement("p");
+        status.className = "achievement-grid__status is-error";
+        status.textContent = "LOAD FAILED";
+        grid.append(status);
+        detailNumber.textContent = "—";
+        detailName.textContent = "UNABLE TO LOAD ACHIEVEMENTS";
+        detailCondition.textContent = error instanceof Error ? error.message : "Unknown error.";
+        renderStatus("ERROR", "is-error");
+        progressValue.textContent = "UNAVAILABLE";
+        progressTrack.removeAttribute("aria-valuenow");
+        progressTrack.setAttribute("aria-valuetext", "Unavailable");
+      });
+  }
+
+  private loadCompletedAchievementIds(): Set<number> {
+    try {
+      const stored = JSON.parse(localStorage.getItem(COMPLETED_ACHIEVEMENTS_KEY) ?? "[]") as unknown;
+      if (!Array.isArray(stored)) return new Set();
+      return new Set(stored.filter((id): id is number => Number.isInteger(id) && id > 0));
+    } catch {
+      return new Set();
+    }
+  }
+
+  private saveCompletedAchievementIds(): void {
+    try {
+      localStorage.setItem(
+        COMPLETED_ACHIEVEMENTS_KEY,
+        JSON.stringify([...this.completedAchievementIds].sort((left, right) => left - right)),
+      );
+    } catch {
+      // Achievement popups should still work when storage is unavailable.
+    }
+  }
+
+  private loadAchievementData(): Promise<AchievementData[]> {
+    if (this.achievementDataPromise) return this.achievementDataPromise;
+
+    const request = fetch(assetUrl("data/achievements.json"), { cache: "no-cache" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Unable to load achievements (${response.status}).`);
+        return response.json() as Promise<{ achievements?: unknown[] }>;
+      })
+      .then((payload) => (payload.achievements ?? [])
+        .filter((entry): entry is AchievementData => {
+          if (!entry || typeof entry !== "object") return false;
+          const achievement = entry as Partial<AchievementData>;
+          return Number.isInteger(achievement.id)
+            && (achievement.id ?? 0) > 0
+            && typeof achievement.secret === "boolean"
+            && typeof achievement.name === "string"
+            && typeof achievement.condition === "string"
+            && typeof achievement.inputCodes === "string";
+        })
+        .sort((left, right) => left.id - right.id));
+    this.achievementDataPromise = request;
+    void request.catch(() => {
+      if (this.achievementDataPromise === request) this.achievementDataPromise = undefined;
+    });
+    return request;
+  }
+
+  private unlockAchievement(achievementId: number): void {
+    if (!Number.isInteger(achievementId)
+      || achievementId <= 0
+      || this.completedAchievementIds.has(achievementId)
+      || this.pendingAchievementIds.has(achievementId)) return;
+
+    this.pendingAchievementIds.add(achievementId);
+    void this.loadAchievementData()
+      .then((achievements) => {
+        const achievement = achievements.find((candidate) => candidate.id === achievementId);
+        if (!achievement || this.completedAchievementIds.has(achievementId)) return;
+        this.completedAchievementIds.add(achievementId);
+        this.saveCompletedAchievementIds();
+        this.showAchievementPopup(achievement);
+      })
+      .catch(() => {
+        // A missing data file must not interrupt active gameplay.
+      })
+      .finally(() => this.pendingAchievementIds.delete(achievementId));
+  }
+
+  private showAchievementPopup(achievement: AchievementData): void {
+    const frame = this.root.querySelector<HTMLElement>(".game-frame");
+    if (!frame) return;
+
+    let layer = document.querySelector<HTMLElement>(".achievement-popup-layer[data-nelg-achievements]");
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "achievement-popup-layer";
+      layer.dataset.nelgAchievements = "";
+      layer.setAttribute("aria-live", "polite");
+      document.body.append(layer);
+    }
+    const frameBounds = frame.getBoundingClientRect();
+    const scale = frameBounds.width / 800;
+    layer.style.top = `${frameBounds.top + (16 * scale)}px`;
+    layer.style.right = `${window.innerWidth - frameBounds.right + (16 * scale)}px`;
+    layer.style.setProperty("--achievement-popup-scale", String(scale));
+
+    const popup = document.createElement("aside");
+    popup.className = "achievement-popup";
+    popup.setAttribute("role", "status");
+    const close = document.createElement("button");
+    close.className = "achievement-popup__close";
+    close.type = "button";
+    close.setAttribute("aria-label", "Close achievement notification");
+    close.textContent = "×";
+    const kicker = document.createElement("span");
+    kicker.className = "achievement-popup__kicker";
+    kicker.textContent = `ACHIEVEMENT UNLOCKED · #${achievement.id}`;
+    const title = document.createElement("h2");
+    title.textContent = achievement.name;
+    const condition = document.createElement("p");
+    condition.className = "achievement-popup__condition";
+    condition.textContent = achievement.condition;
+    const codeRow = document.createElement("div");
+    codeRow.className = "achievement-popup__code";
+    const code = document.createElement("code");
+    code.textContent = achievement.inputCodes;
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.textContent = "COPY";
+    copy.setAttribute("aria-label", `Copy code for achievement ${achievement.id}`);
+    codeRow.append(code, copy);
+    popup.append(close, kicker, title, condition, codeRow);
+    layer.prepend(popup);
+
+    let dismissed = false;
+    const dismiss = (): void => {
+      if (dismissed) return;
+      dismissed = true;
+      popup.classList.add("is-leaving");
+      window.setTimeout(() => {
+        popup.remove();
+        if (layer?.childElementCount === 0) layer.remove();
+      }, 180);
+    };
+    close.addEventListener("click", dismiss, { once: true });
+    copy.addEventListener("click", () => {
+      void this.copyAchievementCode(achievement.inputCodes).then((copied) => {
+        if (!copy.isConnected) return;
+        copy.textContent = copied ? "COPIED" : "FAILED";
+        copy.classList.toggle("is-copied", copied);
+      });
+    });
+    window.setTimeout(() => {
+      if (popup.isConnected) dismiss();
+    }, 10000);
+  }
+
+  private async copyAchievementCode(value: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      const input = document.createElement("textarea");
+      input.value = value;
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      try {
+        document.body.append(input);
+        input.focus();
+        input.select();
+        return document.execCommand("copy");
+      } catch {
+        return false;
+      } finally {
+        input.remove();
+      }
+    }
   }
 
   private startMainMenuParade(): void {
@@ -570,6 +915,7 @@ export class Game {
         event.preventDefault();
         if (!input) return;
         if (maskedInput?.getValue() === checkpoint.password) {
+          this.unlockAchievement(9);
           this.renderWarpCheckpoint(levelNumber);
           return;
         }
@@ -588,7 +934,7 @@ export class Game {
       ?.addEventListener("click", () => this.renderWarpZone(), { once: true });
   }
 
-  private renderWarpCheckpoint(levelNumber: number): void {
+  private renderWarpCheckpoint(levelNumber: number, reachedByCompletion = false): void {
     const checkpoint = WARP_CHECKPOINTS[levelNumber];
     const warpIndex = JUMPABLE_LEVELS.findIndex((number) => number === levelNumber);
     if (!checkpoint || warpIndex < 0) {
@@ -600,6 +946,8 @@ export class Game {
     this.disposeCurrentLevel();
     this.audioManager.stopMusic();
     this.transitioning = false;
+    const checkpointAchievement = WARP_CHECKPOINT_ACHIEVEMENTS[levelNumber];
+    if (reachedByCompletion && checkpointAchievement) this.unlockAchievement(checkpointAchievement);
     this.root.innerHTML = `
       <main class="game-frame warp-gate warp-checkpoint"
         aria-label="Level ${levelNumber}, Warp Zone ${warpNumber} checkpoint">
@@ -658,6 +1006,7 @@ export class Game {
          </section>
        </div>`,
     );
+    this.unlockAchievement(2);
   }
 
   private renderHallOfFame(): void {
@@ -666,6 +1015,7 @@ export class Game {
       `<p class="menu-page__intro">Ranked by the time each winner reached the finish.</p>
        <div class="hall-list" id="hall-list" aria-live="polite"><p>LOADING...</p></div>`,
     );
+    this.unlockAchievement(5);
     const list = this.root.querySelector<HTMLElement>("#hall-list");
     void this.hallOfFame.list().then((entries) => {
       if (!list?.isConnected) return;
@@ -783,6 +1133,7 @@ export class Game {
   }
 
   private openDiscord(): void {
+    this.unlockAchievement(4);
     if (DISCORD_URL) {
       window.open(DISCORD_URL, "_blank", "noopener,noreferrer");
       return;
@@ -857,6 +1208,7 @@ export class Game {
          </section>
        </div>`,
     );
+    this.unlockAchievement(3);
     this.root.querySelector<HTMLElement>(".menu-page")?.classList.add("menu-page--options");
 
     this.root.querySelector<HTMLInputElement>("#music-option")?.addEventListener("change", (event) => {
@@ -1029,6 +1381,7 @@ export class Game {
       levelNumber,
       initialScene,
       complete: () => this.completeCurrentLevel(),
+      unlockAchievement: (achievementId) => this.unlockAchievement(achievementId),
       restart: () => this.showLevel(levelNumber, initialScene),
       goToLevel: (targetLevel) => this.showLevel(targetLevel),
       goToMenu: () => this.renderMainMenu(),
@@ -1042,7 +1395,7 @@ export class Game {
     if (this.transitioning) return;
     this.transitioning = true;
     if (WARP_CHECKPOINTS[this.currentLevel]) {
-      this.renderWarpCheckpoint(this.currentLevel);
+      this.renderWarpCheckpoint(this.currentLevel, true);
       return;
     }
     this.showLevel(this.currentLevel + 1);

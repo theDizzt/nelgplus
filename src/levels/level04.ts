@@ -4,7 +4,7 @@ import { attachStarMaskedInput } from "../core/StarMaskedInput";
 export const level04: LevelDefinition = {
   number: 4,
   title: "Tutorial IV",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-04";
     screen.innerHTML = `
       <header class="level-heading level-04__heading">
@@ -49,11 +49,15 @@ export const level04: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      const accepted = maskedInput.getValue() === "16";
+      const answer = maskedInput.getValue();
+      const accepted = answer === "16";
       if (accepted) {
+        unlockAchievement(1);
         complete();
         return;
       }
+
+      if (answer.toLowerCase() === "hidden") unlockAchievement(6);
 
       checking = false;
       submitButton.disabled = false;

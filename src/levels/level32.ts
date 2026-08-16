@@ -234,8 +234,9 @@ export const level32: LevelDefinition = {
     { id: "fail", label: "Fail screen" },
   ],
   mount(context) {
-    const { screen, audio, initialScene } = context;
+    const { screen, unlockAchievement, audio, initialScene } = context;
     let activeRedGuy: RedGuyController | undefined;
+    let flawlessRun = !initialScene || initialScene === "1";
     const sceneTimeouts = new Set<number>();
     const sceneIntervals = new Set<number>();
 
@@ -280,6 +281,7 @@ export const level32: LevelDefinition = {
     `;
 
     const renderFail = () => {
+      flawlessRun = false;
       clearScene();
       screen.className = "level-screen level-32 level-32--fail";
       screen.style.removeProperty("--level-32-background");
@@ -697,6 +699,7 @@ export const level32: LevelDefinition = {
     }
 
     function renderSceneNine() {
+      if (flawlessRun) unlockAchievement(37);
       renderPlayerScene({
         number: 9,
         className: "level-32--scene-9",

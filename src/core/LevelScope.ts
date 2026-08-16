@@ -6,6 +6,7 @@ interface ScopeOptions {
   levelNumber: number;
   initialScene?: string;
   complete: () => void;
+  unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number) => void;
   goToMenu: () => void;
@@ -48,6 +49,7 @@ export class LevelScope {
         playEffect: (source) => options.audio.playEffect(source),
       },
       complete: options.complete,
+      unlockAchievement: options.unlockAchievement,
       restart: options.restart,
       goToLevel: options.goToLevel,
       goToMenu: options.goToMenu,

@@ -7,7 +7,7 @@ const ANSWER = "decibel";
 export const level34: LevelDefinition = {
   number: 34,
   title: "Voice",
-  mount({ screen, complete, listen, timeout, audio }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout, audio }) {
     screen.className = "level-screen level-34";
     screen.innerHTML = `
       <header class="level-heading level-34__heading">
@@ -53,7 +53,22 @@ export const level34: LevelDefinition = {
       status.textContent = message;
     };
 
+    const secretSequence = ["stop", "pause", "play"] as const;
+    let secretSequenceIndex = 0;
+    const recordSecretCommand = (command: typeof secretSequence[number]) => {
+      if (command === secretSequence[secretSequenceIndex]) {
+        secretSequenceIndex += 1;
+        if (secretSequenceIndex === secretSequence.length) {
+          unlockAchievement(39);
+          secretSequenceIndex = 0;
+        }
+        return;
+      }
+      secretSequenceIndex = command === "stop" ? 1 : 0;
+    };
+
     listen(playButton, "click", () => {
+      recordSecretCommand("play");
       if (!audio.musicEnabled) {
         setStatus("MUSIC IS DISABLED IN OPTIONS");
         return;
@@ -63,11 +78,13 @@ export const level34: LevelDefinition = {
     });
 
     listen(pauseButton, "click", () => {
+      recordSecretCommand("pause");
       recording.pause();
       setStatus("PAUSED");
     });
 
     listen(stopButton, "click", () => {
+      recordSecretCommand("stop");
       recording.pause();
       recording.currentTime = 0;
       setStatus("STOPPED");

@@ -1,0 +1,326 @@
+{
+  "achievements": [
+    {
+      "id": 0,
+      "secret": false,
+      "name": "도전과제 데이터 작성 요령 (실제 도전과제 아님)",
+      "condition": "실제 도전과제는 이 항목을 복사한 뒤 id를 1 이상의 중복되지 않는 정수로 변경하세요. secret은 true 또는 false만 사용하며, true이면 달성 전까지 도전과제 이름과 달성 조건을 숨깁니다. name에는 화면에 표시할 도전과제 이름을, condition에는 플레이어가 수행해야 할 정확한 달성 조건을 입력하세요. inputCodes에는 임의의 4자리 숫자 3개를 하이픈으로 연결한 문자열을 입력하세요. 형식은 반드시 0000-0000-0000이어야 하며 앞자리가 0일 수 있으므로 큰따옴표를 사용해야 합니다. 게임 코드의 해당 달성 지점에서 unlockAchievement(id)를 호출하면 완료 상태 저장과 팝업 표시가 실행됩니다. id 0 항목은 안내용이므로 도전과제 목록과 달성률 계산에서 제외합니다.",
+      "inputCodes": "0000-0000-0000"
+    },
+    {
+      "id": 1,
+      "secret": false,
+      "name": "Hello, World!",
+      "condition": "Complete all tutorial levels (beat Level 4).",
+      "inputCodes": "5968-7619-0681"
+    },
+    {
+      "id": 2,
+      "secret": false,
+      "name": "Who Made This?",
+      "condition": "Visit the Credits page.",
+      "inputCodes": "1524-8144-9944"
+    },
+    {
+      "id": 3,
+      "secret": false,
+      "name": "Customization",
+      "condition": "Visit the Options page.",
+      "inputCodes": "8666-3854-2266"
+    },
+    {
+      "id": 4,
+      "secret": false,
+      "name": "SOS Request",
+      "condition": "Attempt to join the Discord server.",
+      "inputCodes": "6852-3751-5350"
+    },
+    {
+      "id": 5,
+      "secret": false,
+      "name": "Pilgrimage",
+      "condition": "Visit the Hall of Fame page.",
+      "inputCodes": "9389-6498-4137"
+    },
+    {
+      "id": 6,
+      "secret": true,
+      "name": "まさか?",
+      "condition": "Enter 'hidden' in Level 4. (Enter the most commonly used password into the first password field.)",
+      "inputCodes": "3200-3681-3952"
+    },
+    {
+      "id": 7,
+      "secret": true,
+      "name": "Procrastination",
+      "condition": "Click the button in Level 7 before clearing away every object.",
+      "inputCodes": "4379-0196-0489"
+    },
+    {
+      "id": 8,
+      "secret": false,
+      "name": "Finally, I Can Rest",
+      "condition": "Reach the first Warp Zone (beat Level 8).",
+      "inputCodes": "5740-2210-8649"
+    },
+    {
+      "id": 9,
+      "secret": false,
+      "name": "First Flight",
+      "condition": "Use the Warp Zone for the first time.",
+      "inputCodes": "3249-6911-0000"
+    },
+    {
+      "id": 10,
+      "secret": true,
+      "name": "I Want to Go Back",
+      "condition": "Click 'back' or 'rewind' in the Level 9 menu.",
+      "inputCodes": "3553-2954-7496"
+    },
+    {
+      "id": 11,
+      "secret": true,
+      "name": "I Prefer It Stock",
+      "condition": "Enter 'dark purple' in Level 12.",
+      "inputCodes": "3986-0039-3230"
+    },
+    {
+      "id": 12,
+      "secret": false,
+      "name": "Almost Not a Newbie",
+      "condition": "Reach the second Warp Zone (beat Level 14).",
+      "inputCodes": "0533-0873-2429"
+    },
+    {
+      "id": 13,
+      "secret": true,
+      "name": "Same Meaning, Right?",
+      "condition": "Enter 'hide', 'hidden', or '?????' in Level 15.",
+      "inputCodes": "5283-0270-5225"
+    },
+    {
+      "id": 14,
+      "secret": true,
+      "name": "Tunnel Vision",
+      "condition": "Enter '22' or '4.58203125' in Level 16. (Interpret 16 or coffee as hexadecimal.)",
+      "inputCodes": "8990-5269-7519"
+    },
+    {
+      "id": 15,
+      "secret": true,
+      "name": "SKIP",
+      "condition": "Attempt to move to another level from Level 17. (Try to visit a strange level instead of the next one.)",
+      "inputCodes": "3053-4598-0543"
+    },
+    {
+      "id": 16,
+      "secret": true,
+      "name": "Haven't I Seen This Level Before?",
+      "condition": "Click the button at (242, 242) in Level 19 without clicking the button at (19, 19) first.",
+      "inputCodes": "1616-7777-5559"
+    },
+    {
+      "id": 17,
+      "secret": false,
+      "name": "Hard, but Manageable",
+      "condition": "Reach the third Warp Zone (beat Level 19).",
+      "inputCodes": "9872-7988-8762"
+    },
+    {
+      "id": 18,
+      "secret": true,
+      "name": "A New Idea",
+      "condition": "Enter 'neddih' in Level 20, Scene 2.",
+      "inputCodes": "6209-7023-1048"
+    },
+    {
+      "id": 19,
+      "secret": true,
+      "name": "The One That Took Over Computers Worldwide (Except Linux)",
+      "condition": "Enter 'arial' in Level 20, Scene 3.",
+      "inputCodes": "0321-9591-9639"
+    },
+    {
+      "id": 20,
+      "secret": true,
+      "name": "Cassiopeia",
+      "condition": "Press 'w' on the keyboard in Level 20, Scene 5.",
+      "inputCodes": "6368-3213-5687"
+    },
+    {
+      "id": 21,
+      "secret": true,
+      "name": "( ͡° ͜ʖ ͡°)",
+      "condition": "Enter 'awesome face' or 'epic smiley' in Level 20, Scene 6.",
+      "inputCodes": "8763-4777-5777"
+    },
+    {
+      "id": 22,
+      "secret": true,
+      "name": "Stop Denying Reality",
+      "condition": "Click the button at (20, 20) or (242, 242) in Level 20, Scene 7.",
+      "inputCodes": "3813-1696-8277"
+    },
+    {
+      "id": 23,
+      "secret": true,
+      "name": "Missing the Old Days",
+      "condition": "Click 'back' or 'rewind' in the Level 20, Scene 9 menu.",
+      "inputCodes": "6425-8680-7986"
+    },
+    {
+      "id": 24,
+      "secret": true,
+      "name": "I Told You It Wouldn't Work!!!",
+      "condition": "Attempt to move to another level from Level 20, Scene 10. (Try to visit a strange level instead of the next one.)",
+      "inputCodes": "1729-8980-4163"
+    },
+    {
+      "id": 25,
+      "secret": true,
+      "name": "Typing Was Always a Chore",
+      "condition": "Use copy and paste to enter '3' in Level 21 before pressing '3' on the keyboard.",
+      "inputCodes": "9223-0460-6095"
+    },
+    {
+      "id": 26,
+      "secret": true,
+      "name": "Still a Great Answer, but Not What I Wanted",
+      "condition": "Enter 'EBOI' in Level 22.",
+      "inputCodes": "9809-4019-3044"
+    },
+    {
+      "id": 27,
+      "secret": false,
+      "name": "The First Trial",
+      "condition": "Reach the fourth Warp Zone (beat Level 22).",
+      "inputCodes": "4213-3706-2504"
+    },
+    {
+      "id": 28,
+      "secret": true,
+      "name": "Why?",
+      "condition": "Enter '?' in Level 23.",
+      "inputCodes": "8426-5576-1153"
+    },
+    {
+      "id": 29,
+      "secret": true,
+      "name": "You Just Activated My Trap Card",
+      "condition": "Enter 'hidden' in the password field in Level 24.",
+      "inputCodes": "5893-1601-5530"
+    },
+    {
+      "id": 30,
+      "secret": true,
+      "name": "Maze Anorexia",
+      "condition": "Enter 'hidden' on the keyboard in Level 25 without pressing every button in the maze.",
+      "inputCodes": "3435-2521-0611"
+    },
+    {
+      "id": 31,
+      "secret": false,
+      "name": "Patience Reinforcement Learning",
+      "condition": "Reach the fifth Warp Zone (beat Level 25).",
+      "inputCodes": "9687-4931-1894"
+    },
+    {
+      "id": 32,
+      "secret": true,
+      "name": "Are You Included Too?",
+      "condition": "Enter 'hidden.' or '*******' in Level 26.",
+      "inputCodes": "2109-9496-7284"
+    },
+    {
+      "id": 33,
+      "secret": true,
+      "name": "Deal with the Devil",
+      "condition": "Make '666' in Level 27.",
+      "inputCodes": "6306-6668-0842"
+    },
+    {
+      "id": 34,
+      "secret": false,
+      "name": "Roll Safe",
+      "condition": "Reach the sixth Warp Zone (beat Level 29).",
+      "inputCodes": "8081-7057-9270"
+    },
+    {
+      "id": 35,
+      "secret": true,
+      "name": "No thoughts, head empty",
+      "condition": "Enter 'THIRTY' in Level 30.",
+      "inputCodes": "3579-0801-1499"
+    },
+    {
+      "id": 36,
+      "secret": true,
+      "name": "Doppelgänger",
+      "condition": "Enter 'WEIB' in Level 31.",
+      "inputCodes": "8277-9688-6149"
+    },
+    {
+      "id": 37,
+      "secret": true,
+      "name": "Heart of the Beast",
+      "condition": "Reach Scene 9 in Level 32 without dying once.",
+      "inputCodes": "2891-2951-8298"
+    },
+    {
+      "id": 38,
+      "secret": false,
+      "name": "Nexus",
+      "condition": "Reach the seventh Warp Zone (beat Level 32).",
+      "inputCodes": "4458-5073-5820"
+    },
+    {
+      "id": 39,
+      "secret": true,
+      "name": "RGB",
+      "condition": "Click Stop, Pause, and Play in that order in Level 34. (Press the buttons in the same order as the door colors in Level 20.)",
+      "inputCodes": "0339-3942-1894"
+    },
+    {
+      "id": 40,
+      "secret": true,
+      "name": "Sneak 100",
+      "condition": "Enter '*********' in Level 35, Scene 2.",
+      "inputCodes": "2100-5312-8663"
+    },
+    {
+      "id": 41,
+      "secret": true,
+      "name": "Press X to Doubt",
+      "condition": "Enter 'pedestrian' in Level 35, Scene 4. (Even though you were told that the hint was not meant for this scene...)",
+      "inputCodes": "9834-2757-1393"
+    },
+    {
+      "id": 42,
+      "secret": true,
+      "name": "64 bits... 32 bits... 16 bits...",
+      "condition": "Make 16 in Level 35, Scene 5. (You remembered the exact line from Level 16!)",
+      "inputCodes": "1642-6242-7739"
+    },
+    {
+      "id": 43,
+      "secret": true,
+      "name": "IDGAF",
+      "condition": "Enter 'DO YOU STILL REMEMBER?' in Level 35, Scene 7.",
+      "inputCodes": "5608-6870-5785"
+    },
+    {
+      "id": 44,
+      "secret": true,
+      "name": "Silent Hill",
+      "condition": "Press the Play button in Level 35, Scene 9 while the volume is set to 0.",
+      "inputCodes": "2871-7920-4029"
+    },
+    {
+      "id": 45,
+      "secret": false,
+      "name": "hakótel hama'araví",
+      "condition": "Reach the eighth Warp Zone (beat Level 35).",
+      "inputCodes": "6430-9332-5671"
+    }
+  ]
+}

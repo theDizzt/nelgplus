@@ -17,7 +17,7 @@ export const level27: LevelDefinition = {
     { id: "3", label: "Scene 3 - Negative value" },
     { id: "4", label: "Scene 4 - Overflow" },
   ],
-  mount({ screen, complete, listen, initialScene }) {
+  mount({ screen, complete, unlockAchievement, listen, initialScene }) {
     let scene: Scene = "puzzle";
     let value = 0;
     let operations = 0;
@@ -115,6 +115,7 @@ export const level27: LevelDefinition = {
         showError("overflow");
         return;
       }
+      if (value === 666) unlockAchievement(33);
       if (value === 27) {
         complete();
         return;

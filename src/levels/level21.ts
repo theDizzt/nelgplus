@@ -8,7 +8,7 @@ export const level21: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Failure" },
   ],
-  mount({ screen, complete, initialScene }) {
+  mount({ screen, complete, unlockAchievement, initialScene }) {
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -78,6 +78,11 @@ export const level21: LevelDefinition = {
       if (!form || !input || !submitButton) return;
 
       const maskedInput = attachStarMaskedInput(input, on);
+      on(input, "paste", (event) => {
+        if ((event as ClipboardEvent).clipboardData?.getData("text").trim() === "3") {
+          unlockAchievement(25);
+        }
+      });
       let keyboardTrapArmed = false;
       sceneTimeout(() => {
         keyboardTrapArmed = true;

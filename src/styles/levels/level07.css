@@ -46,7 +46,7 @@
   transition: translate 70ms ease, box-shadow 70ms ease, background 70ms ease;
 }
 
-.level-07__finish:disabled {
+.level-07__finish[aria-disabled="true"] {
   opacity: 1;
 }
 

@@ -3,7 +3,7 @@ import type { LevelDefinition } from "../core/types";
 export const level17: LevelDefinition = {
   number: 17,
   title: "Title",
-  mount({ screen, complete, listen }) {
+  mount({ screen, complete, unlockAchievement, listen }) {
     screen.className = "level-screen level-17";
     screen.innerHTML = `
       <header class="level-heading level-17__heading">
@@ -20,7 +20,12 @@ export const level17: LevelDefinition = {
     editableTitle.setSelectionRange(editableTitle.value.length, editableTitle.value.length);
 
     const tryComplete = () => {
-      if (editableTitle.value === "Level 18") complete();
+      const requestedLevel = editableTitle.value.trim();
+      if (requestedLevel === "Level 18") {
+        complete();
+        return;
+      }
+      if (/^Level\s+-?\d+$/i.test(requestedLevel)) unlockAchievement(15);
     };
 
     listen(editableTitle, "keydown", (event) => {

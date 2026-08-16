@@ -49,7 +49,7 @@ export const level20: LevelDefinition = {
   title: "Reunion I",
   scenes: Array.from({ length: 10 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
   mount(context) {
-    const { screen, complete, audio, initialScene } = context;
+    const { screen, complete, unlockAchievement, audio, initialScene } = context;
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -93,7 +93,11 @@ export const level20: LevelDefinition = {
       `;
     };
 
-    const bindPassword = (answers: string | readonly string[], nextScene: number) => {
+    const bindPassword = (
+      answers: string | readonly string[],
+      nextScene: number,
+      achievementAnswers: Readonly<Record<string, number>> = {},
+    ) => {
       const form = screen.querySelector<HTMLFormElement>(".level-20__password-form");
       const input = screen.querySelector<HTMLInputElement>(".level-20__password-form input");
       const button = screen.querySelector<HTMLButtonElement>(".level-20__password-form button");
@@ -108,7 +112,10 @@ export const level20: LevelDefinition = {
       });
       on(form, "submit", (event) => {
         event.preventDefault();
-        if (acceptedAnswers.has(maskedInput.getValue())) {
+        const answer = maskedInput.getValue();
+        const achievementId = achievementAnswers[answer];
+        if (achievementId) unlockAchievement(achievementId);
+        if (acceptedAnswers.has(answer)) {
           renderScene(nextScene);
           return;
         }
@@ -206,7 +213,7 @@ export const level20: LevelDefinition = {
           ).join("");
           renderShell(2, "#1f65ff", `<div class="level-20__size-objects">${objects}</div>${passwordForm("level-20-scene-2-answer")}`, "black");
           makeObjectsDraggable();
-          bindPassword("hidden", 3);
+          bindPassword("hidden", 3, { neddih: 18 });
           break;
         }
 
@@ -262,7 +269,11 @@ export const level20: LevelDefinition = {
             }, 70);
             sceneTimers.add(fadeTimer);
           }
-          bindPassword(["alphabet", "letter", "letters", "text", "character", "english", "white"], 4);
+          bindPassword(
+            ["alphabet", "letter", "letters", "text", "character", "english", "white"],
+            4,
+            { arial: 19 },
+          );
           break;
         }
 
@@ -290,6 +301,10 @@ export const level20: LevelDefinition = {
           renderShell(5, "#fff", `<div class="level-20__near-black-buttons">${buttons}</div>`, "black");
           const clicked = new Set<number>();
           const container = screen.querySelector<HTMLElement>(".level-20__near-black-buttons");
+          on(document, "keydown", (event) => {
+            if (event.repeat || event.key.toLowerCase() !== "w") return;
+            unlockAchievement(20);
+          });
           if (container) {
             on(container, "click", (event) => {
               const button = (event.target as Element).closest<HTMLButtonElement>(".level-20__near-black-button");
@@ -307,7 +322,7 @@ export const level20: LevelDefinition = {
 
         case 6: {
           renderShell(6, "#ffff00", `<img class="level-20__face" src="${assetUrl("images/level20a.png")}" alt="A smiling face" />${passwordForm("level-20-scene-6-answer")}`, "blue");
-          bindPassword("64206", 7);
+          bindPassword("64206", 7, { "awesome face": 21, "epic smiley": 21 });
           break;
         }
 
@@ -344,6 +359,10 @@ export const level20: LevelDefinition = {
           });
           on(screen, "pointerdown", (event) => {
             const { x, y } = getVirtualCoordinates(event);
+            if ((Math.abs(x - 20) <= 1 && Math.abs(y - 20) <= 1)
+              || (Math.abs(x - 242) <= 1 && Math.abs(y - 242) <= 1)) {
+              unlockAchievement(22);
+            }
             if (Math.abs(x - 339) <= 1 && Math.abs(y - 716) <= 1) renderScene(8);
           });
           if (target) {
@@ -412,8 +431,14 @@ export const level20: LevelDefinition = {
             const item = (event.target as Element).closest<HTMLButtonElement>("button[data-command]");
             if (!item) return;
             if (item.dataset.command === "forward") renderScene(10);
-            if (item.dataset.command === "back") renderScene(8);
-            if (item.dataset.command === "rewind") renderScene(1);
+            if (item.dataset.command === "back") {
+              unlockAchievement(23);
+              renderScene(8);
+            }
+            if (item.dataset.command === "rewind") {
+              unlockAchievement(23);
+              renderScene(1);
+            }
           });
           on(document, "pointerdown", (event) => {
             if (!menu.hidden && !menu.contains(event.target as Node)) menu.hidden = true;
@@ -438,7 +463,12 @@ export const level20: LevelDefinition = {
             on(editableTitle, "keydown", (event) => {
               if (event.key !== "Enter" || event.repeat) return;
               event.preventDefault();
-              if (editableTitle.value === "Level 21") complete();
+              const requestedLevel = editableTitle.value.trim();
+              if (requestedLevel === "Level 21") {
+                complete();
+                return;
+              }
+              if (/^Level\s+-?\d+$/i.test(requestedLevel)) unlockAchievement(24);
             });
           }
           break;

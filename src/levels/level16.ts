@@ -4,7 +4,7 @@ import type { LevelDefinition } from "../core/types";
 export const level16: LevelDefinition = {
   number: 16,
   title: "Hexadecimal",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-16";
     screen.innerHTML = `
       <header class="level-heading level-16__heading">
@@ -47,7 +47,9 @@ export const level16: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === "51966") {
+      const answer = maskedInput.getValue();
+      if (answer === "22" || answer === "4.58203125") unlockAchievement(14);
+      if (answer === "51966") {
         complete();
         return;
       }

@@ -11,7 +11,7 @@ const REVEAL_KEYS: Readonly<Record<string, { index: number; letter: string }>> =
 export const level15: LevelDefinition = {
   number: 15,
   title: "Input",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-15";
     screen.innerHTML = `
       <header class="level-heading level-15__heading">
@@ -72,7 +72,9 @@ export const level15: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === "hide?") {
+      const answer = maskedInput.getValue();
+      if (new Set(["hide", "hidden", "?????"]).has(answer)) unlockAchievement(13);
+      if (answer === "hide?") {
         complete();
         return;
       }
