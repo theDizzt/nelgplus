@@ -88,6 +88,9 @@
   font-size: 23px;
   opacity: 0;
   pointer-events: none;
+}
+
+.level-19__passing-clue.is-passing {
   animation: level-19-clue-pass 8s linear 1 both;
 }
 

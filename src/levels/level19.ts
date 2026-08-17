@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { clientPointToLocal } from "../core/floatingPosition";
 import type { LevelDefinition } from "../core/types";
 
 const LEVEL_WIDTH = 800;
@@ -59,19 +60,39 @@ export const level19: LevelDefinition = {
     });
 
     let firstCoordinateClicked = false;
-    listen(firstButton, "click", () => {
+    let secondCoordinateClicked = false;
+
+    const activateFirstCoordinate = () => {
+      if (firstCoordinateClicked) return;
       firstCoordinateClicked = true;
       firstButton.hidden = true;
       passingClue.hidden = false;
-    });
+      passingClue.classList.remove("is-passing");
+      void passingClue.offsetWidth;
+      passingClue.classList.add("is-passing");
+    };
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
-    listen(secondButton, "click", () => {
+    const activateSecondCoordinate = () => {
+      if (secondCoordinateClicked) return;
+      secondCoordinateClicked = true;
       if (!firstCoordinateClicked) unlockAchievement(16);
       secondButton.hidden = true;
       form.hidden = false;
       input.focus();
+    };
+
+    listen(screen, "click", (event) => {
+      if (event.button !== 0) return;
+      const point = clientPointToLocal(screen, event.clientX, event.clientY);
+      const x = Math.floor(point.x);
+      const y = Math.floor(point.y);
+      if (event.target === firstButton || (x === 19 && y === 19)) {
+        activateFirstCoordinate();
+        return;
+      }
+      if (event.target === secondButton || (x === 242 && y === 242)) activateSecondCoordinate();
     });
 
     listen(input, "keydown", (event) => {

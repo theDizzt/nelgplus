@@ -27,6 +27,12 @@ A level creates its DOM in `mount(context)` and returns a cleanup function. Use 
 
 The browser never writes Hall of Fame records. Follow `docs/HALL_OF_FAME.md` for the JSON format and manual editing procedure.
 
+## Flash-Style Context Menu Baseline
+
+Use the Level 9 context menu as the default implementation for any level that needs a Flash-player-style right-click menu. The baseline contains Music and Sound Effects toggles, separate Music and SFX volume submenus in 10% increments from 0 to 100, Forward, Back, Rewind, separators, and the player label. A level may intentionally disable or ignore individual navigation commands, but it should preserve the Level 9 layout, typography, hover behavior, and audio controls unless its puzzle specification explicitly requires another design.
+
+Always position the main menu with `positionFloatingElement` and calculate submenu placement with `localElementBounds`. The volume submenu must open to the left when there is not enough space on the right, and its vertical position must be clamped inside the logical 800×600 screen. Close both menus on an outside pointer press or Escape. Read and update audio state only through `LevelContext.audio`; do not maintain a separate per-level volume value.
+
 When coordinate calculations or interactions are repeated by two or more levels, extract a small utility under `core`. Keep presentation logic used by only one level inside that level's module and CSS file.
 
 ## Scene State Rules

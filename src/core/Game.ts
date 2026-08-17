@@ -8,8 +8,8 @@ import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
-const GAME_VERSION = "1.0.42";
-const VERSION_DATE = "08/16/2026";
+const GAME_VERSION = "1.0.46";
+const VERSION_DATE = "08/17/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
@@ -909,8 +909,6 @@ export class Game {
       </main>
     `;
 
-    this.unlockAchievement(9);
-
     if (checkpoint) {
       const form = this.root.querySelector<HTMLFormElement>(".warp-gate__form");
       const input = this.root.querySelector<HTMLInputElement>(".warp-gate__form input");
@@ -928,6 +926,7 @@ export class Game {
         event.preventDefault();
         if (!input) return;
         if (maskedInput?.getValue() === checkpoint.password) {
+          this.unlockAchievement(9);
           this.renderWarpCheckpoint(levelNumber);
           return;
         }
@@ -1010,6 +1009,8 @@ export class Game {
              <li>Sierra</li>
              <li>Lunaris</li>
              <li>mutsuki</li>
+             <li>Archbear <span>(iamwagyu)</span></li>
+             <li>Mandu <span>(mandu0730)</span></li>
            </ul>
          </section>
          <section class="credits-section">

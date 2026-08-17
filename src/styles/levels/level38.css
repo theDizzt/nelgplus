@@ -1,0 +1,101 @@
+.level-38 {
+  overflow: hidden;
+  color: #000;
+  background: radial-gradient(circle at 50% 42%, #397aab 0%, #174f87 42%, #092e5f 76%, #02172f 100%);
+}
+
+.level-38__heading {
+  z-index: 30;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-38__route-stage {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.level-38__route-stage:active { cursor: grabbing; }
+
+.level-38__route {
+  position: absolute;
+  top: -3420px;
+  left: -3650px;
+  width: 7500px;
+  max-width: none;
+  height: 7500px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.level-38__route.is-dragging {
+  filter: drop-shadow(5px 6px 0 rgb(0 0 0 / 19%));
+}
+
+.level-38__form {
+  position: absolute;
+  z-index: 32;
+  bottom: 43px;
+  left: 0;
+  width: 100%;
+}
+
+.level-38__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.level-38__form input {
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-38__form input.is-wrong {
+  background: #ff8b8b;
+  animation: level-38-wrong 90ms linear 4;
+}
+
+.level-38__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font: 25px/1 "NELG Arial", Arial, sans-serif;
+}
+
+.level-38__form button:hover:not(:disabled),
+.level-38__form button:focus-visible:not(:disabled) {
+  color: #111;
+  background: #f01818;
+  outline: none;
+}
+
+.level-38__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+@keyframes level-38-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}

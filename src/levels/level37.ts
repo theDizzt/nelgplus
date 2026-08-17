@@ -94,8 +94,8 @@ export const level37: LevelDefinition = {
           ${Array.from({ length: 11 }, (_, index) => `<button type="button" role="menuitemradio" data-volume="${index * 10}"></button>`).join("")}
         </div>
         <div class="level-37__menu-separator" role="separator"></div>
-        <button type="button" role="menuitem" disabled>Forward</button>
-        <button type="button" role="menuitem" disabled>Back</button>
+        <button type="button" role="menuitem">Forward</button>
+        <button type="button" role="menuitem">Back</button>
         <button class="level-37__rewind" type="button" role="menuitem">Rewind</button>
         <div class="level-37__menu-separator" role="separator"></div>
         <div class="level-37__player-label">Never Ending Level Game ++</div>

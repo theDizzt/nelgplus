@@ -21,6 +21,10 @@ npm run build
 Upload the **contents** of `dist/` as a ZIP to Newgrounds. `index.html` must be
 at the root of the ZIP.
 
+On Windows, double-click `build-newgrounds.bat` to compile the game and create
+`release/NELGPlus-Newgrounds.zip` with the correct upload structure. The batch
+file validates that `index.html` is at the root of the archive.
+
 ## Adding fonts
 
 The bundled webfont files live under:
