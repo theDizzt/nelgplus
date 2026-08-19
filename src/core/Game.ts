@@ -8,9 +8,11 @@ import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
-const GAME_VERSION = "1.0.46";
-const VERSION_DATE = "08/17/2026";
+const GAME_VERSION = "1.0.47";
+const VERSION_DATE = "08/19/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
+const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
+const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1539230162175000627";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
@@ -336,9 +338,9 @@ export class Game {
           <h1>Never Ending Level Game <span>++</span></h1>
           <div class="main-menu__parade" aria-hidden="true"></div>
           <p class="main-menu__description">
-            This game is a sequel to Clarence Ball’s <em>Never Ending Level Game</em>, which was released in 2005.
-            It was created by blending elements from that game and its fan games (<em>Level Killer</em> and
-            <em>TEDNE</em>) to let players experience the thrill of the original once again. You must complete
+            This game is a sequel to Clarence Ball’s <a href="https://www.newgrounds.com/portal/view/366111" target="_blank" rel="noopener noreferrer"><em>Never Ending Level Game</em></a>, which was released in 2005.
+            It was created by blending elements from that game and its fan games (<a href="https://www.newgrounds.com/portal/view/756739" target="_blank" rel="noopener noreferrer"><em>Level Killer</em></a> and
+            <a href="https://www.newgrounds.com/portal/view/843894" target="_blank" rel="noopener noreferrer"><em>TEDNE</em></a>) to let players experience the thrill of the original once again. You must complete
             150 levels while battling against the time and overcoming the game’s ruthless difficulty.
           </p>
           <p class="main-menu__continuation">
@@ -374,8 +376,8 @@ export class Game {
           <button class="menu-button" data-menu-action="hall" type="button">
             HALL OF FAME
           </button>
-          <button class="menu-button menu-button--discord" data-menu-action="discord" type="button">
-            DISCORD
+          <button class="menu-button" data-menu-action="help" type="button">
+            HELP SECTION
           </button>
           <button class="menu-button" data-menu-action="options" type="button">
             OPTIONS
@@ -409,8 +411,8 @@ export class Game {
         case "hall":
           this.renderHallOfFame();
           break;
-        case "discord":
-          this.openDiscord();
+        case "help":
+          this.renderHelpSection();
           break;
         case "options":
           this.renderOptions();
@@ -987,8 +989,8 @@ export class Game {
       `<div class="credits-list">
          <section class="credits-section">
            <h2>CREATORS</h2>
-           <article class="credits-person"><h3>Dizzt <span>(dizzt3942)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
-           <article class="credits-person"><h3>Perhaptation <span>(highstrike300)</span></h3><p>Former winner of NELG Level 300 and creator of TEDNE.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
+           <article class="credits-person"><h3><a href="https://dizzt3942.neocities.org/" target="_blank" rel="noopener noreferrer">Dizzt <span>(dizzt3942)</span></a></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
+           <article class="credits-person"><h3><a href="https://perstar.neocities.org/" target="_blank" rel="noopener noreferrer">Perhaptation <span>(highstrike300)</span></a></h3><p>Former winner of NELG Level 300 and creator of TEDNE.</p><p>One of the minds responsible for the puzzles in this painful game.</p></article>
          </section>
          <section class="credits-section">
            <h2>SPECIAL THANKS</h2>
@@ -1147,18 +1149,61 @@ export class Game {
 
   private openDiscord(): void {
     this.unlockAchievement(4);
-    if (DISCORD_URL) {
-      window.open(DISCORD_URL, "_blank", "noopener,noreferrer");
-      return;
-    }
+    this.openExternalUrl(DISCORD_URL);
+  }
 
+  private openExternalUrl(url: string): void {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  private renderHelpSection(): void {
     this.renderMenuPage(
-      "Discord",
-      `<div class="empty-panel">
-         <p>INVITE LINK NOT CONFIGURED</p>
-         <span>Add the server address to <code>DISCORD_URL</code> when it is ready.</span>
+      "Help Section",
+      `<div class="help-section">
+         <div class="help-section__copy">
+           <p>Stuck on a difficult level while taking on <em>NELG++</em>? We run a Discord server to help players like you! Click the <strong>JOIN DISCORD SERVER</strong> button below to join, then try the Help Section or chatbot service. One more thing: you can also use the bot to register the codes you receive for completing achievements!</p>
+
+           <section>
+             <h2>HOW TO USE THE HELP SECTION</h2>
+             <ol>
+               <li>Create a new post in the Help Section channel.</li>
+               <li>Include the level number in the title (e.g. <code>16</code>, <code>Level 22</code>, etc.).</li>
+               <li>Explain exactly which screen you are stuck on and what you have tried. However, your post may be deleted if you attach an in-game screenshot or directly mention any password or code that appears in the game.</li>
+               <li>The staff will reply as quickly as possible after they see your post.</li>
+             </ol>
+           </section>
+
+           <section>
+             <h2>HOW TO USE THE CHATBOT</h2>
+             <p>Coming in a future update.</p>
+           </section>
+
+           <p class="help-section__thanks">Thank you!</p>
+         </div>
+         <div class="help-section__actions" aria-label="Help links">
+           <button class="help-section__button help-section__button--discord" data-help-action="join" type="button">JOIN DISCORD SERVER</button>
+           <button class="help-section__button" data-help-action="section" type="button">GO TO HELP SECTION</button>
+           <button class="help-section__button" data-help-action="chatbot" type="button">NELG++ CHATBOT</button>
+         </div>
        </div>`,
     );
+
+    this.root.querySelector<HTMLElement>(".help-section__actions")?.addEventListener("click", (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>("button[data-help-action]");
+      if (!button) return;
+
+      switch (button.dataset.helpAction) {
+        case "join":
+          this.openDiscord();
+          break;
+        case "section":
+          this.openExternalUrl(DISCORD_HELP_SECTION_URL);
+          break;
+        case "chatbot":
+          this.openExternalUrl(DISCORD_CHATBOT_URL);
+          break;
+      }
+    });
   }
 
   private renderOptions(): void {
