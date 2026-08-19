@@ -73,10 +73,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
   "$ErrorActionPreference='Stop';" ^
   "$dist=[IO.Path]::GetFullPath($env:NELG_DIST);" ^
   "$zip=[IO.Path]::GetFullPath($env:NELG_NEWGROUNDS_ZIP);" ^
-  "Compress-Archive -Path (Join-Path $dist '*') -DestinationPath $zip -Force;" ^
+  "if (-not (Test-Path -LiteralPath (Join-Path $dist 'index.html') -PathType Leaf)) { throw 'dist/index.html is missing.' };" ^
+  "if (-not (Test-Path -LiteralPath (Join-Path $dist 'assets') -PathType Container)) { throw 'dist/assets is missing.' };" ^
+  "Add-Type -AssemblyName System.IO.Compression;" ^
   "Add-Type -AssemblyName System.IO.Compression.FileSystem;" ^
+  "if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force };" ^
+  "$archive=[IO.Compression.ZipFile]::Open($zip,[IO.Compression.ZipArchiveMode]::Create);" ^
+  "try { foreach ($file in Get-ChildItem -LiteralPath $dist -Recurse -File) { $entryName=$file.FullName.Substring($dist.Length).TrimStart([char]92,[char]47).Replace([char]92,[char]47); [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,$file.FullName,$entryName,[IO.Compression.CompressionLevel]::Optimal) | Out-Null } } finally { $archive.Dispose() };" ^
   "$archive=[IO.Compression.ZipFile]::OpenRead($zip);" ^
-  "try { $found=$false; foreach ($entry in $archive.Entries) { if ($entry.FullName -eq 'index.html') { $found=$true; break } }; if (-not $found) { throw 'index.html is not at the ZIP root.' } } finally { $archive.Dispose() }"
+  "try { $entries=@($archive.Entries.FullName); if ($entries -notcontains 'index.html') { throw 'index.html is not at the ZIP root.' }; if (-not ($entries | Where-Object { $_ -like 'assets/*' } | Select-Object -First 1)) { throw 'The assets folder is missing from the ZIP.' }; if ($entries | Where-Object { $_.Contains([char]92) } | Select-Object -First 1) { throw 'The ZIP contains a Windows-style path separator.' } } finally { $archive.Dispose() }"
 
 if errorlevel 1 (
   echo.
@@ -91,7 +96,8 @@ echo Upload this file to Newgrounds:
 echo %NELG_NEWGROUNDS_ZIP%
 echo.
 echo The ZIP contains index.html at its root and does not include source,
-echo environment, walkthrough, or server-only files.
+echo environment, walkthrough, or server-only files. All internal paths use
+echo web-compatible forward slashes.
 echo.
 pause
 exit /b 0

@@ -37,6 +37,21 @@ jobs:
           VITE_WINNER_REPORT_API_URL: ${{ vars.VITE_WINNER_REPORT_API_URL }}
         run: npm run build
 
+      - name: Verify Newgrounds archive structure
+        run: |
+          test -f dist/index.html
+          test -d dist/assets
+
+      # Unlike the Pages artifact below, this artifact is a regular ZIP whose
+      # root contains index.html, so it can be uploaded directly to Newgrounds.
+      - name: Upload Newgrounds HTML5 archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: nelgplus-newgrounds-html5
+          path: ./dist/
+          if-no-files-found: error
+          compression-level: 9
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
