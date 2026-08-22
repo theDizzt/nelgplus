@@ -218,6 +218,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
       "Perfect... Wonderful... Beautiful!! But for those of you who are not satisfied even with puzzles this difficult, I have prepared levels in even stranger forms! From now on, I will truly show you the full extent of my wasted time...",
     password: "*philodox*",
   },
+  39: {
+    message:
+      "Unlike Version 1.0, bizarre levels in the style of Never Ending Level Game are now beginning to appear. Level 39 in particular is an adaptation of Level 165, one of my favorite levels from Never Ending Level Game. Many more levels of this kind will appear from now on. Excluding the Reunion levels, Level 39 was probably the longest and most cryptic puzzle you have faced so far. Now the real game begins. From this point forward, every Warp Zone level will be an extremely difficult trial. Of course, the levels between them will not be easy either. Push your patience and intelligence to their absolute limits... And yes, you will need plenty of time as well.",
+    password: "mega dizztwo y",
+  },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
   8: 8,

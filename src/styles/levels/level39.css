@@ -357,8 +357,341 @@
   outline: none;
 }
 
+.level-39__form .level-39__world-reset {
+  width: 88px;
+  font: 700 17px/1 "NELG Courier", Courier, monospace;
+}
+
 .level-39__form.is-malfunctioning {
   animation: level-39-form-failure 65ms steps(2) 8;
+}
+
+.level-39.is-fake-world {
+  cursor: default;
+}
+
+.level-39__fake-stage {
+  position: absolute;
+  z-index: 100;
+  inset: 0;
+  overflow: hidden;
+  color: #111;
+  background: transparent;
+  cursor: default;
+  touch-action: none;
+  pointer-events: none;
+}
+
+.level-39__fake-stage.is-panning {
+  cursor: grabbing;
+}
+
+.level-39__fake-world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  transform: translate(200px, 150px);
+  transform-origin: 0 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.level-39__fake-origin {
+  display: none;
+}
+
+.level-39__fake-origin span {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  width: max-content;
+  padding: 2px 12px;
+  background: #ff0;
+  border: 2px solid #111;
+  translate: -50% 0;
+  font: 31px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-39__fake-level {
+  --fake-level-scale: 0.5;
+
+  position: absolute;
+  z-index: 2;
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+  color: #050505;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 7px, rgb(0 0 0 / 2%) 8px),
+    #fff;
+  border: 3px solid #111;
+  box-shadow: none;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+/*
+ * Fake-level designs use the same 800×600 coordinate system as regular levels.
+ * Everything placed inside this canvas is rendered at half size in the 400×300 card.
+ */
+.level-39__fake-level-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  transform: scale(var(--fake-level-scale));
+  transform-origin: 0 0;
+}
+
+.level-39__fake-stage.is-panning .level-39__fake-level {
+  cursor: grabbing;
+}
+
+.level-39__fake-level header {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 800px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.level-39__fake-level h2 {
+  margin: 0;
+  font: 400 144px/0.92 "NELG Perpetua", Perpetua, Georgia, serif;
+  transform: rotate(var(--fake-title-angle, -4deg)) skewX(-6deg);
+  transform-origin: center;
+}
+
+.level-39__fake-level header p {
+  margin: 22px 0 0;
+  font: 700 44px/1 "NELG Courier", Courier, monospace;
+  letter-spacing: -0.08em;
+  transform: rotate(var(--fake-subtitle-angle, 2deg));
+}
+
+.level-39__fake-level button {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  min-width: 220px;
+  height: 102px;
+  padding: 0 28px;
+  color: #111;
+  background: #ff0;
+  border: 6px solid #111;
+  border-radius: 0;
+  translate: -50% 0;
+  cursor: pointer;
+  font: 700 40px/1 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level button:hover:not(:disabled),
+.level-39__fake-level button:focus-visible:not(:disabled) {
+  color: #fff;
+  background: #d00000;
+  outline: 6px dotted #111;
+  outline-offset: 6px;
+}
+
+.level-39__fake-level button:active:not(:disabled) {
+  background: radial-gradient(circle, #fff 0 25%, #888 49%, #050505 78%);
+}
+
+.level-39__fake-level button:disabled {
+  color: #555;
+  background: #aaa;
+  cursor: default;
+}
+
+.level-39__fake-level.is-cleared {
+  background-color: #e7e7e7;
+  filter: contrast(0.87);
+}
+
+.level-39__fake-level--40 {
+  color: #000;
+  background: #333;
+}
+
+.level-39__fake-level--41 {
+  color: #f00000;
+  background: #ff8c00;
+}
+
+.level-39__fake-level--42 {
+  color: #ff0;
+  background: #0000ff;
+}
+
+.level-39__fake-level--43 {
+  color: #000;
+  background: #f08080;
+}
+
+.level-39__fake-level .level-39__fake-40-button,
+.level-39__fake-level .level-39__fake-40-button:hover,
+.level-39__fake-level .level-39__fake-40-button:focus-visible,
+.level-39__fake-level .level-39__fake-40-button:active,
+.level-39__fake-level .level-39__fake-40-button:disabled {
+  top: 342px;
+  bottom: auto;
+  width: 310px;
+  min-width: 0;
+  height: 180px;
+  padding: 0;
+  color: #000;
+  background: #000;
+  border: 8px solid #050505;
+  outline: none;
+  translate: -50% -50%;
+  animation: none;
+}
+
+.level-39__fake-40-button::before,
+.level-39__fake-40-button::after {
+  display: none !important;
+}
+
+.level-39__fake-41-clue {
+  position: absolute;
+  z-index: 3;
+  top: 49px;
+  left: 67px;
+  width: 480px;
+  height: 190px;
+  color: #e90000;
+  pointer-events: none;
+}
+
+.level-39__fake-41-arrow {
+  position: absolute;
+  top: 65px;
+  left: 0;
+  font: 700 105px/1 Arial, sans-serif;
+  rotate: -8deg;
+}
+
+.level-39__fake-41-clue b {
+  position: absolute;
+  top: -20px;
+  left: 80px;
+  font: 900 102px/1 Arial, sans-serif;
+  rotate: -18deg;
+}
+
+.level-39__fake-41-clue i {
+  position: absolute;
+  top: 0;
+  left: 210px;
+  font: 900 58px/1 "NELG Courier", Courier, monospace;
+  letter-spacing: -0.18em;
+}
+
+.level-39__fake-password-form {
+  position: absolute;
+  z-index: 5;
+  bottom: 72px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  translate: -50% 0;
+}
+
+.level-39__fake-password-form input {
+  box-sizing: border-box;
+  width: 174px;
+  height: 43px;
+  padding: 3px 7px;
+  color: #000;
+  background: #fff;
+  border: 3px solid currentcolor;
+  border-radius: 0;
+  outline: none;
+  font: 25px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-39__fake-password-form button {
+  position: static;
+  width: 52px;
+  min-width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  translate: none;
+  animation: none;
+  font: 25px/1 "NELG Arial", Arial, sans-serif;
+}
+
+.level-39__fake-password-form button::before,
+.level-39__fake-password-form button::after {
+  display: none;
+}
+
+.level-39__fake-password-form.is-wrong {
+  animation: level-39-form-failure 65ms steps(2) 8;
+}
+
+.level-39__fake-42-code {
+  position: absolute;
+  top: 276px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: #0ff;
+  text-align: center;
+  font: 700 43px/1.25 "NELG Courier", Courier, monospace;
+  letter-spacing: 0.05em;
+}
+
+.level-39__fake-43-why {
+  position: absolute;
+  top: 230px;
+  left: 73px;
+  margin: 0;
+  color: #f08083;
+  font: 900 162px/1 "NELG Arial", Arial, sans-serif;
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+.level-39__route-to-666 {
+  position: absolute;
+  z-index: 3;
+  width: 118px;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.level-39__fake-stage.is-panning .level-39__route-to-666 {
+  cursor: grabbing;
+}
+
+.level-39__fake-level--666 {
+  z-index: 4;
+  color: #111;
+  background: #b5b5b5;
+  border-width: 6px;
+  box-shadow: none;
+}
+
+.level-39__fake-level--666 h2 {
+  font-size: 202px;
+}
+
+.level-39__fake-level--666.is-materializing {
+  animation: level-39-materialize-666 900ms steps(6) both;
 }
 
 @keyframes level-39-yellow-signal {
@@ -423,6 +756,13 @@
   0%, 100% { translate: 0 0; filter: none; }
   33% { translate: -19px 4px; filter: invert(1); }
   66% { translate: 23px -5px; filter: hue-rotate(83deg); }
+}
+
+@keyframes level-39-materialize-666 {
+  0% { opacity: 0; transform: scale(4, 0.08) skewX(38deg); filter: invert(1); }
+  35% { opacity: 1; transform: scale(0.3, 2.5) skewX(-19deg); filter: invert(0); }
+  70% { transform: scale(1.4, 0.7) skewX(8deg); }
+  100% { transform: scale(1) skewX(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

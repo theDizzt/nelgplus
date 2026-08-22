@@ -31,6 +31,10 @@ The logical game resolution is 800×600. Place elements in CSS pixel coordinates
 
 Reunion levels should not merely copy earlier mechanics. Combine at least two techniques or alter the controls. The solution must remain logically inferable from knowledge acquired in earlier levels. Both techniques that return and techniques that do not return may serve as clues. A multi-scene level should switch state inside one level module and clean up events, timers, audio, and characters whenever the scene changes.
 
+## Level 39 Fake-Level Canvas
+
+Every fake-level card has a visible size of 400×300, but its contents must be authored inside `.level-39__fake-level-canvas` using the normal 800×600 coordinate system. The canvas applies `--fake-level-scale: 0.5`, so positions, font sizes, images, and interactive objects should use the same values they would use in a regular level and will automatically render at half size. Keep click and drag handlers on elements inside this canvas; do not compensate for the scale a second time in individual fake-level designs.
+
 ## Warp Zone
 
 Each Warp Zone target receives a two-digit number based on its order in the main Warp Zone list. Completing a target level normally opens a checkpoint that displays its password and message. Entering the same password from the main menu returns the player to that checkpoint. `Next` normally opens the following level. Level-specific terminal checkpoints, such as Level 35, may route to a dedicated completion screen instead.
