@@ -31,6 +31,34 @@ const FAKE_SUBTITLES = [
   "▓▒░ ȜLITCH ░▒▓",
 ] as const;
 
+const FAKE_LEVEL_60_ASCII = String.raw`mmmmmm                                                                      mm               ##                         mmmmm
+##""""#m                                                                    ##               ""                         ##"""##
+
+## m#####m  mm#####m  mm#####m ##      ##  m####m    ##m####   m###m##             ####     mm#####m
+######"     " mmm##  ##mmmm "  ##mmmm " "#  ##  #" ##"  "##   ##"      ##"  "##               ##     ##mmmm "            ##    ##
+m##"""##   """"##m   """"##m  ##m##m##  ##    ##   ##       ##    ##               ##      """"##m
+##mmm###   #mmmmm##  #mmmmm##  "##  ##"  "##mm##"   ##       "##mm###            mmm##mmm  #mmmmm##            ##mmm##
+""         """" ""   """"""    """"""    ""  ""     """"     ""         """ ""            """""""   """"""             """""`;
+
+const FAKE_LEVEL_70_MESSAGES = [
+  "the gate is asleep", "wait for green", "null is not empty", "try another color",
+  "memory address 0x46", "the password is cloud", "signal lost", "do not blink",
+  "the password is void", "buffering clue", "there is no password", "look behind you",
+  "syntax error", "the answer escaped", "green means nothing", "pause the noise",
+  "the password is static", "read faster", "wrong timeline", "undefined behavior",
+  "the password is lemon", "seek the silent frame", "permission denied", "try again later",
+  "the password is zero", "frame skipped", "cursor detected", "message corrupted",
+  "the password is yellow", "almost there", "false positive", "checksum failed",
+  "the password is hidden", "stand by", "no useful data", "keep searching",
+  "the password is pause", "packet dropped", "access granted?", "not this one",
+  "the password is green", "random thought", "nothing to see", "stop the stream",
+  "the password is flash", "loading secret", "invalid clue", "watch carefully",
+  "the password is circle", "noise noise noise", "untrusted message", "freeze me",
+  "the password is nelg", "too slow", "decoy detected", "one frame matters",
+  "the password is button", "error 70", "meaning unavailable", "hold your breath",
+  "the password is rewind", "still changing", "this is a decoy", "end of buffer",
+] as const;
+
 interface FakeLevelPoint {
   readonly x: number;
   readonly y: number;
@@ -58,6 +86,7 @@ function launchFakeLevelWorld(
   listen: LevelContext["listen"],
   audio: LevelContext["audio"],
   goToMenu: LevelContext["goToMenu"],
+  adminTargetLevel?: number,
 ): void {
   if (screen.querySelector(".level-39__fake-stage")) return;
   screen.classList.add("is-fake-world");
@@ -84,7 +113,17 @@ function launchFakeLevelWorld(
   let fake51Waiting = false;
   let fake51Timer: number | undefined;
   let fake55Input = "";
+  let fake62Phase: "awaiting-mute" | "awaiting-unmute" = "awaiting-mute";
+  let fake68Timer: number | undefined;
+  let fake68PointerId: number | undefined;
+  let fake70Interval: number | undefined;
+  let fake75OffsetX = 0;
   let routeRevealed = false;
+
+  const stopFake70Cycle = () => {
+    if (fake70Interval !== undefined) window.clearInterval(fake70Interval);
+    fake70Interval = undefined;
+  };
 
   const renderWorldPosition = () => {
     world.style.transform = `translate(${worldX}px, ${worldY}px)`;
@@ -105,6 +144,40 @@ function launchFakeLevelWorld(
       renderWorldPosition();
     });
   }
+
+  const openFake55Menu = (level: HTMLElement, event: MouseEvent) => {
+    const canvas = level.querySelector<HTMLElement>("[data-fake-level-canvas]");
+    const menu = level.querySelector<HTMLElement>(".level-39__fake-55-context-menu");
+    if (!canvas || !menu) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    const pointer = clientPointToLocal(canvas, event.clientX, event.clientY);
+    menu.hidden = false;
+    menu.querySelectorAll<HTMLElement>(".level-39__fake-55-submenu").forEach((submenu) => {
+      submenu.hidden = true;
+    });
+    menu.querySelectorAll<HTMLButtonElement>("button[data-fake-55-command], button[data-fake-55-volume]")
+      .forEach((button) => { button.disabled = false; });
+    if (!level.classList.contains("is-cleared")) {
+      menu.querySelectorAll<HTMLButtonElement>("button[data-fake-55-input]")
+        .forEach((button) => { button.disabled = false; });
+    }
+    const music = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music"]');
+    const effects = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects"]');
+    const musicVolume = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music-volume"]');
+    const effectsVolume = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects-volume"]');
+    if (music) music.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
+    if (effects) effects.textContent = `${audio.effectsEnabled ? "✓" : ""}  Sound Effects`;
+    if (musicVolume) musicVolume.textContent = `   Music Volume: ${audio.musicVolume}%  ▶`;
+    if (effectsVolume) effectsVolume.textContent = `   SFX Volume: ${audio.effectsVolume}%  ▶`;
+
+    const left = Math.max(4, Math.min(pointer.x, 800 - menu.offsetWidth - 4));
+    const top = Math.max(4, Math.min(pointer.y, 600 - menu.offsetHeight - 4));
+    menu.classList.toggle("opens-left", left + menu.offsetWidth + 305 > 796);
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+  };
 
   const makeFakeLevel = (levelNumber: number, point: FakeLevelPoint, finalLevel = false) => {
     const level = document.createElement("article");
@@ -263,12 +336,126 @@ function launchFakeLevelWorld(
             <button type="submit" data-text="GO">GO</button>
           </form>`;
       }
+      if (levelNumber === 60) {
+        return `
+          <textarea class="level-39__fake-60-ascii" data-fake-60-ascii data-allow-select
+            readonly wrap="off" spellcheck="false" aria-label="Tiny selectable dynamic text"></textarea>
+          <form class="level-39__fake-password-form" data-fake-password-form="60" autocomplete="off">
+            <input data-fake-password="60" type="text" maxlength="8" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 60 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 61) {
+        return `
+          <p class="level-39__fake-61-clue">You cannot &quot;divide&quot; this, because it is hiding!</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="61" autocomplete="off">
+            <input data-fake-password="61" type="text" maxlength="24" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 61 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 62) {
+        return `
+          <img class="level-39__fake-62-image" data-fake-62-image
+            src="${assetUrl("images/level39fake62a.png")}" alt="A nearly hidden audio instruction" draggable="false" />
+          <button class="level-39__fake-62-button" type="button" data-fake-62-button hidden>CLICK</button>`;
+      }
+      if (levelNumber === 63) {
+        return `<img class="level-39__fake-63-image" src="${assetUrl("images/level39fake63.png")}" alt="A cup of tea" draggable="false" />`;
+      }
+      if (levelNumber === 64) {
+        return `
+          <p class="level-39__fake-64-clue">STOP PLAYING THIS GAME</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="64" autocomplete="off">
+            <input data-fake-password="64" type="text" maxlength="40" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 64 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 65) {
+        return `
+          <img class="level-39__fake-65-image" src="${assetUrl("images/level39fake65.png")}" alt="The abbreviated game title with one differently colored letter" draggable="false" />
+          <form class="level-39__fake-password-form" data-fake-password-form="65" autocomplete="off">
+            <input data-fake-password="65" type="text" maxlength="20" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 65 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 66) {
+        return `
+          <p class="level-39__fake-66-face">;(</p>
+        `;
+      }
+      if (levelNumber === 67) {
+        return `<img class="level-39__fake-67-image" src="${assetUrl("images/level39fake67.png")}" alt="A message written with symbol characters" draggable="false" />`;
+      }
+      if (levelNumber === 68) {
+        return `
+          <p class="level-39__fake-68-clue">PW =</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="68" autocomplete="off">
+            <input data-fake-password="68" type="text" maxlength="24" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 68 password" />
+            <button type="submit" data-fake-68-hold data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 69) {
+        return `
+          <p class="level-39__fake-69-coordinates">33°55'19&quot; N 118°20'03&quot; W, November 8, 2022<br />
+            24°45'30&quot; N 81°31'53&quot; W, December 31, 2011<br />
+            42°47'11&quot; N 77°42'58&quot; W, December 31, 2020<br />
+            53°13′27″N, 4°11′22″W, April 4, 2021<br />
+            37°02'59&quot; N 110°07'22&quot; W, May 5, 2016<br />
+            52°28′43″N, 1°51′15″W, August 10, 2007</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="69" autocomplete="off">
+            <input data-fake-password="69" type="text" maxlength="20" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 69 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 70) {
+        return `
+          <p class="level-39__fake-70-message" data-fake-70-message>MOVE OVER THE GREEN BUTTON</p>
+          <button class="level-39__fake-70-control level-39__fake-70-control--cycle" type="button"
+            data-fake-70-cycle aria-label="Start rapidly changing text"></button>
+          <button class="level-39__fake-70-control level-39__fake-70-control--pause" type="button"
+            data-fake-70-pause aria-label="Pause changing text">Ⅱ</button>
+          <form class="level-39__fake-password-form" data-fake-password-form="70" autocomplete="off">
+            <input data-fake-password="70" type="text" maxlength="20" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 70 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 71) {
+        return `
+          <p class="level-39__fake-71-clue">EASIER THAN IT LOOKS</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="71" autocomplete="off">
+            <input data-fake-password="71" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 71 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 74) {
+        return `
+          <p class="level-39__fake-74-clue">THE PASSWORD DOES NOT EXIST ON THIS SCREEN.</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="74" autocomplete="off">
+            <input data-fake-password="74" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 74 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 75) {
+        return `
+          <div class="level-39__fake-75-track" data-fake-75-track aria-label="Extremely long draggable gray path">
+            <button class="level-39__fake-75-end" type="button" data-fake-75-end aria-label="Diamond at the end of the path"></button>
+          </div>`;
+      }
       return `<button type="button" data-clear-fake-level="${levelNumber}" ${finalLevel ? "disabled" : ""}>
         ${finalLevel ? "..." : "NEXT"}
       </button>`;
     })();
     level.innerHTML = `
-      <div class="level-39__fake-level-canvas" data-fake-level-canvas>
+      <div class="level-39__fake-level-canvas" data-fake-level-canvas${levelNumber === 55 ? " data-allow-context-menu" : ""}>
         <header>
           <h2>${levelNumber === 56
             ? '<span class="level-39__fake-level-word">L<span class="level-39__fake-56-e">e</span>vel</span> 56'
@@ -279,7 +466,70 @@ function launchFakeLevelWorld(
       </div>`;
     world.append(level);
 
-    if (levelNumber === 55) level.dataset.allowContextMenu = "";
+    if (levelNumber === 74) {
+      const level71Canvas = world.querySelector<HTMLElement>('[data-fake-level="71"] [data-fake-level-canvas]');
+      if (level71Canvas && !level71Canvas.querySelector("[data-fake-71-hidden-clue]")) {
+        const hiddenClue = document.createElement("img");
+        hiddenClue.className = "level-39__fake-71-hidden-clue";
+        hiddenClue.dataset.fake71HiddenClue = "";
+        hiddenClue.src = assetUrl("images/level39fake71.png");
+        hiddenClue.alt = "A newly appeared, nearly hidden clue";
+        hiddenClue.draggable = false;
+        level71Canvas.append(hiddenClue);
+      }
+    }
+
+    const fake60Ascii = level.querySelector<HTMLTextAreaElement>("[data-fake-60-ascii]");
+    if (fake60Ascii) fake60Ascii.value = FAKE_LEVEL_60_ASCII;
+
+    if (levelNumber === 55) {
+      level.dataset.allowContextMenu = "";
+      const menu = level.querySelector<HTMLElement>(".level-39__fake-55-context-menu");
+      if (menu) menu.dataset.allowContextMenu = "";
+      listen(level, "contextmenu", (event) => openFake55Menu(level, event));
+      if (menu) {
+        menu.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
+          listen(button, "pointerdown", (event) => {
+            if (event.button !== 0 || button.disabled) return;
+            if (!handleFake55MenuClick(button)) return;
+            event.preventDefault();
+            event.stopPropagation();
+          });
+        });
+        listen(menu, "click", (event) => {
+          // Pointer input is handled on each button before the draggable stage can
+          // capture it. Keep click handling only for keyboard-generated activation.
+          if (event.detail !== 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+          const target = event.target instanceof Element ? event.target : undefined;
+          if (!target || !handleFake55MenuClick(target)) return;
+          event.preventDefault();
+          event.stopPropagation();
+        });
+      }
+    }
+
+    if (levelNumber === 70) {
+      const cycle = level.querySelector<HTMLButtonElement>("[data-fake-70-cycle]");
+      const pause = level.querySelector<HTMLButtonElement>("[data-fake-70-pause]");
+      const message = level.querySelector<HTMLElement>("[data-fake-70-message]");
+      let previousIndex = -1;
+      if (cycle && pause && message) {
+        listen(cycle, "pointerenter", () => {
+          stopFake70Cycle();
+          fake70Interval = window.setInterval(() => {
+            let index = Math.floor(Math.random() * FAKE_LEVEL_70_MESSAGES.length);
+            if (index === previousIndex) index = (index + 1) % FAKE_LEVEL_70_MESSAGES.length;
+            previousIndex = index;
+            message.textContent = FAKE_LEVEL_70_MESSAGES[index] ?? "void";
+          }, 55);
+        });
+        listen(pause, "pointerenter", stopFake70Cycle);
+      }
+    }
 
     level.querySelectorAll<HTMLInputElement>("[data-fake-password]").forEach((passwordInput) => {
       const passwordForm = passwordInput.closest<HTMLFormElement>("[data-fake-password-form]");
@@ -299,6 +549,7 @@ function launchFakeLevelWorld(
     if (!FAKE_LEVEL_SEQUENCE.includes(levelNumber) || spawnedFakeLevels.has(levelNumber)) return;
     spawnedFakeLevels.add(levelNumber);
     makeFakeLevel(levelNumber, fakeLevelPoint(levelNumber));
+    if (levelNumber === 62) syncFake62();
   };
 
   const revealLevel666 = () => {
@@ -324,18 +575,121 @@ function launchFakeLevelWorld(
     revealLevel666();
   };
 
-  const completeFakeLevel = (levelNumber: number, level: HTMLElement) => {
-    if (level.classList.contains("is-cleared")) return;
+  const markFakeLevelCleared = (levelNumber: number, level: HTMLElement) => {
     level.classList.add("is-cleared");
     level.querySelectorAll<HTMLInputElement>("input").forEach((input) => { input.disabled = true; });
     level.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
-      button.disabled = true;
+      button.disabled = levelNumber === 55 ? button.hasAttribute("data-fake-55-input") : true;
       if (button.matches("[data-clear-fake-level], [data-fake-40-button]")) button.textContent = "CLEARED";
     });
+  };
+
+  const completeFakeLevel = (levelNumber: number, level: HTMLElement) => {
+    if (level.classList.contains("is-cleared")) return;
+    if (levelNumber === 70) stopFake70Cycle();
+    markFakeLevelCleared(levelNumber, level);
     const currentIndex = FAKE_LEVEL_SEQUENCE.indexOf(levelNumber);
     const nextLevel = FAKE_LEVEL_SEQUENCE[currentIndex + 1];
     if (nextLevel === undefined) revealRouteTo666();
     else spawnFakeLevel(nextLevel);
+  };
+
+  const syncFake62 = () => {
+    const level = world.querySelector<HTMLElement>('[data-fake-level="62"]:not(.is-cleared)');
+    if (!level) return;
+    const button = level.querySelector<HTMLButtonElement>("[data-fake-62-button]");
+    const image = level.querySelector<HTMLImageElement>("[data-fake-62-image]");
+    const musicMuted = !audio.musicEnabled || audio.musicVolume === 0;
+    const effectsMuted = !audio.effectsEnabled || audio.effectsVolume === 0;
+    const musicAudible = audio.musicEnabled && audio.musicVolume > 0;
+    const effectsAudible = audio.effectsEnabled && audio.effectsVolume > 0;
+
+    if (fake62Phase === "awaiting-mute") {
+      if (button) button.hidden = !(musicMuted && effectsMuted);
+      return;
+    }
+    if (button) button.hidden = true;
+    if (image) image.src = assetUrl("images/level39fake62b.png");
+    if (musicAudible && effectsAudible) completeFakeLevel(62, level);
+  };
+
+  const handleFake55MenuClick = (target: Element): boolean => {
+    const fake55Menu = target.closest<HTMLElement>(".level-39__fake-55-context-menu");
+    const fake55Level = fake55Menu?.closest<HTMLElement>('[data-fake-level="55"]');
+    if (!fake55Menu || !fake55Level) return false;
+
+    const volumeMenu = fake55Menu.querySelector<HTMLElement>(".level-39__fake-55-volume-menu");
+    const inputsMenu = fake55Menu.querySelector<HTMLElement>(".level-39__fake-55-inputs-menu");
+    const inputButton = target.closest<HTMLButtonElement>("button[data-fake-55-input]");
+    if (inputButton && inputsMenu?.contains(inputButton)) {
+      const character = inputButton.getAttribute("data-fake-55-input") ?? "";
+      const targetAnswer = "HIDDEN";
+      if (character === targetAnswer[fake55Input.length]) fake55Input += character;
+      else fake55Input = character === targetAnswer[0] ? character : "";
+      fake55Level.dataset.inputProgress = fake55Input;
+      if (fake55Input === targetAnswer) {
+        fake55Menu.hidden = true;
+        completeFakeLevel(55, fake55Level);
+      }
+      return true;
+    }
+
+    const volumeButton = target.closest<HTMLButtonElement>("button[data-fake-55-volume]");
+    if (volumeButton && volumeMenu?.contains(volumeButton)) {
+      const volume = Number(volumeButton.getAttribute("data-fake-55-volume"));
+      const volumeKind = volumeMenu.dataset.volumeKind;
+      if (volumeKind === "music") audio.setMusicVolume(volume);
+      else if (volumeKind === "effects") audio.setEffectsVolume(volume);
+      else return true;
+      volumeMenu.hidden = true;
+      syncFake62();
+      return true;
+    }
+
+    const commandButton = target.closest<HTMLButtonElement>("button[data-fake-55-command]");
+    const command = commandButton?.getAttribute("data-fake-55-command");
+    if (!commandButton || !command) return false;
+    const updateFake55Settings = () => {
+      const music = fake55Menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music"]');
+      const effects = fake55Menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects"]');
+      if (music) music.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
+      if (effects) effects.textContent = `${audio.effectsEnabled ? "✓" : ""}  Sound Effects`;
+    };
+    if (command === "music") {
+      audio.setMusicEnabled(!audio.musicEnabled);
+      updateFake55Settings();
+      syncFake62();
+    } else if (command === "effects") {
+      audio.setEffectsEnabled(!audio.effectsEnabled);
+      updateFake55Settings();
+      syncFake62();
+    } else if (command === "music-volume" || command === "effects-volume") {
+      if (!volumeMenu) return true;
+      const kind = command === "music-volume" ? "music" : "effects";
+      volumeMenu.dataset.volumeKind = kind;
+      volumeMenu.querySelectorAll<HTMLButtonElement>("[data-fake-55-volume]").forEach((option) => {
+        const value = Number(option.getAttribute("data-fake-55-volume"));
+        const selected = kind === "music" ? audio.musicVolume : audio.effectsVolume;
+        option.textContent = `${value === selected ? "✓" : ""}  ${value}%`;
+      });
+      if (inputsMenu) inputsMenu.hidden = true;
+      volumeMenu.hidden = !volumeMenu.hidden;
+    } else if (command === "inputs") {
+      if (volumeMenu) volumeMenu.hidden = true;
+      if (inputsMenu) inputsMenu.hidden = !inputsMenu.hidden;
+    } else if (command === "rewind") {
+      goToMenu();
+    } else if (command === "forward" || command === "back") {
+      const canvas = fake55Level.querySelector<HTMLElement>("[data-fake-level-canvas]");
+      if (canvas) {
+        canvas.classList.remove("is-blackout");
+        void canvas.offsetWidth;
+        canvas.classList.add("is-blackout");
+        window.setTimeout(() => canvas.classList.remove("is-blackout"), 520);
+      }
+      fake55Menu.hidden = true;
+    }
+    return true;
   };
 
   const restartFake51Wait = () => {
@@ -349,12 +703,51 @@ function launchFakeLevelWorld(
     }, 30_000);
   };
 
+  const cancelFake68Hold = () => {
+    if (fake68Timer !== undefined) window.clearTimeout(fake68Timer);
+    fake68Timer = undefined;
+    const button = world.querySelector<HTMLButtonElement>("button[data-fake-68-hold][data-holding]");
+    if (button && !button.disabled) {
+      delete button.dataset.holding;
+      button.textContent = "GO";
+      button.dataset.text = "GO";
+    }
+    fake68PointerId = undefined;
+  };
+
   const origin = world.querySelector<HTMLElement>(".level-39__fake-origin");
   if (origin) {
     origin.style.left = "-18px";
     origin.style.top = "-18px";
   }
-  spawnFakeLevel(40);
+  const adminTargetIndex = adminTargetLevel === 666
+    ? FAKE_LEVEL_SEQUENCE.length - 1
+    : FAKE_LEVEL_SEQUENCE.indexOf(adminTargetLevel ?? 40);
+  const finalAdminIndex = adminTargetIndex >= 0 ? adminTargetIndex : 0;
+  for (let index = 0; index <= finalAdminIndex; index += 1) {
+    const levelNumber = FAKE_LEVEL_SEQUENCE[index];
+    if (levelNumber !== undefined) spawnFakeLevel(levelNumber);
+  }
+  for (let index = 0; index < finalAdminIndex; index += 1) {
+    const levelNumber = FAKE_LEVEL_SEQUENCE[index];
+    const level = levelNumber === undefined
+      ? undefined
+      : world.querySelector<HTMLElement>(`[data-fake-level="${levelNumber}"]`);
+    if (levelNumber !== undefined && level) markFakeLevelCleared(levelNumber, level);
+  }
+  if (adminTargetLevel === 666) {
+    const finalRegularLevel = FAKE_LEVEL_SEQUENCE[FAKE_LEVEL_SEQUENCE.length - 1];
+    const finalRegularCard = finalRegularLevel === undefined
+      ? undefined
+      : world.querySelector<HTMLElement>(`[data-fake-level="${finalRegularLevel}"]`);
+    if (finalRegularLevel !== undefined && finalRegularCard) markFakeLevelCleared(finalRegularLevel, finalRegularCard);
+    revealRouteTo666();
+  }
+  const targetPoint = adminTargetLevel === 666
+    ? { x: fakeLevelPoint(55).x, y: fakeLevelPoint(55).y - 4000 }
+    : fakeLevelPoint(FAKE_LEVEL_SEQUENCE[finalAdminIndex] ?? 40);
+  worldX = 200 - targetPoint.x;
+  worldY = 150 - targetPoint.y;
   renderWorldPosition();
 
   type PointerDrag =
@@ -366,8 +759,29 @@ function launchFakeLevelWorld(
       readonly startY: number;
     };
 
+  type Fake75Drag = {
+    readonly pointerId: number;
+    readonly pointerX: number;
+    readonly startOffsetX: number;
+  };
+
   let drag: PointerDrag | undefined;
+  let fake75Drag: Fake75Drag | undefined;
   const localPointer = (event: PointerEvent) => clientPointToLocal(screen, event.clientX, event.clientY);
+  const isFake66BorderHit = (event: PointerEvent | MouseEvent, level: HTMLElement) => {
+    const rect = level.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return false;
+    const styles = getComputedStyle(level);
+    const scaleX = rect.width / level.offsetWidth;
+    const scaleY = rect.height / level.offsetHeight;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const left = Number.parseFloat(styles.borderLeftWidth) * scaleX;
+    const right = Number.parseFloat(styles.borderRightWidth) * scaleX;
+    const top = Number.parseFloat(styles.borderTopWidth) * scaleY;
+    const bottom = Number.parseFloat(styles.borderBottomWidth) * scaleY;
+    return x <= left || x >= rect.width - right || y <= top || y >= rect.height - bottom;
+  };
 
   listen(stage, "pointerdown", (event) => {
     if (event.button !== 0) return;
@@ -375,7 +789,9 @@ function launchFakeLevelWorld(
     world.querySelectorAll<HTMLElement>(".level-39__fake-55-context-menu:not([hidden])").forEach((menu) => {
       if (!target || !menu.contains(target)) menu.hidden = true;
     });
-    if (!target || target.closest("button, input, textarea, select, label, [contenteditable='true']")) return;
+    const fake66 = target?.closest<HTMLElement>('[data-fake-level="66"]');
+    if (fake66 && isFake66BorderHit(event, fake66)) return;
+    if (!target || target.closest("button, input, textarea, select, label, [contenteditable='true'], [data-fake-75-track]")) return;
     if (!target.closest(".level-39__fake-level, .level-39__route-to-666")) return;
     const pointer = localPointer(event);
     drag = {
@@ -390,6 +806,51 @@ function launchFakeLevelWorld(
     event.preventDefault();
   });
 
+  listen(stage, "pointerdown", (event) => {
+    if (event.button !== 0) return;
+    const target = event.target instanceof Element ? event.target : undefined;
+    const track = target?.closest<HTMLElement>("[data-fake-75-track]");
+    if (!track || target?.closest("button")) return;
+    const pointer = localPointer(event);
+    fake75Drag = {
+      pointerId: event.pointerId,
+      pointerX: pointer.x,
+      startOffsetX: fake75OffsetX,
+    };
+    track.classList.add("is-dragging");
+    stage.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  listen(stage, "pointerdown", (event) => {
+    if (event.button !== 0) return;
+    const target = event.target instanceof Element ? event.target : undefined;
+    const button = target?.closest<HTMLButtonElement>("button[data-fake-68-hold]");
+    if (!button || button.disabled) return;
+    const form = button.closest<HTMLFormElement>('[data-fake-password-form="68"]');
+    const answer = fakeAnswers.get("68")?.getValue() ?? "";
+    if (!form || answer !== "") {
+      form?.classList.remove("is-wrong");
+      if (form) void form.offsetWidth;
+      form?.classList.add("is-wrong");
+      return;
+    }
+    cancelFake68Hold();
+    fake68PointerId = event.pointerId;
+    button.dataset.holding = "true";
+    button.textContent = "HOLD";
+    button.dataset.text = "HOLD";
+    stage.setPointerCapture(event.pointerId);
+    fake68Timer = window.setTimeout(() => {
+      fake68Timer = undefined;
+      if (button.dataset.holding !== "true" || (fakeAnswers.get("68")?.getValue() ?? "") !== "") return;
+      delete button.dataset.holding;
+      const level = button.closest<HTMLElement>('[data-fake-level="68"]');
+      if (level) completeFakeLevel(68, level);
+    }, 10_000);
+    event.preventDefault();
+  });
+
   listen(stage, "pointermove", (event) => {
     if (!drag || drag.pointerId !== event.pointerId) return;
     const pointer = localPointer(event);
@@ -401,6 +862,18 @@ function launchFakeLevelWorld(
     event.preventDefault();
   });
 
+  listen(stage, "pointermove", (event) => {
+    if (!fake75Drag || fake75Drag.pointerId !== event.pointerId) return;
+    const pointer = localPointer(event);
+    // The fake-level canvas is rendered at 50%, so pointer travel must be doubled
+    // to keep the path attached to the cursor in its 800×600 design space.
+    fake75OffsetX = Math.max(-5_310, Math.min(0,
+      fake75Drag.startOffsetX + (pointer.x - fake75Drag.pointerX) * 2));
+    const track = world.querySelector<HTMLElement>("[data-fake-75-track]");
+    if (track) track.style.transform = `translateX(${fake75OffsetX}px)`;
+    event.preventDefault();
+  });
+
   const finishDrag = (event: PointerEvent) => {
     if (!drag || drag.pointerId !== event.pointerId) return;
     if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
@@ -409,9 +882,37 @@ function launchFakeLevelWorld(
   };
   listen(stage, "pointerup", finishDrag);
   listen(stage, "pointercancel", finishDrag);
+  const finishFake75Drag = (event: PointerEvent) => {
+    if (!fake75Drag || fake75Drag.pointerId !== event.pointerId) return;
+    if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+    world.querySelector<HTMLElement>("[data-fake-75-track]")?.classList.remove("is-dragging");
+    fake75Drag = undefined;
+  };
+  listen(stage, "pointerup", finishFake75Drag);
+  listen(stage, "pointercancel", finishFake75Drag);
+  const finishFake68Hold = (event: PointerEvent) => {
+    if (fake68PointerId !== event.pointerId) return;
+    if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+    cancelFake68Hold();
+  };
+  listen(stage, "pointerup", finishFake68Hold);
+  listen(stage, "pointercancel", finishFake68Hold);
 
   listen(stage, "click", (event) => {
     const target = event.target instanceof Element ? event.target : undefined;
+    const fake66 = target?.closest<HTMLElement>('[data-fake-level="66"]');
+    if (fake66 && isFake66BorderHit(event, fake66)) {
+      completeFakeLevel(66, fake66);
+      return;
+    }
+
+    const fake75End = target?.closest<HTMLButtonElement>("button[data-fake-75-end]");
+    if (fake75End && !fake75End.disabled) {
+      const level = fake75End.closest<HTMLElement>('[data-fake-level="75"]');
+      if (level) completeFakeLevel(75, level);
+      return;
+    }
+
     const smashButton = target?.closest<HTMLButtonElement>("button[data-fake-40-button]");
     if (smashButton && !smashButton.disabled) {
       audio.playEffect(SOUND_EFFECTS.smack);
@@ -448,76 +949,16 @@ function launchFakeLevelWorld(
       return;
     }
 
-    const fake55Menu = target?.closest<HTMLElement>(".level-39__fake-55-context-menu");
-    const fake55Level = fake55Menu?.closest<HTMLElement>('[data-fake-level="55"]');
-    if (fake55Menu && fake55Level && !fake55Level.classList.contains("is-cleared")) {
-      const volumeMenu = fake55Menu.querySelector<HTMLElement>(".level-39__fake-55-volume-menu");
-      const inputsMenu = fake55Menu.querySelector<HTMLElement>(".level-39__fake-55-inputs-menu");
-      const inputButton = target?.closest<HTMLButtonElement>("button[data-fake-55-input]");
-      if (inputButton && inputsMenu?.contains(inputButton)) {
-        const character = inputButton.dataset.fake55Input ?? "";
-        const targetAnswer = "HIDDEN";
-        if (character === targetAnswer[fake55Input.length]) fake55Input += character;
-        else fake55Input = character === targetAnswer[0] ? character : "";
-        fake55Level.dataset.inputProgress = fake55Input;
-        if (fake55Input === targetAnswer) {
-          fake55Menu.hidden = true;
-          completeFakeLevel(55, fake55Level);
-        }
-        return;
-      }
+    if (target && handleFake55MenuClick(target)) return;
 
-      const volumeButton = target?.closest<HTMLButtonElement>("button[data-fake-55-volume]");
-      if (volumeButton && volumeMenu?.contains(volumeButton)) {
-        const volume = Number(volumeButton.dataset.fake55Volume);
-        const volumeKind = volumeMenu.dataset.volumeKind;
-        if (volumeKind === "music") audio.setMusicVolume(volume);
-        else audio.setEffectsVolume(volume);
-        volumeMenu.hidden = true;
-        return;
-      }
-
-      const commandButton = target?.closest<HTMLButtonElement>("button[data-fake-55-command]");
-      const command = commandButton?.dataset.fake55Command;
-      if (!commandButton || !command) return;
-      const updateFake55Settings = () => {
-        const music = fake55Menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music"]');
-        const effects = fake55Menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects"]');
-        if (music) music.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
-        if (effects) effects.textContent = `${audio.effectsEnabled ? "✓" : ""}  Sound Effects`;
-      };
-      if (command === "music") {
-        audio.setMusicEnabled(!audio.musicEnabled);
-        updateFake55Settings();
-      } else if (command === "effects") {
-        audio.setEffectsEnabled(!audio.effectsEnabled);
-        updateFake55Settings();
-      } else if (command === "music-volume" || command === "effects-volume") {
-        if (!volumeMenu) return;
-        const kind = command === "music-volume" ? "music" : "effects";
-        volumeMenu.dataset.volumeKind = kind;
-        volumeMenu.querySelectorAll<HTMLButtonElement>("[data-fake-55-volume]").forEach((option) => {
-          const value = Number(option.dataset.fake55Volume);
-          const selected = kind === "music" ? audio.musicVolume : audio.effectsVolume;
-          option.textContent = `${value === selected ? "✓" : ""}  ${value}%`;
-        });
-        if (inputsMenu) inputsMenu.hidden = true;
-        volumeMenu.hidden = !volumeMenu.hidden;
-      } else if (command === "inputs") {
-        if (volumeMenu) volumeMenu.hidden = true;
-        if (inputsMenu) inputsMenu.hidden = !inputsMenu.hidden;
-      } else if (command === "rewind") {
-        goToMenu();
-      } else if (command === "forward" || command === "back") {
-        const canvas = fake55Level.querySelector<HTMLElement>("[data-fake-level-canvas]");
-        if (canvas) {
-          canvas.classList.remove("is-blackout");
-          void canvas.offsetWidth;
-          canvas.classList.add("is-blackout");
-          window.setTimeout(() => canvas.classList.remove("is-blackout"), 520);
-        }
-        fake55Menu.hidden = true;
-      }
+    const fake62Button = target?.closest<HTMLButtonElement>("button[data-fake-62-button]");
+    if (fake62Button && !fake62Button.hidden && !fake62Button.disabled) {
+      const level = fake62Button.closest<HTMLElement>('[data-fake-level="62"]');
+      const image = level?.querySelector<HTMLImageElement>("[data-fake-62-image]");
+      fake62Phase = "awaiting-unmute";
+      fake62Button.hidden = true;
+      if (image) image.src = assetUrl("images/level39fake62b.png");
+      syncFake62();
       return;
     }
 
@@ -538,10 +979,20 @@ function launchFakeLevelWorld(
     const expectedAnswers: Readonly<Record<string, string>> = {
       "41": "Level", "42": "the", "43": "y", "45": "sum",
       "49": "fake", "50": "ap",
-      "52": "OBTaIn", "59": "pea",
+      "52": "OBTaIn", "59": "pea", "60": "D", "61": "dividing",
+      "64": "STOP PLAYING THIS GAME", "65": "Never",
+      "69": "triple", "70": "void", "71": "red", "74": "IS",
       "47-1": "three", "47-2": "three", "47-3": "three",
     };
     const answer = fakeAnswers.get(answerKey)?.getValue();
+    if (levelNumber === 68) {
+      if (answer !== "") {
+        form.classList.remove("is-wrong");
+        void form.offsetWidth;
+        form.classList.add("is-wrong");
+      }
+      return;
+    }
     if (levelNumber === 49 && answer === "hidden" && !fake49HintRevealed) {
       fake49HintRevealed = true;
       const clue = form.closest<HTMLElement>(".level-39__fake-level")
@@ -575,9 +1026,13 @@ function launchFakeLevelWorld(
       const level46 = world.querySelector<HTMLElement>('[data-fake-level="46"]:not(.is-cleared)');
       const level48 = world.querySelector<HTMLElement>('[data-fake-level="48"]:not(.is-cleared)');
       const level56 = world.querySelector<HTMLElement>('[data-fake-level="56"]:not(.is-cleared)');
+      const level63 = world.querySelector<HTMLElement>('[data-fake-level="63"]:not(.is-cleared)');
+      const level67 = world.querySelector<HTMLElement>('[data-fake-level="67"]:not(.is-cleared)');
       if (key === "b" && level46) completeFakeLevel(46, level46);
       if (key === "s" && level48) completeFakeLevel(48, level48);
       if (key === "e" && level56) completeFakeLevel(56, level56);
+      if (key === "t" && level63) completeFakeLevel(63, level63);
+      if (event.key === "ArrowRight" && level67) completeFakeLevel(67, level67);
     }
     if (fake51Waiting) restartFake51Wait();
   });
@@ -595,30 +1050,6 @@ function launchFakeLevelWorld(
     if (button && !button.contains(previous ?? null)) audio.playEffect(SOUND_EFFECTS.pop);
   });
 
-  listen(stage, "contextmenu", (event) => {
-    const target = event.target instanceof Element ? event.target : undefined;
-    const level = target?.closest<HTMLElement>('[data-fake-level="55"]:not(.is-cleared)');
-    const canvas = level?.querySelector<HTMLElement>("[data-fake-level-canvas]");
-    const menu = level?.querySelector<HTMLElement>(".level-39__fake-55-context-menu");
-    if (!level || !canvas || !menu) return;
-    event.preventDefault();
-    const pointer = clientPointToLocal(canvas, event.clientX, event.clientY);
-    menu.hidden = false;
-    menu.querySelectorAll<HTMLElement>(".level-39__fake-55-submenu").forEach((submenu) => { submenu.hidden = true; });
-    const music = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music"]');
-    const effects = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects"]');
-    const musicVolume = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="music-volume"]');
-    const effectsVolume = menu.querySelector<HTMLButtonElement>('[data-fake-55-command="effects-volume"]');
-    if (music) music.textContent = `${audio.musicEnabled ? "✓" : ""}  Music`;
-    if (effects) effects.textContent = `${audio.effectsEnabled ? "✓" : ""}  Sound Effects`;
-    if (musicVolume) musicVolume.textContent = `   Music Volume: ${audio.musicVolume}%  ▶`;
-    if (effectsVolume) effectsVolume.textContent = `   SFX Volume: ${audio.effectsVolume}%  ▶`;
-    const left = Math.max(4, Math.min(pointer.x, 800 - menu.offsetWidth - 4));
-    const top = Math.max(4, Math.min(pointer.y, 600 - menu.offsetHeight - 4));
-    menu.classList.toggle("opens-left", left + menu.offsetWidth + 305 > 796);
-    menu.style.left = `${left}px`;
-    menu.style.top = `${top}px`;
-  });
 }
 
 function corruptCoordinate(value: number): string {
@@ -636,7 +1067,15 @@ function corruptCoordinate(value: number): string {
 export const level39: LevelDefinition = {
   number: 39,
   title: "Glitch",
-  mount({ screen, listen, timeout, audio, goToMenu }) {
+  scenes: [
+    { id: "main", label: "Main Screen" },
+    ...FAKE_LEVEL_SEQUENCE.map((levelNumber) => ({
+      id: `fake-${levelNumber}`,
+      label: `Fake Level ${levelNumber}`,
+    })),
+    { id: "fake-666", label: "Fake Level 666" },
+  ],
+  mount({ screen, listen, timeout, audio, goToMenu, initialScene }) {
     screen.className = "level-screen level-39";
     screen.innerHTML = `
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
@@ -742,5 +1181,13 @@ return void 0x000000;</code></pre>
         input.focus();
       }, 520);
     });
+
+    const requestedFakeLevel = /^fake-(\d+)$/.exec(initialScene ?? "");
+    if (requestedFakeLevel) {
+      const targetLevel = Number(requestedFakeLevel[1]);
+      if (targetLevel === 666 || FAKE_LEVEL_SEQUENCE.includes(targetLevel)) {
+        launchFakeLevelWorld(screen, listen, audio, goToMenu, targetLevel);
+      }
+    }
   },
 };
