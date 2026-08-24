@@ -12,4 +12,5 @@ export function assetUrl(path: string): string {
 export const SOUND_EFFECTS = {
   pop: "sounds/nelgpop.WAV",
   smack: "sounds/nelgsmack.WAV",
+  break: "sounds/nelgbreak.wav",
 } as const;

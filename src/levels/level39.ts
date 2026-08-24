@@ -59,6 +59,24 @@ const FAKE_LEVEL_70_MESSAGES = [
   "the password is rewind", "still changing", "this is a decoy", "end of buffer",
 ] as const;
 
+const FAKE_LEVEL_96_WORDS = [
+  "anchor", "biscuit", "cactus", "dynamo", "ember", "feather", "galaxy", "harbor",
+  "island", "jacket", "kettle", "lantern", "marble", "needle", "orchid", "pencil",
+  "quartz", "ribbon", "saddle", "thunder", "utopia", "velvet", "walnut", "xylophone",
+  "yogurt", "zipper", "acorn", "beacon", "castle", "desert", "engine", "fossil",
+  "garden", "helmet", "igloo", "jigsaw", "kernel", "lizard", "magnet", "napkin",
+  "ocean", "pepper", "rocket", "silver", "tunnel", "urchin", "violin", "window",
+  "yellow", "zephyr", "apricot", "bucket", "camera", "dragon", "eclipse", "forest",
+  "goblin", "hammer", "insect", "jungle", "koala", "lemon", "meteor", "nectar",
+  "oxygen", "planet", "rabbit", "signal", "temple", "unicorn", "vortex", "whistle",
+  "yonder", "zenith", "almond", "bridge", "comet", "dolphin", "falcon", "glacier",
+  "horizon", "ivory", "jasmine", "kitten", "lobster", "mirror", "noodle", "octopus",
+  "parrot", "radar", "sphinx", "tiger", "violet", "waffle", "yacht", "zebra",
+] as const;
+
+const FAKE_LEVEL_94_ERROR =
+  "E̷̽̊͗r̸͒̈́̕r̷̈́̑͝o̶͛͐̚r̷͒͑̈*̵C̵͊̾͝õ̸̂͠d̴̛̐͐ë̷́̄̉*̵6̴̓̄͠6̶̛̀̚6̵̈́̒̑:̵͆̒ System*Fall. NULL*POINT at 0x00000";
+
 interface FakeLevelPoint {
   readonly x: number;
   readonly y: number;
@@ -86,6 +104,7 @@ function launchFakeLevelWorld(
   listen: LevelContext["listen"],
   audio: LevelContext["audio"],
   goToMenu: LevelContext["goToMenu"],
+  complete: LevelContext["complete"],
   adminTargetLevel?: number,
 ): void {
   if (screen.querySelector(".level-39__fake-stage")) return;
@@ -118,6 +137,15 @@ function launchFakeLevelWorld(
   let fake68PointerId: number | undefined;
   let fake70Interval: number | undefined;
   let fake75OffsetX = 0;
+  let fake77SpawnedButtons = 0;
+  let fake81Clicks = 0;
+  let fake83KeyBuffer = "";
+  let fake84Step = 0;
+  let fake84Timer: number | undefined;
+  let fake92KeyBuffer = "";
+  let fake94DroppedLetters = 0;
+  let fake96LastWordAt = 0;
+  let fake98KeyBuffer = "";
   let routeRevealed = false;
 
   const stopFake70Cycle = () => {
@@ -189,6 +217,9 @@ function launchFakeLevelWorld(
     const titleAngle = ((levelNumber * 13) % 17) - 8;
     level.style.setProperty("--fake-title-angle", `${titleAngle}deg`);
     level.style.setProperty("--fake-subtitle-angle", `${titleAngle * -0.45}deg`);
+    if (levelNumber === 91) {
+      level.style.setProperty("--fake-91-space", `url("${assetUrl("images/spacebg.png?v=20260813")}")`);
+    }
     const puzzle = (() => {
       if (levelNumber === 40) {
         return `<button class="level-39__fake-40-button" type="button" data-fake-40-button
@@ -450,6 +481,171 @@ function launchFakeLevelWorld(
             <button class="level-39__fake-75-end" type="button" data-fake-75-end aria-label="Diamond at the end of the path"></button>
           </div>`;
       }
+      if (levelNumber === 76) {
+        return `
+          <img class="level-39__fake-76-image" src="${assetUrl("images/level39fake76.png")}" alt="An extremely horizontally stretched text clue" draggable="false" />
+          <form class="level-39__fake-password-form" data-fake-password-form="76" autocomplete="off">
+            <input data-fake-password="76" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 76 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 77) {
+        return `
+          <p class="level-39__fake-77-message">THE GAME IS COMPLETELY BROKEN...<br />PRESS REWIND AND START AGAIN FROM THE BEGINNING!</p>
+          <div class="level-39__fake-77-buttons" data-fake-77-buttons aria-live="polite"></div>
+          <form class="level-39__fake-password-form level-39__fake-77-form" data-fake-password-form="77" autocomplete="off">
+            <input data-fake-password="77" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 77 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 78) {
+        return `
+          <p class="level-39__fake-78-message">A SCREEN WHERE THE STARS SHINE...</p>
+          <div class="level-39__fake-78-stars" aria-hidden="true">
+            ${Array.from({ length: 54 }, (_, index) => `<span style="--star-x:${(index * 47 + 13) % 96}%;--star-y:${(index * 71 + 19) % 82}%;--star-delay:${(index % 11) * -0.13}s;--star-size:${24 + (index % 6) * 8}px">*</span>`).join("")}
+          </div>
+          <form class="level-39__fake-password-form" data-fake-password-form="78" autocomplete="off">
+            <input data-fake-password="78" type="text" maxlength="4" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 78 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 79) {
+        return `
+          <p class="level-39__fake-79-message">When you mix different elements together, you create a new mix of ideas. In the modern studio, audio engineers mix tracks with great care. They adjust the mix until the final mix sounds just right. You can mix vocals, guitars, and drums into a single mix. A good mix requires patience, just like a chef who likes to mix spices to create a rich mix of flavors. When ingredients mix, they form a delicious mix. If you mix red and blue, you get a mix of purple. Life is also a mix of choices. We mix work and play to find a healthy mix. Every daily mix of events brings a new mix of feelings. Do not mix up your priorities. Keep your mix balanced and clear.</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="79" autocomplete="off">
+            <input data-fake-password="79" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 79 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 80) {
+        return `
+          <p class="level-39__fake-80-message">Finish the equation.</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="80" autocomplete="off">
+            <input data-fake-password="80" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 80 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 81) {
+        return `
+          <button class="level-39__fake-81-surface" type="button" data-fake-81-surface
+            aria-label="Extremely worn surface, 0 of 132 hits"></button>
+          <p class="level-39__fake-81-message">???</p>`;
+      }
+      if (levelNumber === 83) {
+        return `
+          <img class="level-39__fake-83-image" src="${assetUrl("images/level39fake83.png")}" alt="A visual clue about a number" draggable="false" />
+          <form class="level-39__fake-password-form" data-fake-password-form="83" autocomplete="off" hidden>
+            <input data-fake-password="83" type="text" maxlength="24" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 83 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 84) {
+        return `
+          <p class="level-39__fake-84-message">USE THE POWER OF THE HEXAGON...</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="84" autocomplete="off">
+            <input data-fake-password="84" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 84 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 86) {
+        const debris = Array.from({ length: 16 }, (_, index) => `
+          <button class="level-39__fake-86-object level-39__fake-86-object--${(index % 8) + 1}" type="button"
+            data-fake-86-object style="--object-x:${42 + (index % 4) * 184}px;--object-y:${178 + Math.floor(index / 4) * 76}px;--object-r:${(index * 37) % 180 - 90}deg"
+            aria-label="Strange breakable object ${index + 1}"></button>`).join("");
+        return `
+          <div class="level-39__fake-86-objects">${debris}</div>
+          <form class="level-39__fake-password-form" data-fake-password-form="86" autocomplete="off">
+            <input data-fake-password="86" type="text" maxlength="24" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 86 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 87) {
+        return `
+          <p class="level-39__fake-87-clue">WELL KNOWN = A5Q7A2A2Q2Z5<br />PW = Q8A3</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="87" autocomplete="off">
+            <input data-fake-password="87" type="text" maxlength="12" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 87 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 89) {
+        return `<p class="level-39__fake-89-clue">uǝppᴉɥ sᴉ pɹoʍssɐd ǝɥʇ</p>`;
+      }
+      if (levelNumber === 91) {
+        return `
+          <form class="level-39__fake-password-form" data-fake-password-form="91" autocomplete="off">
+            <input data-fake-password="91" type="text" maxlength="1" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 91 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 92) {
+        return `<p class="level-39__fake-92-message">QUIT THIS GAME</p>`;
+      }
+      if (levelNumber === 94) {
+        return `
+          <p class="level-39__fake-94-error">${FAKE_LEVEL_94_ERROR}</p>
+          <div class="level-39__fake-94-letters" data-fake-94-letters aria-live="polite"></div>
+          <form class="level-39__fake-password-form" data-fake-password-form="94" autocomplete="off">
+            <input data-fake-password="94" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 94 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 95) {
+        return `
+          <p class="level-39__fake-95-message">JUST GIVE UP</p>
+          <form class="level-39__fake-password-form" data-fake-password-form="95" autocomplete="off">
+            <input data-fake-password="95" type="text" maxlength="20" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 95 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 96) {
+        return `
+          <p class="level-39__fake-96-message">ABSOLUTELY IMPOSSIBLE!!!</p>
+          <div class="level-39__fake-96-words" data-fake-96-words aria-hidden="true"></div>
+          <form class="level-39__fake-password-form" data-fake-password-form="96" autocomplete="off">
+            <input data-fake-password="96" type="text" maxlength="16" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 96 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 97) {
+        return `<div class="level-39__fake-97-errors" aria-label="Corrupted error codes">
+          ${Array.from({ length: 18 }, (_, index) => `<code>ERR_${(0x9700 + index * 39).toString(16).toUpperCase()} :: ${index % 3 === 0 ? "NULL_SIGNAL" : index % 3 === 1 ? "FRAME_ABORT" : "MEMORY_GLITCH"}</code>`).join("")}
+        </div>`;
+      }
+      if (levelNumber === 98) {
+        return `<p class="level-39__fake-98-message">FATAL ERROR</p>`;
+      }
+      if (levelNumber === 99) {
+        return `
+          <p class="level-39__fake-99-message">GAME CRASHED</p>
+          <img class="level-39__fake-99-image" src="${assetUrl("images/level39fake99.png")}" alt="A dead-face emoticon clue" draggable="false" />
+          <form class="level-39__fake-password-form" data-fake-password-form="99" autocomplete="off">
+            <input data-fake-password="99" type="text" maxlength="12" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 99 password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
+      if (levelNumber === 666) {
+        return `
+          <img class="level-39__fake-666-image" src="${assetUrl("images/level39fake666.png")}" alt="A keypad-position cipher" draggable="false" />
+          <form class="level-39__fake-password-form level-39__fake-666-form" data-fake-password-form="666" autocomplete="off">
+            <input data-fake-password="666" type="text" inputmode="numeric" maxlength="3" autocomplete="off"
+              spellcheck="false" aria-label="Fake Level 666 final password" />
+            <button type="submit" data-text="GO">GO</button>
+          </form>`;
+      }
       return `<button type="button" data-clear-fake-level="${levelNumber}" ${finalLevel ? "disabled" : ""}>
         ${finalLevel ? "..." : "NEXT"}
       </button>`;
@@ -481,6 +677,37 @@ function launchFakeLevelWorld(
 
     const fake60Ascii = level.querySelector<HTMLTextAreaElement>("[data-fake-60-ascii]");
     if (fake60Ascii) fake60Ascii.value = FAKE_LEVEL_60_ASCII;
+
+    if (levelNumber === 84) {
+      const route = [
+        { level: 84, label: "55", step: 0 },
+        { level: 55, label: "70", step: 1 },
+        { level: 70, label: "77", step: 2 },
+        { level: 77, label: "46", step: 3 },
+        { level: 46, label: "66", step: 4 },
+        { level: 66, label: "84", step: 5 },
+      ] as const;
+      route.forEach(({ level: targetLevel, label, step }) => {
+        const targetCanvas = world.querySelector<HTMLElement>(`[data-fake-level="${targetLevel}"] [data-fake-level-canvas]`);
+        if (!targetCanvas || targetCanvas.querySelector(`[data-fake-84-route="${step}"]`)) return;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "level-39__fake-84-route";
+        button.dataset.fake84Route = String(step);
+        button.textContent = label;
+        button.hidden = step !== 0;
+        button.setAttribute("aria-label", `Hexagon route ${label}`);
+        targetCanvas.append(button);
+      });
+    }
+
+    if (levelNumber === 89) {
+      const level68Form = world.querySelector<HTMLFormElement>('[data-fake-level="68"] [data-fake-password-form="68"]');
+      fakeAnswers.get("68")?.clear();
+      level68Form?.querySelectorAll<HTMLInputElement | HTMLButtonElement>("input, button").forEach((control) => {
+        control.disabled = false;
+      });
+    }
 
     if (levelNumber === 55) {
       level.dataset.allowContextMenu = "";
@@ -558,6 +785,14 @@ function launchFakeLevelWorld(
     const level55 = fakeLevelPoint(55);
     const level666 = makeFakeLevel(666, { x: level55.x, y: level55.y - 4000 }, true);
     level666.classList.add("is-materializing");
+    const level69Canvas = world.querySelector<HTMLElement>('[data-fake-level="69"] [data-fake-level-canvas]');
+    if (level69Canvas && !level69Canvas.querySelector("[data-fake-666-extra]")) {
+      const clue = document.createElement("p");
+      clue.className = "level-39__fake-69-extra";
+      clue.dataset.fake666Extra = "";
+      clue.textContent = "apply the pw and plus four hundred";
+      level69Canvas.append(clue);
+    }
   };
 
   const revealRouteTo666 = () => {
@@ -577,8 +812,15 @@ function launchFakeLevelWorld(
 
   const markFakeLevelCleared = (levelNumber: number, level: HTMLElement) => {
     level.classList.add("is-cleared");
-    level.querySelectorAll<HTMLInputElement>("input").forEach((input) => { input.disabled = true; });
+    const preserveLevel68Input = levelNumber === 68
+      && Boolean(world.querySelector('[data-fake-level="89"]:not(.is-cleared)'));
+    level.querySelectorAll<HTMLInputElement>("input").forEach((input) => {
+      if (preserveLevel68Input && input.closest('[data-fake-password-form="68"]')) return;
+      input.disabled = true;
+    });
     level.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
+      if (button.hasAttribute("data-fake-84-route")) return;
+      if (preserveLevel68Input && button.closest('[data-fake-password-form="68"]')) return;
       button.disabled = levelNumber === 55 ? button.hasAttribute("data-fake-55-input") : true;
       if (button.matches("[data-clear-fake-level], [data-fake-40-button]")) button.textContent = "CLEARED";
     });
@@ -587,6 +829,14 @@ function launchFakeLevelWorld(
   const completeFakeLevel = (levelNumber: number, level: HTMLElement) => {
     if (level.classList.contains("is-cleared")) return;
     if (levelNumber === 70) stopFake70Cycle();
+    if (levelNumber === 84) {
+      if (fake84Timer !== undefined) window.clearTimeout(fake84Timer);
+      fake84Timer = undefined;
+      world.querySelectorAll<HTMLButtonElement>("[data-fake-84-route]").forEach((button) => {
+        button.hidden = true;
+        button.disabled = true;
+      });
+    }
     markFakeLevelCleared(levelNumber, level);
     const currentIndex = FAKE_LEVEL_SEQUENCE.indexOf(levelNumber);
     const nextLevel = FAKE_LEVEL_SEQUENCE[currentIndex + 1];
@@ -715,6 +965,26 @@ function launchFakeLevelWorld(
     fake68PointerId = undefined;
   };
 
+  const resetFake84Route = () => {
+    if (fake84Timer !== undefined) window.clearTimeout(fake84Timer);
+    fake84Timer = undefined;
+    fake84Step = 0;
+    world.querySelectorAll<HTMLButtonElement>("[data-fake-84-route]").forEach((button) => {
+      const step = Number(button.dataset.fake84Route);
+      button.hidden = step !== 0;
+      button.disabled = false;
+      if (step === 0) {
+        button.textContent = "55";
+        button.setAttribute("aria-label", "Hexagon route 55");
+      }
+    });
+  };
+
+  const armFake84Timer = () => {
+    if (fake84Timer !== undefined) window.clearTimeout(fake84Timer);
+    fake84Timer = window.setTimeout(resetFake84Route, 6_000);
+  };
+
   const origin = world.querySelector<HTMLElement>(".level-39__fake-origin");
   if (origin) {
     origin.style.left = "-18px";
@@ -757,6 +1027,7 @@ function launchFakeLevelWorld(
       readonly pointerY: number;
       readonly startX: number;
       readonly startY: number;
+      readonly shakesFake94: boolean;
     };
 
   type Fake75Drag = {
@@ -767,6 +1038,9 @@ function launchFakeLevelWorld(
 
   let drag: PointerDrag | undefined;
   let fake75Drag: Fake75Drag | undefined;
+  let fake94LastPointerX = 0;
+  let fake94LastDirection = 0;
+  let fake94ShakeScore = 0;
   const localPointer = (event: PointerEvent) => clientPointToLocal(screen, event.clientX, event.clientY);
   const isFake66BorderHit = (event: PointerEvent | MouseEvent, level: HTMLElement) => {
     const rect = level.getBoundingClientRect();
@@ -800,7 +1074,13 @@ function launchFakeLevelWorld(
       pointerY: pointer.y,
       startX: worldX,
       startY: worldY,
+      shakesFake94: Boolean(target.closest('[data-fake-level="94"]:not(.is-cleared)')),
     };
+    if (drag.shakesFake94) {
+      fake94LastPointerX = pointer.x;
+      fake94LastDirection = 0;
+      fake94ShakeScore = 0;
+    }
     stage.classList.add("is-panning");
     stage.setPointerCapture(event.pointerId);
     event.preventDefault();
@@ -859,6 +1139,31 @@ function launchFakeLevelWorld(
     worldX = drag.startX + deltaX;
     worldY = drag.startY + deltaY;
     renderWorldPosition();
+    if (drag.shakesFake94 && fake94DroppedLetters < 4) {
+      const movementX = pointer.x - fake94LastPointerX;
+      const direction = Math.abs(movementX) >= 8 ? Math.sign(movementX) : 0;
+      if (direction !== 0) {
+        if (fake94LastDirection !== 0 && direction !== fake94LastDirection) {
+          fake94ShakeScore += 1;
+          if (fake94ShakeScore >= 2) {
+            fake94ShakeScore = 0;
+            const level94 = world.querySelector<HTMLElement>('[data-fake-level="94"]:not(.is-cleared)');
+            const layer = level94?.querySelector<HTMLElement>("[data-fake-94-letters]");
+            const character = "pass"[fake94DroppedLetters];
+            if (layer && character) {
+              const letter = document.createElement("span");
+              letter.textContent = character;
+              letter.style.setProperty("--letter-x", `${105 + fake94DroppedLetters * 175}px`);
+              letter.style.setProperty("--letter-delay", `${fake94DroppedLetters * 35}ms`);
+              layer.append(letter);
+              fake94DroppedLetters += 1;
+            }
+          }
+        }
+        fake94LastDirection = direction;
+        fake94LastPointerX = pointer.x;
+      }
+    }
     event.preventDefault();
   });
 
@@ -872,6 +1177,25 @@ function launchFakeLevelWorld(
     const track = world.querySelector<HTMLElement>("[data-fake-75-track]");
     if (track) track.style.transform = `translateX(${fake75OffsetX}px)`;
     event.preventDefault();
+  });
+
+  listen(stage, "pointermove", (event) => {
+    const now = performance.now();
+    if (now - fake96LastWordAt < 45) return;
+    const target = event.target instanceof Element ? event.target : undefined;
+    const level96 = target?.closest<HTMLElement>('[data-fake-level="96"]:not(.is-cleared)');
+    const canvas = level96?.querySelector<HTMLElement>("[data-fake-level-canvas]");
+    const layer = level96?.querySelector<HTMLElement>("[data-fake-96-words]");
+    if (!canvas || !layer) return;
+    fake96LastWordAt = now;
+    const pointer = clientPointToLocal(canvas, event.clientX, event.clientY);
+    const word = document.createElement("span");
+    word.textContent = FAKE_LEVEL_96_WORDS[Math.floor(Math.random() * FAKE_LEVEL_96_WORDS.length)] ?? "word";
+    word.style.left = `${Math.max(12, Math.min(720, pointer.x - 40))}px`;
+    word.style.top = `${Math.max(125, Math.min(520, pointer.y - 14))}px`;
+    word.style.setProperty("--word-angle", `${Math.floor(Math.random() * 35) - 17}deg`);
+    layer.append(word);
+    while (layer.childElementCount > 96) layer.firstElementChild?.remove();
   });
 
   const finishDrag = (event: PointerEvent) => {
@@ -900,6 +1224,11 @@ function launchFakeLevelWorld(
 
   listen(stage, "click", (event) => {
     const target = event.target instanceof Element ? event.target : undefined;
+    const fake97 = target?.closest<HTMLElement>('[data-fake-level="97"]:not(.is-cleared)');
+    if (fake97) {
+      completeFakeLevel(97, fake97);
+      return;
+    }
     const fake66 = target?.closest<HTMLElement>('[data-fake-level="66"]');
     if (fake66 && isFake66BorderHit(event, fake66)) {
       completeFakeLevel(66, fake66);
@@ -910,6 +1239,66 @@ function launchFakeLevelWorld(
     if (fake75End && !fake75End.disabled) {
       const level = fake75End.closest<HTMLElement>('[data-fake-level="75"]');
       if (level) completeFakeLevel(75, level);
+      return;
+    }
+
+    const fake77Go = target?.closest<HTMLButtonElement>("button[data-fake-77-go]");
+    if (fake77Go && !fake77Go.disabled) {
+      fake77Go.closest<HTMLElement>('[data-fake-level="77"]')
+        ?.querySelector<HTMLFormElement>('[data-fake-password-form="77"]')?.requestSubmit();
+      return;
+    }
+
+    const fake81Surface = target?.closest<HTMLButtonElement>("button[data-fake-81-surface]");
+    if (fake81Surface && !fake81Surface.disabled) {
+      fake81Clicks += 1;
+      fake81Surface.setAttribute("aria-label", `Extremely worn surface, ${fake81Clicks} of 132 hits`);
+      if (fake81Clicks >= 132) {
+        fake81Surface.disabled = true;
+        const level = fake81Surface.closest<HTMLElement>('[data-fake-level="81"]');
+        level?.classList.add("is-shattering");
+        audio.playEffect(SOUND_EFFECTS.break);
+        window.setTimeout(() => {
+          if (level?.isConnected) completeFakeLevel(81, level);
+        }, 760);
+      } else audio.playEffect(SOUND_EFFECTS.smack);
+      return;
+    }
+
+    const fake84Route = target?.closest<HTMLButtonElement>("button[data-fake-84-route]");
+    if (fake84Route && !fake84Route.hidden && !fake84Route.disabled) {
+      const clickedStep = Number(fake84Route.dataset.fake84Route);
+      if ((fake84Step < 6 && clickedStep !== fake84Step) || (fake84Step === 6 && clickedStep !== 0)) {
+        resetFake84Route();
+        return;
+      }
+      if (fake84Step === 6) {
+        const level84 = world.querySelector<HTMLElement>('[data-fake-level="84"]:not(.is-cleared)');
+        if (fakeAnswers.get("84")?.getValue() === "time" && level84) completeFakeLevel(84, level84);
+        else resetFake84Route();
+        return;
+      }
+      fake84Route.hidden = true;
+      fake84Step += 1;
+      const nextStep = fake84Step === 6 ? 0 : fake84Step;
+      const nextButton = world.querySelector<HTMLButtonElement>(`[data-fake-84-route="${nextStep}"]`);
+      if (nextButton) {
+        nextButton.hidden = false;
+        if (fake84Step === 6) {
+          nextButton.textContent = "time";
+          nextButton.setAttribute("aria-label", "Hexagon route time");
+        }
+      }
+      armFake84Timer();
+      return;
+    }
+
+    const fake86Object = target?.closest<HTMLButtonElement>("button[data-fake-86-object]");
+    if (fake86Object && !fake86Object.disabled) {
+      fake86Object.disabled = true;
+      fake86Object.classList.add("is-breaking");
+      audio.playEffect(SOUND_EFFECTS.break);
+      window.setTimeout(() => fake86Object.remove(), 460);
       return;
     }
 
@@ -982,10 +1371,34 @@ function launchFakeLevelWorld(
       "52": "OBTaIn", "59": "pea", "60": "D", "61": "dividing",
       "64": "STOP PLAYING THIS GAME", "65": "Never",
       "69": "triple", "70": "void", "71": "red", "74": "IS",
+      "76": "hat", "78": "*", "79": "mix", "80": "77693",
+      "83": "number",
+      "87": "of", "91": " ",
+      "94": "pass", "96": "word", "99": "XoX",
       "47-1": "three", "47-2": "three", "47-3": "three",
     };
     const answer = fakeAnswers.get(answerKey)?.getValue();
+    if (levelNumber === 666) {
+      if (answer === "607") {
+        form.querySelectorAll<HTMLInputElement | HTMLButtonElement>("input, button")
+          .forEach((control) => { control.disabled = true; });
+        complete();
+        return;
+      }
+      form.classList.remove("is-wrong");
+      void form.offsetWidth;
+      form.classList.add("is-wrong");
+      return;
+    }
     if (levelNumber === 68) {
+      const level89 = world.querySelector<HTMLElement>('[data-fake-level="89"]:not(.is-cleared)');
+      if (level89 && answer === "hidden") {
+        form.querySelectorAll<HTMLInputElement | HTMLButtonElement>("input, button").forEach((control) => {
+          control.disabled = true;
+        });
+        completeFakeLevel(89, level89);
+        return;
+      }
       if (answer !== "") {
         form.classList.remove("is-wrong");
         void form.offsetWidth;
@@ -1000,6 +1413,45 @@ function launchFakeLevelWorld(
       if (clue) clue.innerHTML = "Haha! You fell for it &gt;:D<br /><b>The password is fake</b>";
       fakeAnswers.get(answerKey)?.clear();
       form.querySelector<HTMLInputElement>("input")?.focus();
+      return;
+    }
+    if (levelNumber === 77) {
+      const level = form.closest<HTMLElement>('[data-fake-level="77"]');
+      if (answer === "hidden" && fake77SpawnedButtons < 76 && level) {
+        const layer = level.querySelector<HTMLElement>("[data-fake-77-buttons]");
+        if (layer) {
+          const index = fake77SpawnedButtons;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "level-39__fake-77-go";
+          button.dataset.fake77Go = "";
+          button.textContent = "GO";
+          button.setAttribute("aria-label", `Generated GO button ${index + 1} of 76`);
+          button.style.left = `${12 + (index % 10) * 78}px`;
+          button.style.top = `${12 + Math.floor(index / 10) * 54}px`;
+          layer.append(button);
+          fake77SpawnedButtons += 1;
+        }
+        return;
+      }
+      if (answer === "77" && fake77SpawnedButtons === 76 && level) {
+        completeFakeLevel(77, level);
+        return;
+      }
+      form.classList.remove("is-wrong");
+      void form.offsetWidth;
+      form.classList.add("is-wrong");
+      return;
+    }
+    if (levelNumber === 84) {
+      form.classList.remove("is-wrong");
+      void form.offsetWidth;
+      form.classList.add("is-wrong");
+      return;
+    }
+    if (levelNumber === 86 && (answer === "86" || answer === "eighty six")) {
+      const level = form.closest<HTMLElement>('[data-fake-level="86"]');
+      if (level) completeFakeLevel(86, level);
       return;
     }
     if (answer === expectedAnswers[answerKey]) {
@@ -1028,11 +1480,45 @@ function launchFakeLevelWorld(
       const level56 = world.querySelector<HTMLElement>('[data-fake-level="56"]:not(.is-cleared)');
       const level63 = world.querySelector<HTMLElement>('[data-fake-level="63"]:not(.is-cleared)');
       const level67 = world.querySelector<HTMLElement>('[data-fake-level="67"]:not(.is-cleared)');
+      const level83 = world.querySelector<HTMLElement>('[data-fake-level="83"]:not(.is-cleared)');
+      const level92 = world.querySelector<HTMLElement>('[data-fake-level="92"]:not(.is-cleared)');
+      const level95 = world.querySelector<HTMLElement>('[data-fake-level="95"]:not(.is-cleared)');
+      const level98 = world.querySelector<HTMLElement>('[data-fake-level="98"]:not(.is-cleared)');
+      const typingInForm = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement;
       if (key === "b" && level46) completeFakeLevel(46, level46);
       if (key === "s" && level48) completeFakeLevel(48, level48);
       if (key === "e" && level56) completeFakeLevel(56, level56);
       if (key === "t" && level63) completeFakeLevel(63, level63);
       if (event.key === "ArrowRight" && level67) completeFakeLevel(67, level67);
+      if (event.key === "ArrowUp" && level95) {
+        event.preventDefault();
+        completeFakeLevel(95, level95);
+      }
+      if (level92 && !typingInForm && event.key.length === 1) {
+        fake92KeyBuffer = `${fake92KeyBuffer}${event.key.toLowerCase()}`.slice(-14);
+        if (fake92KeyBuffer === "quit this game") {
+          completeFakeLevel(92, level92);
+          fake92KeyBuffer = "";
+        }
+      }
+      if (level98 && !typingInForm && event.key.length === 1) {
+        fake98KeyBuffer = `${fake98KeyBuffer}${event.key.toLowerCase()}`.slice(-11);
+        if (fake98KeyBuffer === "fatal error") {
+          completeFakeLevel(98, level98);
+          fake98KeyBuffer = "";
+        }
+      }
+      if (level83 && !typingInForm) {
+        fake83KeyBuffer = `${fake83KeyBuffer}${key}`.slice(-6);
+        if (fake83KeyBuffer === "hidden") {
+          const form = level83.querySelector<HTMLFormElement>('[data-fake-password-form="83"]');
+          if (form) {
+            form.hidden = false;
+            form.querySelector<HTMLInputElement>("input")?.focus();
+          }
+          fake83KeyBuffer = "";
+        }
+      }
     }
     if (fake51Waiting) restartFake51Wait();
   });
@@ -1075,7 +1561,7 @@ export const level39: LevelDefinition = {
     })),
     { id: "fake-666", label: "Fake Level 666" },
   ],
-  mount({ screen, listen, timeout, audio, goToMenu, initialScene }) {
+  mount({ screen, listen, timeout, audio, goToMenu, complete, initialScene }) {
     screen.className = "level-screen level-39";
     screen.innerHTML = `
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
@@ -1166,7 +1652,7 @@ return void 0x000000;</code></pre>
     listen(form, "submit", (event) => {
       event.preventDefault();
       if (maskedInput.getValue() === "hidden") {
-        launchFakeLevelWorld(screen, listen, audio, goToMenu);
+        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete);
         return;
       }
       form.classList.remove("is-malfunctioning");
@@ -1186,7 +1672,7 @@ return void 0x000000;</code></pre>
     if (requestedFakeLevel) {
       const targetLevel = Number(requestedFakeLevel[1]);
       if (targetLevel === 666 || FAKE_LEVEL_SEQUENCE.includes(targetLevel)) {
-        launchFakeLevelWorld(screen, listen, audio, goToMenu, targetLevel);
+        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, targetLevel);
       }
     }
   },

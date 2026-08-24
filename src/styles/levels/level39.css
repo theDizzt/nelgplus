@@ -1414,6 +1414,538 @@
   animation: none;
 }
 
+.level-39__fake-level--76 {
+  color: #000;
+  background: linear-gradient(90deg, #f00, #ff8c00, #ff0, #00d850, #00eaff, #1648ff, #8b00ff, #f0f);
+  background-size: 260% 100%;
+  animation: level-39-fake-76-rainbow 1.4s ease-in-out infinite alternate;
+}
+
+.level-39__fake-76-image {
+  position: absolute;
+  top: 205px;
+  left: 55px;
+  width: 690px;
+  height: 230px;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.level-39__fake-level--77 {
+  color: #009630;
+  background: #0f0;
+}
+
+.level-39__fake-level--77 header p { color: #009630; }
+
+.level-39__fake-77-message {
+  position: absolute;
+  z-index: 3;
+  top: 195px;
+  left: 70px;
+  width: 660px;
+  margin: 0;
+  color: #ff0;
+  text-align: center;
+  font: 700 38px/1.28 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-39__fake-77-buttons {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-39__fake-level .level-39__fake-77-go {
+  position: absolute;
+  bottom: auto;
+  width: 52px;
+  min-width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: none;
+  translate: none;
+  animation: none;
+  pointer-events: auto;
+  font: 400 25px/1 "NELG Arial", Arial, sans-serif;
+}
+
+.level-39__fake-level .level-39__fake-77-go:hover:not(:disabled),
+.level-39__fake-level .level-39__fake-77-go:focus-visible:not(:disabled) {
+  color: #111;
+  background: #f01818;
+  outline: none;
+}
+
+.level-39__fake-level .level-39__fake-77-go:active:not(:disabled) {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-39__fake-level .level-39__fake-77-go::before,
+.level-39__fake-level .level-39__fake-77-go::after {
+  display: none;
+}
+
+.level-39__fake-77-form { z-index: 9; }
+
+.level-39__fake-level--78 {
+  color: #fff;
+  background: radial-gradient(circle at 48% 42%, #111c43 0%, #07102c 48%, #010617 100%);
+}
+
+.level-39__fake-78-message {
+  position: absolute;
+  z-index: 3;
+  top: 238px;
+  left: 75px;
+  width: 650px;
+  margin: 0;
+  color: #393d4a;
+  text-align: center;
+  font: 700 43px/1.15 "NELG Papyrus", Papyrus, fantasy;
+}
+
+.level-39__fake-78-stars {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.level-39__fake-78-stars span {
+  position: absolute;
+  top: var(--star-y);
+  left: var(--star-x);
+  color: #fff;
+  text-shadow: 0 0 8px #fff, 0 0 20px #75a7ff;
+  opacity: 0.18;
+  font: 700 var(--star-size)/1 Arial, sans-serif;
+  animation: level-39-fake-78-star 720ms steps(2) var(--star-delay) infinite;
+}
+
+.level-39__fake-level--79 {
+  color: #696969;
+  background: #708090;
+}
+
+.level-39__fake-79-message {
+  position: absolute;
+  top: 174px;
+  left: 48px;
+  width: 704px;
+  margin: 0;
+  color: #696969;
+  text-align: left;
+  font: 700 19px/1.28 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level--80 {
+  color: aqua;
+  background: #fff;
+}
+
+.level-39__fake-80-message {
+  position: absolute;
+  top: 270px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: aqua;
+  text-align: center;
+  font: 700 52px/1.1 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level--81 {
+  color: #000;
+  background: #8b0000;
+}
+
+.level-39__fake-level--81 header,
+.level-39__fake-81-message {
+  z-index: 4;
+}
+
+.level-39__fake-81-message {
+  position: absolute;
+  top: 278px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  pointer-events: none;
+  font: 700 76px/1 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level .level-39__fake-81-surface,
+.level-39__fake-level .level-39__fake-81-surface:hover,
+.level-39__fake-level .level-39__fake-81-surface:focus-visible,
+.level-39__fake-level .level-39__fake-81-surface:active,
+.level-39__fake-level .level-39__fake-81-surface:disabled {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 800px;
+  min-width: 0;
+  height: 600px;
+  padding: 0;
+  background:
+    linear-gradient(112deg, transparent 0 18%, rgb(15 0 0 / 58%) 18.5% 19.2%, transparent 20% 67%, rgb(25 0 0 / 45%) 68% 69%, transparent 70%),
+    repeating-linear-gradient(7deg, rgb(255 255 255 / 3%) 0 3px, transparent 4px 18px),
+    radial-gradient(circle at 22% 71%, #3a0000 0 4%, transparent 15%),
+    radial-gradient(circle at 78% 24%, #b3261b 0 3%, transparent 17%),
+    #8b0000;
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset 0 0 72px #210000, inset 0 0 0 12px rgb(30 0 0 / 34%);
+  outline: 0;
+  cursor: pointer;
+  translate: none;
+  opacity: 1;
+  animation: none;
+}
+
+.level-39__fake-level--81.is-shattering {
+  animation: level-39-fake-81-card-break 760ms steps(7) both;
+}
+
+.level-39__fake-level--81.is-shattering .level-39__fake-81-surface {
+  clip-path: polygon(0 0, 31% 0, 25% 31%, 48% 22%, 41% 52%, 65% 43%, 59% 72%, 100% 61%, 100% 100%, 68% 100%, 72% 78%, 47% 89%, 51% 63%, 24% 74%, 30% 46%, 0 57%);
+}
+
+.level-39__fake-level--83 {
+  color: #000;
+  background: #000;
+}
+
+.level-39__fake-level--83 header p { color: #ffb6c1; }
+
+.level-39__fake-83-image {
+  position: absolute;
+  top: 170px;
+  left: 105px;
+  width: 590px;
+  height: 315px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.level-39__fake-level--84 {
+  color: #0f0;
+  background: linear-gradient(120deg, #0d2715, #315b27, #152f16, #56723a);
+  background-size: 240% 240%;
+  animation: level-39-fake-84-forest 4.5s ease-in-out infinite alternate;
+}
+
+.level-39__fake-84-message {
+  position: absolute;
+  top: 245px;
+  left: 70px;
+  width: 660px;
+  margin: 0;
+  color: #0f0;
+  text-align: center;
+  font: 700 42px/1.2 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level .level-39__fake-84-route,
+.level-39__fake-level .level-39__fake-84-route:hover,
+.level-39__fake-level .level-39__fake-84-route:focus-visible,
+.level-39__fake-level .level-39__fake-84-route:active {
+  position: absolute;
+  z-index: 12;
+  top: 330px;
+  bottom: auto;
+  left: 620px;
+  width: 92px;
+  min-width: 92px;
+  height: 92px;
+  padding: 0;
+  color: #071b08;
+  background: #8cff75;
+  border: 5px solid #08290d;
+  border-radius: 50%;
+  box-shadow: none;
+  outline: 0;
+  translate: none;
+  animation: none;
+  font: 700 27px/1 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level .level-39__fake-84-route[hidden] { display: none; }
+
+.level-39__fake-level--86 {
+  color: #000;
+  background: #00bfff;
+}
+
+.level-39__fake-86-objects {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-39__fake-level .level-39__fake-86-object,
+.level-39__fake-level .level-39__fake-86-object:hover,
+.level-39__fake-level .level-39__fake-86-object:focus-visible,
+.level-39__fake-level .level-39__fake-86-object:active,
+.level-39__fake-level .level-39__fake-86-object:disabled {
+  position: absolute;
+  top: var(--object-y);
+  bottom: auto;
+  left: var(--object-x);
+  width: 88px;
+  min-width: 0;
+  height: 58px;
+  padding: 0;
+  color: #111;
+  background: #d3ff00;
+  border: 6px solid #101010;
+  border-radius: 5% 48% 12% 39%;
+  box-shadow: none;
+  outline: 0;
+  cursor: pointer;
+  translate: none;
+  rotate: var(--object-r);
+  opacity: 1;
+  animation: none;
+  pointer-events: auto;
+}
+
+.level-39__fake-level .level-39__fake-86-object--2 { background: #f0f; clip-path: polygon(50% 0, 100% 34%, 76% 100%, 18% 82%, 0 23%); }
+.level-39__fake-level .level-39__fake-86-object--3 { background: #ff6100; border-radius: 50% 4% 50% 7%; }
+.level-39__fake-level .level-39__fake-86-object--4 { background: #6600d7; clip-path: polygon(0 0, 100% 19%, 62% 47%, 100% 100%, 0 79%, 29% 48%); }
+.level-39__fake-level .level-39__fake-86-object--5 { background: #fff; border-width: 10px 3px 5px 12px; }
+.level-39__fake-level .level-39__fake-86-object--6 { background: #006400; clip-path: polygon(50% 0, 61% 37%, 100% 50%, 61% 63%, 50% 100%, 39% 63%, 0 50%, 39% 37%); }
+.level-39__fake-level .level-39__fake-86-object--7 { background: #ffef00; border-radius: 50%; scale: 0.7 1.25; }
+.level-39__fake-level .level-39__fake-86-object--8 { background: #b22222; clip-path: polygon(0 16%, 72% 0, 100% 76%, 31% 100%); }
+
+.level-39__fake-level .level-39__fake-86-object.is-breaking {
+  pointer-events: none;
+  animation: level-39-fake-86-break 450ms steps(6) forwards;
+}
+
+.level-39__fake-level--86 .level-39__fake-password-form { z-index: 8; }
+
+.level-39__fake-level--87 {
+  color: #ff8c00;
+  background: #4b0082;
+}
+
+.level-39__fake-87-clue {
+  position: absolute;
+  top: 245px;
+  left: 55px;
+  width: 690px;
+  margin: 0;
+  color: #0ff;
+  text-align: center;
+  font: 700 42px/1.45 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level--89 {
+  color: #4b0082;
+  background: #7fffd4;
+}
+
+.level-39__fake-89-clue {
+  position: absolute;
+  top: 272px;
+  left: 50px;
+  width: 700px;
+  margin: 0;
+  color: #4b0082;
+  text-align: center;
+  font: 700 47px/1.2 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-level--91 {
+  color: #c71585;
+  background: #090014 var(--fake-91-space) center / cover no-repeat;
+}
+
+.level-39__fake-level--92 {
+  color: #000;
+  background: #b22222;
+}
+
+.level-39__fake-92-message,
+.level-39__fake-95-message {
+  position: absolute;
+  top: 286px;
+  left: 30px;
+  width: 740px;
+  margin: 0;
+  text-align: center;
+  font: 700 68px/1.1 "NELG Comic Sans", "Comic Sans MS", cursive;
+}
+
+.level-39__fake-92-message { color: #f00; }
+
+.level-39__fake-level--94 {
+  color: #7b68ee;
+  background: #191970;
+}
+
+.level-39__fake-94-error {
+  position: absolute;
+  top: 228px;
+  left: 36px;
+  width: 728px;
+  max-height: 210px;
+  margin: 0;
+  overflow: hidden;
+  color: #7b68ee;
+  overflow-wrap: anywhere;
+  font: 700 27px/1.12 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-94-letters {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.level-39__fake-94-letters span {
+  position: absolute;
+  top: -90px;
+  left: var(--letter-x);
+  color: #fff;
+  text-shadow: 2px 2px #111;
+  font: 700 78px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+  animation: level-39-fake-94-drop 950ms cubic-bezier(0.3, 0.7, 0.4, 1.15) var(--letter-delay) forwards;
+}
+
+.level-39__fake-level--95 {
+  color: #000;
+  background: #ff4500;
+}
+
+.level-39__fake-95-message { color: #000; }
+
+.level-39__fake-level--96 {
+  color: #ff0;
+  background: #6b8e23;
+}
+
+.level-39__fake-96-message {
+  position: absolute;
+  z-index: 3;
+  top: 235px;
+  left: 20px;
+  width: 760px;
+  margin: 0;
+  color: #f00;
+  text-align: center;
+  font: 700 57px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-39__fake-96-words {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.level-39__fake-96-words span {
+  position: absolute;
+  color: #161600;
+  opacity: 0.84;
+  rotate: var(--word-angle);
+  font: 700 24px/1 "NELG Courier", Courier, monospace;
+  animation: level-39-fake-96-word 2.8s ease-out both;
+}
+
+.level-39__fake-level--96 .level-39__fake-password-form { z-index: 6; }
+
+.level-39__fake-level--97 {
+  color: #f00;
+  background: #000;
+}
+
+.level-39__fake-97-errors {
+  position: absolute;
+  top: 220px;
+  left: 28px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 744px;
+  color: #f00;
+  font: 700 19px/1.45 "NELG Courier", Courier, monospace;
+}
+
+.level-39__fake-97-errors code:nth-child(3n + 2) { translate: 19px -7px; }
+.level-39__fake-97-errors code:nth-child(4n) { scale: -1 1; }
+
+.level-39__fake-level--98 {
+  color: #000;
+  background: #240000;
+}
+
+.level-39__fake-98-message,
+.level-39__fake-99-message {
+  position: absolute;
+  top: 280px;
+  left: 20px;
+  width: 760px;
+  margin: 0;
+  text-align: center;
+  font: 700 76px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-39__fake-level--99 {
+  color: #fff;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.13) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.25) 0 1px, transparent 1px 5px),
+    #0000ff;
+  animation: level-39-fake-99-noise 120ms steps(2) infinite;
+}
+
+.level-39__fake-level--99 header,
+.level-39__fake-99-message,
+.level-39__fake-99-image,
+.level-39__fake-level--99 .level-39__fake-password-form {
+  animation: level-39-fake-99-jitter 90ms steps(2) infinite;
+}
+
+.level-39__fake-99-message {
+  top: 227px;
+  color: #fff;
+  font-size: 61px;
+}
+
+.level-39__fake-99-image {
+  position: absolute;
+  top: 313px;
+  left: 310px;
+  width: 180px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.level-39__fake-69-extra {
+  position: absolute;
+  z-index: 7;
+  top: 420px;
+  left: 45px;
+  width: 710px;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  font: 700 29px/1.1 "NELG Courier", Courier, monospace;
+}
+
 .level-39__route-to-666 {
   position: absolute;
   z-index: 3;
@@ -1430,18 +1962,79 @@
 
 .level-39__fake-level--666 {
   z-index: 4;
-  color: #111;
-  background: #b5b5b5;
+  color: #f00;
+  background:
+    repeating-radial-gradient(circle at 35% 40%, rgba(255,0,0,.18) 0 3px, transparent 4px 10px),
+    linear-gradient(125deg, #050000, #4b0000 48%, #090000);
   border-width: 6px;
   box-shadow: none;
+  animation: level-39-fake-666-noise 180ms steps(3) infinite;
 }
 
 .level-39__fake-level--666 h2 {
-  font-size: 132px;
+  font-size: 94px;
+}
+
+.level-39__fake-666-image {
+  position: absolute;
+  top: 190px;
+  left: 170px;
+  width: 460px;
+  height: 250px;
+  object-fit: contain;
+  filter: contrast(1.2) saturate(1.25);
+}
+
+.level-39__fake-666-form {
+  color: #8d0000;
+}
+
+.level-39__fake-666-form input {
+  color: #ff3333;
+  background: #180000;
+  border-color: #a40000;
+}
+
+.level-39__fake-666-form button {
+  color: #ffb0b0;
+  background: #750000;
+  border-color: #d00000;
 }
 
 .level-39__fake-level--666.is-materializing {
-  animation: level-39-materialize-666 900ms steps(6) both;
+  animation:
+    level-39-materialize-666 900ms steps(6) both,
+    level-39-fake-666-noise 180ms steps(3) 900ms infinite;
+}
+
+@keyframes level-39-fake-94-drop {
+  0% { top: -90px; rotate: -18deg; }
+  74% { top: 380px; rotate: 8deg; }
+  88% { top: 344px; rotate: -3deg; }
+  100% { top: 366px; rotate: 0deg; }
+}
+
+@keyframes level-39-fake-96-word {
+  0% { opacity: 0; scale: .7; }
+  15% { opacity: .84; scale: 1; }
+  100% { opacity: .18; translate: 0 -22px; }
+}
+
+@keyframes level-39-fake-99-noise {
+  0% { background-position: 0 0, 0 0; filter: contrast(1.1); }
+  50% { background-position: 13px -8px, -9px 11px; filter: contrast(1.7); }
+  100% { background-position: -7px 12px, 14px -6px; filter: contrast(1.25); }
+}
+
+@keyframes level-39-fake-99-jitter {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 3px -2px; }
+}
+
+@keyframes level-39-fake-666-noise {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 17px -12px, 0 0; }
+  100% { background-position: -11px 8px, 0 0; }
 }
 
 @keyframes level-39-yellow-signal {
@@ -1527,6 +2120,36 @@
 @keyframes level-39-fake-75-rainbow {
   from { background-position: 0 0; }
   to { background-position: 100% 0; }
+}
+
+@keyframes level-39-fake-76-rainbow {
+  from { background-position: 0 0; }
+  to { background-position: 100% 0; }
+}
+
+@keyframes level-39-fake-78-star {
+  0%, 100% { opacity: 0.08; scale: 0.55; filter: blur(0); }
+  45% { opacity: 1; scale: 1.35; filter: blur(0.4px); }
+  70% { opacity: 0.35; scale: 0.8; filter: blur(1px); }
+}
+
+@keyframes level-39-fake-81-card-break {
+  0% { translate: 0 0; rotate: 0deg; filter: none; }
+  18% { translate: -12px 7px; rotate: -1deg; filter: contrast(2); }
+  42% { translate: 15px -10px; rotate: 2deg; filter: invert(0.35) contrast(2.4); }
+  70% { translate: -20px 18px; rotate: -4deg; opacity: 0.8; }
+  100% { translate: 28px 90px; rotate: 9deg; opacity: 0; filter: grayscale(1); }
+}
+
+@keyframes level-39-fake-84-forest {
+  from { background-position: 0 20%; }
+  to { background-position: 100% 80%; }
+}
+
+@keyframes level-39-fake-86-break {
+  0% { opacity: 1; scale: 1; filter: none; }
+  40% { opacity: 1; scale: 1.45 0.55; filter: contrast(3); }
+  100% { opacity: 0; scale: 2.2 0.08; filter: blur(5px); }
 }
 
 @keyframes level-39-materialize-666 {

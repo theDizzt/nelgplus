@@ -24,7 +24,9 @@ The logical game resolution is 800×600. Place elements in CSS pixel coordinates
 - Passwords are case-sensitive and preserve leading and trailing whitespace unless a level explicitly says otherwise.
 - Use `attachStarMaskedInput` for star-masked password fields.
 - Puzzles that distinguish direct typing from paste input must clearly separate the roles of `keydown`, `beforeinput`, and `paste`.
-- All ordinary password fields use the Level 5 field dimensions and the 52×40 GO button as their baseline.
+- Unless a puzzle explicitly requires a different visual treatment, password controls must follow the Level 5 control design. The input is 174×43, uses a square three-pixel dark border, a white background, Perpetua text, and the shared star-masking behavior. The GO button is 52×40, yellow with a square three-pixel dark border and 25px Arial text; hover/focus turns it red, and active press uses the white-center-to-black radial gradient.
+- The instructional label above Level 5's input (`Type the background color`) is level content, not part of the reusable password-control design. Do not copy or reserve space for that label unless the new level specification explicitly requests one.
+- Level-specific colors may override the Level 5 palette when the specification requires them, but ordinary field and button dimensions, border proportions, font roles, and interaction states should remain consistent.
 - Record whether Enter submits the form in the level specification. When allowed, Enter and GO must use the same validation path.
 
 ## Repetition and Composite Levels

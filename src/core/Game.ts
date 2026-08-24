@@ -171,8 +171,12 @@ const PRELOAD_IMAGES = [
   "/assets/images/level36f.png",
   "/assets/images/level36g.png",
   "/assets/images/level36h.png",
+  "/assets/images/level39fake76.png",
+  "/assets/images/level39fake83.png",
+  "/assets/images/level39fake99.png",
+  "/assets/images/level39fake666.png",
 ].map(assetUrl);
-const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack] as const;
+const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack, SOUND_EFFECTS.break] as const;
 const MINIMUM_PRELOADER_TIME = 700;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 22, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 97,
