@@ -693,7 +693,7 @@ function launchFakeLevelWorld(
         const button = document.createElement("button");
         button.type = "button";
         button.className = "level-39__fake-84-route";
-        button.dataset.fake84Route = String(step);
+        button.setAttribute("data-fake-84-route", String(step));
         button.textContent = label;
         button.hidden = step !== 0;
         button.setAttribute("aria-label", `Hexagon route ${label}`);
@@ -970,7 +970,7 @@ function launchFakeLevelWorld(
     fake84Timer = undefined;
     fake84Step = 0;
     world.querySelectorAll<HTMLButtonElement>("[data-fake-84-route]").forEach((button) => {
-      const step = Number(button.dataset.fake84Route);
+      const step = Number(button.getAttribute("data-fake-84-route"));
       button.hidden = step !== 0;
       button.disabled = false;
       if (step === 0) {
@@ -1028,6 +1028,7 @@ function launchFakeLevelWorld(
       readonly startX: number;
       readonly startY: number;
       readonly shakesFake94: boolean;
+      readonly draggedFake97?: HTMLElement;
     };
 
   type Fake75Drag = {
@@ -1075,6 +1076,7 @@ function launchFakeLevelWorld(
       startX: worldX,
       startY: worldY,
       shakesFake94: Boolean(target.closest('[data-fake-level="94"]:not(.is-cleared)')),
+      draggedFake97: target.closest<HTMLElement>('[data-fake-level="97"]:not(.is-cleared)') ?? undefined,
     };
     if (drag.shakesFake94) {
       fake94LastPointerX = pointer.x;
@@ -1139,6 +1141,9 @@ function launchFakeLevelWorld(
     worldX = drag.startX + deltaX;
     worldY = drag.startY + deltaY;
     renderWorldPosition();
+    if (drag.draggedFake97 && Math.abs(deltaX) + Math.abs(deltaY) >= 3) {
+      completeFakeLevel(97, drag.draggedFake97);
+    }
     if (drag.shakesFake94 && fake94DroppedLetters < 4) {
       const movementX = pointer.x - fake94LastPointerX;
       const direction = Math.abs(movementX) >= 8 ? Math.sign(movementX) : 0;
@@ -1267,7 +1272,7 @@ function launchFakeLevelWorld(
 
     const fake84Route = target?.closest<HTMLButtonElement>("button[data-fake-84-route]");
     if (fake84Route && !fake84Route.hidden && !fake84Route.disabled) {
-      const clickedStep = Number(fake84Route.dataset.fake84Route);
+      const clickedStep = Number(fake84Route.getAttribute("data-fake-84-route"));
       if ((fake84Step < 6 && clickedStep !== fake84Step) || (fake84Step === 6 && clickedStep !== 0)) {
         resetFake84Route();
         return;

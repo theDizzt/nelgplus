@@ -1613,19 +1613,27 @@
 }
 
 .level-39__fake-level--81.is-shattering {
-  animation: level-39-fake-81-card-break 760ms steps(7) both;
+  background: #fff;
 }
 
 .level-39__fake-level--81.is-shattering .level-39__fake-81-surface {
   clip-path: polygon(0 0, 31% 0, 25% 31%, 48% 22%, 41% 52%, 65% 43%, 59% 72%, 100% 61%, 100% 100%, 68% 100%, 72% 78%, 47% 89%, 51% 63%, 24% 74%, 30% 46%, 0 57%);
+  pointer-events: none;
+  animation: level-39-fake-81-card-break 760ms steps(7) both;
+}
+
+.level-39__fake-level--81.is-shattering header,
+.level-39__fake-level--81.is-shattering .level-39__fake-81-message {
+  pointer-events: none;
+  animation: level-39-fake-81-card-break 760ms steps(7) both;
 }
 
 .level-39__fake-level--83 {
   color: #000;
-  background: #000;
+  background: #ffb6c1;
 }
 
-.level-39__fake-level--83 header p { color: #ffb6c1; }
+.level-39__fake-level--83 header p { color: #000; }
 
 .level-39__fake-83-image {
   position: absolute;
