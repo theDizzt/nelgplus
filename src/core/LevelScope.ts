@@ -47,6 +47,7 @@ export class LevelScope {
         setMusicVolume: (volume) => options.audio.setMusicVolume(volume),
         setEffectsVolume: (volume) => options.audio.setEffectsVolume(volume),
         playMusic: (source, loop) => options.audio.playMusic(source, loop),
+        playMusicSequence: (sources) => options.audio.playMusicSequence(sources),
         stopMusic: () => options.audio.stopMusic(),
         playEffect: (source) => options.audio.playEffect(source),
       },

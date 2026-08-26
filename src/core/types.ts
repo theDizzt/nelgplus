@@ -24,6 +24,7 @@ export interface LevelContext {
     setMusicVolume: (volume: number) => void;
     setEffectsVolume: (volume: number) => void;
     playMusic: (source: string, loop?: boolean) => Promise<void>;
+    playMusicSequence: (sources: readonly string[]) => Promise<void>;
     stopMusic: () => void;
     playEffect: (source: string) => void;
   };

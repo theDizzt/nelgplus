@@ -15,6 +15,7 @@ function normalizeVolume(value: number): number {
 
 export class AudioManager {
   private currentMusic?: HTMLAudioElement;
+  private musicPlaybackId = 0;
   private readonly effectPools = new Map<string, HTMLAudioElement[]>();
   private readonly effectPoolCursor = new Map<string, number>();
   private musicAllowed = true;
@@ -86,6 +87,8 @@ export class AudioManager {
   async playMusic(source: string, loop = true): Promise<void> {
     this.stopMusic();
     if (!this.musicAllowed) return;
+    const playbackId = this.musicPlaybackId + 1;
+    this.musicPlaybackId = playbackId;
     const audio = new Audio(resolveAudioSource(source));
     audio.loop = loop;
     audio.preload = "auto";
@@ -99,7 +102,32 @@ export class AudioManager {
     }
   }
 
+  async playMusicSequence(sources: readonly string[]): Promise<void> {
+    this.stopMusic();
+    if (!this.musicAllowed || sources.length === 0) return;
+    const playlist = sources.map(resolveAudioSource);
+    const playbackId = this.musicPlaybackId + 1;
+    this.musicPlaybackId = playbackId;
+    let index = 0;
+
+    const playNext = () => {
+      if (!this.musicAllowed || playbackId !== this.musicPlaybackId) return;
+      const audio = new Audio(playlist[index % playlist.length]);
+      index += 1;
+      audio.loop = false;
+      audio.preload = "auto";
+      audio.volume = this.musicVolumePercent / 100;
+      this.currentMusic = audio;
+      audio.addEventListener("ended", playNext, { once: true });
+      audio.addEventListener("error", playNext, { once: true });
+      void audio.play().catch(() => undefined);
+    };
+
+    playNext();
+  }
+
   stopMusic(): void {
+    this.musicPlaybackId += 1;
     if (!this.currentMusic) return;
     this.currentMusic.pause();
     this.currentMusic.currentTime = 0;

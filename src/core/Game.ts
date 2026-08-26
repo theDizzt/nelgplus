@@ -175,6 +175,7 @@ const PRELOAD_IMAGES = [
   "/assets/images/level39fake83.png",
   "/assets/images/level39fake99.png",
   "/assets/images/level39fake666.png",
+  "/assets/images/level40bg1.png",
 ].map(assetUrl);
 const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack, SOUND_EFFECTS.break] as const;
 const MINIMUM_PRELOADER_TIME = 700;
@@ -1027,6 +1028,8 @@ export class Game {
          <section class="credits-section">
            <h2>MUSIC USED</h2>
            <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly</strong></article>
+           <article class="credits-track"><span>LEVEL 39</span><strong>Final Doom — M05: More</strong></article>
+           <article class="credits-track"><span>LEVEL 39</span><strong>Animal Company Soundtrack — Old Map Music | The End | ERROR</strong></article>
          </section>
        </div>`,
     );

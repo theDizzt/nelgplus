@@ -1,0 +1,169 @@
+.level-40 {
+  isolation: isolate;
+  overflow: hidden;
+  color: #000;
+  background: #ddd;
+  cursor: default;
+}
+
+.level-40::before,
+.level-40::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.level-40::before {
+  z-index: -2;
+  background: var(--level-40-bg) center / cover no-repeat;
+}
+
+.level-40::after {
+  z-index: -1;
+  background: rgb(255 255 255 / 50%);
+}
+
+.level-40__heading {
+  z-index: 3;
+  top: 48px;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-40 .level-40__title {
+  color: #000;
+  font-size: 116px;
+  line-height: 0.82;
+  text-shadow: none;
+}
+
+.level-40 .level-40__subtitle {
+  margin-top: 5px;
+  color: #000;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.level-40__copy {
+  position: absolute;
+  z-index: 2;
+  top: 184px;
+  left: 20px;
+  width: 735px;
+  color: #000;
+}
+
+.level-40__copy h2 {
+  margin: 0 0 20px;
+  font: 700 41px/1 "NELG Courier", Courier, monospace;
+  letter-spacing: 0;
+}
+
+.level-40__copy p {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 0;
+  font: 400 40px/1 "NELG Comic Sans", "Comic Sans MS", cursive;
+  letter-spacing: 0;
+}
+
+.level-40__copy span {
+  display: block;
+  min-height: 40px;
+}
+
+.level-40__copy em {
+  color: #f00;
+  font-style: normal;
+}
+
+.level-40[data-scene="1"] .level-40__copy p,
+.level-40[data-scene="2"] .level-40__copy p,
+.level-40[data-scene="3"] .level-40__copy p {
+  gap: 11px;
+  font-size: 34px;
+}
+
+.level-40[data-scene="1"] .level-40__copy span,
+.level-40[data-scene="2"] .level-40__copy span,
+.level-40[data-scene="3"] .level-40__copy span {
+  min-height: 34px;
+}
+
+.level-40__next {
+  position: absolute;
+  z-index: 4;
+  right: 10px;
+  bottom: 8px;
+  width: 86px;
+  height: 78px;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.level-40__next::before,
+.level-40__next::after {
+  position: absolute;
+  content: "";
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  pointer-events: none;
+}
+
+.level-40__next::before {
+  inset: 0;
+  background: #050505;
+}
+
+.level-40__next::after {
+  inset: 5px 7px 5px 9px;
+  background: radial-gradient(circle at 43% 50%, #00ff25 0 20%, #04b515 48%, #035d0c 72%, #022d05 100%);
+}
+
+.level-40__next:hover:not(:disabled),
+.level-40__next:focus-visible:not(:disabled) {
+  outline: none;
+}
+
+.level-40__next:hover:not(:disabled)::after,
+.level-40__next:focus-visible:not(:disabled)::after {
+  filter: brightness(1.12);
+}
+
+.level-40__next:active:not(:disabled)::after {
+  background: radial-gradient(circle at 43% 50%, #ccffcc 0 14%, #00e91f 38%, #02750c 72%, #011d03 100%);
+}
+
+.level-40__warning {
+  position: absolute;
+  z-index: 5;
+  top: 262px;
+  left: 0;
+  display: none;
+  width: 100%;
+  margin: 0;
+  color: #f00;
+  text-align: center;
+  text-shadow: 3px 3px 0 #000;
+  font: 700 78px/1 "NELG Courier", Courier, monospace;
+  pointer-events: none;
+}
+
+.level-40.is-too-fast {
+  animation: level-40-fail 80ms steps(2) 6;
+}
+
+.level-40.is-too-fast .level-40__warning {
+  display: block;
+}
+
+@keyframes level-40-fail {
+  0%, 100% { filter: none; }
+  50% { filter: invert(1) contrast(2); }
+}
