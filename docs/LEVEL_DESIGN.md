@@ -19,6 +19,14 @@ Every level must define at least the following:
 
 The logical game resolution is 800×600. Place elements in CSS pixel coordinates, but always convert browser pointer coordinates using `getBoundingClientRect()` and the logical-screen scale. Context menus, draggable elements, and invisible coordinate buttons must use the shared coordinate utility. Puzzles that use off-screen space must define their playable bounds separately from the visible viewport.
 
+## Level Heading Standard
+
+Every level title and subtitle must use the same position and text size as Level 1. Use the shared `.level-heading`, `.level-heading__number`, and `.level-heading h1` styles: the heading begins at `top: 32px`, the level title is `116px` with `0.9` line height, and the subtitle is `30px` with a `6px` top margin and `1` line height. Level-specific styles may change colors, fonts, effects, or content when required, but must not override these heading coordinates, font sizes, margins, or line heights.
+
+## Language and Copy
+
+Use English for all player-facing game content unless a level specification or explicit request requires another language. This rule applies to visible text, hidden clues, background code, error messages, labels, buttons, and accessibility text. Do not introduce non-English game copy merely for decoration or atmosphere without an explicit requirement.
+
 ## Input and Passwords
 
 - Passwords are case-sensitive and preserve leading and trailing whitespace unless a level explicitly says otherwise.

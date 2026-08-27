@@ -64,7 +64,10 @@ export class AudioManager {
 
   setMusicEnabled(enabled: boolean): void {
     this.musicAllowed = enabled;
-    if (!enabled) this.stopMusic();
+    if (this.currentMusic) {
+      if (enabled) void this.currentMusic.play().catch(() => undefined);
+      else this.currentMusic.pause();
+    }
     this.saveSettings();
   }
 
@@ -86,7 +89,6 @@ export class AudioManager {
 
   async playMusic(source: string, loop = true): Promise<void> {
     this.stopMusic();
-    if (!this.musicAllowed) return;
     const playbackId = this.musicPlaybackId + 1;
     this.musicPlaybackId = playbackId;
     const audio = new Audio(resolveAudioSource(source));
@@ -94,6 +96,8 @@ export class AudioManager {
     audio.preload = "auto";
     audio.volume = this.musicVolumePercent / 100;
     this.currentMusic = audio;
+
+    if (!this.musicAllowed) return;
 
     try {
       await audio.play();
@@ -104,14 +108,14 @@ export class AudioManager {
 
   async playMusicSequence(sources: readonly string[]): Promise<void> {
     this.stopMusic();
-    if (!this.musicAllowed || sources.length === 0) return;
+    if (sources.length === 0) return;
     const playlist = sources.map(resolveAudioSource);
     const playbackId = this.musicPlaybackId + 1;
     this.musicPlaybackId = playbackId;
     let index = 0;
 
     const playNext = () => {
-      if (!this.musicAllowed || playbackId !== this.musicPlaybackId) return;
+      if (playbackId !== this.musicPlaybackId) return;
       const audio = new Audio(playlist[index % playlist.length]);
       index += 1;
       audio.loop = false;
@@ -120,7 +124,7 @@ export class AudioManager {
       this.currentMusic = audio;
       audio.addEventListener("ended", playNext, { once: true });
       audio.addEventListener("error", playNext, { once: true });
-      void audio.play().catch(() => undefined);
+      if (this.musicAllowed) void audio.play().catch(() => undefined);
     };
 
     playNext();

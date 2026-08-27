@@ -65,7 +65,7 @@
 }
 
 .level-39 .level-39__title {
-  font-size: 100px;
+  font-size: 116px;
   line-height: 0.9;
   animation: level-39-title-rattle 118ms steps(2, jump-none) infinite;
 }
@@ -156,6 +156,10 @@
   font: 700 13px/1.7 "NELG Courier", Courier, monospace;
   text-shadow: none;
   animation: level-39-code-tear 360ms steps(3) infinite;
+}
+
+.level-39__rupture code {
+  font: inherit;
 }
 
 .level-39__rupture span { color: #9ff; }
@@ -666,8 +670,40 @@
   background: radial-gradient(circle at 50% 53%, #000 0 12%, var(--fake-44-accent) 100%);
 }
 
+.level-39__fake-44-entry {
+  position: absolute;
+  z-index: 0;
+  inset: 155px 0 auto;
+  height: 230px;
+  overflow: hidden;
+  color: rgb(255 255 255 / 36%);
+  text-align: center;
+  font: 900 190px/1.1 "NELG Arial", Arial, sans-serif;
+  letter-spacing: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.level-39__fake-44-result {
+  position: absolute;
+  z-index: 3;
+  top: 475px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  text-shadow: 3px 3px 0 #000;
+  font: 900 58px/1 "NELG Courier", Courier, monospace;
+  pointer-events: none;
+}
+
+.level-39__fake-level--44.is-correct .level-39__fake-44-result { color: #7fff00; }
+.level-39__fake-level--44.is-wrong .level-39__fake-44-result { color: #fff200; }
+
 .level-39__fake-44-diamonds {
   position: absolute;
+  z-index: 2;
   top: 215px;
   left: 143px;
   display: grid;
@@ -1610,7 +1646,38 @@
   translate: none;
   opacity: 1;
   animation: none;
+  overflow: hidden;
 }
+
+.level-39__fake-81-crack {
+  position: absolute;
+  z-index: 2;
+  width: 132px;
+  height: 132px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--crack-angle)) scale(var(--crack-scale));
+  background:
+    linear-gradient(88deg, transparent 48%, #120000 49% 51%, transparent 52%) center / 100% 100% no-repeat,
+    linear-gradient(28deg, transparent 48%, #210000 49% 51%, transparent 52%) center / 82% 82% no-repeat,
+    linear-gradient(148deg, transparent 48%, #080000 49% 51%, transparent 52%) center / 68% 68% no-repeat;
+  filter: drop-shadow(1px 1px 0 rgb(255 120 90 / 34%));
+  opacity: 0.88;
+}
+
+.level-39__fake-81-crack::before,
+.level-39__fake-81-crack::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 74px;
+  height: 2px;
+  content: "";
+  background: #180000;
+  transform-origin: left center;
+}
+
+.level-39__fake-81-crack::before { transform: rotate(67deg); }
+.level-39__fake-81-crack::after { transform: rotate(203deg); }
 
 .level-39__fake-level--81.is-shattering {
   background: #fff;

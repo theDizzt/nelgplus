@@ -24,6 +24,18 @@
   background: rgb(255 255 255 / 50%);
 }
 
+.level-40[data-scene="7"]::after {
+  display: none;
+}
+
+.level-40[data-scene="8"]::before {
+  background: #fff;
+}
+
+.level-40[data-scene="8"]::after {
+  display: none;
+}
+
 .level-40__heading {
   z-index: 3;
   top: 48px;
@@ -155,6 +167,245 @@
   pointer-events: none;
 }
 
+.level-40__drag-puzzle {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+}
+
+.level-40__diamond {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  rotate: 45deg;
+}
+
+.level-40__diamond::before,
+.level-40__diamond::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.level-40__diamond::before {
+  inset: 0;
+  background: #050505;
+}
+
+.level-40__diamond::after {
+  inset: 5px;
+  background: radial-gradient(circle at 50% 50%, #19ff2d 0 18%, #03b515 52%, #025b09 100%);
+}
+
+.level-40__diamond:hover:not(:disabled)::after,
+.level-40__diamond:focus-visible:not(:disabled)::after {
+  filter: brightness(1.12);
+}
+
+.level-40__diamond:focus-visible {
+  outline: none;
+}
+
+.level-40__diamond--center {
+  top: 326px;
+  left: 400px;
+  translate: -50% -50%;
+}
+
+.level-40__diamond--return {
+  z-index: 5;
+  top: 32px;
+  left: 38px;
+}
+
+.level-40__diamond--maze-exit {
+  z-index: 8;
+  bottom: 28px;
+  left: 44px;
+}
+
+.level-40__diamond--moving {
+  z-index: 6;
+  top: 92px;
+  left: -96px;
+  animation: level-40-moving-diamond 8s linear forwards;
+}
+
+.level-40__moving-password {
+  position: absolute;
+  z-index: 5;
+  top: 220px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  text-shadow: 2px 2px 0 #fff;
+  font: 700 43px/1.1 "NELG Courier", Courier, monospace;
+  pointer-events: none;
+}
+
+.level-40__moving-password strong {
+  color: #f00;
+  font-weight: 700;
+}
+
+.level-40__moving-password[hidden] {
+  display: none;
+}
+
+.level-40__maze,
+.level-40__maze-walls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+}
+
+.level-40__maze-walls {
+  pointer-events: none;
+}
+
+.level-40__maze-wall,
+.level-40__maze-obstacle {
+  position: absolute;
+  display: block;
+}
+
+.level-40__maze-wall {
+  background: rgb(128 128 128 / 31%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+.level-40__maze-obstacle {
+  background: radial-gradient(circle at 50% 50%, #ff1010 0 12%, #c90000 48%, #510000 100%);
+  border: 4px solid #080808;
+}
+
+.level-40__blocker {
+  position: absolute;
+  z-index: calc(20 + var(--blocker-index));
+  top: calc(305px + var(--blocker-index) * -1px);
+  left: calc(379px + var(--blocker-index) * -1px);
+  width: 250px;
+  height: 250px;
+  cursor: grab;
+  translate: -50% -50%;
+  touch-action: none;
+}
+
+.level-40__blocker.is-dragging {
+  z-index: 80;
+  cursor: grabbing;
+}
+
+.level-40__blocker span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, #f4fbff 0 8%, #73cdf6 30%, #1aa5ed 72%, #0b8bd5 100%);
+  border: 7px solid #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 9%);
+  pointer-events: none;
+}
+
+.level-40__speedometer {
+  position: absolute;
+  z-index: 7;
+  right: 12px;
+  bottom: 9px;
+  left: 12px;
+  display: flex;
+  justify-content: space-between;
+  width: auto;
+  color: #000;
+  font: 700 28px/1 "NELG Courier", Courier, monospace;
+  pointer-events: none;
+}
+
+.level-40__speedometer span {
+  white-space: nowrap;
+}
+
+.level-40__speedometer output {
+  display: inline-block;
+  min-width: 46px;
+  margin-left: 3px;
+  font-weight: 400;
+}
+
+.level-40__crash-message {
+  position: absolute;
+  z-index: 4;
+  right: 13px;
+  bottom: 45px;
+  width: 610px;
+  margin: 0;
+  color: #f00;
+  text-align: right;
+  font: 700 72px/1.32 "NELG Perpetua", Perpetua, Georgia, serif;
+  pointer-events: none;
+}
+
+.level-40__wall-message {
+  position: absolute;
+  z-index: 4;
+  right: 48px;
+  bottom: 42px;
+  margin: 0;
+  color: #f00;
+  font: 700 39px/1.1 "NELG Perpetua", Perpetua, Georgia, serif;
+  pointer-events: none;
+}
+
+.level-40__password-form {
+  position: absolute;
+  z-index: 5;
+  bottom: 18px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.level-40__password-form input {
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  outline: none;
+  font: 25px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-40__password-form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font: 25px/1 "NELG Arial", Arial, sans-serif;
+}
+
+.level-40__password-form button:hover,
+.level-40__password-form button:focus-visible {
+  background: #f01818;
+  outline: none;
+}
+
+.level-40__password-form.is-wrong {
+  animation: level-40-wrong 90ms linear 4;
+}
+
 .level-40.is-too-fast {
   animation: level-40-fail 80ms steps(2) 6;
 }
@@ -166,4 +417,15 @@
 @keyframes level-40-fail {
   0%, 100% { filter: none; }
   50% { filter: invert(1) contrast(2); }
+}
+
+@keyframes level-40-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+
+@keyframes level-40-moving-diamond {
+  from { translate: 0 0; }
+  to { translate: 992px 0; }
 }

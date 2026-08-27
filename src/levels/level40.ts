@@ -1,14 +1,53 @@
 import { SOUND_EFFECTS, assetUrl } from "../core/assets";
+import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { clientPointToLocal, type LocalPoint } from "../core/floatingPosition";
 import type { LevelDefinition } from "../core/types";
 
-const MAX_POINTER_SPEED = 40;
+const DISPLAY_SPEED_LIMIT = 40;
+const SPEEDOMETER_DIVISOR = 30;
+const MAX_POINTER_SPEED = DISPLAY_SPEED_LIMIT * SPEEDOMETER_DIVISOR;
+const BLOCKER_COUNT = 10;
+const SCENE_SEVEN_PASSWORD = "sluggish";
 
 interface Level40Scene {
   readonly title: string;
   readonly body: readonly string[];
   readonly emphasis?: string;
 }
+
+interface MazeRect {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+const MAZE_WALLS: readonly MazeRect[] = [
+  { x: 48, y: 92, width: 186, height: 28 },
+  { x: 280, y: 105, width: 292, height: 28 },
+  { x: 620, y: 82, width: 142, height: 28 },
+  { x: 166, y: 150, width: 28, height: 210 },
+  { x: 310, y: 152, width: 28, height: 158 },
+  { x: 490, y: 132, width: 28, height: 166 },
+  { x: 630, y: 170, width: 28, height: 198 },
+  { x: 96, y: 320, width: 98, height: 28 },
+  { x: 240, y: 278, width: 250, height: 28 },
+  { x: 518, y: 340, width: 210, height: 28 },
+  { x: 340, y: 410, width: 220, height: 28 },
+  { x: 180, y: 470, width: 160, height: 28 },
+  { x: 470, y: 500, width: 232, height: 28 },
+] as const;
+
+const MAZE_OBSTACLES: readonly MazeRect[] = [
+  { x: 118, y: 66, width: 82, height: 82 },
+  { x: 348, y: 182, width: 84, height: 84 },
+  { x: 668, y: 216, width: 84, height: 84 },
+  { x: 138, y: 382, width: 82, height: 82 },
+  { x: 216, y: 396, width: 82, height: 82 },
+  { x: 566, y: 382, width: 82, height: 82 },
+] as const;
+
+const MAZE_HAZARDS = [...MAZE_WALLS, ...MAZE_OBSTACLES] as const;
 
 const SCENES: readonly Level40Scene[] = [
   {
@@ -92,51 +131,174 @@ function renderBody(scene: (typeof SCENES)[number]): string {
   return scene.emphasis ? `${lines}<span><em>${scene.emphasis}</em></span>` : lines;
 }
 
+function renderSpeedometer(): string {
+  return `
+    <aside class="level-40__speedometer" aria-live="polite">
+      <span>Speed:<output data-speed>0</output> ups</span>
+      <span>Max:<output data-max-speed>0</output> ups</span>
+    </aside>`;
+}
+
+function renderDiamondButton(className: string, label: string): string {
+  return `<button class="${className}" type="button" aria-label="${label}"></button>`;
+}
+
+function renderBlockers(): string {
+  return Array.from({ length: BLOCKER_COUNT }, (_, index) => `
+    <div class="level-40__blocker level-40__blocker--${index + 1}" data-blocker style="--blocker-index:${index}">
+      <span></span>
+    </div>`).join("");
+}
+
+function renderMaze(): string {
+  const renderRect = (rect: MazeRect, className: string) =>
+    `<i class="${className}" style="left:${rect.x}px;top:${rect.y}px;width:${rect.width}px;height:${rect.height}px"></i>`;
+  return `
+    <section class="level-40__maze" aria-label="Move through the maze without touching a wall">
+      <div class="level-40__maze-walls" aria-hidden="true">
+        ${MAZE_WALLS.map((wall) => renderRect(wall, "level-40__maze-wall")).join("")}
+        ${MAZE_OBSTACLES.map((obstacle) => renderRect(obstacle, "level-40__maze-obstacle")).join("")}
+      </div>
+      ${renderDiamondButton("level-40__diamond level-40__diamond--maze-exit", "Continue to Scene 6")}
+    </section>`;
+}
+
+function pointInsideRect(point: LocalPoint, rect: MazeRect): boolean {
+  return point.x >= rect.x && point.x <= rect.x + rect.width
+    && point.y >= rect.y && point.y <= rect.y + rect.height;
+}
+
+function movementHitsMaze(start: LocalPoint, end: LocalPoint): boolean {
+  const distance = Math.hypot(end.x - start.x, end.y - start.y);
+  const steps = Math.max(1, Math.ceil(distance / 4));
+  for (let step = 0; step <= steps; step += 1) {
+    const ratio = step / steps;
+    const point = {
+      x: start.x + (end.x - start.x) * ratio,
+      y: start.y + (end.y - start.y) * ratio,
+    };
+    if (MAZE_HAZARDS.some((hazard) => pointInsideRect(point, hazard))) return true;
+  }
+  return false;
+}
+
+function elementsOverlap(first: Element, second: Element): boolean {
+  const firstRect = first.getBoundingClientRect();
+  const secondRect = second.getBoundingClientRect();
+  return firstRect.left < secondRect.right
+    && firstRect.right > secondRect.left
+    && firstRect.top < secondRect.bottom
+    && firstRect.bottom > secondRect.top;
+}
+
 export const level40: LevelDefinition = {
   number: 40,
   title: "Limitation",
   scenes: SCENES.map((_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
-  mount({ screen, listen, audio, complete, restart, initialScene }) {
+  mount({ screen, listen, audio, complete, initialScene }) {
     let sceneIndex = Math.max(0, Math.min(SCENES.length - 1, Number(initialScene ?? "1") - 1));
     let previousPointer: { readonly point: LocalPoint; readonly time: number } | undefined;
-    let failed = false;
+    let maximumDisplaySpeed = 0;
+    let sluggishPasswordRevealed = false;
+    let activeDrag:
+      | {
+          readonly element: HTMLElement;
+          readonly pointerId: number;
+          readonly pointerX: number;
+          readonly pointerY: number;
+          readonly elementX: number;
+          readonly elementY: number;
+        }
+      | undefined;
+    let passwordInput: ReturnType<typeof attachStarMaskedInput> | undefined;
 
     const renderScene = () => {
       const scene = SCENES[sceneIndex];
       if (!scene) return;
       screen.className = "level-screen level-40";
       screen.dataset.scene = String(sceneIndex + 1);
-      screen.style.setProperty("--level-40-bg", `url("${assetUrl("images/level40bg1.png")}")`);
+      screen.style.setProperty(
+        "--level-40-bg",
+        sceneIndex === 7
+          ? "none"
+          : `url("${assetUrl(sceneIndex === 6 ? "images/level40bg2.jpg" : "images/level40bg1.png")}")`,
+      );
+      activeDrag = undefined;
+      passwordInput = undefined;
       screen.innerHTML = `
         <header class="level-heading level-40__heading" aria-label="Level 40, Limitation">
           <div class="level-heading__number level-40__title">Level 40</div>
           <h1 class="level-40__subtitle">Limitation</h1>
         </header>
 
-        <article class="level-40__copy" aria-live="polite">
-          <h2>${scene.title}</h2>
-          <p>${renderBody(scene)}</p>
-        </article>
-
-        <button class="level-40__next" type="button" aria-label="Continue to the next screen"></button>
-        <p class="level-40__warning" role="alert">TOO FAST</p>
+        ${sceneIndex < 3 ? `
+          <article class="level-40__copy" aria-live="polite">
+            <h2>${scene.title}</h2>
+            <p>${renderBody(scene)}</p>
+          </article>
+          <button class="level-40__next" type="button" aria-label="Continue to the next screen"></button>
+        ` : ""}
+        ${sceneIndex === 3 ? `
+          <section class="level-40__drag-puzzle" aria-label="Move every blocker away from the green button">
+            ${renderDiamondButton("level-40__diamond level-40__diamond--center", "Continue")}
+            ${renderBlockers()}
+          </section>
+          ${renderSpeedometer()}
+        ` : ""}
+        ${sceneIndex === 4 ? `
+          ${renderMaze()}
+          ${renderSpeedometer()}
+        ` : ""}
+        ${sceneIndex === 5 ? `
+          ${sluggishPasswordRevealed
+            ? ""
+            : renderDiamondButton("level-40__diamond level-40__diamond--moving", "Catch the moving button")}
+          <p class="level-40__moving-password" data-moving-password ${sluggishPasswordRevealed ? "" : "hidden"}>
+            Password = <strong>sluggish</strong>
+          </p>
+          ${renderSpeedometer()}
+        ` : ""}
+        ${sceneIndex === 6 ? `
+          ${renderDiamondButton("level-40__diamond level-40__diamond--return", "Return to Scene 4")}
+          <p class="level-40__crash-message">Don't move<br />more than<br />40 units per second.</p>
+          <form class="level-40__password-form" autocomplete="off">
+            <input class="nelg-password-input" id="level-40-answer" name="nelg-level-forty-answer"
+              data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
+              maxlength="16" autocomplete="off" autocapitalize="off" aria-autocomplete="none" spellcheck="false"
+              aria-label="Password" />
+            <button type="submit">GO</button>
+          </form>
+        ` : ""}
+        ${sceneIndex === 7 ? `
+          ${renderDiamondButton("level-40__diamond level-40__diamond--return", "Return to Scene 4")}
+          <p class="level-40__wall-message">You got pinned against the damn wall.</p>
+        ` : ""}
       `;
       previousPointer = undefined;
+      maximumDisplaySpeed = 0;
+      if (sceneIndex === 6) {
+        const input = screen.querySelector<HTMLInputElement>("#level-40-answer");
+        if (input) passwordInput = attachStarMaskedInput(input, listen);
+      }
     };
 
-    const fail = () => {
-      if (failed) return;
-      failed = true;
-      screen.classList.add("is-too-fast");
-      audio.playEffect(SOUND_EFFECTS.break);
-      window.setTimeout(() => restart(), 520);
+    const goToScene = (nextSceneIndex: number) => {
+      sceneIndex = Math.max(0, Math.min(SCENES.length - 1, nextSceneIndex));
+      renderScene();
+    };
+
+    const updateSpeedometer = (displaySpeed: number) => {
+      maximumDisplaySpeed = Math.max(maximumDisplaySpeed, displaySpeed);
+      const speedOutput = screen.querySelector<HTMLOutputElement>("[data-speed]");
+      const maxSpeedOutput = screen.querySelector<HTMLOutputElement>("[data-max-speed]");
+      if (speedOutput) speedOutput.value = String(Math.round(displaySpeed));
+      if (maxSpeedOutput) maxSpeedOutput.value = String(Math.round(maximumDisplaySpeed));
     };
 
     renderScene();
 
     listen(screen, "pointermove", (event) => {
-      if (failed) return;
-      if (sceneIndex < 3) {
+      if (sceneIndex < 3 || sceneIndex >= 6) {
         previousPointer = undefined;
         return;
       }
@@ -145,29 +307,144 @@ export const level40: LevelDefinition = {
       if (previousPointer) {
         const deltaSeconds = Math.max((time - previousPointer.time) / 1000, 0.001);
         const distance = Math.hypot(point.x - previousPointer.point.x, point.y - previousPointer.point.y);
-        if (distance / deltaSeconds > MAX_POINTER_SPEED) {
-          fail();
+        const rawSpeed = distance / deltaSeconds;
+        const displaySpeed = rawSpeed / SPEEDOMETER_DIVISOR;
+        updateSpeedometer(displaySpeed);
+        if (displaySpeed > DISPLAY_SPEED_LIMIT || rawSpeed > MAX_POINTER_SPEED) {
+          audio.playEffect(SOUND_EFFECTS.smack);
+          goToScene(6);
           return;
         }
+        if (sceneIndex === 4 && movementHitsMaze(previousPointer.point, point)) {
+          audio.playEffect(SOUND_EFFECTS.break);
+          goToScene(7);
+          return;
+        }
+      } else if (sceneIndex === 4 && MAZE_HAZARDS.some((hazard) => pointInsideRect(point, hazard))) {
+        audio.playEffect(SOUND_EFFECTS.break);
+        goToScene(7);
+        return;
+      }
+      if (activeDrag && activeDrag.pointerId === event.pointerId) {
+        const x = activeDrag.elementX + point.x - activeDrag.pointerX;
+        const y = activeDrag.elementY + point.y - activeDrag.pointerY;
+        activeDrag.element.style.left = `${Math.max(-40, Math.min(730, x))}px`;
+        activeDrag.element.style.top = `${Math.max(130, Math.min(530, y))}px`;
+        event.preventDefault();
       }
       previousPointer = { point, time };
     });
 
-    listen(screen, "pointerleave", () => {
-      previousPointer = undefined;
+    listen(screen, "pointerdown", (event) => {
+      const blocker = (event.target as Element).closest<HTMLElement>("[data-blocker]");
+      if (!blocker || (sceneIndex !== 3 && sceneIndex !== 5)) return;
+      const point = clientPointToLocal(screen, event.clientX, event.clientY);
+      activeDrag = {
+        element: blocker,
+        pointerId: event.pointerId,
+        pointerX: point.x,
+        pointerY: point.y,
+        elementX: blocker.offsetLeft,
+        elementY: blocker.offsetTop,
+      };
+      blocker.setPointerCapture(event.pointerId);
+      blocker.classList.add("is-dragging");
+      event.preventDefault();
     });
 
-    listen(screen, "click", (event) => {
-      const button = (event.target as Element).closest<HTMLButtonElement>(".level-40__next");
-      if (!button || failed) return;
-      audio.playEffect(SOUND_EFFECTS.smack);
-      button.disabled = true;
-      if (sceneIndex >= SCENES.length - 1) {
+    const finishDrag = (event: PointerEvent) => {
+      if (!activeDrag || activeDrag.pointerId !== event.pointerId) return;
+      if (activeDrag.element.hasPointerCapture(event.pointerId)) activeDrag.element.releasePointerCapture(event.pointerId);
+      activeDrag.element.classList.remove("is-dragging");
+      activeDrag = undefined;
+    };
+
+    listen(screen, "pointerup", finishDrag);
+    listen(screen, "pointercancel", finishDrag);
+
+    listen(screen, "submit", (event) => {
+      const form = event.target instanceof HTMLFormElement ? event.target : undefined;
+      if (!form?.matches(".level-40__password-form")) return;
+      event.preventDefault();
+      if (passwordInput?.getValue().toLowerCase() === SCENE_SEVEN_PASSWORD) {
         complete();
         return;
       }
-      sceneIndex += 1;
-      renderScene();
+      form.classList.remove("is-wrong");
+      void form.offsetWidth;
+      form.classList.add("is-wrong");
+      passwordInput?.clear();
+      form.querySelector<HTMLInputElement>("input")?.focus();
+    });
+
+    listen(screen, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat || sceneIndex !== 6) return;
+      const input = event.target instanceof HTMLInputElement ? event.target : undefined;
+      if (!input?.matches("#level-40-answer")) return;
+      event.preventDefault();
+      input.closest<HTMLFormElement>("form")?.requestSubmit();
+    });
+
+    listen(screen, "animationend", (event) => {
+      const form = event.target instanceof HTMLElement ? event.target.closest(".level-40__password-form") : undefined;
+      form?.classList.remove("is-wrong");
+    });
+
+    listen(screen, "click", (event) => {
+      const target = event.target as Element;
+      const sceneButton = target.closest<HTMLButtonElement>(".level-40__next");
+      const centerButton = target.closest<HTMLButtonElement>(".level-40__diamond--center");
+      const mazeButton = target.closest<HTMLButtonElement>(".level-40__diamond--maze-exit");
+      const movingButton = target.closest<HTMLButtonElement>(".level-40__diamond--moving");
+      const returnButton = target.closest<HTMLButtonElement>(".level-40__diamond--return");
+      const submitButton = target.closest<HTMLButtonElement>(".level-40__password-form button");
+
+      if (sceneButton || centerButton || mazeButton || movingButton || returnButton || submitButton) {
+        audio.playEffect(SOUND_EFFECTS.smack);
+      }
+
+      if (sceneButton) {
+        sceneButton.disabled = true;
+        if (sceneIndex >= SCENES.length - 1) {
+          complete();
+          return;
+        }
+        goToScene(sceneIndex + 1);
+        return;
+      }
+
+      if (centerButton) {
+        const blocked = Array.from(screen.querySelectorAll<HTMLElement>("[data-blocker]"))
+          .some((blocker) => elementsOverlap(centerButton, blocker));
+        if (blocked) return;
+        centerButton.disabled = true;
+        if (sceneIndex >= 5) complete();
+        else goToScene(sceneIndex + 1);
+        return;
+      }
+
+      if (mazeButton) {
+        mazeButton.disabled = true;
+        goToScene(5);
+        return;
+      }
+
+      if (movingButton && !sluggishPasswordRevealed) {
+        sluggishPasswordRevealed = true;
+        movingButton.disabled = true;
+        movingButton.remove();
+        screen.querySelector<HTMLElement>("[data-moving-password]")?.removeAttribute("hidden");
+        return;
+      }
+
+      if (returnButton) {
+        returnButton.disabled = true;
+        goToScene(3);
+      }
+    });
+
+    listen(screen, "pointerleave", () => {
+      previousPointer = undefined;
     });
   },
 };

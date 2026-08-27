@@ -176,6 +176,7 @@ const PRELOAD_IMAGES = [
   "/assets/images/level39fake99.png",
   "/assets/images/level39fake666.png",
   "/assets/images/level40bg1.png",
+  "/assets/images/level40bg2.jpg",
 ].map(assetUrl);
 const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack, SOUND_EFFECTS.break] as const;
 const MINIMUM_PRELOADER_TIME = 700;

@@ -121,13 +121,15 @@ function launchFakeLevelWorld(
 
   const world = stage.querySelector<HTMLElement>(".level-39__fake-world");
   if (!world) return;
+  void audio.playMusicSequence(["music/level39a.mp3", "music/level39b.mp3"]);
 
   let worldX = 200;
   let worldY = 150;
   const spawnedFakeLevels = new Set<number>();
   const fakeAnswers = new Map<string, ReturnType<typeof attachStarMaskedInput>>();
   const completedFake47Fields = new Set<string>();
-  let fake44SequenceIndex = 0;
+  let fake44Sequence: string[] = [];
+  let fake44Locked = false;
   let fake49HintRevealed = false;
   let fake51Waiting = false;
   let fake51Timer: number | undefined;
@@ -260,7 +262,10 @@ function launchFakeLevelWorld(
           ["emerald", "#50c878"], ["daisy", "#fff200"], ["blue", "#0000ff"],
           ["navy", "#000080"], ["violet", "#8f00ff"], ["ivory", "#fffff0"],
         ] as const;
-        return `<div class="level-39__fake-44-diamonds">${colors.map(([name, color]) => `
+        return `
+        <div class="level-39__fake-44-entry" data-fake-44-entry aria-live="polite" aria-label="0 of 6 colors entered"></div>
+        <p class="level-39__fake-44-result" data-fake-44-result aria-live="assertive"></p>
+        <div class="level-39__fake-44-diamonds">${colors.map(([name, color]) => `
           <button type="button" data-fake-44-color="${name}" data-fake-44-value="${color}"
             style="--diamond-color:${color}" aria-label="${name} diamond"></button>`).join("")}
         </div>`;
@@ -1258,6 +1263,17 @@ function launchFakeLevelWorld(
     if (fake81Surface && !fake81Surface.disabled) {
       fake81Clicks += 1;
       fake81Surface.setAttribute("aria-label", `Extremely worn surface, ${fake81Clicks} of 132 hits`);
+      if (event instanceof MouseEvent) {
+        const point = clientPointToLocal(fake81Surface, event.clientX, event.clientY);
+        const crack = document.createElement("span");
+        crack.className = "level-39__fake-81-crack";
+        crack.setAttribute("aria-hidden", "true");
+        crack.style.left = `${point.x}px`;
+        crack.style.top = `${point.y}px`;
+        crack.style.setProperty("--crack-angle", `${(fake81Clicks * 47) % 360}deg`);
+        crack.style.setProperty("--crack-scale", `${0.72 + Math.min(fake81Clicks, 90) / 150}`);
+        fake81Surface.append(crack);
+      }
       if (fake81Clicks >= 132) {
         fake81Surface.disabled = true;
         const level = fake81Surface.closest<HTMLElement>('[data-fake-level="81"]');
@@ -1321,16 +1337,50 @@ function launchFakeLevelWorld(
     }
 
     const colorButton = target?.closest<HTMLButtonElement>("button[data-fake-44-color]");
-    if (colorButton && !colorButton.disabled) {
+    if (colorButton && !colorButton.disabled && !fake44Locked) {
       audio.playEffect(SOUND_EFFECTS.smack);
       const level = colorButton.closest<HTMLElement>(".level-39__fake-level");
       const colorName = colorButton.getAttribute("data-fake-44-color") ?? "";
       const colorValue = colorButton.getAttribute("data-fake-44-value") ?? "#f00";
       level?.style.setProperty("--fake-44-accent", colorValue);
       const requiredOrder = ["hazel", "ivory", "daisy", "daisy", "emerald", "navy"];
-      if (colorName === requiredOrder[fake44SequenceIndex]) fake44SequenceIndex += 1;
-      else fake44SequenceIndex = colorName === requiredOrder[0] ? 1 : 0;
-      if (fake44SequenceIndex === requiredOrder.length && level) completeFakeLevel(44, level);
+      fake44Sequence.push(colorName);
+      const entry = level?.querySelector<HTMLElement>("[data-fake-44-entry]");
+      const result = level?.querySelector<HTMLElement>("[data-fake-44-result]");
+      if (entry) {
+        entry.textContent = "*".repeat(fake44Sequence.length);
+        entry.setAttribute("aria-label", `${fake44Sequence.length} of 6 colors entered`);
+      }
+      if (fake44Sequence.length === requiredOrder.length && level) {
+        fake44Locked = true;
+        const isCorrect = fake44Sequence.every((color, index) => color === requiredOrder[index]);
+        level.classList.toggle("is-correct", isCorrect);
+        level.classList.toggle("is-wrong", !isCorrect);
+        if (result) result.textContent = isCorrect ? "CORRECT" : "WRONG";
+        level.querySelectorAll<HTMLButtonElement>("[data-fake-44-color]").forEach((button) => {
+          button.disabled = true;
+        });
+        if (isCorrect) {
+          window.setTimeout(() => {
+            if (level.isConnected) completeFakeLevel(44, level);
+          }, 700);
+        } else {
+          window.setTimeout(() => {
+            if (!level.isConnected) return;
+            fake44Sequence = [];
+            fake44Locked = false;
+            level.classList.remove("is-wrong");
+            if (entry) {
+              entry.textContent = "";
+              entry.setAttribute("aria-label", "0 of 6 colors entered");
+            }
+            if (result) result.textContent = "";
+            level.querySelectorAll<HTMLButtonElement>("[data-fake-44-color]").forEach((button) => {
+              button.disabled = false;
+            });
+          }, 900);
+        }
+      }
       return;
     }
 
@@ -1596,6 +1646,7 @@ if (cursor.x !== cursor.y) {
 }
 screen.render(fragment[NaN]);
 while (signal) signal ^= 0x39;
+// THE MOST COMMONLY USED PASSWORD
 // DO NOT TRUST THE TITLE
 return void 0x000000;</code></pre>
       </section>
@@ -1680,5 +1731,6 @@ return void 0x000000;</code></pre>
         launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, targetLevel);
       }
     }
+    return () => audio.stopMusic();
   },
 };

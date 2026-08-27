@@ -1,0 +1,142 @@
+.level-41 {
+  overflow: hidden;
+  color: #000;
+  background: #f00;
+}
+
+.level-41__hidden-clue {
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  left: 0;
+  width: 800px;
+  margin: 0;
+  color: #ff0003;
+  text-align: center;
+  font: 400 14px/1 "NELG Comic Sans", "Comic Sans MS", cursive;
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.level-41__heading {
+  z-index: 2;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-41 .level-41__title {
+  color: #000;
+  text-shadow: none;
+}
+
+.level-41 .level-41__subtitle {
+  color: #000;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.level-41__message {
+  position: absolute;
+  z-index: 2;
+  top: 170px;
+  left: 21px;
+  width: 758px;
+  margin: 0;
+  color: #ff0;
+  text-align: left;
+  font: 700 72px/1.43 "NELG Perpetua", Perpetua, Georgia, serif;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.level-41__message span {
+  color: #ffff03;
+}
+
+.level-41__form {
+  position: absolute;
+  z-index: 3;
+  bottom: 40px;
+  left: 260px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.level-41__fake-input,
+.level-41__answer,
+.level-41__return {
+  appearance: none;
+  color: #000;
+  background: #ff0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  filter: none;
+  transform: none;
+  transition: none;
+}
+
+.level-41__fake-input {
+  width: 200px;
+  height: 50px;
+  padding: 0;
+  cursor: pointer;
+  font: 700 31px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+
+.level-41__answer {
+  width: 60px;
+  height: 50px;
+  padding: 4px 6px;
+  caret-color: #000;
+  cursor: text;
+  font: 700 27px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+  text-align: center;
+}
+
+.level-41__return {
+  position: absolute;
+  z-index: 3;
+  right: 62px;
+  bottom: 34px;
+  width: 86px;
+  height: 86px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.level-41__fake-input:hover,
+.level-41__fake-input:focus-visible,
+.level-41__fake-input:active,
+.level-41__answer:hover,
+.level-41__answer:focus,
+.level-41__answer:active,
+.level-41__return:hover,
+.level-41__return:focus-visible,
+.level-41__return:active {
+  color: #000;
+  background: #ff0;
+  border: 0;
+  box-shadow: none;
+  outline: none;
+  filter: none;
+  transform: none;
+}
+
+.level-41__fake-input:hover,
+.level-41__fake-input:focus-visible,
+.level-41__fake-input:active,
+.level-41__answer:hover,
+.level-41__answer:focus,
+.level-41__answer:active {
+  border-radius: 0;
+}
+
+.level-41__return:hover,
+.level-41__return:focus-visible,
+.level-41__return:active {
+  border-radius: 50%;
+}
