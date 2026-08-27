@@ -40,6 +40,7 @@ import { level38 } from "./level38";
 import { level39 } from "./level39";
 import { level40 } from "./level40";
 import { level41 } from "./level41";
+import { level42 } from "./level42";
 
 const levels: LevelDefinition[] = [
   level01,
@@ -83,6 +84,7 @@ const levels: LevelDefinition[] = [
   level39,
   level40,
   level41,
+  level42,
 ];
 
 const levelMap = new Map(levels.map((level) => [level.number, level]));

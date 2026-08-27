@@ -23,9 +23,17 @@ The logical game resolution is 800×600. Place elements in CSS pixel coordinates
 
 Every level title and subtitle must use the same position and text size as Level 1. Use the shared `.level-heading`, `.level-heading__number`, and `.level-heading h1` styles: the heading begins at `top: 32px`, the level title is `116px` with `0.9` line height, and the subtitle is `30px` with a `6px` top margin and `1` line height. Level-specific styles may change colors, fonts, effects, or content when required, but must not override these heading coordinates, font sizes, margins, or line heights.
 
+Reference screenshots are visual guides for backgrounds, body copy, objects, color, and overall atmosphere only. A screenshot's level-title or subtitle placement and scale must never override the standard heading guide. Unless an explicit request specifically changes the heading standard itself, keep every level title and subtitle at the Level 1 position and size even when the reference image shows a different design.
+
 ## Language and Copy
 
 Use English for all player-facing game content unless a level specification or explicit request requires another language. This rule applies to visible text, hidden clues, background code, error messages, labels, buttons, and accessibility text. Do not introduce non-English game copy merely for decoration or atmosphere without an explicit requirement.
+
+## Walkthrough Maintenance
+
+Building and registering a level is not complete until its solution has been added to the root `walkthrough.md` file in Korean. This documentation requirement is an explicit exception to the English player-facing copy rule above. The walkthrough entry must describe the full playable route, including scene order, clue interpretation, required interactions or inputs, exact passwords and case rules, failure conditions and recovery paths, timed mechanics, and any Warp Zone password introduced by the level.
+
+Whenever a level's mechanics, timing, password, scene flow, success condition, or failure behavior changes, update its Korean walkthrough in the same change so that the document continues to match the shipped implementation. Do not leave a newly built level or materially changed solution undocumented, and do not mark the level work complete until the walkthrough entry has been checked against the current code.
 
 ## Input and Passwords
 

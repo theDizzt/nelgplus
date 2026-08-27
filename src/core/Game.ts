@@ -28,6 +28,7 @@ const ADMIN_FONT_OPTIONS = [
   { id: "", label: "Default (level design)", family: "" },
   { id: "perpetua", label: "Perpetua", family: '"NELG Perpetua", Perpetua, serif' },
   { id: "courier", label: "Courier", family: '"NELG Courier", Courier, monospace' },
+  { id: "matisse", label: "Matisse", family: '"NELG Matisse", sans-serif' },
   { id: "arial", label: "Arial", family: '"NELG Arial", Arial, sans-serif' },
   { id: "arial-narrow", label: "Arial Narrow", family: '"NELG Arial Narrow", Arial, sans-serif' },
   { id: "tahoma", label: "Tahoma", family: '"NELG Tahoma", Tahoma, sans-serif' },
@@ -54,6 +55,7 @@ const PRELOAD_FONTS = [
   "/assets/fonts/courier/CourierStd-Bold.woff2",
   "/assets/fonts/courier/CourierStd-Oblique.woff2",
   "/assets/fonts/courier/CourierStd-BoldOblique.woff2",
+  "/assets/fonts/matisse/MatisseITC-Regular.woff2",
   "/assets/fonts/arial/ArialMT.woff2",
   "/assets/fonts/arial/Arial-BoldMT.woff2",
   "/assets/fonts/arial/Arial-ItalicMT.woff2",
@@ -85,6 +87,7 @@ const PRELOAD_FONTS = [
 const PRELOAD_FONT_REQUESTS = [
   '400 32px "NELG Perpetua"', '700 32px "NELG Perpetua"', 'italic 400 32px "NELG Perpetua"',
   '400 24px "NELG Courier"', '700 24px "NELG Courier"', 'italic 400 24px "NELG Courier"',
+  '400 32px "NELG Matisse"',
   '400 24px "NELG Arial"', '700 24px "NELG Arial"', 'italic 400 24px "NELG Arial"',
   '400 24px "NELG Arial Narrow"', '700 24px "NELG Arial Narrow"',
   '400 24px "NELG Tahoma"', '700 24px "NELG Tahoma"',
@@ -228,6 +231,11 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
     message:
       "Unlike Version 1.0, bizarre levels in the style of Never Ending Level Game are now beginning to appear. Level 39 in particular is an adaptation of Level 165, one of my favorite levels from Never Ending Level Game. Many more levels of this kind will appear from now on. Excluding the Reunion levels, Level 39 was probably the longest and most cryptic puzzle you have faced so far. Now the real game begins. From this point forward, every Warp Zone level will be an extremely difficult trial. Of course, the levels between them will not be easy either. Push your patience and intelligence to their absolute limits... And yes, you will need plenty of time as well.",
     password: "mega dizztwo y",
+  },
+  42: {
+    message:
+      "You survived the trap and reached another Warp Zone. Take a breath before moving on; the machines ahead will not be nearly as helpful as they appear.",
+    password: "freedom",
   },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {

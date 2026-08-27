@@ -1,0 +1,493 @@
+.level-42 {
+  overflow: hidden;
+  color: #0ff;
+  background: #000080;
+}
+
+.level-42__heading {
+  z-index: 8;
+  color: #0ff;
+  pointer-events: none;
+}
+
+.level-42__heading .level-heading__number,
+.level-42__heading h1 {
+  color: inherit;
+  text-shadow: none;
+}
+
+.level-42--start {
+  background: radial-gradient(circle at 50% 48%, #0000a8 0%, #00005f 42%, #00002a 72%, #000 100%);
+}
+
+.level-42__intro {
+  position: absolute;
+  z-index: 2;
+  top: 194px;
+  left: 24px;
+  width: 752px;
+  color: #0ff;
+  text-align: center;
+  font: 400 30px/1.45 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__intro p {
+  margin: 0;
+}
+
+.level-42__intro .level-42__intro-warning {
+  margin-bottom: 9px;
+  color: #ff0;
+}
+
+.level-42__controls {
+  position: absolute;
+  z-index: 3;
+  bottom: 116px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #0f0;
+  text-align: center;
+  font: 400 24px/1.25 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__start-button,
+.level-42__retry {
+  appearance: none;
+  padding: 0;
+  color: #ff0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+  font-family: "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__start-button {
+  position: absolute;
+  z-index: 3;
+  bottom: 48px;
+  left: 50%;
+  font-size: 50px;
+  translate: -50% 0;
+}
+
+.level-42__start-button:hover,
+.level-42__start-button:focus-visible {
+  color: #ff0;
+  text-shadow: 0 0 10px rgb(255 255 0 / 55%);
+}
+
+.level-42__retry:hover,
+.level-42__retry:focus-visible {
+  color: #0ff;
+  text-shadow: 0 0 10px rgb(0 255 255 / 65%);
+}
+
+.level-42--game {
+  background: #0000ff;
+}
+
+.level-42--game .level-42__heading {
+  color: #ff0;
+}
+
+.level-42__floor {
+  position: absolute;
+  z-index: 1;
+  background: #0ff;
+}
+
+.level-42__floor--arena {
+  top: 120px;
+  left: 192px;
+  width: 520px;
+  height: 400px;
+}
+
+.level-42__floor--corridor {
+  top: 300px;
+  left: 0;
+  width: 192px;
+  height: 108px;
+}
+
+.level-42__exit-portal,
+.level-42__trigger-portal,
+.level-42__door-mask,
+.level-42__door,
+.level-42__rainbow-square,
+.level-42__rainbow-message,
+.level-42__chaser,
+.level-42__magic-circle,
+.level-42__meteor,
+.level-42__laser,
+.level-42__mine,
+.level-42__crusher,
+.level-42__player {
+  position: absolute;
+}
+
+.level-42--game.is-boosting .level-42__player {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 30%), 0 0 18px #ffb000;
+}
+
+.level-42--game.is-controls-inverted .level-42__player {
+  background: radial-gradient(circle at 48% 44%, #a4ff9c 0 12%, #00df45 48%, #004d16 100%);
+  border-color: #003b11;
+}
+
+.level-42__effect-timer {
+  position: absolute;
+  right: 50%;
+  bottom: calc(100% + 5px);
+  display: none;
+  min-width: 36px;
+  color: #00ff57;
+  text-align: center;
+  text-shadow: 2px 2px 0 #003513;
+  font: 700 28px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  translate: 50% 0;
+}
+
+.level-42--game.is-controls-inverted .level-42__effect-timer {
+  display: block;
+}
+
+.level-42__exit-portal,
+.level-42__trigger-portal {
+  z-index: 3;
+  box-shadow: inset 0 0 0 3px #050505, 0 0 0 2px rgb(255 255 255 / 35%);
+}
+
+.level-42__exit-portal {
+  top: 318px;
+  left: 14px;
+  width: 58px;
+  height: 72px;
+  background: radial-gradient(circle, #fff966 0 10%, #ff0 34%, #a5a500 64%, #191900 100%);
+}
+
+.level-42__trigger-portal {
+  top: 442px;
+  left: 202px;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, #7cff79 0 10%, #00db00 34%, #007000 65%, #001b00 100%);
+}
+
+.level-42__trigger-portal::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #030303;
+  content: "−";
+  font: 700 24px/1 Arial, sans-serif;
+  translate: -50% -50%;
+}
+
+.level-42.is-activated .level-42__trigger-portal {
+  filter: saturate(0.55) brightness(0.7);
+}
+
+.level-42__door-mask {
+  z-index: 5;
+  top: 300px;
+  left: 92px;
+  width: 48px;
+  height: 108px;
+  overflow: hidden;
+}
+
+.level-42__door {
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 108px;
+  background: linear-gradient(90deg, #00006c, #0000f0 45%, #000078);
+  border: 3px solid #00005a;
+  box-shadow: inset 0 0 0 2px rgb(70 70 255 / 55%);
+}
+
+.level-42__hazards {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-42__rainbow-square,
+.level-42__rainbow-message,
+.level-42__chaser,
+.level-42__magic-circle,
+.level-42__meteor,
+.level-42__laser,
+.level-42__mine {
+  pointer-events: none;
+}
+
+.level-42__rainbow-square {
+  background: linear-gradient(90deg, #f00 0 14%, #ff8c00 14% 28%, #ff0 28% 42%, #00d836 42% 57%, #00d9ff 57% 71%, #145dff 71% 85%, #d000ff 85% 100%);
+  border: 3px solid #111;
+  box-shadow: inset 0 0 5px rgb(255 255 255 / 58%), 0 0 7px rgb(255 255 255 / 45%);
+}
+
+.level-42__rainbow-message {
+  color: transparent;
+  background: linear-gradient(90deg, #f00, #ff8c00, #ff0, #00d836, #00d9ff, #145dff, #d000ff);
+  background-clip: text;
+  font: 700 52px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  white-space: nowrap;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.level-42__chaser {
+  background: radial-gradient(circle, #ff6b6b 0 12%, #f00 47%, #710000 100%);
+  border: 3px solid #300;
+  box-shadow: 0 0 10px #f00;
+}
+
+.level-42__magic-circle {
+  border: 5px solid rgb(0 255 80 / 62%);
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 0 32%, rgb(0 255 80 / 25%) 34% 46%, transparent 48%);
+  box-shadow: 0 0 13px rgb(0 255 80 / 75%), inset 0 0 12px rgb(0 255 80 / 62%);
+  animation: level-42-magic-spin 280ms linear infinite;
+}
+
+.level-42__magic-circle::before,
+.level-42__magic-circle::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.level-42__magic-circle::before {
+  inset: 10px;
+  border: 3px solid rgb(146 255 173 / 72%);
+  rotate: 45deg;
+}
+
+.level-42__magic-circle::after {
+  inset: 20px;
+  border: 2px solid #b7ffc7;
+  border-radius: 50%;
+}
+
+.level-42__meteor {
+  background: linear-gradient(180deg, rgb(255 255 255 / 8%), #fff 38%, #ffdb3d 58%, #ff4d00 100%);
+  border-radius: 50% 50% 38% 38%;
+  box-shadow: 0 -18px 14px rgb(255 122 0 / 68%);
+}
+
+.level-42__laser {
+  z-index: 2;
+  opacity: 0.45;
+  background: repeating-linear-gradient(45deg, rgb(255 0 0 / 18%) 0 8px, rgb(255 255 255 / 52%) 8px 12px);
+  border: 2px dashed #ff5252;
+}
+
+.level-42__laser.is-active {
+  opacity: 1;
+  background: #fff;
+  border: 4px solid #f00;
+  box-shadow: 0 0 9px #fff, 0 0 22px #f00;
+}
+
+.level-42__mine {
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffef70 0 8%, #202020 12% 52%, #050505 55% 100%);
+  border: 3px solid #111;
+  box-shadow: 0 0 0 5px rgb(30 30 30 / 78%);
+  transition: scale 100ms linear, opacity 100ms linear;
+}
+
+.level-42__mine::before,
+.level-42__mine::after {
+  position: absolute;
+  inset: 45% -9px;
+  background: #181818;
+  content: "";
+  rotate: 45deg;
+}
+
+.level-42__mine::after {
+  rotate: -45deg;
+}
+
+.level-42__mine.is-exploding {
+  z-index: 4;
+  background: radial-gradient(circle, #fff 0 10%, #ff0 11% 25%, #ff3d00 26% 58%, rgb(70 0 0 / 20%) 72% 100%);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 18px #ff0, 0 0 34px #f00;
+  opacity: 0.82;
+  scale: 3.8;
+}
+
+.level-42__crusher {
+  z-index: 6;
+  display: none;
+  background: repeating-linear-gradient(180deg, #060652 0 24px, #1919d0 24px 48px);
+  border-right: 5px solid #00004a;
+  clip-path: polygon(28% 0, 100% 0, 100% 100%, 28% 100%, 0 94%, 28% 88%, 0 82%, 28% 76%, 0 70%, 28% 64%, 0 58%, 28% 52%, 0 46%, 28% 40%, 0 34%, 28% 28%, 0 22%, 28% 16%, 0 10%, 28% 4%);
+  box-shadow: -8px 0 15px rgb(0 0 90 / 70%);
+}
+
+.level-42__crusher.is-active {
+  display: block;
+}
+
+.level-42__player {
+  z-index: 7;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle at 48% 44%, #5578ff 0 12%, #001cff 48%, #000062 100%);
+  border: 3px solid #00004a;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 30%);
+}
+
+.level-42__player-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  font: 700 18px/1 "NELG Perpetua", Perpetua, Georgia, serif;
+  letter-spacing: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
+}
+
+.level-42__player.is-facing-left .level-42__player-face {
+  transform: translate(-50%, -50%) rotate(90deg) scaleY(-1);
+}
+
+.level-42__timer {
+  position: absolute;
+  z-index: 8;
+  bottom: 14px;
+  left: 15px;
+  margin: 0;
+  color: #0ff;
+  font: 400 49px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.level-42__timer output {
+  color: #ff0;
+}
+
+.level-42__boost {
+  position: absolute;
+  z-index: 8;
+  right: 16px;
+  bottom: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.level-42__boost-track {
+  display: block;
+  width: 210px;
+  height: 25px;
+  overflow: hidden;
+  background: #111;
+  border: 3px solid #004515;
+}
+
+.level-42__boost-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ff0, #ff9800);
+}
+
+.level-42__boost-percent {
+  min-width: 68px;
+  color: #00ff57;
+  text-align: right;
+  text-shadow: 2px 2px 0 #003713;
+  font: 700 27px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+}
+
+.level-42__control-status {
+  position: absolute;
+  z-index: 9;
+  right: 18px;
+  bottom: 72px;
+  display: none;
+  margin: 0;
+  color: #00ff6a;
+  text-shadow: 2px 2px 0 #003813;
+  font: 400 25px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  pointer-events: none;
+}
+
+.level-42.is-controls-inverted .level-42__control-status {
+  display: block;
+}
+
+.level-42--game.is-quaking {
+  animation: level-42-earthquake 80ms steps(2, jump-none) infinite;
+}
+
+.level-42--death {
+  background: #000080;
+}
+
+.level-42__death-message {
+  position: absolute;
+  z-index: 2;
+  top: 205px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #ff0;
+  text-align: center;
+  font: 400 112px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__death-reason {
+  position: absolute;
+  z-index: 2;
+  top: 355px;
+  left: 40px;
+  width: 720px;
+  margin: 0;
+  color: #f00;
+  text-align: center;
+  font: 700 30px/1.2 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__retry {
+  position: absolute;
+  z-index: 3;
+  right: 70px;
+  bottom: 65px;
+  font-size: 65px;
+}
+
+@keyframes level-42-magic-spin {
+  to { rotate: 360deg; }
+}
+
+@keyframes level-42-earthquake {
+  0% { translate: -3px 2px; }
+  25% { translate: 4px -3px; }
+  50% { translate: -2px -4px; }
+  75% { translate: 3px 3px; }
+  100% { translate: 0 0; }
+}
