@@ -1,0 +1,107 @@
+.level-43 {
+  color: #000;
+  background: linear-gradient(135deg, #ffd9e9 0%, #f39bc4 44%, #e9b9ef 72%, #ffcadb 100%);
+}
+
+.level-43__heading {
+  z-index: 4;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-43__message {
+  position: absolute;
+  z-index: 4;
+  top: 182px;
+  left: 22px;
+  width: 756px;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  font-family: "NELG ITC Kristen", "Comic Sans MS", cursive;
+  font-size: 20px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.level-43__piece-stage {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.level-43__piece {
+  position: absolute;
+  display: block;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(1px 2px 1px rgb(0 0 0 / 18%));
+}
+
+.level-43__piece.is-dragging {
+  filter: drop-shadow(3px 5px 3px rgb(0 0 0 / 28%));
+}
+
+.level-43__form {
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  translate: -50% 0;
+}
+
+.level-43__form input {
+  box-sizing: border-box;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  outline: none;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-43__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-43__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-43__form button:hover:not(:disabled),
+.level-43__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-43__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-43__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

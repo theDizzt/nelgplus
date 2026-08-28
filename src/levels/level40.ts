@@ -22,20 +22,64 @@ interface MazeRect {
   readonly height: number;
 }
 
-const MAZE_WALLS: readonly MazeRect[] = [
-  { x: 48, y: 92, width: 186, height: 28 },
-  { x: 280, y: 105, width: 292, height: 28 },
-  { x: 620, y: 82, width: 142, height: 28 },
-  { x: 166, y: 150, width: 28, height: 210 },
-  { x: 310, y: 152, width: 28, height: 158 },
-  { x: 490, y: 132, width: 28, height: 166 },
-  { x: 630, y: 170, width: 28, height: 198 },
-  { x: 96, y: 320, width: 98, height: 28 },
-  { x: 240, y: 278, width: 250, height: 28 },
-  { x: 518, y: 340, width: 210, height: 28 },
-  { x: 340, y: 410, width: 220, height: 28 },
-  { x: 180, y: 470, width: 160, height: 28 },
-  { x: 470, y: 500, width: 232, height: 28 },
+const MAZE_SAFE_PATH: readonly MazeRect[] = [
+  { x: 26, y: 25, width: 259, height: 7 },
+  { x: 26, y: 32, width: 259, height: 58 },
+  { x: 591, y: 32, width: 176, height: 58 },
+  { x: 26, y: 90, width: 58, height: 15 },
+  { x: 226, y: 90, width: 59, height: 15 },
+  { x: 591, y: 90, width: 59, height: 15 },
+  { x: 693, y: 90, width: 74, height: 15 },
+  { x: 26, y: 105, width: 58, height: 59 },
+  { x: 226, y: 105, width: 424, height: 59 },
+  { x: 693, y: 105, width: 74, height: 59 },
+  { x: 26, y: 164, width: 58, height: 24 },
+  { x: 693, y: 164, width: 74, height: 24 },
+  { x: 26, y: 188, width: 58, height: 13 },
+  { x: 124, y: 188, width: 139, height: 13 },
+  { x: 693, y: 188, width: 74, height: 13 },
+  { x: 26, y: 201, width: 58, height: 42 },
+  { x: 124, y: 201, width: 139, height: 42 },
+  { x: 295, y: 201, width: 211, height: 42 },
+  { x: 693, y: 201, width: 74, height: 42 },
+  { x: 26, y: 243, width: 58, height: 4 },
+  { x: 124, y: 243, width: 59, height: 4 },
+  { x: 211, y: 243, width: 52, height: 4 },
+  { x: 295, y: 243, width: 211, height: 4 },
+  { x: 693, y: 243, width: 74, height: 4 },
+  { x: 26, y: 247, width: 58, height: 21 },
+  { x: 124, y: 247, width: 59, height: 21 },
+  { x: 211, y: 247, width: 52, height: 21 },
+  { x: 295, y: 247, width: 472, height: 21 },
+  { x: 26, y: 268, width: 157, height: 54 },
+  { x: 211, y: 268, width: 52, height: 54 },
+  { x: 295, y: 268, width: 472, height: 54 },
+  { x: 211, y: 322, width: 52, height: 25 },
+  { x: 295, y: 322, width: 211, height: 25 },
+  { x: 211, y: 347, width: 52, height: 23 },
+  { x: 295, y: 347, width: 211, height: 23 },
+  { x: 565, y: 347, width: 202, height: 23 },
+  { x: 26, y: 370, width: 237, height: 18 },
+  { x: 565, y: 370, width: 202, height: 18 },
+  { x: 26, y: 388, width: 237, height: 22 },
+  { x: 25, y: 390, width: 1, height: 59 },
+  { x: 565, y: 388, width: 73, height: 22 },
+  { x: 693, y: 388, width: 74, height: 22 },
+  { x: 26, y: 410, width: 51, height: 30 },
+  { x: 565, y: 410, width: 73, height: 30 },
+  { x: 693, y: 410, width: 74, height: 30 },
+  { x: 26, y: 440, width: 612, height: 9 },
+  { x: 693, y: 440, width: 74, height: 9 },
+  { x: 26, y: 449, width: 612, height: 31 },
+  { x: 693, y: 449, width: 74, height: 31 },
+  { x: 565, y: 480, width: 73, height: 1 },
+  { x: 693, y: 480, width: 74, height: 1 },
+  { x: 693, y: 481, width: 74, height: 9 },
+  { x: 26, y: 490, width: 105, height: 25 },
+  { x: 693, y: 490, width: 74, height: 25 },
+  { x: 26, y: 515, width: 741, height: 45 },
+  { x: 26, y: 560, width: 734, height: 6 },
+  { x: 26, y: 566, width: 105, height: 26 },
 ] as const;
 
 const MAZE_OBSTACLES: readonly MazeRect[] = [
@@ -46,8 +90,6 @@ const MAZE_OBSTACLES: readonly MazeRect[] = [
   { x: 216, y: 396, width: 82, height: 82 },
   { x: 566, y: 382, width: 82, height: 82 },
 ] as const;
-
-const MAZE_HAZARDS = [...MAZE_WALLS, ...MAZE_OBSTACLES] as const;
 
 const SCENES: readonly Level40Scene[] = [
   {
@@ -134,8 +176,8 @@ function renderBody(scene: (typeof SCENES)[number]): string {
 function renderSpeedometer(): string {
   return `
     <aside class="level-40__speedometer" aria-live="polite">
-      <span>Speed:<output data-speed>0</output> ups</span>
-      <span>Max:<output data-max-speed>0</output> ups</span>
+      <span>Speed:<output data-speed>0.0</output> unit/s</span>
+      <span>Max:<output data-max-speed>0.0</output> unit/s</span>
     </aside>`;
 }
 
@@ -153,10 +195,20 @@ function renderBlockers(): string {
 function renderMaze(): string {
   const renderRect = (rect: MazeRect, className: string) =>
     `<i class="${className}" style="left:${rect.x}px;top:${rect.y}px;width:${rect.width}px;height:${rect.height}px"></i>`;
+  const renderSafeRect = (rect: MazeRect) =>
+    `<rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}"></rect>`;
   return `
     <section class="level-40__maze" aria-label="Move through the maze without touching a wall">
-      <div class="level-40__maze-walls" aria-hidden="true">
-        ${MAZE_WALLS.map((wall) => renderRect(wall, "level-40__maze-wall")).join("")}
+      <svg class="level-40__maze-walls" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="level-40-safe-path" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="600">
+            <rect width="800" height="600" fill="white"></rect>
+            <g fill="black">${MAZE_SAFE_PATH.map(renderSafeRect).join("")}</g>
+          </mask>
+        </defs>
+        <rect class="level-40__maze-wall-fill" width="800" height="600" mask="url(#level-40-safe-path)"></rect>
+      </svg>
+      <div class="level-40__maze-obstacles" aria-hidden="true">
         ${MAZE_OBSTACLES.map((obstacle) => renderRect(obstacle, "level-40__maze-obstacle")).join("")}
       </div>
       ${renderDiamondButton("level-40__diamond level-40__diamond--maze-exit", "Continue to Scene 6")}
@@ -168,6 +220,10 @@ function pointInsideRect(point: LocalPoint, rect: MazeRect): boolean {
     && point.y >= rect.y && point.y <= rect.y + rect.height;
 }
 
+function pointInsideMazePath(point: LocalPoint): boolean {
+  return MAZE_SAFE_PATH.some((safeArea) => pointInsideRect(point, safeArea));
+}
+
 function movementHitsMaze(start: LocalPoint, end: LocalPoint): boolean {
   const distance = Math.hypot(end.x - start.x, end.y - start.y);
   const steps = Math.max(1, Math.ceil(distance / 4));
@@ -177,7 +233,8 @@ function movementHitsMaze(start: LocalPoint, end: LocalPoint): boolean {
       x: start.x + (end.x - start.x) * ratio,
       y: start.y + (end.y - start.y) * ratio,
     };
-    if (MAZE_HAZARDS.some((hazard) => pointInsideRect(point, hazard))) return true;
+    if (!pointInsideMazePath(point)
+      || MAZE_OBSTACLES.some((obstacle) => pointInsideRect(point, obstacle))) return true;
   }
   return false;
 }
@@ -291,8 +348,8 @@ export const level40: LevelDefinition = {
       maximumDisplaySpeed = Math.max(maximumDisplaySpeed, displaySpeed);
       const speedOutput = screen.querySelector<HTMLOutputElement>("[data-speed]");
       const maxSpeedOutput = screen.querySelector<HTMLOutputElement>("[data-max-speed]");
-      if (speedOutput) speedOutput.value = String(Math.round(displaySpeed));
-      if (maxSpeedOutput) maxSpeedOutput.value = String(Math.round(maximumDisplaySpeed));
+      if (speedOutput) speedOutput.value = displaySpeed.toFixed(1);
+      if (maxSpeedOutput) maxSpeedOutput.value = maximumDisplaySpeed.toFixed(1);
     };
 
     renderScene();
@@ -320,7 +377,8 @@ export const level40: LevelDefinition = {
           goToScene(7);
           return;
         }
-      } else if (sceneIndex === 4 && MAZE_HAZARDS.some((hazard) => pointInsideRect(point, hazard))) {
+      } else if (sceneIndex === 4 && (!pointInsideMazePath(point)
+        || MAZE_OBSTACLES.some((obstacle) => pointInsideRect(point, obstacle)))) {
         audio.playEffect(SOUND_EFFECTS.break);
         goToScene(7);
         return;

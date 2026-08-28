@@ -229,13 +229,13 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
   },
   39: {
     message:
-      "Unlike Version 1.0, bizarre levels in the style of Never Ending Level Game are now beginning to appear. Level 39 in particular is an adaptation of Level 165, one of my favorite levels from Never Ending Level Game. Many more levels of this kind will appear from now on. Excluding the Reunion levels, Level 39 was probably the longest and most cryptic puzzle you have faced so far. Now the real game begins. From this point forward, every Warp Zone level will be an extremely difficult trial. Of course, the levels between them will not be easy either. Push your patience and intelligence to their absolute limits... And yes, you will need plenty of time as well.",
+      "I packed Level 39 with a bunch of classic NELG levels, along with several levels that were originally planned for NELG++ but never made the cut. It’s essentially a powered-up version of Level 165—one of my favorite levels from NELG—so it’s probably going to be one hell of a long and exhausting ride! And don’t expect any breather levels in the next section. I’ve got plenty of levels lined up specifically to annoy you and get on your nerves...",
     password: "mega dizztwo y",
   },
   42: {
     message:
-      "You survived the trap and reached another Warp Zone. Take a breath before moving on; the machines ahead will not be nearly as helpful as they appear.",
-    password: "freedom",
+      "This time, I’ve prepared a batch of Level Killer-style levels designed to kick your ass. Level 40 is based on LK’s Level 130, while Level 41 has been brought over directly from LK’s Level 41! For Level 42, I took NELG’s Level 297—infamous for being its final Level Jump—and reimagined it in the style of LK. And before long, you’ll be seeing some truly diabolical TEDNE-style levels as well...",
+    password: "BronZwong",
   },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
@@ -1027,11 +1027,12 @@ export class Game {
              <li>decing <span>(jw29674)</span></li>
              <li>Bin <span>(monteeplayer)</span></li>
              <li>Confringo</li>
-             <li>Sierra</li>
+             <li>Yosemite</li>
              <li>Lunaris</li>
              <li>mutsuki</li>
              <li>Archbear <span>(iamwagyu)</span></li>
              <li>Mandu <span>(mandu0730)</span></li>
+             <li>HwaRang<span>(bloomin'lady)</span></li>
            </ul>
          </section>
          <section class="credits-section">
@@ -1039,6 +1040,7 @@ export class Game {
            <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Final Doom — M05: More</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Animal Company Soundtrack — Old Map Music | The End | ERROR</strong></article>
+           <article class="credits-track"><span>LEVEL 42</span><strong>Final Doom — M20: Horizon</strong></article>
          </section>
        </div>`,
     );

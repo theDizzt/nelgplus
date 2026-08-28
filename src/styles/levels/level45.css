@@ -1,0 +1,175 @@
+.level-45 {
+  color: #000;
+  background: #fff var(--level-45-background) center / cover no-repeat;
+}
+
+.level-45__heading {
+  z-index: 2;
+  color: #000;
+}
+
+.level-45__clock {
+  position: absolute;
+  z-index: 1;
+  top: 188px;
+  left: 220px;
+  width: 360px;
+  height: 360px;
+  overflow: hidden;
+  background: #fff;
+  border: 5px solid #080808;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 38%);
+}
+
+.level-45__clock-number {
+  position: absolute;
+  z-index: 2;
+  width: 44px;
+  color: #050505;
+  translate: -50% -50%;
+  text-align: center;
+  font-family: "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.level-45__clock-tick {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  rotate: var(--level-45-tick-angle);
+}
+
+.level-45__clock-tick::before {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 2px;
+  height: 8px;
+  background: #272727;
+  translate: -50% 0;
+  content: "";
+}
+
+.level-45__clock-tick--major::before {
+  width: 3px;
+  height: 14px;
+}
+
+.level-45__clue {
+  position: absolute;
+  z-index: 1;
+  top: 252px;
+  left: 34px;
+  width: 292px;
+  margin: 0;
+  color: #fffffc;
+  text-align: center;
+  white-space: nowrap;
+  font-family: "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.level-45__hand {
+  position: absolute;
+  z-index: 3;
+  bottom: 50%;
+  left: 50%;
+  display: block;
+  border-radius: 5px 5px 2px 2px;
+  transform-origin: 50% 100%;
+  translate: -50% 0;
+}
+
+.level-45__hand--hour {
+  width: 10px;
+  height: 91px;
+  background: #079b25;
+}
+
+.level-45__hand--minute {
+  width: 7px;
+  height: 126px;
+  background: #1746bd;
+}
+
+.level-45__hand--second {
+  width: 3px;
+  height: 140px;
+  background: #db1717;
+}
+
+.level-45__clock-pin {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background: #111;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  translate: -50% -50%;
+  box-shadow: 0 0 0 2px #111;
+}
+
+.level-45__form {
+  position: absolute;
+  z-index: 5;
+  right: 20px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.level-45__form input {
+  box-sizing: border-box;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  outline: none;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-45__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-45__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-45__form button:hover:not(:disabled),
+.level-45__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-45__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-45__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
