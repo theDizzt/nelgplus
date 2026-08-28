@@ -1,6 +1,7 @@
 @import "./fonts.css";
 @import "./base.css";
 @import "./components/password-input.css";
+@import "./components/custom-cursor.css";
 @import "./components/red-guy.css";
 @import "./components/buttons.css";
 @import "./menu.css";
@@ -49,5 +50,6 @@
 @import "./levels/level41.css";
 @import "./levels/level42.css";
 @import "./levels/level43.css";
+@import "./levels/level44.css";
 @import "./levels/level45.css";
 @import "./components/level-heading.css";

@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { attachCustomCursor } from "../core/CustomCursor";
 import { createRedGuy, type RedGuyController } from "../core/RedGuy";
 import { assetUrl } from "../core/assets";
 import type { LevelContext, LevelDefinition } from "../core/types";
@@ -25,6 +26,10 @@ export const level35: LevelDefinition = {
   ],
   mount(context) {
     const { screen, complete, unlockAchievement, audio, initialScene } = context;
+    const removeCustomCursor = attachCustomCursor(context, {
+      source: "cursor/level35.png",
+      hotspot: "center",
+    });
     let controller = new AbortController();
     const timers = new Set<number>();
     let redGuy: RedGuyController | undefined;
@@ -325,6 +330,9 @@ function validate(raw) {
       const requestedScene = Number(initialScene);
       renderScene(Number.isInteger(requestedScene) && requestedScene >= 1 && requestedScene <= 10 ? requestedScene : 1);
     }
-    return clearScene;
+    return () => {
+      clearScene();
+      removeCustomCursor();
+    };
   },
 };

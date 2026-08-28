@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { attachCustomCursor } from "../core/CustomCursor";
 import { SOUND_EFFECTS, assetUrl } from "../core/assets";
 import { clientPointToLocal } from "../core/floatingPosition";
 import type { LevelContext, LevelDefinition } from "../core/types";
@@ -1616,7 +1617,13 @@ export const level39: LevelDefinition = {
     })),
     { id: "fake-666", label: "Fake Level 666" },
   ],
-  mount({ screen, listen, timeout, audio, goToMenu, complete, initialScene }) {
+  mount(context) {
+    const { screen, listen, timeout, audio, goToMenu, complete, initialScene } = context;
+    const removeCustomCursor = attachCustomCursor(context, {
+      source: "cursor/level39.png",
+      hotspot: "center",
+      rotating: true,
+    });
     screen.className = "level-screen level-39";
     screen.innerHTML = `
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
@@ -1688,7 +1695,7 @@ return void 0x000000;</code></pre>
     const form = screen.querySelector<HTMLFormElement>(".level-39__form");
     const input = screen.querySelector<HTMLInputElement>("#level-39-answer");
     const submit = screen.querySelector<HTMLButtonElement>(".level-39__form button");
-    if (!xOutput || !yOutput || !sigil || !form || !input || !submit) return;
+    if (!xOutput || !yOutput || !sigil || !form || !input || !submit) return removeCustomCursor;
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
@@ -1731,6 +1738,9 @@ return void 0x000000;</code></pre>
         launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, targetLevel);
       }
     }
-    return () => audio.stopMusic();
+    return () => {
+      audio.stopMusic();
+      removeCustomCursor();
+    };
   },
 };

@@ -1,0 +1,36 @@
+[data-custom-cursor-root],
+[data-custom-cursor-root] * {
+  cursor: none !important;
+}
+
+.custom-cursor {
+  position: absolute;
+  z-index: 2147483646;
+  display: block;
+  width: max-content;
+  height: max-content;
+  pointer-events: none;
+}
+
+.custom-cursor[hidden] {
+  display: none;
+}
+
+.custom-cursor--center {
+  translate: -50% -50%;
+}
+
+.custom-cursor img {
+  display: block;
+  max-width: none;
+}
+
+.custom-cursor--rotating img {
+  animation: custom-cursor-clockwise-spin 1.8s linear infinite;
+}
+
+@keyframes custom-cursor-clockwise-spin {
+  to {
+    rotate: 360deg;
+  }
+}

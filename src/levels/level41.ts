@@ -1,4 +1,5 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
+import { attachCustomCursor } from "../core/CustomCursor";
 import type { LevelDefinition } from "../core/types";
 
 const ANSWER = "love";
@@ -6,7 +7,12 @@ const ANSWER = "love";
 export const level41: LevelDefinition = {
   number: 41,
   title: "Distinguish",
-  mount({ screen, listen, complete, goToLevel }) {
+  mount(context) {
+    const { screen, listen, complete, goToLevel } = context;
+    const removeCustomCursor = attachCustomCursor(context, {
+      source: "cursor/level41.png",
+      hotspot: "top-left",
+    });
     screen.className = "level-screen level-41";
     screen.innerHTML = `
       <p class="level-41__hidden-clue">Can you spot the very subtle difference?</p>
@@ -37,7 +43,7 @@ export const level41: LevelDefinition = {
     const form = screen.querySelector<HTMLFormElement>(".level-41__form");
     const input = screen.querySelector<HTMLInputElement>("#level-41-answer");
     const returnButton = screen.querySelector<HTMLButtonElement>(".level-41__return");
-    if (!form || !input || !returnButton) return;
+    if (!form || !input || !returnButton) return removeCustomCursor;
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
@@ -58,5 +64,6 @@ export const level41: LevelDefinition = {
     });
 
     listen(returnButton, "click", () => goToLevel(40));
+    return removeCustomCursor;
   },
 };

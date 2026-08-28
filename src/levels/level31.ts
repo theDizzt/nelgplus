@@ -1,5 +1,6 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { assetUrl } from "../core/assets";
+import { attachCustomCursor } from "../core/CustomCursor";
 import type { LevelDefinition } from "../core/types";
 
 const IMAGE_SEQUENCE = [
@@ -27,7 +28,12 @@ const ANSWERS = new Set(["WEIẞ", "WEISS"]);
 export const level31: LevelDefinition = {
   number: 31,
   title: "BLANC",
-  mount({ screen, complete, unlockAchievement, listen, timeout }) {
+  mount(context) {
+    const { screen, complete, unlockAchievement, listen, timeout } = context;
+    const removeCustomCursor = attachCustomCursor(context, {
+      source: "cursor/level31.png",
+      hotspot: "top-left",
+    });
     screen.className = "level-screen level-31";
     screen.innerHTML = `
       <header class="level-heading level-31__heading">
@@ -52,7 +58,7 @@ export const level31: LevelDefinition = {
     const form = screen.querySelector<HTMLFormElement>(".level-31__form");
     const input = screen.querySelector<HTMLInputElement>("#level-31-answer");
     const submitButton = screen.querySelector<HTMLButtonElement>(".level-31__form button");
-    if (!image || !form || !input || !submitButton) return;
+    if (!image || !form || !input || !submitButton) return removeCustomCursor;
 
     let stage = 0;
     listen(screen, "click", (event) => {
@@ -94,5 +100,6 @@ export const level31: LevelDefinition = {
       input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);
     });
+    return removeCustomCursor;
   },
 };

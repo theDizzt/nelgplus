@@ -1,5 +1,6 @@
 import type { LevelDefinition } from "../core/types";
 import { assetUrl } from "../core/assets";
+import { attachCustomCursor } from "../core/CustomCursor";
 
 type Scene = "puzzle" | "wall" | "escape" | "order" | "box";
 
@@ -68,7 +69,12 @@ export const level25: LevelDefinition = {
     { id: "4", label: "Scene 4 - Order failure" },
     { id: "5", label: "Scene 5 - Obstacle failure" },
   ],
-  mount({ screen, complete, unlockAchievement, listen, interval, initialScene }) {
+  mount(context) {
+    const { screen, complete, unlockAchievement, listen, interval, initialScene } = context;
+    const removeCustomCursor = attachCustomCursor(context, {
+      source: "cursor/level25.png",
+      hotspot: "center",
+    });
     let scene: Scene = "puzzle";
     let armed = false;
     let awaitingPassword = false;
@@ -304,5 +310,6 @@ export const level25: LevelDefinition = {
         }
       }
     }, 30);
+    return removeCustomCursor;
   },
 };

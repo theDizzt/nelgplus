@@ -1,0 +1,188 @@
+.level-44 {
+  color: #000;
+  background: #0a481f;
+}
+
+.level-44__world {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #0a481f;
+  transform-origin: top left;
+  will-change: transform;
+}
+
+.level-44__teal-panel {
+  position: absolute;
+  inset: 0;
+  background: #104846;
+  clip-path: polygon(52% 0, 100% 0, 100% 100%, 88% 100%, 65% 47%, 57% 34%);
+}
+
+.level-44__line {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  height: 2px;
+  background: #050505;
+  transform-origin: left center;
+}
+
+.level-44__line--one {
+  top: -2px;
+  left: 415px;
+  width: 410px;
+  rotate: 79deg;
+}
+
+.level-44__line--two {
+  top: 235px;
+  left: 430px;
+  width: 180px;
+  rotate: -32deg;
+}
+
+.level-44__line--three {
+  top: 225px;
+  left: 480px;
+  width: 440px;
+  rotate: 60deg;
+}
+
+.level-44__heading {
+  z-index: 3;
+  color: #000;
+  pointer-events: none;
+}
+
+.level-44__rainbow-button {
+  position: absolute;
+  z-index: 4;
+  top: 206px;
+  left: 459px;
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 78px;
+  padding: 0;
+  overflow: hidden;
+  color: #fff;
+  background: #050505;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(0 17%, 84% 0, 100% 82%, 17% 100%);
+  cursor: pointer;
+}
+
+.level-44__rainbow-button::before {
+  position: absolute;
+  z-index: 0;
+  inset: 3px;
+  background: linear-gradient(135deg, #ff0048 0%, #ff7b00 18%, #ffe600 34%, #36d13f 50%, #00cde8 66%, #3154ef 82%, #bd25da 100%);
+  clip-path: polygon(0 17%, 84% 0, 100% 82%, 17% 100%);
+  content: "";
+}
+
+.level-44__rainbow-button img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.level-44__rainbow-button:hover::before,
+.level-44__rainbow-button:focus-visible::before {
+  background: linear-gradient(135deg, #f31b1b 0%, #870d0d 42%, #050505 100%);
+}
+
+.level-44__rainbow-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.level-44__rainbow-button:active::before {
+  background: #000;
+}
+
+.level-44__form {
+  position: absolute;
+  z-index: 5;
+  bottom: 33px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-44__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-44__form input.is-wrong {
+  background: #ff6d87;
+  translate: 6px 0;
+}
+
+.level-44__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.level-44__form button:hover:not(:disabled),
+.level-44__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-44__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-44__form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.level-44.is-zoomed .level-44__world {
+  cursor: grab;
+}
+
+.level-44.is-zoomed .level-44__world button,
+.level-44.is-zoomed .level-44__world input {
+  cursor: pointer;
+}
+
+.level-44.is-panning .level-44__world {
+  cursor: grabbing;
+}
+
+.level-44__context-menu button:disabled {
+  color: #999;
+}
+
+.level-44__context-menu button:disabled:hover {
+  color: #999;
+  background: transparent;
+}
