@@ -22,6 +22,26 @@ interface MazeRect {
   readonly height: number;
 }
 
+interface MazeObstacleDefinition extends MazeRect {
+  readonly axis: "x" | "y";
+  readonly travel: number;
+  readonly duration: number;
+  readonly phase: number;
+}
+
+interface ActiveMazeObstacle {
+  x: number;
+  y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly startX: number;
+  readonly startY: number;
+  readonly axis: "x" | "y";
+  readonly travel: number;
+  readonly duration: number;
+  readonly phase: number;
+}
+
 const MAZE_SAFE_PATH: readonly MazeRect[] = [
   { x: 26, y: 25, width: 259, height: 7 },
   { x: 26, y: 32, width: 259, height: 58 },
@@ -82,13 +102,13 @@ const MAZE_SAFE_PATH: readonly MazeRect[] = [
   { x: 26, y: 566, width: 105, height: 26 },
 ] as const;
 
-const MAZE_OBSTACLES: readonly MazeRect[] = [
-  { x: 118, y: 66, width: 82, height: 82 },
-  { x: 348, y: 182, width: 84, height: 84 },
-  { x: 668, y: 216, width: 84, height: 84 },
-  { x: 138, y: 382, width: 82, height: 82 },
-  { x: 216, y: 396, width: 82, height: 82 },
-  { x: 566, y: 382, width: 82, height: 82 },
+const MAZE_OBSTACLES: readonly MazeObstacleDefinition[] = [
+  { x: 118, y: 66, width: 82, height: 82, axis: "x", travel: 90, duration: 2200, phase: 0 },
+  { x: 348, y: 182, width: 84, height: 84, axis: "y", travel: 88, duration: 2600, phase: 0.45 },
+  { x: 668, y: 216, width: 84, height: 84, axis: "x", travel: -112, duration: 2000, phase: 0.85 },
+  { x: 138, y: 382, width: 82, height: 82, axis: "y", travel: -104, duration: 2400, phase: 1.2 },
+  { x: 216, y: 396, width: 82, height: 82, axis: "x", travel: 120, duration: 2800, phase: 0.65 },
+  { x: 566, y: 382, width: 82, height: 82, axis: "y", travel: 96, duration: 2300, phase: 1.55 },
 ] as const;
 
 const SCENES: readonly Level40Scene[] = [
@@ -192,9 +212,17 @@ function renderBlockers(): string {
     </div>`).join("");
 }
 
-function renderMaze(): string {
-  const renderRect = (rect: MazeRect, className: string) =>
-    `<i class="${className}" style="left:${rect.x}px;top:${rect.y}px;width:${rect.width}px;height:${rect.height}px"></i>`;
+function createMazeObstacles(): ActiveMazeObstacle[] {
+  return MAZE_OBSTACLES.map((obstacle) => ({
+    ...obstacle,
+    startX: obstacle.x,
+    startY: obstacle.y,
+  }));
+}
+
+function renderMaze(obstacles: readonly ActiveMazeObstacle[]): string {
+  const renderObstacle = (rect: MazeRect, index: number) =>
+    `<i class="level-40__maze-obstacle" data-maze-obstacle="${index}" style="left:${rect.x}px;top:${rect.y}px;width:${rect.width}px;height:${rect.height}px"></i>`;
   const renderSafeRect = (rect: MazeRect) =>
     `<rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}"></rect>`;
   return `
@@ -209,7 +237,7 @@ function renderMaze(): string {
         <rect class="level-40__maze-wall-fill" width="800" height="600" mask="url(#level-40-safe-path)"></rect>
       </svg>
       <div class="level-40__maze-obstacles" aria-hidden="true">
-        ${MAZE_OBSTACLES.map((obstacle) => renderRect(obstacle, "level-40__maze-obstacle")).join("")}
+        ${obstacles.map(renderObstacle).join("")}
       </div>
       ${renderDiamondButton("level-40__diamond level-40__diamond--maze-exit", "Continue to Scene 6")}
     </section>`;
@@ -224,7 +252,11 @@ function pointInsideMazePath(point: LocalPoint): boolean {
   return MAZE_SAFE_PATH.some((safeArea) => pointInsideRect(point, safeArea));
 }
 
-function movementHitsMaze(start: LocalPoint, end: LocalPoint): boolean {
+function movementHitsMaze(
+  start: LocalPoint,
+  end: LocalPoint,
+  obstacles: readonly MazeRect[],
+): boolean {
   const distance = Math.hypot(end.x - start.x, end.y - start.y);
   const steps = Math.max(1, Math.ceil(distance / 4));
   for (let step = 0; step <= steps; step += 1) {
@@ -234,7 +266,7 @@ function movementHitsMaze(start: LocalPoint, end: LocalPoint): boolean {
       y: start.y + (end.y - start.y) * ratio,
     };
     if (!pointInsideMazePath(point)
-      || MAZE_OBSTACLES.some((obstacle) => pointInsideRect(point, obstacle))) return true;
+      || obstacles.some((obstacle) => pointInsideRect(point, obstacle))) return true;
   }
   return false;
 }
@@ -252,11 +284,14 @@ export const level40: LevelDefinition = {
   number: 40,
   title: "Limitation",
   scenes: SCENES.map((_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
-  mount({ screen, listen, audio, complete, initialScene }) {
+  mount({ screen, listen, interval, audio, complete, initialScene }) {
     let sceneIndex = Math.max(0, Math.min(SCENES.length - 1, Number(initialScene ?? "1") - 1));
     let previousPointer: { readonly point: LocalPoint; readonly time: number } | undefined;
     let maximumDisplaySpeed = 0;
     let sluggishPasswordRevealed = false;
+    let mazeObstacles: ActiveMazeObstacle[] = [];
+    let mazeObstacleElements: HTMLElement[] = [];
+    let mazeAnimationStartedAt = 0;
     let activeDrag:
       | {
           readonly element: HTMLElement;
@@ -282,6 +317,9 @@ export const level40: LevelDefinition = {
       );
       activeDrag = undefined;
       passwordInput = undefined;
+      mazeObstacles = sceneIndex === 4 ? createMazeObstacles() : [];
+      mazeObstacleElements = [];
+      mazeAnimationStartedAt = performance.now();
       screen.innerHTML = `
         <header class="level-heading level-40__heading" aria-label="Level 40, Limitation">
           <div class="level-heading__number level-40__title">Level 40</div>
@@ -303,7 +341,7 @@ export const level40: LevelDefinition = {
           ${renderSpeedometer()}
         ` : ""}
         ${sceneIndex === 4 ? `
-          ${renderMaze()}
+          ${renderMaze(mazeObstacles)}
           ${renderSpeedometer()}
         ` : ""}
         ${sceneIndex === 5 ? `
@@ -333,6 +371,9 @@ export const level40: LevelDefinition = {
       `;
       previousPointer = undefined;
       maximumDisplaySpeed = 0;
+      if (sceneIndex === 4) {
+        mazeObstacleElements = Array.from(screen.querySelectorAll<HTMLElement>("[data-maze-obstacle]"));
+      }
       if (sceneIndex === 6) {
         const input = screen.querySelector<HTMLInputElement>("#level-40-answer");
         if (input) passwordInput = attachStarMaskedInput(input, listen);
@@ -354,6 +395,30 @@ export const level40: LevelDefinition = {
 
     renderScene();
 
+    interval(() => {
+      if (sceneIndex !== 4) return;
+      const elapsed = performance.now() - mazeAnimationStartedAt;
+      mazeObstacles.forEach((obstacle, index) => {
+        const cycle = (elapsed / obstacle.duration + obstacle.phase) % 2;
+        const linearProgress = cycle <= 1 ? cycle : 2 - cycle;
+        const progress = (1 - Math.cos(linearProgress * Math.PI)) / 2;
+        obstacle.x = obstacle.startX + (obstacle.axis === "x" ? obstacle.travel * progress : 0);
+        obstacle.y = obstacle.startY + (obstacle.axis === "y" ? obstacle.travel * progress : 0);
+        const element = mazeObstacleElements[index];
+        if (!element) return;
+        element.style.left = `${obstacle.x.toFixed(2)}px`;
+        element.style.top = `${obstacle.y.toFixed(2)}px`;
+      });
+
+      const pointer = previousPointer;
+      if (pointer
+        && mazeObstacles.some((obstacle) => pointInsideRect(pointer.point, obstacle))) {
+        previousPointer = undefined;
+        audio.playEffect(SOUND_EFFECTS.break);
+        goToScene(7);
+      }
+    }, 16);
+
     listen(screen, "pointermove", (event) => {
       if (sceneIndex < 3 || sceneIndex >= 6) {
         previousPointer = undefined;
@@ -372,13 +437,13 @@ export const level40: LevelDefinition = {
           goToScene(6);
           return;
         }
-        if (sceneIndex === 4 && movementHitsMaze(previousPointer.point, point)) {
+        if (sceneIndex === 4 && movementHitsMaze(previousPointer.point, point, mazeObstacles)) {
           audio.playEffect(SOUND_EFFECTS.break);
           goToScene(7);
           return;
         }
       } else if (sceneIndex === 4 && (!pointInsideMazePath(point)
-        || MAZE_OBSTACLES.some((obstacle) => pointInsideRect(point, obstacle)))) {
+        || mazeObstacles.some((obstacle) => pointInsideRect(point, obstacle)))) {
         audio.playEffect(SOUND_EFFECTS.break);
         goToScene(7);
         return;

@@ -50,9 +50,313 @@
 }
 
 .level-44__heading {
-  z-index: 3;
+  z-index: 8;
   color: #000;
   pointer-events: none;
+}
+
+.level-44__password-hint {
+  position: absolute;
+  z-index: 7;
+  top: 88px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #ffff00;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 92px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
+}
+
+.level-44__password-hint[hidden] {
+  display: none;
+}
+
+.level-44__cursor-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-44__cursor-button {
+  --cursor-button-fill: #fff;
+  --cursor-button-outline: #050505;
+  --cursor-button-shape: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 96px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--cursor-button-outline);
+  border: 0;
+  border-radius: 0;
+  clip-path: var(--cursor-button-shape);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.level-44__cursor-button::before {
+  position: absolute;
+  z-index: 0;
+  inset: 5px;
+  background: var(--cursor-button-fill);
+  clip-path: var(--cursor-button-shape);
+  content: "";
+}
+
+.level-44__cursor-button img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.level-44__cursor-button--one {
+  --cursor-button-fill: #0868bd;
+  --cursor-button-outline: #050505;
+  --cursor-button-shape: polygon(12% 8%, 82% 0, 100% 100%, 0 92%);
+  top: 260px;
+  left: 68px;
+}
+
+.level-44__cursor-button--four {
+  --cursor-button-fill: #ed171c;
+  --cursor-button-outline: #050505;
+  --cursor-button-shape: polygon(0 16%, 76% 0, 100% 75%, 0 100%);
+  top: 430px;
+  left: 385px;
+}
+
+.level-44__cursor-button--seven {
+  --cursor-button-fill: #050505;
+  --cursor-button-outline: #fff;
+  --cursor-button-shape: polygon(56% 0, 84% 100%, 0 86%, 18% 21%);
+  right: 30px;
+  bottom: 56px;
+}
+
+.level-44__cursor-button--seven img {
+  width: 66px;
+  height: 66px;
+}
+
+.level-44__cursor-button:hover,
+.level-44__cursor-button:focus-visible {
+  filter: brightness(1.12);
+  outline: none;
+}
+
+.level-44__cursor-map {
+  position: absolute;
+  z-index: 4;
+  top: 267px;
+  left: 380px;
+  display: block;
+  width: 40px;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  image-rendering: auto;
+}
+
+.level-44__cursor-map[hidden] {
+  display: none;
+}
+
+.level-44__cursor-map.is-resetting {
+  animation: level-44-maze-reset 180ms linear;
+}
+
+.level-44__custom-cursor img {
+  width: 40px;
+  height: auto;
+  image-rendering: auto;
+}
+
+.level-44__custom-cursor i {
+  display: block;
+  width: 1px;
+  height: 1px;
+  background: #ffff00;
+}
+
+.level-44__custom-cursor i[hidden],
+.level-44__custom-cursor img[hidden] {
+  display: none;
+}
+
+@keyframes level-44-maze-reset {
+  25% { translate: -2px 0; }
+  75% { translate: 2px 0; }
+}
+
+.level-44__mirrors {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-44__mirror {
+  position: absolute;
+  z-index: var(--mirror-layer);
+  width: 230px;
+  height: 300px;
+  padding: 26px;
+  background: transparent;
+  border: 0;
+  isolation: isolate;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.level-44__mirror-grip {
+  position: absolute;
+  z-index: 5;
+  display: block;
+  background: #a50000;
+  border: 6px solid #050505;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.level-44__mirror-grip--top,
+.level-44__mirror-grip--bottom {
+  left: 0;
+  width: 100%;
+  height: 30px;
+}
+
+.level-44__mirror-grip--top {
+  top: 0;
+}
+
+.level-44__mirror-grip--bottom {
+  bottom: 0;
+}
+
+.level-44__mirror-grip--left,
+.level-44__mirror-grip--right {
+  top: 24px;
+  width: 30px;
+  height: calc(100% - 48px);
+}
+
+.level-44__mirror-grip--left {
+  left: 0;
+}
+
+.level-44__mirror-grip--right {
+  right: 0;
+}
+
+.level-44__mirror.is-dragging .level-44__mirror-grip {
+  cursor: grabbing;
+}
+
+.level-44__mirror-face {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(112deg, #00d9dc 15%, #bfffff 42%, #00d9dc 67%, #00bfc9 100%);
+  background-size: 260% 100%;
+  border: 4px solid #050505;
+  border-radius: 0;
+  cursor: default;
+  pointer-events: auto;
+  animation: level-44-mirror-shine 1.35s linear infinite;
+}
+
+.level-44__mirror-face:hover,
+.level-44__mirror-face:focus-visible {
+  outline: none;
+}
+
+.level-44__mirror-error,
+.level-44__mirror-hole,
+.level-44__mirror-crack {
+  display: none;
+}
+
+.level-44__mirror.is-broken {
+  cursor: not-allowed;
+}
+
+.level-44__mirror.is-broken .level-44__mirror-grip {
+  cursor: not-allowed;
+}
+
+.level-44__mirror.is-broken .level-44__mirror-face {
+  background: #f20b12;
+  cursor: not-allowed;
+  animation: none;
+  opacity: 1;
+}
+
+.level-44__mirror.is-broken .level-44__mirror-error {
+  position: absolute;
+  z-index: 3;
+  top: 13px;
+  left: 10px;
+  display: block;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.level-44__mirror.is-broken .level-44__mirror-hole {
+  position: absolute;
+  z-index: 2;
+  top: 72px;
+  left: 43px;
+  display: block;
+  width: 88px;
+  height: 108px;
+  background: linear-gradient(90deg, #082657 0 45%, #050505 45% 58%, #7e0909 58% 100%);
+  clip-path: polygon(38% 0, 61% 17%, 100% 10%, 84% 48%, 100% 73%, 61% 69%, 42% 100%, 21% 74%, 0 60%, 18% 36%, 4% 9%);
+}
+
+.level-44__mirror.is-broken .level-44__mirror-crack {
+  position: absolute;
+  z-index: 4;
+  top: 127px;
+  left: 87px;
+  display: block;
+  width: var(--crack-length, 88px);
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 0 1px #333;
+  rotate: var(--crack-angle, 0deg);
+  transform-origin: left center;
+}
+
+.level-44__mirror-crack--1 { --crack-angle: -92deg; --crack-length: 108px; }
+.level-44__mirror-crack--2 { --crack-angle: -55deg; --crack-length: 116px; }
+.level-44__mirror-crack--3 { --crack-angle: -18deg; --crack-length: 102px; }
+.level-44__mirror-crack--4 { --crack-angle: 21deg; --crack-length: 110px; }
+.level-44__mirror-crack--5 { --crack-angle: 58deg; --crack-length: 114px; }
+.level-44__mirror-crack--6 { --crack-angle: 94deg; --crack-length: 105px; }
+.level-44__mirror-crack--7 { --crack-angle: 133deg; --crack-length: 118px; }
+.level-44__mirror-crack--8 { --crack-angle: 166deg; --crack-length: 106px; }
+.level-44__mirror-crack--9 { --crack-angle: 205deg; --crack-length: 96px; }
+
+@keyframes level-44-mirror-shine {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
 }
 
 .level-44__rainbow-button {
