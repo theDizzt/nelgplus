@@ -45,7 +45,7 @@ const ADMIN_FONT_OPTIONS = [
 ] as const;
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
-const PUBLIC_LEVEL_COUNT = 35;
+const PUBLIC_LEVEL_COUNT = registeredLevelNumbers.length;
 const PRELOAD_FONTS = [
   "/assets/fonts/perpetua/Perpetua.woff2",
   "/assets/fonts/perpetua/Perpetua-Bold.woff2",

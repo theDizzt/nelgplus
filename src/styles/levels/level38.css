@@ -1,7 +1,7 @@
 .level-38 {
   overflow: hidden;
   color: #000;
-  background: radial-gradient(circle at 50% 42%, #397aab 0%, #174f87 42%, #092e5f 76%, #02172f 100%);
+  background: radial-gradient(circle at 50% 42%, #0000FF 0%, #02172f 100%);
 }
 
 .level-38__heading {
@@ -24,7 +24,7 @@
 .level-38__route {
   position: absolute;
   top: -3420px;
-  left: -3650px;
+  left: -3350px;
   width: 7500px;
   max-width: none;
   height: 7500px;

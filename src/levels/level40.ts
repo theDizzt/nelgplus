@@ -107,7 +107,7 @@ const MAZE_OBSTACLES: readonly MazeObstacleDefinition[] = [
   { x: 348, y: 182, width: 84, height: 84, axis: "y", travel: 88, duration: 2600, phase: 0.45 },
   { x: 668, y: 216, width: 84, height: 84, axis: "x", travel: -112, duration: 2000, phase: 0.85 },
   { x: 138, y: 382, width: 82, height: 82, axis: "y", travel: -104, duration: 2400, phase: 1.2 },
-  { x: 216, y: 396, width: 82, height: 82, axis: "x", travel: 120, duration: 2800, phase: 0.65 },
+  { x: 216, y: 396, width: 82, height: 82, axis: "y", travel: -120, duration: 2800, phase: 0.65 },
   { x: 566, y: 382, width: 82, height: 82, axis: "y", travel: 96, duration: 2300, phase: 1.55 },
 ] as const;
 
