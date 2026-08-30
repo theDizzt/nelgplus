@@ -1,0 +1,149 @@
+.level-51 {
+  color: #f00;
+  background: radial-gradient(circle at 50% 48%, #686868 0 8%, #4a4a4a 38%, #292929 74%, #151515 100%);
+  overflow: hidden;
+}
+
+.level-51__heading {
+  z-index: 20;
+  color: #f00;
+  pointer-events: none;
+}
+
+.level-51__heading .level-heading__number,
+.level-51__heading h1 {
+  color: #f00;
+  -webkit-text-stroke: 2px #fff;
+  paint-order: stroke fill;
+  text-shadow: none;
+}
+
+.level-51__message {
+  position: absolute;
+  z-index: 12;
+  top: 174px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #f00;
+  font-family: "NELG ITC Kristen", "Comic Sans MS", cursive;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+
+.level-51__friends {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-51__friend {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--friend-width);
+  line-height: 0;
+  will-change: translate;
+}
+
+.level-51__friend-visual {
+  display: block;
+  width: 100%;
+  transform-origin: 50% 100%;
+  transition: transform 90ms linear;
+}
+
+.level-51__friend.is-facing-left .level-51__friend-visual {
+  transform: scaleX(-1);
+}
+
+.level-51__friend img {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: level-51-walk-wobble 460ms ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+  user-select: none;
+}
+
+.level-51__friend:nth-child(2n) img { animation-delay: -170ms; }
+.level-51__friend:nth-child(3n) img { animation-duration: 520ms; }
+.level-51__friend.is-leaving img { animation-duration: 260ms; }
+
+.level-51__form {
+  position: absolute;
+  z-index: 25;
+  bottom: 43px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+}
+
+.level-51__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-51__form input {
+  padding: 4px 8px;
+  color: #f00;
+  background: #333;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  caret-color: #f00;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-51__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-51__form input.is-wrong {
+  background: #5c1515;
+  translate: 6px 0;
+}
+
+.level-51__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  opacity: 0.88;
+}
+
+.level-51__form button:hover,
+.level-51__form button:focus-visible {
+  background: #f01818;
+  outline: none;
+}
+
+.level-51__form button:active {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+@keyframes level-51-walk-wobble {
+  from { translate: 0 0; rotate: -2deg; }
+  to { translate: 0 -5px; rotate: 2deg; }
+}

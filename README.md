@@ -57,4 +57,8 @@ enhanced level.
 Whenever a level is added or substantially changed, add or update its Korean
 solution in `walkthrough.md`.
 
+Unless a level specification explicitly requests a different password form,
+use Level 5 as the reference for the password input and GO button dimensions,
+spacing, typography, and screen position.
+
 Open `?debug=1` during development to display previous/next level controls.
