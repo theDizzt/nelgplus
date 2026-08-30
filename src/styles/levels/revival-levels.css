@@ -269,12 +269,12 @@
 .level-18__revival-button:active {
   position: absolute;
   z-index: 5;
-  top: 14px;
+  top: 25px;
   left: 50%;
-  width: 18px;
-  height: 18px;
+  width: 10px;
+  height: 10px;
   padding: 0;
-  background: #393519;
+  background: #393516;
   border: 0;
   border-radius: 50%;
   box-shadow: none;
