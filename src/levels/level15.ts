@@ -8,11 +8,20 @@ const REVEAL_KEYS: Readonly<Record<string, { index: number; letter: string }>> =
   e: { index: 3, letter: "e" },
 };
 
+const REVIVAL_REVEAL_KEYS: Readonly<Record<string, { index: number; letter: string }>> = {
+  "!": { index: 0, letter: "!" },
+  "#": { index: 1, letter: "#" },
+  "%": { index: 2, letter: "%" },
+  "&": { index: 3, letter: "&" },
+  "(": { index: 4, letter: "(" },
+};
+
 export const level15: LevelDefinition = {
   number: 15,
   title: "Input",
-  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout }) {
-    screen.className = "level-screen level-15";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-15${revival ? " level-15--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-15__heading">
         <div class="level-heading__number">Level 15</div>
@@ -48,7 +57,7 @@ export const level15: LevelDefinition = {
 
     listen(document, "keydown", (event) => {
       if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) return;
-      const reveal = REVEAL_KEYS[event.key.toLowerCase()];
+      const reveal = (revival ? REVIVAL_REVEAL_KEYS : REVEAL_KEYS)[event.key.toLowerCase()];
       if (!reveal) return;
 
       const box = boxes[reveal.index];
@@ -74,7 +83,7 @@ export const level15: LevelDefinition = {
 
       const answer = maskedInput.getValue();
       if (new Set(["hide", "hidden", "?????"]).has(answer)) unlockAchievement(13);
-      if (answer === "hide?") {
+      if (answer === (revival ? "!#%&(" : "hide?")) {
         complete();
         return;
       }

@@ -1476,7 +1476,33 @@ export class Game {
       }
 
       optionsController.abort();
-      this.showLevel(levelNumber, adminScene?.value || undefined);
+      const selectedScene = adminScene?.value || undefined;
+      if (levelNumber === 50) {
+        if (selectedScene === "revival-main") {
+          this.sessionFlags.delete("level50-enhanced-run");
+          this.sessionFlags.add("level50-revival-main");
+          this.renderMainMenu();
+          return;
+        }
+
+        const enhancedMatch = selectedScene?.match(/^enhanced-(\d+)$/);
+        if (enhancedMatch) {
+          const enhancedLevel = Number(enhancedMatch[1]);
+          if (enhancedLevel >= 1 && enhancedLevel <= 25) {
+            this.sessionFlags.add("level50-revival-main");
+            this.sessionFlags.add("level50-enhanced-run");
+            this.showLevel(enhancedLevel);
+            return;
+          }
+        }
+
+        this.sessionFlags.delete("level50-revival-main");
+        this.sessionFlags.delete("level50-enhanced-run");
+        this.showLevel(50, "intro");
+        return;
+      }
+
+      this.showLevel(levelNumber, selectedScene);
     });
   }
 
@@ -1583,7 +1609,8 @@ export class Game {
   private completeCurrentLevel(): void {
     if (this.transitioning) return;
     this.transitioning = true;
-    if (WARP_CHECKPOINTS[this.currentLevel]) {
+    const enhancedRun = this.sessionFlags.has("level50-enhanced-run");
+    if (!enhancedRun && WARP_CHECKPOINTS[this.currentLevel]) {
       this.renderWarpCheckpoint(this.currentLevel, true);
       return;
     }

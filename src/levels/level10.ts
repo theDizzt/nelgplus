@@ -23,7 +23,8 @@ const BUTTON_POSITIONS = [
 export const level10: LevelDefinition = {
   number: 10,
   title: "Disappearance",
-  mount({ screen, complete, listen, audio }) {
+  mount({ screen, complete, wrongAnswer, listen, audio, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
     const buttons = BUTTON_POSITIONS.map(
       ([left, top], index) => `
         <button class="level-10__target" type="button" style="left:${left}px;top:${top}px"
@@ -31,7 +32,7 @@ export const level10: LevelDefinition = {
       `,
     ).join("");
 
-    screen.className = "level-screen level-10";
+    screen.className = `level-screen level-10${revival ? " level-10--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-10__heading">
         <div class="level-heading__number">Level 10</div>
@@ -53,6 +54,11 @@ export const level10: LevelDefinition = {
     listen(targetContainer, "click", (event) => {
       const target = (event.target as Element).closest<HTMLButtonElement>(".level-10__target");
       if (!target || !targetContainer.contains(target)) return;
+
+      if (revival && (event as MouseEvent).detail !== 0) {
+        wrongAnswer();
+        return;
+      }
 
       audio.playEffect(SOUND_EFFECTS.smack);
       target.remove();

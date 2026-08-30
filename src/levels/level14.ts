@@ -4,8 +4,9 @@ import type { LevelDefinition } from "../core/types";
 export const level14: LevelDefinition = {
   number: 14,
   title: "Form",
-  mount({ screen, complete, wrongAnswer, listen, timeout }) {
-    screen.className = "level-screen level-14";
+  mount({ screen, complete, wrongAnswer, listen, timeout, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-14${revival ? " level-14--revival" : ""}`;
     screen.innerHTML = `
       <div class="level-14__background" aria-hidden="true">
         <span class="level-14__shape level-14__shape--navy"></span>
@@ -19,7 +20,9 @@ export const level14: LevelDefinition = {
         <h1>Form</h1>
       </header>
 
-      <p class="level-14__message">Can you figure out what is hidden?</p>
+      <p class="level-14__message">${revival
+        ? 'Ca<span data-night-letter>n</span> you f<span data-night-letter>i</span>gure out what is hidden? Fi<span data-night-letter>g</span>ure out w<span data-night-letter>h</span>a<span data-night-letter>t</span> changed.'
+        : "Can you figure out what is hidden?"}</p>
       <canvas class="level-14__hidden-word" width="700" height="180" aria-hidden="true"></canvas>
       <canvas class="level-14__trace" width="700" height="180" aria-hidden="true"></canvas>
 
@@ -57,6 +60,8 @@ export const level14: LevelDefinition = {
     void document.fonts.load('700 170px "NELG Arial"').then(() => {
       if (hiddenWord.isConnected) drawHiddenWord();
     });
+
+    if (revival) hiddenWord.hidden = true;
 
     listen(hiddenWord, "pointermove", (event) => {
       const bounds = hiddenWord.getBoundingClientRect();
@@ -114,7 +119,7 @@ export const level14: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === "hidden") {
+      if (maskedInput.getValue() === (revival ? "night" : "hidden")) {
         complete();
         return;
       }
@@ -128,8 +133,17 @@ export const level14: LevelDefinition = {
       timeout(() => input.classList.remove("is-wrong"), 360);
     });
 
+    let backgroundInterval: number | undefined;
+    if (revival) {
+      const colors = ["#243540", "#5a1717", "#193d2a", "#4b3518", "#2f1749", "#101010"];
+      backgroundInterval = window.setInterval(() => {
+        screen.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)] ?? "#101010";
+      }, 850);
+    }
+
     return () => {
       window.clearInterval(traceFadeInterval);
+      if (backgroundInterval !== undefined) window.clearInterval(backgroundInterval);
       if (traceClearTimeout !== undefined) window.clearTimeout(traceClearTimeout);
     };
   },

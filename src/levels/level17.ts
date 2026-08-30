@@ -3,8 +3,9 @@ import type { LevelDefinition } from "../core/types";
 export const level17: LevelDefinition = {
   number: 17,
   title: "Title",
-  mount({ screen, complete, unlockAchievement, listen }) {
-    screen.className = "level-screen level-17";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-17${revival ? " level-17--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-17__heading">
         <input class="level-heading__number level-17__title" data-allow-select type="text" value="Level 17"
@@ -21,8 +22,12 @@ export const level17: LevelDefinition = {
 
     const tryComplete = () => {
       const requestedLevel = editableTitle.value.trim();
-      if (requestedLevel === "Level 18") {
+      if (requestedLevel === (revival ? "Level 51" : "Level 18")) {
         complete();
+        return;
+      }
+      if (revival) {
+        wrongAnswer();
         return;
       }
       if (/^Level\s+-?\d+$/i.test(requestedLevel)) unlockAchievement(15);

@@ -23,7 +23,8 @@ function clamp(value: number): number {
 export const level08: LevelDefinition = {
   number: 8,
   title: "Colour II",
-  mount({ screen, complete, wrongAnswer, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, listen, timeout, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
     const mazeMarkup = MAZES.map(
       ({ color, letter, path }, index) => `
         <div class="level-08__maze" data-maze="${index + 1}" data-allow-drag
@@ -39,11 +40,11 @@ export const level08: LevelDefinition = {
       `,
     ).join("");
 
-    screen.className = "level-screen level-08";
+    screen.className = `level-screen level-08${revival ? " level-08--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-08__heading">
         <div class="level-heading__number level-08__number" aria-label="Level 8">
-          <span>L</span><span>e</span><span>v</span><span>e</span><span>l</span><span>8</span>
+          ${revival ? "Level 8" : "<span>L</span><span>e</span><span>v</span><span>e</span><span>l</span><span>8</span>"}
         </div>
         <h1>Colour II</h1>
       </header>
@@ -108,6 +109,14 @@ export const level08: LevelDefinition = {
       if (!activeMaze || !activeMap || event.pointerId !== activePointer) return;
       const nextOffset = clamp((offsets.get(activeMaze) ?? 0) + (event.clientX - previousX) * DRAG_SPEED);
       previousX = event.clientX;
+      if (revival) {
+        const repelledMaze = activeMaze;
+        repelledMaze.classList.add("is-repelled");
+        activeMap.style.transform = "translate3d(0, 0, 0)";
+        timeout(() => repelledMaze.classList.remove("is-repelled"), 140);
+        event.preventDefault();
+        return;
+      }
       offsets.set(activeMaze, nextOffset);
       activeMap.style.transform = `translate3d(${nextOffset}px, 0, 0)`;
       if (nextOffset <= MAX_OFFSET + 8) {
@@ -138,7 +147,7 @@ export const level08: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === "silver") {
+      if (maskedInput.getValue() === (revival ? "gold" : "silver")) {
         complete();
         return;
       }

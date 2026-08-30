@@ -4,11 +4,12 @@ import { assetUrl } from "../core/assets";
 export const level18: LevelDefinition = {
   number: 18,
   title: "Paint",
-  mount({ screen, complete, listen }) {
-    screen.className = "level-screen level-18";
+  mount({ screen, complete, wrongAnswer, listen, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-18${revival ? " level-18--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-18__heading">
-        <div class="level-heading__number">Level 18</div>
+        <div class="level-heading__number">Level 1<span class="level-18__eight${revival ? " revival-font-perpetua" : ""}">8${revival ? '<button class="level-18__revival-button" type="button" aria-label="Hidden button inside 8"></button>' : ""}</span></div>
         <h1>Paint</h1>
       </header>
 
@@ -26,6 +27,8 @@ export const level18: LevelDefinition = {
     `;
 
     const hiddenButton = screen.querySelector<HTMLButtonElement>(".level-18__hidden-button");
-    if (hiddenButton) listen(hiddenButton, "click", complete);
+    if (hiddenButton) listen(hiddenButton, "click", revival ? wrongAnswer : complete);
+    const revivalButton = screen.querySelector<HTMLButtonElement>(".level-18__revival-button");
+    if (revivalButton) listen(revivalButton, "click", complete);
   },
 };

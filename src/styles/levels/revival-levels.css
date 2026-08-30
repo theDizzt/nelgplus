@@ -10,7 +10,7 @@
 }
 
 .level-frame--revival .level-screen,
-.level-frame--revival .level-screen *:not(.level-heading__number):not(input):not(textarea):not(button[type="submit"]) {
+.level-frame--revival .level-screen *:not(.level-heading__number):not(input):not(textarea):not(button[type="submit"]):not(.revival-font-courier):not(.revival-font-perpetua):not(.revival-font-kristen) {
   font-family: "NELG Chiller", fantasy !important;
   letter-spacing: 0 !important;
 }
@@ -19,6 +19,14 @@
   color: #130000;
   font-family: "NELG Perpetua", Georgia, serif !important;
   text-shadow: none !important;
+}
+
+.level-frame--revival .revival-font-perpetua {
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif !important;
+}
+
+.level-frame--revival .revival-font-kristen {
+  font-family: "NELG ITC Kristen", "Comic Sans MS", cursive !important;
 }
 
 .level-frame--revival .level-heading h1 {
@@ -79,10 +87,215 @@
 }
 
 .level-frame--revival .level-screen button[type="submit"]:hover,
-.level-frame--revival .level-screen button[type="submit"]:focus-visible,
-.level-frame--revival .level-screen button[type="submit"]:active {
-  color: #f00 !important;
-  background: #760000 !important;
+.level-frame--revival .level-screen button[type="submit"]:focus-visible {
+  color: #000 !important;
+  background: #f00 !important;
   border-color: #f00 !important;
   box-shadow: none !important;
 }
+
+.level-frame--revival .level-screen button[type="submit"]:active {
+  color: #f00 !important;
+  background: #000 !important;
+  border-color: #f00 !important;
+  box-shadow: none !important;
+}
+
+/* Enhanced Levels 6-21 */
+.level-frame--revival .level-06--revival {
+  background: linear-gradient(180deg, #070707 0%, #383838 43%, #f4f4f4 50%, #3d3d3d 58%, #050505 100%);
+}
+
+.level-frame--revival .level-06--revival .level-heading__number,
+.level-frame--revival .level-06--revival .level-heading h1,
+.level-frame--revival .level-10--revival .level-heading__number,
+.level-frame--revival .level-10--revival .level-heading h1 {
+  color: #fff !important;
+}
+
+.level-frame--revival .level-06--revival .level-06__button {
+  color: #000;
+  background: #fff;
+}
+
+.level-06--revival .level-06__button--0 { top: 210px; left: 30px; animation: level-06-path-two 3.6s linear infinite; }
+.level-06--revival .level-06__button--4 { top: 205px; left: 180px; animation: level-06-path-three 3.8s linear infinite reverse; }
+.level-06--revival .level-06__button--5 { top: 390px; left: 260px; animation: level-06-path-one 4.1s linear infinite reverse; }
+.level-06--revival .level-06__button--6 { top: 190px; left: 410px; animation: level-06-path-two 4.3s linear infinite reverse; }
+.level-06--revival .level-06__button--7 { top: 365px; left: 520px; animation: level-06-path-three 3.9s linear infinite; }
+.level-06--revival .level-06__button--8 { top: 235px; left: 640px; animation: level-06-path-one 4.5s linear infinite; }
+.level-06--revival .level-06__button--9 { top: 455px; left: 380px; animation: level-06-path-two 4s linear infinite; }
+
+.level-frame--revival .level-07--revival {
+  background: #07072a;
+}
+
+.level-frame--revival .level-07--revival .level-heading__number,
+.level-frame--revival .level-07--revival .level-heading h1,
+.level-frame--revival .level-11--revival .level-heading__number,
+.level-frame--revival .level-11--revival .level-heading h1,
+.level-frame--revival .level-15--revival .level-heading__number,
+.level-frame--revival .level-15--revival .level-heading h1 {
+  color: #f00 !important;
+}
+
+.level-07--revival .level-07__message { color: #f00; }
+.level-07--revival .level-07__object {
+  background: radial-gradient(circle at 42% 38%, #ff3535 0 7%, #8b0000 28%, #260000 70%) !important;
+  border: 8px ridge #f00 !important;
+  border-radius: 38% 62% 47% 53% / 55% 36% 64% 45% !important;
+  clip-path: polygon(8% 19%, 29% 8%, 47% 20%, 67% 4%, 93% 24%, 80% 49%, 96% 75%, 68% 91%, 49% 79%, 27% 98%, 6% 73%, 18% 48%) !important;
+  filter: none;
+}
+
+.level-frame--revival .level-08--revival {
+  background: linear-gradient(135deg, #5f3b00, #ffd84a 38%, #9b6100 65%, #fff0a0);
+}
+
+.level-frame--revival .level-08--revival .level-08__number,
+.level-frame--revival .level-08--revival .level-08__number span {
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif !important;
+}
+
+.level-frame--revival .level-08--revival .level-heading__number span,
+.level-frame--revival .level-08--revival .level-heading h1,
+.level-frame--revival .level-09--revival .level-heading__number,
+.level-frame--revival .level-09--revival .level-heading h1,
+.level-frame--revival .level-14--revival .level-heading__number,
+.level-frame--revival .level-14--revival .level-heading h1,
+.level-frame--revival .level-17--revival .level-heading h1,
+.level-frame--revival .level-18--revival .level-heading__number,
+.level-frame--revival .level-18--revival .level-heading h1 {
+  color: #000 !important;
+}
+
+.level-08--revival .level-08__maze-route { stroke: #d00000; }
+.level-08--revival .level-08__maze.is-repelled { animation: revival-maze-repel 140ms linear; }
+@keyframes revival-maze-repel { 50% { translate: 14px 0; } }
+
+.level-frame--revival .level-09--revival { background: #07351b; }
+.level-frame--revival .level-09--revival .level-09__context-menu,
+.level-frame--revival .level-09--revival .level-09__context-menu button,
+.level-frame--revival .level-09--revival .level-09__context-menu pre {
+  font-family: "NELG Courier", Courier, "Courier New", monospace !important;
+}
+.level-09--revival .level-09__context-menu { width: 430px; }
+.level-09--revival .level-09__spider-option {
+  display: block;
+  width: 100%;
+  height: 27px;
+  padding: 2px 10px;
+  text-align: left;
+  white-space: pre;
+}
+.level-09--revival .level-09__spider-option pre {
+  margin: 0;
+  white-space: pre;
+}
+
+.level-frame--revival .level-10--revival { background: #160b17; }
+.level-10--revival .level-10__target {
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  pointer-events: none;
+}
+.level-10--revival .level-10__target:focus-visible {
+  background: transparent;
+  border-color: #ff0;
+  border-radius: 0;
+  outline: 2px solid #ff0;
+  outline-offset: 2px;
+}
+
+.level-11--revival .level-11__letters {
+  position: relative;
+  justify-self: center;
+  width: max-content;
+}
+.level-11--revival .level-11__plus {
+  position: absolute;
+  left: calc(100% + 5px);
+  opacity: 0;
+}
+.level-11--revival .level-11__plus:last-child { left: calc(100% + 57px); }
+.level-11--revival .level-11__plus.is-pressed { opacity: 1; }
+
+.level-frame--revival .level-12--revival {
+  background: radial-gradient(circle at center, #123b24 0%, #0a2416 35%, #020503 70%, #000 100%);
+}
+.level-frame--revival .level-12--revival .level-heading__number,
+.level-frame--revival .level-12--revival .level-heading h1 { color: #000 !important; }
+.level-12--revival .level-12__message strong { color: #063d16; }
+
+.level-frame--revival .level-13--revival {
+  background: linear-gradient(135deg, #000 0%, #350000 35%, #f00 68%, #150000 100%);
+}
+.level-frame--revival .level-13--revival .level-heading__number,
+.level-frame--revival .level-13--revival .level-heading h1 { color: #f00 !important; }
+.level-13--revival .level-13__button { background: #f00; }
+.level-13--revival .level-13__button img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.level-13--revival .level-13__button:disabled { cursor: default; }
+
+.level-frame--revival .level-14--revival { transition: background-color 700ms ease; }
+.level-14--revival .level-14__background,
+.level-14--revival .level-14__trace { display: none; }
+.level-14--revival [data-night-letter] { cursor: crosshair; }
+
+.level-frame--revival .level-15--revival { background: #6b3e22; }
+
+.level-frame--revival .level-16--revival {
+  background: url("/assets/images/warp.png") center / cover no-repeat;
+}
+.level-frame--revival .level-16--revival .level-heading__number,
+.level-frame--revival .level-16--revival .level-heading h1 { color: #7cfc00 !important; }
+
+.level-frame--revival .level-17--revival { background: #8b3f35; }
+.level-frame--revival .level-17--revival .level-17__title { color: #000 !important; }
+
+.level-frame--revival .level-18--revival { background: #393519; }
+.level-18__eight { position: relative; display: inline-block; }
+.level-18--revival .level-18__hidden-button { background: #393516; }
+.level-18__revival-button,
+.level-18__revival-button:hover,
+.level-18__revival-button:focus,
+.level-18__revival-button:active {
+  position: absolute;
+  z-index: 5;
+  top: 14px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: #393519;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: default;
+  outline: 0;
+  translate: -50% 0;
+}
+
+.level-frame--revival .level-19--revival { background: #000; }
+.level-frame--revival .level-19--revival .level-heading__number,
+.level-frame--revival .level-19--revival .level-heading h1,
+.level-19--revival .level-19__coordinates { color: #444 !important; }
+.level-19--revival .level-19__pixel-button--revival { top: 338px; left: 432px; width: 3px; height: 3px; }
+
+.level-frame--revival .level-21--revival {
+  background: url("/assets/images/level50u21bg.jpg") center / cover no-repeat;
+}
+.level-frame--revival .level-21--revival .level-heading__number,
+.level-frame--revival .level-21--revival .level-heading h1 {
+  color: #ff0 !important;
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+}
+.level-21--revival .level-21__message { color: #f00; }

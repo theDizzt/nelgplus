@@ -11,6 +11,7 @@ export const level21: LevelDefinition = {
     { id: "2", label: "Scene 2 - Failure" },
   ],
   mount({ screen, complete, wrongAnswer, unlockAchievement, initialScene, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -37,6 +38,10 @@ export const level21: LevelDefinition = {
     };
 
     const renderSceneTwo = () => {
+      if (revival) {
+        wrongAnswer();
+        return;
+      }
       session.setFlag(NO_SCREEN_VISITED_FLAG);
       clearScene();
       screen.className = "level-screen level-21 level-21--failure";
@@ -55,20 +60,20 @@ export const level21: LevelDefinition = {
 
     const renderSceneOne = () => {
       clearScene();
-      screen.className = "level-screen level-21 level-21--puzzle";
+      screen.className = `level-screen level-21 level-21--puzzle${revival ? " level-21--revival" : ""}`;
       screen.innerHTML = `
         <header class="level-heading level-21__heading">
           <div class="level-heading__number">Level 21</div>
           <h1>Homophone</h1>
         </header>
 
-        <p class="level-21__message">Stop playing this game and go for a walk.</p>
+        <p class="level-21__message${revival ? " revival-font-kristen" : ""}">Stop playing this game and go for a walk.</p>
 
         <form class="level-21__form" autocomplete="off">
           <div class="level-21__controls">
             <input class="nelg-password-input" id="level-21-answer" data-allow-select
               data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
-              maxlength="1" autocomplete="off" autocapitalize="off" aria-autocomplete="none"
+              maxlength="${revival ? 294 : 1}" autocomplete="off" autocapitalize="off" aria-autocomplete="none"
               aria-label="Password" spellcheck="false" />
             <button type="submit">GO</button>
           </div>
@@ -91,14 +96,14 @@ export const level21: LevelDefinition = {
       }, 0);
       on(window, "keydown", (event) => {
         if (!keyboardTrapArmed || event.repeat) return;
-        if (event.key === "3" || event.key === "Enter") {
+        if (!revival && (event.key === "3" || event.key === "Enter")) {
           event.preventDefault();
           renderSceneTwo();
         }
       });
       on(form, "submit", (event) => {
         event.preventDefault();
-        if (maskedInput.getValue() === "3") {
+        if (maskedInput.getValue() === (revival ? "294" : "3")) {
           if (pastedThree && !session.hasFlag(NO_SCREEN_VISITED_FLAG)) unlockAchievement(25);
           complete();
           return;
@@ -113,6 +118,12 @@ export const level21: LevelDefinition = {
         sceneTimeout(() => input.classList.remove("is-wrong"), 360);
       });
       input.focus();
+      if (revival) {
+        sceneTimeout(() => {
+          const message = screen.querySelector<HTMLElement>(".level-21__message");
+          if (message) message.textContent = "Can you measure the capacity inside the box?";
+        }, 300_000);
+      }
     };
 
     if (initialScene === "2") renderSceneTwo();

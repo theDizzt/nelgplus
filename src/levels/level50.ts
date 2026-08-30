@@ -7,7 +7,14 @@ const CORRUPTED_MAIN_FLAG = "level50-revival-main";
 export const level50: LevelDefinition = {
   number: 50,
   title: "Revival",
-  scenes: [{ id: "intro", label: "Intro" }],
+  scenes: [
+    { id: "intro", label: "Intro" },
+    { id: "revival-main", label: "Revival Main" },
+    ...Array.from({ length: 25 }, (_, index) => ({
+      id: `enhanced-${index + 1}`,
+      label: `Enhanced Level ${index + 1}`,
+    })),
+  ],
   mount({ screen, audio, listen, goToMenu, session }) {
     screen.className = "level-screen level-50";
     screen.innerHTML = `

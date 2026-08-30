@@ -2,11 +2,26 @@ import type { LevelDefinition } from "../core/types";
 import { localElementBounds, positionFloatingElement } from "../core/floatingPosition";
 import { assetUrl } from "../core/assets";
 
+const REVIVAL_MENU_LINES = [
+  "             |",
+  "             |",
+  "             |",
+  "         /   |   \\",
+  "         \\   |   /",
+  "       .  --\\|/--  ,",
+  "        '--|___|--'",
+  "        ,--|___|--,",
+  "       '  /\\o o/\\  `",
+  "         +   +   +",
+  "          `     '",
+] as const;
+
 export const level09: LevelDefinition = {
   number: 9,
   title: "Menu",
-  mount({ screen, complete, unlockAchievement, goToLevel, goToMenu, audio, listen }) {
-    screen.className = "level-screen level-09";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, goToLevel, goToMenu, audio, listen, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-09${revival ? " level-09--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-09__heading">
         <div class="level-heading__number">Level 9</div>
@@ -38,6 +53,28 @@ export const level09: LevelDefinition = {
 
     const menu = screen.querySelector<HTMLElement>(".level-09__context-menu");
     if (!menu) return;
+
+    if (revival) {
+      menu.innerHTML = REVIVAL_MENU_LINES.map(
+        (line) => `<button class="level-09__spider-option revival-font-courier" type="button" role="menuitem"><pre class="revival-font-courier">${line}</pre></button>`,
+      ).join("");
+      listen(screen, "contextmenu", (event) => {
+        event.preventDefault();
+        menu.hidden = false;
+        positionFloatingElement(screen, menu, event.clientX, event.clientY);
+      });
+      listen(menu, "click", () => wrongAnswer());
+      listen(document, "pointerdown", (event) => {
+        if (!menu.hidden && !menu.contains(event.target as Node)) menu.hidden = true;
+      });
+      let typed = "";
+      listen(document, "keydown", (event) => {
+        if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || event.key.length !== 1) return;
+        typed = `${typed}${event.key.toLowerCase()}`.slice(-6);
+        if (typed === "spider") complete();
+      });
+      return;
+    }
 
     const musicItem = menu.querySelector<HTMLButtonElement>("[data-menu-command='music']");
     const effectsItem = menu.querySelector<HTMLButtonElement>("[data-menu-command='effects']");

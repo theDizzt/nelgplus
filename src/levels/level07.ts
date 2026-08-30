@@ -6,8 +6,9 @@ const OBJECT_COUNT = 12;
 export const level07: LevelDefinition = {
   number: 7,
   title: "Tidy Up",
-  mount({ screen, complete, unlockAchievement, listen, audio }) {
-    screen.className = "level-screen level-07";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, audio, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-07${revival ? " level-07--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-07__heading">
         <div class="level-heading__number">Level 7</div>
@@ -39,6 +40,10 @@ export const level07: LevelDefinition = {
     let activePointer: number | undefined;
     let pointerOffsetX = 0;
     let pointerOffsetY = 0;
+    let shakeDistance = 0;
+    let shakeTurns = 0;
+    let lastPointerX = 0;
+    let lastDirection = 0;
 
     const clearObject = (object: HTMLElement, pointerId: number) => {
       object.classList.remove("is-dragging");
@@ -85,6 +90,10 @@ export const level07: LevelDefinition = {
       const scaleY = clutter.clientHeight / clutterBounds.height;
       draggedObject = object;
       activePointer = event.pointerId;
+      shakeDistance = 0;
+      shakeTurns = 0;
+      lastPointerX = event.clientX;
+      lastDirection = 0;
       pointerOffsetX = (event.clientX - objectBounds.left) * scaleX;
       pointerOffsetY = (event.clientY - objectBounds.top) * scaleY;
       object.style.left = `${(objectBounds.left - clutterBounds.left) * scaleX}px`;
@@ -101,11 +110,26 @@ export const level07: LevelDefinition = {
       const clutterBounds = clutter.getBoundingClientRect();
       const scaleX = clutter.clientWidth / clutterBounds.width;
       const scaleY = clutter.clientHeight / clutterBounds.height;
-      draggedObject.style.left = `${(event.clientX - clutterBounds.left) * scaleX - pointerOffsetX}px`;
-      draggedObject.style.top = `${(event.clientY - clutterBounds.top) * scaleY - pointerOffsetY}px`;
+      const proposedLeft = (event.clientX - clutterBounds.left) * scaleX - pointerOffsetX;
+      const proposedTop = (event.clientY - clutterBounds.top) * scaleY - pointerOffsetY;
+      draggedObject.style.left = `${revival ? Math.max(0, Math.min(clutter.clientWidth - draggedObject.offsetWidth, proposedLeft)) : proposedLeft}px`;
+      draggedObject.style.top = `${revival ? Math.max(0, Math.min(clutter.clientHeight - draggedObject.offsetHeight, proposedTop)) : proposedTop}px`;
+
+      if (revival) {
+        const deltaX = event.clientX - lastPointerX;
+        const direction = Math.sign(deltaX);
+        shakeDistance += Math.abs(deltaX);
+        if (direction !== 0 && lastDirection !== 0 && direction !== lastDirection) shakeTurns += 1;
+        if (direction !== 0) lastDirection = direction;
+        lastPointerX = event.clientX;
+        if (shakeDistance >= 150 && shakeTurns >= 4) {
+          clearObject(draggedObject, event.pointerId);
+          return;
+        }
+      }
 
       const objectBounds = draggedObject.getBoundingClientRect();
-      if (
+      if (!revival &&
         objectBounds.left < clutterBounds.left || objectBounds.right > clutterBounds.right ||
         objectBounds.top < clutterBounds.top || objectBounds.bottom > clutterBounds.bottom
       ) {
@@ -118,6 +142,10 @@ export const level07: LevelDefinition = {
     listen(clutter, "pointercancel", endDrag);
     listen(finishButton, "click", () => {
       if (remainingObjects !== 0) {
+        if (revival) {
+          wrongAnswer();
+          return;
+        }
         unlockAchievement(7);
         return;
       }
