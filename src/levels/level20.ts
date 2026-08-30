@@ -472,13 +472,18 @@ export const level20: LevelDefinition = {
             );
           };
           updateSettings();
-          on(screen, "contextmenu", (event) => {
+          const openMenu = (event: MouseEvent | PointerEvent) => {
             event.preventDefault();
             updateSettings();
             volumeMenu.hidden = true;
             menu.hidden = false;
             positionFloatingElement(screen, menu, event.clientX, event.clientY);
+          };
+          on(screen, "pointerdown", (event) => {
+            if (event.button !== 2) return;
+            openMenu(event);
           });
+          on(screen, "contextmenu", openMenu);
           on(menu, "click", (event) => {
             const volumeOption = (event.target as Element).closest<HTMLButtonElement>("button[data-volume]");
             if (volumeOption && volumeMenu.contains(volumeOption)) {

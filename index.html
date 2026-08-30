@@ -1,13 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" oncontextmenu="return false">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#111111" />
     <title>Never Ending Level Game ++</title>
+    <script>
+      (() => {
+        window.__NELG_CONTEXT_MENU_BLOCKER_VERSION = "2026-08-30-secondary-pointer";
+        const blockContextMenu = (event) => {
+          event.preventDefault();
+          event.returnValue = false;
+          return false;
+        };
+        const blockSecondaryPointer = (event) => {
+          if (event.button !== 2) return;
+          event.preventDefault();
+          event.returnValue = false;
+          return false;
+        };
+
+        const options = { capture: true, passive: false };
+        window.addEventListener("pointerdown", blockSecondaryPointer, options);
+        window.addEventListener("mousedown", blockSecondaryPointer, options);
+        window.addEventListener("mouseup", blockSecondaryPointer, options);
+        window.addEventListener("contextmenu", blockContextMenu, options);
+        document.addEventListener("pointerdown", blockSecondaryPointer, options);
+        document.addEventListener("mousedown", blockSecondaryPointer, options);
+        document.addEventListener("mouseup", blockSecondaryPointer, options);
+        document.addEventListener("contextmenu", blockContextMenu, options);
+        window.oncontextmenu = blockContextMenu;
+        document.oncontextmenu = blockContextMenu;
+      })();
+    </script>
   </head>
-  <body>
-    <div id="game-root"></div>
+  <body oncontextmenu="return false">
+    <div id="game-root" oncontextmenu="return false"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

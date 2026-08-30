@@ -1573,6 +1573,7 @@ export class Game {
     });
     const levelCleanup = level.mount(this.scope.context);
     const revivalCleanup = revivalMode ? this.bindRevivalLevelPresentation(screen, levelNumber) : undefined;
+    if (revivalMode) this.bindRevivalEnterSubmission(screen);
     this.scope.setCustomCleanup(() => {
       levelCleanup?.();
       revivalCleanup?.();
@@ -1592,6 +1593,22 @@ export class Game {
     const observer = new MutationObserver(updateSubtitle);
     observer.observe(screen, { childList: true, subtree: true });
     return () => observer.disconnect();
+  }
+
+  private bindRevivalEnterSubmission(screen: HTMLElement): void {
+    this.scope?.context.listen(screen, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat || event.isComposing || event.defaultPrevented) return;
+
+      const input = (event.target as Element).closest<HTMLInputElement>("input.nelg-password-input");
+      if (!input || input.disabled || input.readOnly) return;
+
+      const form = input.form;
+      const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (!form || !submitButton || submitButton.disabled) return;
+
+      event.preventDefault();
+      form.requestSubmit(submitButton);
+    });
   }
 
   private handleRevivalWrongAnswer(levelNumber: number): boolean {

@@ -55,15 +55,26 @@ export const level09: LevelDefinition = {
     if (!menu) return;
 
     if (revival) {
-      menu.innerHTML = REVIVAL_MENU_LINES.map(
-        (line) => `<button class="level-09__spider-option revival-font-courier" type="button" role="menuitem"><pre class="revival-font-courier">${line}</pre></button>`,
-      ).join("");
-      listen(screen, "contextmenu", (event) => {
+      menu.innerHTML = `
+        ${REVIVAL_MENU_LINES.map(
+          (line) => `<button class="level-09__spider-option revival-font-courier" type="button" role="menuitem"><pre class="revival-font-courier">${line}</pre></button>`,
+        ).join("")}
+        <div class="level-09__menu-separator" role="separator"></div>
+        <div class="level-09__player-label revival-font-courier">Never Ending Level Game ++</div>
+      `;
+      const openMenu = (event: MouseEvent | PointerEvent) => {
         event.preventDefault();
         menu.hidden = false;
         positionFloatingElement(screen, menu, event.clientX, event.clientY);
+      };
+      listen(screen, "pointerdown", (event) => {
+        if (event.button !== 2) return;
+        openMenu(event);
       });
-      listen(menu, "click", () => wrongAnswer());
+      listen(screen, "contextmenu", openMenu);
+      listen(menu, "click", (event) => {
+        if ((event.target as Element).closest(".level-09__spider-option")) wrongAnswer();
+      });
       listen(document, "pointerdown", (event) => {
         if (!menu.hidden && !menu.contains(event.target as Node)) menu.hidden = true;
       });
@@ -127,14 +138,19 @@ export const level09: LevelDefinition = {
 
     updateSettings();
 
-    listen(screen, "contextmenu", (event) => {
+    const openMenu = (event: MouseEvent | PointerEvent) => {
       event.preventDefault();
       updateSettings();
       volumeMenu.hidden = true;
       menu.hidden = false;
 
       positionFloatingElement(screen, menu, event.clientX, event.clientY);
+    };
+    listen(screen, "pointerdown", (event) => {
+      if (event.button !== 2) return;
+      openMenu(event);
     });
+    listen(screen, "contextmenu", openMenu);
 
     listen(menu, "click", (event) => {
       const volumeOption = (event.target as Element).closest<HTMLButtonElement>("button[data-volume]");

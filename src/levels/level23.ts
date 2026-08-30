@@ -1,12 +1,14 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { SOUND_EFFECTS } from "../core/assets";
+import { clientPointToLocal } from "../core/floatingPosition";
 import type { LevelDefinition } from "../core/types";
 
 export const level23: LevelDefinition = {
   number: 23,
   title: "Symbol",
-  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, audio }) {
-    screen.className = "level-screen level-23";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, audio, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-23${revival ? " level-23--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-23__heading">
         <div class="level-heading__number">Level 23</div><h1>Symbol</h1>
@@ -58,6 +60,41 @@ export const level23: LevelDefinition = {
     const interactive = screen.querySelector<HTMLElement>(".level-23__interactive");
     const effects = screen.querySelector<HTMLElement>(".level-23__effects");
     if (!form || !input || !button || !interactive || !effects) return;
+
+    if (revival) {
+      listen(form, "submit", (event) => event.preventDefault());
+      listen(screen, "click", (event) => {
+        const target = (event.target as Element).closest<HTMLElement>(
+          ".level-heading__number, .level-heading h1, .level-23__chaos, .level-23__toy, .level-23__drag, .level-23__decoy, .level-23__slash, .level-23__form input, .level-23__form button",
+        );
+        if (!target || target.classList.contains("is-shattered")) return;
+        event.preventDefault();
+        target.classList.add("is-shattered");
+        audio.playEffect(SOUND_EFFECTS.break);
+        timeout(() => target.remove(), 520);
+        const point = clientPointToLocal(screen, event.clientX, event.clientY);
+        for (let index = 0; index < 9; index += 1) {
+          const shard = document.createElement("i");
+          shard.className = "level-23__break-shard";
+          shard.style.left = `${point.x}px`;
+          shard.style.top = `${point.y}px`;
+          shard.style.setProperty("--break-x", `${Math.cos(index * Math.PI * 2 / 9) * (45 + index * 5)}px`);
+          shard.style.setProperty("--break-y", `${Math.sin(index * Math.PI * 2 / 9) * (45 + index * 5)}px`);
+          effects.append(shard);
+          timeout(() => shard.remove(), 650);
+        }
+      });
+      listen(document, "keydown", (event) => {
+        if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) return;
+        if (event.key === "Delete") {
+          event.preventDefault();
+          complete();
+          return;
+        }
+        if (event.key.length === 1 || event.key === "Enter" || event.key === "Backspace") wrongAnswer();
+      });
+      return;
+    }
 
     let dragged: HTMLElement | undefined;
     let activePointer: number | undefined;

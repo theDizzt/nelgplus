@@ -10,7 +10,7 @@
 }
 
 .level-frame--revival .level-screen,
-.level-frame--revival .level-screen *:not(.level-heading__number):not(input):not(textarea):not(button[type="submit"]):not(.revival-font-courier):not(.revival-font-perpetua):not(.revival-font-kristen) {
+.level-frame--revival .level-screen *:not(.level-heading__number):not(input):not(textarea):not(button[type="submit"]):not(.revival-font-courier):not(.revival-font-perpetua):not(.revival-font-kristen):not(.revival-font-arial):not(.revival-font-arial *) {
   font-family: "NELG Chiller", fantasy !important;
   letter-spacing: 0 !important;
 }
@@ -27,6 +27,11 @@
 
 .level-frame--revival .revival-font-kristen {
   font-family: "NELG ITC Kristen", "Comic Sans MS", cursive !important;
+}
+
+.level-frame--revival .revival-font-arial,
+.level-frame--revival .revival-font-arial * {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
 .level-frame--revival .level-heading h1 {
@@ -299,3 +304,58 @@
   paint-order: stroke fill;
 }
 .level-21--revival .level-21__message { color: #f00; }
+
+.level-frame--revival .level-22--revival { background: #4a412a; }
+.level-frame--revival .level-22--revival .level-heading,
+.level-frame--revival .level-22--revival .level-heading__number,
+.level-frame--revival .level-22--revival .level-heading h1 {
+  color: #ff0 !important;
+}
+
+.level-frame--revival .level-23--revival { background: #430000; }
+.level-frame--revival .level-23--revival .level-heading__number,
+.level-frame--revival .level-23--revival .level-heading h1 { color: #f00 !important; }
+.level-23--revival .level-23__chaos,
+.level-23--revival .level-23__decoy,
+.level-23--revival .level-23__slash {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.level-23--revival .is-shattered {
+  pointer-events: none !important;
+  animation: revival-23-target-break 520ms steps(4, end) forwards !important;
+}
+.level-23__break-shard {
+  position: absolute;
+  z-index: 30;
+  width: 13px;
+  height: 18px;
+  background: #f00;
+  border: 2px solid #180000;
+  pointer-events: none;
+  animation: revival-23-shard-break 650ms ease-out forwards;
+}
+@keyframes revival-23-target-break {
+  30% { filter: contrast(2) brightness(1.8); scale: 1.08 .82; }
+  65% { opacity: .55; rotate: 8deg; scale: .7 1.25; }
+  100% { opacity: 0; rotate: -18deg; scale: 0; }
+}
+@keyframes revival-23-shard-break {
+  to { translate: var(--break-x) var(--break-y); rotate: 300deg; opacity: 0; }
+}
+
+.level-frame--revival .level-24--revival { background: #000; }
+.level-frame--revival .level-24--revival .level-heading,
+.level-frame--revival .level-24--revival .level-heading__number,
+.level-frame--revival .level-24--revival .level-heading h1 {
+  color: #7cfc00 !important;
+}
+.level-24--revival .level-24__source,
+.level-24--revival .level-24__source code {
+  color: #3d3d3d !important;
+  opacity: 1;
+}
+.level-frame--revival .level-24--revival .level-24__context-menu,
+.level-frame--revival .level-24--revival .level-24__context-menu * {
+  font-family: Arial, Helvetica, sans-serif !important;
+}

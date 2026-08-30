@@ -657,7 +657,7 @@ function launchFakeLevelWorld(
       </button>`;
     })();
     level.innerHTML = `
-      <div class="level-39__fake-level-canvas" data-fake-level-canvas${levelNumber === 55 ? " data-allow-context-menu" : ""}>
+      <div class="level-39__fake-level-canvas" data-fake-level-canvas>
         <header>
           <h2>${levelNumber === 56
             ? '<span class="level-39__fake-level-word">L<span class="level-39__fake-56-e">e</span>vel</span> 56'
@@ -716,9 +716,15 @@ function launchFakeLevelWorld(
     }
 
     if (levelNumber === 55) {
-      level.dataset.allowContextMenu = "";
       const menu = level.querySelector<HTMLElement>(".level-39__fake-55-context-menu");
-      if (menu) menu.dataset.allowContextMenu = "";
+      listen(level, "pointerdown", (event) => {
+        if (event.button !== 2) return;
+        openFake55Menu(level, event);
+      });
+      listen(level, "mousedown", (event) => {
+        if (event.button !== 2) return;
+        openFake55Menu(level, event);
+      });
       listen(level, "contextmenu", (event) => openFake55Menu(level, event));
       if (menu) {
         menu.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {

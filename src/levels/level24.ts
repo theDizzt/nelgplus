@@ -4,6 +4,7 @@ import type { LevelDefinition } from "../core/types";
 import { positionFloatingElement } from "../core/floatingPosition";
 
 const UNLOCK_SEQUENCE = "hidden";
+const REVIVAL_UNLOCK_SEQUENCE = "hiddenhidden";
 
 export const level24: LevelDefinition = {
   number: 24,
@@ -12,11 +13,16 @@ export const level24: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Punishment" },
   ],
-  mount({ screen, complete, wrongAnswer, unlockAchievement, restart, listen, audio, initialScene }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, restart, listen, audio, initialScene, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    const unlockSequence = revival ? REVIVAL_UNLOCK_SEQUENCE : UNLOCK_SEQUENCE;
     let scene: "puzzle" | "wrong" = "puzzle";
     let keyBuffer = "";
     let menuUnlocked = false;
+    let revivalKeyIndex = 0;
     let punishmentPresses = 0;
+    let revivalMenuPairs = 0;
+    let revivalExpectedCommand: "forward" | "back" | "rewind" = "forward";
     const requiredPunishmentPresses = 35;
 
     const showWrong = () => {
@@ -33,9 +39,28 @@ export const level24: LevelDefinition = {
       `;
     };
 
-    screen.className = "level-screen level-24 level-24--puzzle";
+    screen.className = `level-screen level-24 level-24--puzzle${revival ? " level-24--revival" : ""}`;
     screen.innerHTML = `
-      <pre class="level-24__source" aria-hidden="true"><code>const sequence = ["hid", "den"].join("");
+      <pre class="level-24__source${revival ? " revival-font-courier" : ""}" aria-hidden="true"><code class="${revival ? "revival-font-courier" : ""}">${revival ? `const A = [0x75, 0x74, 0x79, 0x79, 0x78, 0x73];
+const X = 0x1d;
+const K = Array.from({ length: 2 }, () =&gt;
+  A.map(n =&gt; String.fromCharCode(n ^ X)).join("")
+).join("");
+
+const T = ["back", "rewind", "forward"];
+const R = [2, 1, 2, 1, 2, 1, 0]
+  .map(n =&gt; T[(n * 2 + 1) % T.length]);
+let S = "", I = ~0;
+
+addEventListener("keydown", e =&gt; {
+  S = (S + e.key.toLowerCase()).slice(-K.length);
+  if (![...K].some((c, i) =&gt; c !== S[i])) flashMenu.unlock();
+});
+
+function choose(c) {
+  if (c !== R[++I]) return previousLevel();
+  if (~I === -R.length) nextLevel();
+}` : `const sequence = ["hid", "den"].join("");
 let history = "";
 let contextAllowed = false;
 
@@ -57,7 +82,7 @@ function choose(command) {
   else trapForever("WRONG :(");
 }
 
-passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
+passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");`}</code></pre>
 
       <header class="level-heading level-24__heading">
         <div class="level-heading__number">Level 24</div>
@@ -74,7 +99,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
         </div>
       </form>
 
-      <div class="level-24__context-menu" role="menu" aria-label="Flash player menu" hidden>
+      <div class="level-24__context-menu${revival ? " revival-font-arial" : ""}" role="menu" aria-label="Flash player menu" hidden>
         <button type="button" role="menuitemcheckbox" data-menu-command="music"></button>
         <button type="button" role="menuitemcheckbox" data-menu-command="effects"></button>
         <div class="level-24__menu-separator" role="separator"></div>
@@ -123,8 +148,20 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       if (scene !== "puzzle") return;
       if ((event.target as Element).closest("input, button")) return;
       if (event.key.length !== 1 || event.ctrlKey || event.altKey || event.metaKey) return;
-      keyBuffer = `${keyBuffer}${event.key}`.slice(-UNLOCK_SEQUENCE.length);
-      if (keyBuffer !== UNLOCK_SEQUENCE || menuUnlocked) return;
+      if (revival) {
+        const key = event.key.toLowerCase();
+        if (key !== unlockSequence[revivalKeyIndex]) {
+          wrongAnswer();
+          return;
+        }
+        revivalKeyIndex += 1;
+        if (revivalKeyIndex !== unlockSequence.length) return;
+        menuUnlocked = true;
+        unlockFlash.classList.add("is-visible");
+        return;
+      }
+      keyBuffer = `${keyBuffer}${event.key.toLowerCase()}`.slice(-unlockSequence.length);
+      if (keyBuffer !== unlockSequence || menuUnlocked) return;
       menuUnlocked = true;
       unlockFlash.classList.add("is-visible");
     });
@@ -138,7 +175,11 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     });
 
     const openMenu = (clientX: number, clientY: number) => {
-      if (scene !== "puzzle" || !menuUnlocked) return;
+      if (scene !== "puzzle") return;
+      if (!menuUnlocked) {
+        if (revival) wrongAnswer();
+        return;
+      }
       updateSettings();
       menu.hidden = false;
       positionFloatingElement(screen, menu, clientX, clientY);
@@ -158,6 +199,26 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
     listen(menu, "click", (event) => {
       const item = (event.target as Element).closest<HTMLButtonElement>("button[data-menu-command]");
       if (!item || scene !== "puzzle") return;
+      if (revival) {
+        const command = item.dataset.menuCommand;
+        if (command !== revivalExpectedCommand) {
+          wrongAnswer();
+          return;
+        }
+
+        closeMenu();
+        if (command === "forward") {
+          revivalExpectedCommand = "back";
+          return;
+        }
+        if (command === "back") {
+          revivalMenuPairs += 1;
+          revivalExpectedCommand = revivalMenuPairs === 3 ? "rewind" : "forward";
+          return;
+        }
+        complete();
+        return;
+      }
       switch (item.dataset.menuCommand) {
         case "music":
           audio.setMusicEnabled(!audio.musicEnabled);

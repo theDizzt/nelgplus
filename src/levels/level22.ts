@@ -5,8 +5,9 @@ import type { LevelDefinition } from "../core/types";
 export const level22: LevelDefinition = {
   number: 22,
   title: "Virtual Image",
-  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout }) {
-    screen.className = "level-screen level-22";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
+    const revival = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-22${revival ? " level-22--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-22__heading">
         <div class="level-heading__number">Level 22</div>
@@ -15,7 +16,7 @@ export const level22: LevelDefinition = {
 
       <span class="level-22__face" aria-hidden="true">&gt;:D</span>
       <p class="level-22__hint">THE MIRROR KNOWS THE ANSWER.</p>
-      <img class="level-22__image" src="${assetUrl("images/level22a.png")}" alt="Mirrored symbol puzzle" />
+      <img class="level-22__image" src="${assetUrl(revival ? "images/level50u22a.png" : "images/level22a.png")}" alt="Mirrored symbol puzzle" />
 
       <form class="level-22__form" autocomplete="off">
         <div class="level-22__controls">
@@ -51,7 +52,7 @@ export const level22: LevelDefinition = {
 
       const answer = maskedInput.getValue();
       if (answer === "EBOI") unlockAchievement(26);
-      if (answer === "1083") {
+      if (revival ? answer.trim().toUpperCase() === "JOKER" : answer === "1083") {
         complete();
         return;
       }
