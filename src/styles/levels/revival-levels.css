@@ -1,0 +1,88 @@
+.level-frame--revival {
+  border-color: #780000;
+  box-shadow: inset 0 0 42px rgb(90 0 0 / 58%);
+}
+
+.level-frame--revival::before,
+.level-frame--revival::after {
+  display: none;
+  content: none;
+}
+
+.level-frame--revival .level-screen,
+.level-frame--revival .level-screen *:not(.level-heading__number):not(input):not(textarea):not(button[type="submit"]) {
+  font-family: "NELG Chiller", fantasy !important;
+  letter-spacing: 0 !important;
+}
+
+.level-frame--revival .level-heading__number {
+  color: #130000;
+  font-family: "NELG Perpetua", Georgia, serif !important;
+  text-shadow: none !important;
+}
+
+.level-frame--revival .level-heading h1 {
+  color: #a40000;
+  font-size: 31px;
+  line-height: 1;
+  text-shadow: none !important;
+}
+
+.level-frame--revival .level-01--revival .level-heading__number,
+.level-frame--revival .level-01--revival .level-heading h1,
+.level-frame--revival .level-03--revival .level-heading__number,
+.level-frame--revival .level-03--revival .level-heading h1 {
+  color: #f00 !important;
+}
+
+.level-frame--revival .level-02--revival .level-heading__number,
+.level-frame--revival .level-02--revival .level-heading h1 {
+  color: #fff !important;
+}
+
+.level-frame--revival .level-04--revival .level-heading__number,
+.level-frame--revival .level-04--revival .level-heading h1,
+.level-frame--revival .level-05--revival .level-heading__number,
+.level-frame--revival .level-05--revival .level-heading h1 {
+  color: #000 !important;
+}
+
+.level-frame--revival .level-heading,
+.level-frame--revival .level-heading__number,
+.level-frame--revival .level-heading h1 {
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.level-frame--revival .nelg-password-input {
+  color: #ff2727 !important;
+  background: #050000 !important;
+  border: 3px solid #9e0000 !important;
+  caret-color: #ff1919;
+  box-shadow: inset 0 0 10px rgb(255 0 0 / 24%), 0 0 7px rgb(100 0 0 / 38%);
+}
+
+.level-frame--revival .nelg-password-input::selection {
+  color: #000;
+  background: #f00;
+}
+
+.level-frame--revival .level-screen button[type="submit"] {
+  color: #f00 !important;
+  background: #760000 !important;
+  border: 4px solid #f00 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.level-frame--revival .level-screen button[type="submit"]:hover,
+.level-frame--revival .level-screen button[type="submit"]:focus-visible,
+.level-frame--revival .level-screen button[type="submit"]:active {
+  color: #f00 !important;
+  background: #760000 !important;
+  border-color: #f00 !important;
+  box-shadow: none !important;
+}

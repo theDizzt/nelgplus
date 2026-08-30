@@ -45,7 +45,34 @@ const ADMIN_FONT_OPTIONS = [
 ] as const;
 const MINIMUM_LEVEL = -8;
 const MAXIMUM_LEVEL = 150;
-const PUBLIC_LEVEL_COUNT = registeredLevelNumbers.length;
+const PUBLIC_LEVEL_COUNT = 35;
+const REVIVAL_LEVEL_SUBTITLES: Readonly<Record<number, string>> = {
+  1: "IT STARTS AGAIN",
+  2: "DO NOT LOOK AWAY",
+  3: "THE BUTTON REMEMBERS",
+  4: "NO SECRET STAYS BURIED",
+  5: "WRONG ANSWERS BLEED",
+  6: "COUNT THE MISSING",
+  7: "YOUR HAND IS NOT YOURS",
+  8: "THE PASSWORD WATCHES",
+  9: "REWIND WON'T SAVE YOU",
+  10: "TEN LITTLE FAILURES",
+  11: "SIGNAL LOST...",
+  12: "NO EXIT FOUND",
+  13: "ORDER HAS COLLAPSED",
+  14: "YOU ALREADY KNEW",
+  15: "INPUT CORRUPTED",
+  16: "THE BOX IS HUNGRY",
+  17: "DON'T LET GO",
+  18: "PAINT IT BLACK",
+  19: "SOMETHING TYPES BACK",
+  20: "ERROR//MEMORY SPLIT",
+  21: "THE SCREEN IS LISTENING",
+  22: "DENIED DENIED DENIED",
+  23: "ONE SYMBOL REMAINS",
+  24: "THIS PAGE IS LYING",
+  25: "YOU SHOULD HAVE STOPPED",
+};
 const PRELOAD_FONTS = [
   "/assets/fonts/perpetua/Perpetua.woff2",
   "/assets/fonts/perpetua/Perpetua-Bold.woff2",
@@ -349,35 +376,67 @@ export class Game {
   private renderMainMenu(): void {
     this.disposeCurrentLevel();
     this.audioManager.stopMusic();
-    this.root.innerHTML = `
-      <main class="game-frame main-menu" aria-label="Never Ending Level Game Plus Plus main menu">
-        <div class="main-menu__glow" aria-hidden="true"></div>
-        <section class="main-menu__identity">
-          <p class="main-menu__kicker">WELCOME TO THE</p>
-          <h1>Never Ending Level Game <span>++</span></h1>
-          <div class="main-menu__parade" aria-hidden="true"></div>
-          <p class="main-menu__description">
+    const revivalMode = this.sessionFlags.has("level50-revival-main");
+    const menuCopy = revivalMode
+      ? {
+          kicker: "WELCOME BACK. IT REMEMBERED YOU.",
+          title: "Never Ending Level Game <span>666</span>",
+          description: `
+            Your last run was not erased. It has been waiting underneath this screen, learning every click.
+            There are no levels left to finish. There are only doors that remember how you failed.
+          `,
+          continuation: `
+            Do not trust the numbers. Do not trust the buttons. Something returned with you from Level 50,
+            and it wants to begin again.
+          `,
+          levelsLabel: "LEVELS STILL BREATHING",
+          levelsValue: "666 / 120",
+          developmentLabel: "FIRST / LAST SEEN",
+          developmentValue: "11/02/2005 - 02/15/2010",
+          versionLabel: "CURRENT INFECTION",
+          versionValue: "6.6.666 12/31/2019",
+        }
+      : {
+          kicker: "WELCOME TO THE",
+          title: "Never Ending Level Game <span>++</span>",
+          description: `
             This game is a sequel to Clarence Ball’s <a href="https://www.newgrounds.com/portal/view/366111" target="_blank" rel="noopener noreferrer"><em>Never Ending Level Game</em></a>, which was released in 2005.
             It was created by blending elements from that game and its fan games (<a href="https://www.newgrounds.com/portal/view/756739" target="_blank" rel="noopener noreferrer"><em>Level Killer</em></a> and
             <a href="https://www.newgrounds.com/portal/view/843894" target="_blank" rel="noopener noreferrer"><em>TEDNE</em></a>) to let players experience the thrill of the original once again. You must complete
             150 levels while battling against the time and overcoming the game’s ruthless difficulty.
-          </p>
-          <p class="main-menu__continuation">
+          `,
+          continuation: `
             This game is a continuation of the test of knowledge, patience and perhaps more stuff and I am
             reflecting myself for making the difficulty of the things ruthless, of the puzzles, or not puzzles...
-          </p>
+          `,
+          levelsLabel: "LEVELS INCLUDED",
+          levelsValue: `${PUBLIC_LEVEL_COUNT} / ${MAXIMUM_LEVEL}`,
+          developmentLabel: "DEVELOPMENT",
+          developmentValue: DEVELOPMENT_PERIOD,
+          versionLabel: "VERSION",
+          versionValue: `${GAME_VERSION} · ${VERSION_DATE}`,
+        };
+    this.root.innerHTML = `
+      <main class="game-frame main-menu${revivalMode ? " main-menu--revival" : ""}" aria-label="Never Ending Level Game Plus Plus main menu">
+        <div class="main-menu__glow" aria-hidden="true"></div>
+        <section class="main-menu__identity">
+          <p class="main-menu__kicker">${menuCopy.kicker}</p>
+          <h1>${menuCopy.title}</h1>
+          <div class="main-menu__parade" aria-hidden="true"></div>
+          <p class="main-menu__description">${menuCopy.description}</p>
+          <p class="main-menu__continuation">${menuCopy.continuation}</p>
           <dl class="main-menu__facts">
             <div>
-              <dt>LEVELS INCLUDED</dt>
-              <dd>${PUBLIC_LEVEL_COUNT} / ${MAXIMUM_LEVEL}</dd>
+              <dt>${menuCopy.levelsLabel}</dt>
+              <dd>${menuCopy.levelsValue}</dd>
             </div>
             <div>
-              <dt>DEVELOPMENT</dt>
-              <dd>${DEVELOPMENT_PERIOD}</dd>
+              <dt>${menuCopy.developmentLabel}</dt>
+              <dd>${menuCopy.developmentValue}</dd>
             </div>
             <div>
-              <dt>VERSION</dt>
-              <dd>${GAME_VERSION} · ${VERSION_DATE}</dd>
+              <dt>${menuCopy.versionLabel}</dt>
+              <dd>${menuCopy.versionValue}</dd>
             </div>
           </dl>
         </section>
@@ -387,22 +446,22 @@ export class Game {
             START GAME
           </button>
           <button class="menu-button" data-menu-action="warp" type="button">
-            WARP ZONE
+            ${revivalMode ? "WARP INTO THE WOUND" : "WARP ZONE"}
           </button>
           <button class="menu-button" data-menu-action="achievements" type="button">
-            ACHIEVEMENTS
+            ${revivalMode ? "SINS REMEMBERED" : "ACHIEVEMENTS"}
           </button>
           <button class="menu-button" data-menu-action="hall" type="button">
-            HALL OF FAME
+            ${revivalMode ? "HALL OF THE MISSING" : "HALL OF FAME"}
           </button>
           <button class="menu-button" data-menu-action="help" type="button">
-            HELP SECTION
+            ${revivalMode ? "DO NOT ASK FOR HELP" : "HELP SECTION"}
           </button>
           <button class="menu-button" data-menu-action="options" type="button">
-            OPTIONS
+            ${revivalMode ? "OBEY" : "OPTIONS"}
           </button>
           <button class="menu-button" data-menu-action="credits" type="button">
-            CREDITS
+            ${revivalMode ? "FINAL NAMES" : "CREDITS"}
           </button>
         </nav>
       </main>
@@ -414,8 +473,20 @@ export class Game {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-menu-action]");
       if (!button) return;
 
+      if (revivalMode && button.dataset.menuAction !== "start") {
+        const mainMenu = this.root.querySelector<HTMLElement>(".main-menu--revival");
+        if (mainMenu) {
+          mainMenu.classList.remove("is-shaking");
+          void mainMenu.offsetWidth;
+          mainMenu.classList.add("is-shaking");
+          window.setTimeout(() => mainMenu.classList.remove("is-shaking"), 430);
+        }
+        return;
+      }
+
       switch (button.dataset.menuAction) {
         case "start":
+          if (revivalMode) this.sessionFlags.add("level50-enhanced-run");
           this.showLevel(1);
           break;
         case "warp":
@@ -1446,9 +1517,12 @@ export class Game {
     this.audioManager.stopMusic();
     this.transitioning = false;
     this.currentLevel = levelNumber;
+    const revivalMode = this.sessionFlags.has("level50-enhanced-run")
+      && levelNumber >= 1
+      && levelNumber <= 25;
 
     this.root.innerHTML = `
-      <main class="game-frame level-frame" data-level="${level.number}">
+      <main class="game-frame level-frame${revivalMode ? " level-frame--revival" : ""}" data-level="${level.number}">
         <section id="level-screen" class="level-screen" aria-label="Level ${level.number}: ${level.title}"></section>
         ${this.debugMode ? this.renderDebugControls() : ""}
       </main>
@@ -1462,6 +1536,7 @@ export class Game {
       levelNumber,
       initialScene,
       complete: () => this.completeCurrentLevel(),
+      wrongAnswer: () => this.handleRevivalWrongAnswer(levelNumber),
       unlockAchievement: (achievementId) => this.unlockAchievement(achievementId),
       restart: () => this.showLevel(levelNumber, initialScene),
       goToLevel: (targetLevel) => this.showLevel(targetLevel),
@@ -1470,8 +1545,39 @@ export class Game {
       hasSessionFlag: (flag) => this.sessionFlags.has(flag),
       setSessionFlag: (flag) => this.sessionFlags.add(flag),
     });
-    this.scope.setCustomCleanup(level.mount(this.scope.context));
+    const levelCleanup = level.mount(this.scope.context);
+    const revivalCleanup = revivalMode ? this.bindRevivalLevelPresentation(screen, levelNumber) : undefined;
+    this.scope.setCustomCleanup(() => {
+      levelCleanup?.();
+      revivalCleanup?.();
+    });
     this.bindDebugControls();
+  }
+
+  private bindRevivalLevelPresentation(screen: HTMLElement, levelNumber: number): () => void {
+    const subtitle = REVIVAL_LEVEL_SUBTITLES[levelNumber];
+    const updateSubtitle = (): void => {
+      if (!subtitle) return;
+      screen.querySelectorAll<HTMLElement>(".level-heading h1").forEach((heading) => {
+        if (heading.textContent !== subtitle) heading.textContent = subtitle;
+      });
+    };
+    updateSubtitle();
+    const observer = new MutationObserver(updateSubtitle);
+    observer.observe(screen, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }
+
+  private handleRevivalWrongAnswer(levelNumber: number): boolean {
+    if (!this.sessionFlags.has("level50-enhanced-run") || levelNumber < 1 || levelNumber > 25) return false;
+    if (levelNumber === 1) {
+      this.renderMainMenu();
+      return true;
+    }
+    const currentIndex = registeredLevelNumbers.indexOf(levelNumber);
+    const previousLevel = registeredLevelNumbers[currentIndex - 1];
+    this.showLevel(previousLevel ?? 1);
+    return true;
   }
 
   private completeCurrentLevel(): void {

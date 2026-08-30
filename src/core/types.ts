@@ -33,6 +33,7 @@ export interface LevelContext {
     setFlag: (flag: string) => void;
   };
   complete: () => void;
+  wrongAnswer: () => boolean;
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number) => void;

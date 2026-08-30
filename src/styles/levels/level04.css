@@ -24,6 +24,19 @@
   }
 }
 
+.level-04--revival {
+  animation: level-04-revival-background 9s ease-in-out infinite;
+}
+
+@keyframes level-04-revival-background {
+  0%, 100% { background-color: #f00000; }
+  24% { background-color: #0000c8; }
+  46% { background-color: #b00000; }
+  61% { background-color: #260000; }
+  70% { background-color: #000; }
+  79% { background-color: #260000; }
+}
+
 .level-04__heading,
 .level-04__message,
 .level-04__form,

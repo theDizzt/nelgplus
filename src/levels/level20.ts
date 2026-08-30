@@ -49,7 +49,7 @@ export const level20: LevelDefinition = {
   title: "Reunion I",
   scenes: Array.from({ length: 10 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
   mount(context) {
-    const { screen, complete, unlockAchievement, audio, initialScene } = context;
+    const { screen, complete, wrongAnswer, unlockAchievement, audio, initialScene } = context;
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -119,6 +119,7 @@ export const level20: LevelDefinition = {
           renderScene(nextScene);
           return;
         }
+        if (wrongAnswer()) return;
         maskedInput.clear();
         input.classList.remove("is-wrong");
         void input.offsetWidth;

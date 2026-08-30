@@ -70,7 +70,7 @@ export const level25: LevelDefinition = {
     { id: "5", label: "Scene 5 - Obstacle failure" },
   ],
   mount(context) {
-    const { screen, complete, unlockAchievement, listen, interval, initialScene } = context;
+    const { screen, complete, wrongAnswer, unlockAchievement, listen, interval, initialScene } = context;
     const removeCustomCursor = attachCustomCursor(context, {
       source: "cursor/level25.png",
       hotspot: "center",
@@ -278,9 +278,12 @@ export const level25: LevelDefinition = {
       if (scene !== "puzzle" || event.repeat || event.key.length !== 1) return;
       if (event.ctrlKey || event.altKey || event.metaKey) return;
       passwordBuffer = `${passwordBuffer}${event.key}`.slice(-6);
-      if (passwordBuffer !== "hidden") return;
-      if (awaitingPassword) complete();
-      else unlockAchievement(30);
+      if (passwordBuffer === "hidden") {
+        if (awaitingPassword) complete();
+        else unlockAchievement(30);
+        return;
+      }
+      if (awaitingPassword && passwordBuffer.length === 6) wrongAnswer();
     });
 
     interval(() => {

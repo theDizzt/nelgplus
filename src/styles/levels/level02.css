@@ -81,6 +81,34 @@
   }
 }
 
+.level-02--revival {
+  color: #fff;
+  background: radial-gradient(circle at 50% 42%, #07195a 0%, #020a2d 48%, #000 100%);
+}
+
+.level-02--revival .level-02__copy {
+  color: #fff;
+}
+
+.level-02--revival .level-02__orb {
+  top: 180px;
+  left: 60px;
+  background: #36a9ff;
+  border-color: #b9e5ff;
+  box-shadow: none;
+  animation: level-02-revival-eight 7s linear infinite;
+}
+
+@keyframes level-02-revival-eight {
+  0%, 50%, 100% { translate: 340px 90px; }
+  12.5% { translate: 500px 0; }
+  25% { translate: 660px 90px; }
+  37.5% { translate: 500px 180px; }
+  62.5% { translate: 180px 0; }
+  75% { translate: 20px 90px; }
+  87.5% { translate: 180px 180px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .level-02__orb {
     animation: none;

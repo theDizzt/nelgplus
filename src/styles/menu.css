@@ -390,6 +390,95 @@
   background: rgb(255 153 0 / 15%);
 }
 
+.main-menu--revival {
+  color: #e2c8c8;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 18%) 0 2px, transparent 2px 5px),
+    linear-gradient(145deg, #050000, #2b0000 48%, #030000);
+  border-color: #590000;
+}
+
+.main-menu--revival .main-menu__glow {
+  background: radial-gradient(ellipse, rgb(255 0 0 / 34%), rgb(105 0 0 / 15%) 48%, transparent 72%);
+  animation-name: main-menu-revival-pulse;
+}
+
+.main-menu--revival .main-menu__kicker,
+.main-menu--revival h1 span,
+.main-menu--revival .main-menu__description em,
+.main-menu--revival .main-menu__facts dd {
+  color: #ff3434;
+}
+
+.main-menu--revival h1 {
+  color: #f1dede;
+  text-shadow: 3px 0 0 #510000, -2px 0 0 #000;
+  animation: main-menu-revival-title 1.9s steps(2) infinite;
+}
+
+.main-menu--revival .main-menu__description,
+.main-menu--revival .main-menu__continuation,
+.main-menu--revival .main-menu__facts dt {
+  color: #c89f9f;
+}
+
+.main-menu--revival .main-menu__continuation,
+.main-menu--revival .main-menu__buttons {
+  border-color: rgb(255 0 0 / 32%);
+}
+
+.main-menu--revival .main-menu__facts div {
+  background: linear-gradient(#2b0808, #080303);
+  border-color: #850000;
+}
+
+.main-menu--revival .menu-button {
+  color: #d8bcbc;
+  background: rgb(255 0 0 / 4%);
+  border-color: #633737;
+}
+
+.main-menu--revival .menu-button:hover,
+.main-menu--revival .menu-button:focus-visible {
+  color: #fff;
+  background: rgb(255 0 0 / 18%);
+  border-color: #f00;
+}
+
+.main-menu--revival .menu-button--primary {
+  color: #ff5757;
+  background: rgb(255 0 0 / 13%);
+  border-color: #b00000;
+}
+
+.main-menu--revival .main-menu__parade-item img,
+.main-menu--revival .main-menu__parade-static {
+  filter: grayscale(.65) sepia(.8) hue-rotate(310deg) contrast(1.5) brightness(.62);
+}
+
+.main-menu--revival.is-shaking {
+  animation: main-menu-revival-shake 430ms steps(2);
+}
+
+@keyframes main-menu-revival-pulse {
+  from { opacity: .45; scale: .94; }
+  to { opacity: 1; scale: 1.07; }
+}
+
+@keyframes main-menu-revival-title {
+  0%, 76%, 100% { translate: 0 0; }
+  80% { translate: -3px 1px; }
+  86% { translate: 4px -2px; }
+}
+
+@keyframes main-menu-revival-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-9px, 5px); }
+  40% { transform: translate(8px, -6px); }
+  60% { transform: translate(-6px, -4px); }
+  80% { transform: translate(7px, 5px); }
+}
+
 @keyframes main-menu-gear-roll {
   from {
     transform: scaleX(var(--main-menu-sprite-facing, 1)) rotate(0);

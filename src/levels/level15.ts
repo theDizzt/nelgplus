@@ -11,7 +11,7 @@ const REVEAL_KEYS: Readonly<Record<string, { index: number; letter: string }>> =
 export const level15: LevelDefinition = {
   number: 15,
   title: "Input",
-  mount({ screen, complete, unlockAchievement, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-15";
     screen.innerHTML = `
       <header class="level-heading level-15__heading">
@@ -78,6 +78,7 @@ export const level15: LevelDefinition = {
         complete();
         return;
       }
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

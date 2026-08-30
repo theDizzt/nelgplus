@@ -1,0 +1,65 @@
+.level-50 {
+  color: #000;
+  background: linear-gradient(125deg, #020000, #310000 36%, #080000 65%, #460000);
+  background-size: 260% 260%;
+  animation: level-50-background 9s ease-in-out infinite alternate;
+}
+
+.level-50::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 14%) 0 2px, transparent 2px 6px);
+  content: "";
+  pointer-events: none;
+}
+
+.level-50__heading {
+  z-index: 4;
+  animation: level-50-heading 5.5s ease-in-out infinite alternate;
+}
+
+.level-50__steve {
+  position: absolute;
+  z-index: 3;
+  top: 300px;
+  left: 50%;
+  width: 159px;
+  height: 155px;
+  object-fit: contain;
+  pointer-events: none;
+  transform-origin: 50% 75%;
+  animation: level-50-steve-approach 18s cubic-bezier(.19,.7,.22,1) forwards;
+}
+
+.level-50__context-menu {
+  z-index: 100;
+}
+
+@keyframes level-50-background {
+  from { background-position: 0 20%; }
+  to { background-position: 100% 80%; }
+}
+
+@keyframes level-50-heading {
+  from { color: #000; text-shadow: 0 0 2px rgb(120 0 0 / 12%); }
+  to { color: #8f0000; text-shadow: 0 0 12px rgb(255 0 0 / 34%); }
+}
+
+@keyframes level-50-steve-approach {
+  0% { opacity: 0; filter: brightness(0); transform: translateX(-50%) scale(.18); }
+  28% { opacity: .12; filter: brightness(.08); }
+  63% { opacity: .48; filter: brightness(.28); }
+  100% { opacity: 1; filter: brightness(.58) contrast(1.25); transform: translateX(-50%) scale(2.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-50,
+  .level-50__heading { animation: none; }
+  .level-50__steve {
+    opacity: 1;
+    filter: brightness(.58) contrast(1.25);
+    transform: translateX(-50%) scale(2.15);
+    animation: none;
+  }
+}

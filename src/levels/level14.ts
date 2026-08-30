@@ -4,7 +4,7 @@ import type { LevelDefinition } from "../core/types";
 export const level14: LevelDefinition = {
   number: 14,
   title: "Form",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, listen, timeout }) {
     screen.className = "level-screen level-14";
     screen.innerHTML = `
       <div class="level-14__background" aria-hidden="true">
@@ -118,6 +118,7 @@ export const level14: LevelDefinition = {
         complete();
         return;
       }
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

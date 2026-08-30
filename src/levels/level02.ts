@@ -3,8 +3,9 @@ import type { LevelDefinition } from "../core/types";
 export const level02: LevelDefinition = {
   number: 2,
   title: "Tutorial II",
-  mount({ screen, complete, listen }) {
-    screen.className = "level-screen level-02";
+  mount({ screen, complete, wrongAnswer, listen, session }) {
+    const revivalMode = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-02${revivalMode ? " level-02--revival" : ""}`;
     screen.innerHTML = `
       <div class="level-02__orb" aria-hidden="true"></div>
 
@@ -31,7 +32,13 @@ export const level02: LevelDefinition = {
     `;
 
     listen(document, "keydown", (event) => {
-      if (event.key.toLowerCase() === "n" && !event.repeat) complete();
+      const answer = revivalMode ? "8" : "n";
+      if (event.repeat) return;
+      if (event.key.toLowerCase() === answer) {
+        complete();
+        return;
+      }
+      if (revivalMode && event.key.length === 1 && !event.ctrlKey && !event.altKey && !event.metaKey) wrongAnswer();
     });
   },
 };

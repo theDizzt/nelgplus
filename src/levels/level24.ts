@@ -12,7 +12,7 @@ export const level24: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Punishment" },
   ],
-  mount({ screen, complete, unlockAchievement, restart, listen, audio, initialScene }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, restart, listen, audio, initialScene }) {
     let scene: "puzzle" | "wrong" = "puzzle";
     let keyBuffer = "";
     let menuUnlocked = false;
@@ -133,6 +133,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");</code></pre>
       event.preventDefault();
       if (scene !== "puzzle") return;
       if (maskedInput.getValue() === "hidden") unlockAchievement(29);
+      if (wrongAnswer()) return;
       showWrong();
     });
 

@@ -3,6 +3,21 @@
   background: #ff9900;
 }
 
+.level-05--revival {
+  background: linear-gradient(
+    to bottom,
+    #1b78ed 0%,
+    #78aaf0 17%,
+    #f7f9ff 40%,
+    #fff 43%,
+    #704100 44%,
+    #b78000 46%,
+    #ffd000 59%,
+    #ffe378 76%,
+    #fff 100%
+  );
+}
+
 .level-05__heading {
   top: 47px;
 }

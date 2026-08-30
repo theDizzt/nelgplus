@@ -4,8 +4,9 @@ import { attachStarMaskedInput } from "../core/StarMaskedInput";
 export const level04: LevelDefinition = {
   number: 4,
   title: "Tutorial IV",
-  mount({ screen, complete, unlockAchievement, listen, timeout }) {
-    screen.className = "level-screen level-04";
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
+    const revivalMode = session.hasFlag("level50-enhanced-run");
+    screen.className = `level-screen level-04${revivalMode ? " level-04--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-04__heading">
         <div class="level-heading__number">Level 4</div>
@@ -50,14 +51,15 @@ export const level04: LevelDefinition = {
       submitButton.disabled = true;
 
       const answer = maskedInput.getValue();
-      const accepted = answer === "16";
+      const accepted = answer === (revivalMode ? "2500" : "16");
       if (accepted) {
-        unlockAchievement(1);
+        if (!revivalMode) unlockAchievement(1);
         complete();
         return;
       }
 
       if (answer.toLowerCase() === "hidden") unlockAchievement(6);
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

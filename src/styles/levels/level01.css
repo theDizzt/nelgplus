@@ -46,3 +46,42 @@
   box-shadow: 0 1px 0 #080808;
   translate: -50% 4px;
 }
+
+.level-01--revival {
+  color: #080808;
+  background: #ffff00;
+  animation: none;
+}
+
+.level-01--revival .level-heading {
+  color: #f00;
+  text-shadow: none;
+}
+
+.level-01--revival .level-01__instructions {
+  color: #080808;
+  text-shadow: none;
+}
+
+.level-01__revival-secret {
+  position: absolute;
+  top: 430px;
+  right: 58px;
+  width: 96px;
+  height: 96px;
+  padding: 0;
+  background: #ffff03;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.level-01__revival-secret:hover,
+.level-01__revival-secret:focus-visible,
+.level-01__revival-secret:active {
+  background: #ffff03;
+  border-color: #ffff03;
+  box-shadow: none;
+  outline: none;
+}

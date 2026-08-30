@@ -23,7 +23,7 @@ function clamp(value: number): number {
 export const level08: LevelDefinition = {
   number: 8,
   title: "Colour II",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, listen, timeout }) {
     const mazeMarkup = MAZES.map(
       ({ color, letter, path }, index) => `
         <div class="level-08__maze" data-maze="${index + 1}" data-allow-drag
@@ -142,6 +142,7 @@ export const level08: LevelDefinition = {
         complete();
         return;
       }
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

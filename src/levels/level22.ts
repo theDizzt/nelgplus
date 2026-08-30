@@ -5,7 +5,7 @@ import type { LevelDefinition } from "../core/types";
 export const level22: LevelDefinition = {
   number: 22,
   title: "Virtual Image",
-  mount({ screen, complete, unlockAchievement, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-22";
     screen.innerHTML = `
       <header class="level-heading level-22__heading">
@@ -55,6 +55,7 @@ export const level22: LevelDefinition = {
         complete();
         return;
       }
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

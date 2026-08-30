@@ -10,7 +10,7 @@ export const level21: LevelDefinition = {
     { id: "1", label: "Scene 1 - Puzzle" },
     { id: "2", label: "Scene 2 - Failure" },
   ],
-  mount({ screen, complete, unlockAchievement, initialScene, session }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, initialScene, session }) {
     let sceneController = new AbortController();
     const sceneTimers = new Set<number>();
 
@@ -103,6 +103,7 @@ export const level21: LevelDefinition = {
           complete();
           return;
         }
+        if (wrongAnswer()) return;
 
         maskedInput.clear();
         input.classList.remove("is-wrong");

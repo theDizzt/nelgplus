@@ -167,6 +167,14 @@
 }
 
 @font-face {
+  font-family: "NELG Chiller";
+  src: url("/assets/fonts/chiller/Chiller V2.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "NELG Outfit";
   src: url("/assets/fonts/outfit/outfit-v15-latin-700.woff2") format("woff2");
   font-style: normal;

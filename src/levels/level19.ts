@@ -8,7 +8,7 @@ const LEVEL_HEIGHT = 600;
 export const level19: LevelDefinition = {
   number: 19,
   title: "Coordinate",
-  mount({ screen, complete, unlockAchievement, listen, timeout }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout }) {
     screen.className = "level-screen level-19";
     screen.innerHTML = `
       <header class="level-heading level-19__heading">
@@ -112,6 +112,7 @@ export const level19: LevelDefinition = {
         complete();
         return;
       }
+      if (wrongAnswer()) return;
 
       checking = false;
       submitButton.disabled = false;

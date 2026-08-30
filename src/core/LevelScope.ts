@@ -6,6 +6,7 @@ interface ScopeOptions {
   levelNumber: number;
   initialScene?: string;
   complete: () => void;
+  wrongAnswer: () => boolean;
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number) => void;
@@ -56,6 +57,7 @@ export class LevelScope {
         setFlag: (flag) => options.setSessionFlag(flag),
       },
       complete: options.complete,
+      wrongAnswer: options.wrongAnswer,
       unlockAchievement: options.unlockAchievement,
       restart: options.restart,
       goToLevel: options.goToLevel,

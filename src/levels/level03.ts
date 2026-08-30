@@ -12,8 +12,10 @@ function clamp(value: number, minimum: number, maximum: number): number {
 export const level03: LevelDefinition = {
   number: 3,
   title: "Tutorial III",
-  mount({ screen, complete, listen, audio }) {
-    screen.className = "level-screen level-03";
+  mount({ screen, complete, wrongAnswer, listen, audio, session }) {
+    const revivalMode = session.hasFlag("level50-enhanced-run");
+    const mapWidth = revivalMode ? 3000 : MAP_WIDTH;
+    screen.className = `level-screen level-03${revivalMode ? " level-03--revival" : ""}`;
     screen.innerHTML = `
       <header class="level-heading level-03__heading">
         <div class="level-heading__number">Level 3</div>
@@ -21,9 +23,9 @@ export const level03: LevelDefinition = {
       </header>
 
       <div class="level-03__viewport" data-allow-drag aria-label="Drag the rainbow route to find its end">
-        <div class="level-03__map">
-          <svg class="level-03__route" width="${MAP_WIDTH}" height="${MAP_HEIGHT}"
-            viewBox="0 0 ${MAP_WIDTH} ${MAP_HEIGHT}" aria-hidden="true">
+        <div class="level-03__map" style="width: ${mapWidth}px">
+          <svg class="level-03__route" width="${mapWidth}" height="${MAP_HEIGHT}"
+            viewBox="0 0 ${mapWidth} ${MAP_HEIGHT}" aria-hidden="true">
             <defs>
               <linearGradient id="level-03-rainbow" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#ff1010" />
@@ -41,6 +43,7 @@ export const level03: LevelDefinition = {
               d="M 322 105 H 980 V 165 H 1320 V 65 H 1660 V 165 H 2000 V 65 H 2220 V 105 H 2350" />
           </svg>
           <button class="level-03__end-button" type="button" aria-label="Continue to Level 4"></button>
+          ${revivalMode ? '<button class="level-03__revival-button" type="button" aria-label="Grotesque button, 0 of 66 clicks" hidden></button>' : ""}
         </div>
       </div>
 
@@ -54,6 +57,7 @@ export const level03: LevelDefinition = {
     const viewport = screen.querySelector<HTMLElement>(".level-03__viewport");
     const map = screen.querySelector<HTMLElement>(".level-03__map");
     const endButton = screen.querySelector<HTMLButtonElement>(".level-03__end-button");
+    const revivalButton = screen.querySelector<HTMLButtonElement>(".level-03__revival-button");
     if (!viewport || !map || !endButton) return;
 
     let offsetX = 0;
@@ -62,10 +66,11 @@ export const level03: LevelDefinition = {
 
     const renderPosition = () => {
       map.style.transform = `translate3d(${offsetX}px, 0, 0)`;
+      if (revivalButton && offsetX <= VIEWPORT_WIDTH - mapWidth + 2) revivalButton.hidden = false;
     };
 
     listen(viewport, "pointerdown", (event) => {
-      if ((event.target as Element).closest(".level-03__end-button")) return;
+      if ((event.target as Element).closest(".level-03__end-button, .level-03__revival-button")) return;
       activePointer = event.pointerId;
       previousX = event.clientX;
       viewport.setPointerCapture(event.pointerId);
@@ -77,7 +82,7 @@ export const level03: LevelDefinition = {
       if (activePointer !== event.pointerId) return;
       const deltaX = event.clientX - previousX;
       previousX = event.clientX;
-      offsetX = clamp(offsetX + deltaX, VIEWPORT_WIDTH - MAP_WIDTH, 0);
+      offsetX = clamp(offsetX + deltaX, VIEWPORT_WIDTH - mapWidth, 0);
       renderPosition();
       event.preventDefault();
     });
@@ -93,7 +98,18 @@ export const level03: LevelDefinition = {
     listen(viewport, "pointercancel", finishDragging);
     listen(endButton, "click", () => {
       audio.playEffect(SOUND_EFFECTS.smack);
-      complete();
+      if (revivalMode) wrongAnswer();
+      else complete();
     });
+    let revivalClicks = 0;
+    if (revivalButton) {
+      listen(revivalButton, "click", () => {
+        audio.playEffect(SOUND_EFFECTS.smack);
+        revivalClicks += 1;
+        revivalButton.setAttribute("aria-label", `Grotesque button, ${revivalClicks} of 66 clicks`);
+        revivalButton.style.setProperty("--level-03-revival-progress", String(revivalClicks / 66));
+        if (revivalClicks >= 66) complete();
+      });
+    }
   },
 };
