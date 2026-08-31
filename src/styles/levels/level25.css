@@ -120,6 +120,40 @@
 .level-25__dice--6 i:nth-child(3) { top: 50%; left: 9px; }
 .level-25__dice--6 i:nth-child(4) { top: 50%; right: 2px; left: auto; }
 
+.level-25__dice-face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.level-25__dice-face--hover { display: none; }
+
+.level-25__dice-face i {
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+
+.level-25__dice-face i:nth-child(1) { top: 9px; left: 9px; }
+.level-25__dice-face--1 i:nth-child(1),
+.level-25__dice-face--3 i:nth-child(2),
+.level-25__dice-face--5 i:nth-child(3) { top: 50%; left: 50%; right: auto; bottom: auto; }
+.level-25__dice-face--2 i:nth-child(2),
+.level-25__dice-face--3 i:nth-child(3),
+.level-25__dice-face--4 i:nth-child(4),
+.level-25__dice-face--5 i:nth-child(5),
+.level-25__dice-face--6 i:nth-child(6) { top: auto; right: 2px; bottom: 2px; left: auto; }
+.level-25__dice-face--4 i:nth-child(2),
+.level-25__dice-face--5 i:nth-child(2),
+.level-25__dice-face--6 i:nth-child(2) { top: 9px; right: 2px; bottom: auto; left: auto; }
+.level-25__dice-face--4 i:nth-child(3),
+.level-25__dice-face--5 i:nth-child(4),
+.level-25__dice-face--6 i:nth-child(5) { top: auto; bottom: 2px; left: 9px; right: auto; }
+.level-25__dice-face--6 i:nth-child(3) { top: 50%; left: 9px; }
+.level-25__dice-face--6 i:nth-child(4) { top: 50%; right: 2px; left: auto; }
+
 .level-25__patrol-box {
   position: absolute;
   display: grid;
@@ -282,4 +316,193 @@
   color: #fff;
   background: var(--level-25-error-heading);
   outline: none;
+}
+
+/* Level 50 enhanced Level 25 */
+.level-25--revival {
+  background: radial-gradient(circle at 52% 43%, #5c0000 0%, #280000 48%, #080000 100%);
+}
+
+.level-frame--revival .level-25--revival .level-heading__number,
+.level-frame--revival .level-25--revival .level-heading h1,
+.level-frame--revival .level-25--revival-failure .level-heading__number,
+.level-frame--revival .level-25--revival-failure .level-heading h1 {
+  color: transparent !important;
+  background: linear-gradient(90deg, #3a0000 0%, #ff1717 24%, #760000 48%, #ff3b3b 70%, #210000 100%);
+  background-size: 240% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: level-25-revival-title 2.1s linear infinite;
+}
+
+.level-25--revival .level-25__maze-shape {
+  stroke: #e00000;
+  stroke-width: 3px;
+}
+
+.level-25--revival .level-25__patrol-box {
+  color: transparent;
+  background: radial-gradient(circle, #ca1010 0%, #680000 55%, #210000 100%);
+  border-color: #ff1c1c;
+  box-shadow: 0 0 12px rgb(255 0 0 / 72%);
+}
+
+.level-25--revival .level-25__dice,
+.level-25--revival .level-25__dice:hover,
+.level-25--revival .level-25__dice:focus-visible {
+  background: #a40000;
+  border-color: #2b0000;
+}
+
+.level-25--revival .level-25__dice:hover .level-25__dice-face--base,
+.level-25--revival .level-25__dice:focus-visible .level-25__dice-face--base {
+  display: none;
+}
+
+.level-25--revival .level-25__dice:hover .level-25__dice-face--hover,
+.level-25--revival .level-25__dice:focus-visible .level-25__dice-face--hover {
+  display: block;
+}
+
+.level-25--revival .level-25__dice--pressed,
+.level-25--revival .level-25__dice--pressed:hover,
+.level-25--revival .level-25__dice--pressed:focus-visible {
+  background: #120000;
+  border-color: #e00000;
+}
+
+.level-25--revival .level-25__dice--pressed i { background: #f00; }
+
+.level-25--revival .level-25__password-prompt {
+  color: #ff2a2a;
+  background: rgb(0 0 0 / 82%);
+  border-block: 2px solid #8f0000;
+  font-size: 18px;
+}
+
+.level-25__revival-lasers {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.level-25__revival-laser {
+  position: absolute;
+  display: block;
+  background: #ff1818;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px #fff, 0 0 13px #f00, 0 0 24px #f00;
+  opacity: 0;
+}
+
+.level-25__revival-laser--horizontal {
+  top: 362px;
+  left: -180px;
+  width: 170px;
+  height: 7px;
+  animation: level-25-revival-laser-horizontal 2.15s linear infinite;
+}
+
+.level-25__revival-laser--vertical {
+  top: -170px;
+  left: 482px;
+  width: 7px;
+  height: 155px;
+  animation: level-25-revival-laser-vertical 2.65s linear .7s infinite;
+}
+
+.level-25--revival-failure {
+  overflow: hidden;
+  background:
+    repeating-conic-gradient(from 18deg at 50% 47%, #000 0 7deg, #260000 8deg 13deg, #7c0000 14deg 15deg),
+    #000;
+  animation: level-25-revival-failure-pulse 1.4s steps(2, end) infinite;
+}
+
+.level-25--revival-failure .level-25__heading { z-index: 6; }
+
+.level-25__revival-failure-noise,
+.level-25__revival-failure-rings {
+  position: absolute;
+  pointer-events: none;
+}
+
+.level-25__revival-failure-noise {
+  z-index: 2;
+  inset: -20%;
+  background: repeating-linear-gradient(97deg, transparent 0 13px, rgb(255 0 0 / 20%) 14px 16px, transparent 17px 31px);
+  animation: level-25-revival-noise 430ms steps(3, end) infinite;
+}
+
+.level-25__revival-failure-rings {
+  z-index: 1;
+  top: 145px;
+  left: 245px;
+  width: 310px;
+  height: 310px;
+  border: 18px double #890000;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 32px #000, inset 0 0 0 48px #c00000, 0 0 52px #f00;
+  animation: level-25-revival-rings 3.6s linear infinite;
+}
+
+.level-25--revival-failure .level-25__error-message {
+  z-index: 7;
+  top: 250px;
+  color: #ff2020;
+  font-family: "NELG Chiller", fantasy;
+  font-size: 39px;
+  text-shadow: 3px 2px 0 #000, -2px -1px 0 #fff;
+}
+
+.level-25--revival-failure .level-25__try-again {
+  z-index: 8;
+  top: 425px;
+  color: #f00;
+  background: #050000;
+  border-color: #f00;
+}
+
+.level-25__revival-failure-code {
+  position: absolute;
+  z-index: 7;
+  top: 205px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #8d0000;
+  text-align: center;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 19px;
+}
+
+@keyframes level-25-revival-title {
+  to { background-position: -240% 0; }
+}
+
+@keyframes level-25-revival-laser-horizontal {
+  0%, 12% { translate: 0 0; opacity: 0; }
+  18%, 78% { opacity: 1; }
+  88%, 100% { translate: 1150px 0; opacity: 0; }
+}
+
+@keyframes level-25-revival-laser-vertical {
+  0%, 12% { translate: 0 0; opacity: 0; }
+  18%, 78% { opacity: 1; }
+  88%, 100% { translate: 0 930px; opacity: 0; }
+}
+
+@keyframes level-25-revival-failure-pulse {
+  50% { filter: contrast(1.35) brightness(.72); }
+}
+
+@keyframes level-25-revival-noise {
+  50% { translate: 17px -11px; opacity: .58; }
+}
+
+@keyframes level-25-revival-rings {
+  to { rotate: 360deg; }
 }

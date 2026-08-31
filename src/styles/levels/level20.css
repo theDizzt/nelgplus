@@ -510,3 +510,245 @@
     outline: 7px solid #ff0015;
   }
 }
+
+/* Level 50 enhanced Level 20 */
+.level-frame--revival .level-20--revival {
+  background: #000;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-1 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-1 .level-heading h1 {
+  color: #ff0 !important;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-2 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-2 .level-heading h1,
+.level-frame--revival .level-20--revival.level-20--scene-7 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-7 .level-heading h1,
+.level-frame--revival .level-20--revival.level-20--scene-8 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-8 .level-heading h1,
+.level-frame--revival .level-20--revival.level-20--scene-10 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-10 .level-heading h1 {
+  color: #f00 !important;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-3 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-3 .level-heading h1 {
+  color: #570000 !important;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-4 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-4 .level-heading h1,
+.level-frame--revival .level-20--revival.level-20--scene-5 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-5 .level-heading h1 {
+  color: #fff !important;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-6 {
+  background: #3b3b3b;
+}
+
+.level-frame--revival .level-20--revival.level-20--scene-6 .level-heading__number,
+.level-frame--revival .level-20--revival.level-20--scene-6 .level-heading h1 {
+  color: #000 !important;
+}
+
+.level-20--revival.level-20--scene-7 {
+  background: #fff;
+}
+
+.level-20--revival.level-20--scene-8 {
+  background: radial-gradient(circle at 54% 42%, #b80000 0, #430000 44%, #000 100%);
+}
+
+.level-20--revival.level-20--scene-9 {
+  background: #000;
+}
+
+.level-20--revival.level-20--scene-10 {
+  background: #fff;
+}
+
+.level-20--revival .level-20__heading,
+.level-20--revival .level-20__heading * {
+  text-shadow: none !important;
+}
+
+.level-20--revival .level-20__door,
+.level-20--revival .level-20__door--red,
+.level-20--revival .level-20__door--blue,
+.level-20--revival .level-20__door--green {
+  display: grid;
+  place-items: center;
+  color: #ff0003;
+  background: #f00;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif !important;
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.level-20--revival .level-20__door::after {
+  background: #f00;
+  border-color: #2b0000;
+}
+
+.level-20--revival .level-20__size-object,
+.level-20--revival .level-20__size-object--gear,
+.level-20--revival .level-20__size-object--diamond,
+.level-20--revival .level-20__size-object--burst,
+.level-20--revival .level-20__size-object--ring,
+.level-20--revival .level-20__size-object--blob,
+.level-20--revival .level-20__size-object--square {
+  color: #ff9b9b;
+  background: radial-gradient(circle at 38% 34%, #ff2020 0 8%, #8d0000 35%, #230000 74%);
+  border: 6px ridge #e00000;
+  border-radius: 41% 59% 55% 45% / 47% 38% 62% 53%;
+  box-shadow: inset 0 0 17px #000, 0 0 13px rgb(255 0 0 / 68%);
+  filter: contrast(1.5);
+}
+
+.level-20--revival .level-20__size-object.is-cleared {
+  pointer-events: none;
+  animation: level-20-revival-object-clear 280ms steps(3, end) forwards;
+}
+
+.level-20__revival-type-twice {
+  position: absolute;
+  top: 265px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #570000;
+  text-align: center;
+  font-family: "NELG Chiller", fantasy;
+  font-size: 64px;
+  font-weight: 700;
+}
+
+.level-20__revival-orbs {
+  position: absolute;
+  inset: 0;
+}
+
+.level-20__revival-orb,
+.level-20__revival-orb:hover,
+.level-20__revival-orb:focus,
+.level-20__revival-orb:active {
+  position: absolute;
+  z-index: 5;
+  top: var(--orb-top);
+  left: var(--orb-left);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #fff;
+  border: 3px solid #cfcfcf;
+  border-radius: 50%;
+  box-shadow: 0 0 13px #fff;
+  cursor: pointer;
+  outline: none;
+  animation: level-20-revival-orb-path 2.4s ease-in-out var(--orb-delay) infinite alternate;
+}
+
+.level-20__revival-orb.is-cleared {
+  display: none;
+}
+
+.level-20--revival.level-20--scene-5 .level-20__near-black-button {
+  background: #000003;
+  border-radius: 0;
+}
+
+.level-20__revival-efface {
+  position: absolute;
+  top: 270px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #f00;
+  text-align: center;
+  font-family: "NELG Chiller", fantasy;
+  font-size: 58px;
+  font-weight: 700;
+}
+
+.level-20__revival-coordinate-clue {
+  position: absolute;
+  z-index: 2;
+  top: 255px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #fffffc;
+  text-align: center;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif !important;
+  font-size: 82px;
+  font-weight: 700;
+  animation: level-20-revival-clue 4s linear infinite;
+}
+
+.level-20__coordinate-target--revival {
+  width: 11px;
+  height: 11px;
+  background: #fffffc;
+  border-radius: 50%;
+}
+
+.level-20__coordinates--revival {
+  color: #111;
+  font-family: "NELG Courier", Courier, "Courier New", monospace !important;
+}
+
+.level-20__memory-button--revival,
+.level-20__memory-button--revival:hover,
+.level-20__memory-button--revival:active {
+  width: 72px;
+  height: 72px;
+  background: #f00;
+  border-color: #240000;
+  box-shadow: 5px 5px 0 rgb(35 0 0 / 78%);
+}
+
+.level-20__memory-button--revival:focus-visible {
+  background: #f00;
+  border-color: #240000;
+  box-shadow: 0 0 0 5px #ff0, 5px 5px 0 rgb(35 0 0 / 78%);
+  outline: none;
+}
+
+.level-20__memory-button--revival.is-correct {
+  opacity: .24;
+  pointer-events: none;
+}
+
+.level-20--revival.level-20--scene-9 .level-20__context-menu,
+.level-20--revival.level-20--scene-9 .level-20__context-menu * {
+  font-family: "NELG Arial", Arial, Helvetica, sans-serif !important;
+}
+
+.level-20__revival-scene-ten-image {
+  position: absolute;
+  top: 230px;
+  left: 50%;
+  width: 720px;
+  height: 240px;
+  object-fit: contain;
+  translate: -50% 0;
+}
+
+@keyframes level-20-revival-object-clear {
+  35% { scale: 1.35 .45; rotate: 19deg; filter: brightness(2); }
+  100% { scale: 0; rotate: -45deg; opacity: 0; }
+}
+
+@keyframes level-20-revival-orb-path {
+  0% { translate: -28px -17px; }
+  40% { translate: 34px 22px; }
+  70% { translate: -11px 39px; }
+  100% { translate: 27px -31px; }
+}
+
+@keyframes level-20-revival-clue {
+  0%, 24.9% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}

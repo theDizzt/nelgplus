@@ -2,11 +2,14 @@ import type { LevelDefinition } from "../core/types";
 import { assetUrl } from "../core/assets";
 import { attachCustomCursor } from "../core/CustomCursor";
 
-type Scene = "puzzle" | "wall" | "escape" | "order" | "box";
+type FailureScene = "wall" | "escape" | "order" | "box";
+type Scene = "puzzle" | FailureScene | "revival-failure";
 
 const MAZE_SHAPE = "M41 27 H230 V88 H108 V275 H466 V334 H500 V239 H149 V115 H213 V186 H557 V386 H407 V419 H590 V27 H647 V171 H709 V27 H767 V230 H647 V469 H335 V319 H271 V507 H697 V275 H767 V564 H41 V382 H186 V449 H106 V507 H205 V319 H41 Z";
 
 const PATROL_BOX_HALF_SIZE = 21;
+const REVIVAL_DICE_VALUES = [3, 5, 6, 2, 4, 1] as const;
+const REVIVAL_DICE_ORDER = [6, 4, 1, 5, 2, 3] as const;
 
 const BRANCHES = [
   { path: "M220 57 H75 V250", x: 185, y: 57, letter: "h", speed: 2700, phase: 0.12 },
@@ -17,7 +20,7 @@ const BRANCHES = [
   { path: "M735 310 V535 H515", x: 735, y: 310, letter: "n", speed: 2600, phase: 0.86 },
 ] as const;
 
-const ERROR_CONTENT: Record<Exclude<Scene, "puzzle">, { message: string; headingColor: string }> = {
+const ERROR_CONTENT: Record<FailureScene, { message: string; headingColor: string }> = {
   wall: { message: "THE MOUSE HIT A WALL AND SHATTERED INTO 2,048 PIECES!", headingColor: "#000" },
   escape: { message: "DO NOT CHEAT.", headingColor: "#000" },
   order: { message: "CONGRATULATIONS! YOU HAVE THE INTELLIGENCE OF SOMEONE WHO CANNOT COUNT!!!!!!!", headingColor: "#000" },
@@ -26,6 +29,11 @@ const ERROR_CONTENT: Record<Exclude<Scene, "puzzle">, { message: string; heading
 
 function dicePips(value: number): string {
   return Array.from({ length: value }, () => "<i></i>").join("");
+}
+
+function diceFace(value: number, variant: "base" | "hover"): string {
+  return `<span class="level-25__dice-face level-25__dice-face--${value} level-25__dice-face--${variant}"
+    aria-hidden="true">${dicePips(value)}</span>`;
 }
 
 function shatteredImageMarkup(): string {
@@ -52,7 +60,7 @@ function shatteredImageMarkup(): string {
   ).join("")}</div>`;
 }
 
-function errorArtworkMarkup(errorScene: Exclude<Scene, "puzzle">): string {
+function errorArtworkMarkup(errorScene: FailureScene): string {
   if (errorScene === "wall") return shatteredImageMarkup();
   const source = errorScene === "box" ? "level25a.png" : errorScene === "order" ? "level25b.png" : "level25c.png";
   return `<img class="level-25__error-art level-25__error-art--${errorScene}"
@@ -68,9 +76,11 @@ export const level25: LevelDefinition = {
     { id: "3", label: "Scene 3 - Cheat failure" },
     { id: "4", label: "Scene 4 - Order failure" },
     { id: "5", label: "Scene 5 - Obstacle failure" },
+    { id: "6", label: "Revival failure" },
   ],
   mount(context) {
-    const { screen, complete, wrongAnswer, unlockAchievement, listen, interval, initialScene } = context;
+    const { screen, complete, wrongAnswer, unlockAchievement, listen, interval, initialScene, session, goToMenu } = context;
+    const revival = session.hasFlag("level50-enhanced-run");
     const removeCustomCursor = attachCustomCursor(context, {
       source: "cursor/level25.png",
       hotspot: "center",
@@ -78,12 +88,13 @@ export const level25: LevelDefinition = {
     let scene: Scene = "puzzle";
     let armed = false;
     let awaitingPassword = false;
-    let expectedButton = 1;
+    let expectedButtonIndex = 0;
     let passwordBuffer = "";
     let lastPointer: { x: number; y: number } | undefined;
     let hitPaths: SVGPathElement[] = [];
     let patrolPaths: SVGPathElement[] = [];
     let boxes: HTMLElement[] = [];
+    let lasers: HTMLElement[] = [];
     let puzzleStartedAt = performance.now();
     let boxCollisionGraceUntil = performance.now();
     let draggedPiece: HTMLElement | undefined;
@@ -94,7 +105,7 @@ export const level25: LevelDefinition = {
       scene = "puzzle";
       armed = startArmed;
       awaitingPassword = false;
-      expectedButton = 1;
+      expectedButtonIndex = 0;
       passwordBuffer = "";
       lastPointer = undefined;
       puzzleStartedAt = performance.now();
@@ -106,16 +117,18 @@ export const level25: LevelDefinition = {
       const buttons = BRANCHES.map(
         ({ x, y }, index) => `
           <button class="level-25__dice level-25__dice--${index + 1}" data-dice="${index + 1}"
-            type="button" style="left:${x - 21}px;top:${y - 21}px" aria-label="Dice button ${index + 1}">
-            ${dicePips(index + 1)}
+            type="button" style="left:${x - 21}px;top:${y - 21}px"
+            aria-label="Dice button ${index + 1}${revival ? `, changes to ${REVIVAL_DICE_VALUES[index]} on hover` : ""}">
+            ${diceFace(index + 1, "base")}
+            ${revival ? diceFace(REVIVAL_DICE_VALUES[index] ?? index + 1, "hover") : ""}
           </button>
         `,
       ).join("");
       const patrolBoxes = BRANCHES.map(
-        ({ letter }, index) => `<span class="level-25__patrol-box" data-box="${index}" aria-hidden="true">${letter}</span>`,
+        ({ letter }, index) => `<span class="level-25__patrol-box" data-box="${index}" aria-hidden="true">${revival ? "" : letter}</span>`,
       ).join("");
 
-      screen.className = "level-screen level-25 level-25--puzzle";
+      screen.className = `level-screen level-25 level-25--puzzle${revival ? " level-25--revival" : ""}`;
       screen.innerHTML = `
         <header class="level-heading level-25__heading">
           <div class="level-heading__number">Level 25</div>
@@ -123,14 +136,24 @@ export const level25: LevelDefinition = {
         </header>
         <svg class="level-25__maze" viewBox="0 0 800 600" aria-label="Six-way mouse maze">
           <defs>
-            <linearGradient id="level-25-maze-rainbow" gradientUnits="userSpaceOnUse" x1="65" y1="0" x2="735" y2="0">
-              <stop offset="0" stop-color="#ff1b00" />
-              <stop offset=".16" stop-color="#fff000" />
-              <stop offset=".32" stop-color="#25ff00" />
-              <stop offset=".49" stop-color="#00f5ff" />
-              <stop offset=".67" stop-color="#0051ff" />
-              <stop offset=".84" stop-color="#d000ff" />
-              <stop offset="1" stop-color="#ff006a" />
+            <linearGradient id="level-25-maze-rainbow" gradientUnits="userSpaceOnUse" x1="65" y1="0" x2="735" y2="0" spreadMethod="reflect">
+              ${revival ? `
+                <stop offset="0" stop-color="#050000" />
+                <stop offset=".22" stop-color="#e00000" />
+                <stop offset=".48" stop-color="#170000" />
+                <stop offset=".72" stop-color="#ff1a1a" />
+                <stop offset="1" stop-color="#000" />
+                <animateTransform attributeName="gradientTransform" type="translate"
+                  from="-700 0" to="700 0" dur="1.4s" repeatCount="indefinite" />
+              ` : `
+                <stop offset="0" stop-color="#ff1b00" />
+                <stop offset=".16" stop-color="#fff000" />
+                <stop offset=".32" stop-color="#25ff00" />
+                <stop offset=".49" stop-color="#00f5ff" />
+                <stop offset=".67" stop-color="#0051ff" />
+                <stop offset=".84" stop-color="#d000ff" />
+                <stop offset="1" stop-color="#ff006a" />
+              `}
             </linearGradient>
           </defs>
           <path class="level-25__maze-shape" d="${MAZE_SHAPE}" />
@@ -139,15 +162,48 @@ export const level25: LevelDefinition = {
         </svg>
         <div class="level-25__dice-buttons">${buttons}</div>
         <div class="level-25__patrol-boxes">${patrolBoxes}</div>
-        <p class="level-25__password-prompt" role="status" hidden>TYPE THE PASSWORD ON YOUR KEYBOARD!</p>
+        ${revival ? `<div class="level-25__revival-lasers" aria-hidden="true">
+          <span class="level-25__revival-laser level-25__revival-laser--horizontal"></span>
+          <span class="level-25__revival-laser level-25__revival-laser--vertical"></span>
+        </div>` : ""}
+        <p class="level-25__password-prompt" role="status" hidden>
+          ${revival
+            ? "TYPE THE PASSWORD. A WRONG PASSWORD WILL RESET ALL OF YOUR HARD WORKS."
+            : "TYPE THE PASSWORD ON YOUR KEYBOARD!"}
+        </p>
       `;
 
       hitPaths = [...screen.querySelectorAll<SVGPathElement>(".level-25__route-hit")];
       patrolPaths = [...screen.querySelectorAll<SVGPathElement>(".level-25__patrol-path")];
       boxes = [...screen.querySelectorAll<HTMLElement>(".level-25__patrol-box")];
+      lasers = [...screen.querySelectorAll<HTMLElement>(".level-25__revival-laser")];
     };
 
-    const showError = (errorScene: Exclude<Scene, "puzzle">) => {
+    const showError = (errorScene: FailureScene) => {
+      if (revival) {
+        scene = "revival-failure";
+        armed = false;
+        awaitingPassword = false;
+        lastPointer = undefined;
+        screen.className = "level-screen level-25 level-25--error level-25--revival-failure";
+        screen.innerHTML = `
+          <div class="level-25__revival-failure-noise" aria-hidden="true"></div>
+          <div class="level-25__revival-failure-rings" aria-hidden="true"></div>
+          <header class="level-heading level-25__heading level-25__heading--error">
+            <div class="level-heading__number">Level 25</div>
+            <h1>THE TRIAL REMEMBERS</h1>
+          </header>
+          <p class="level-25__revival-failure-code" aria-hidden="true">${errorScene.toUpperCase()} // 25 // NULL // AGAIN</p>
+          <p class="level-25__error-message" role="alert">THE MAZE REJECTED YOU.<br />RETURN. TRY AGAIN. DO NOT LOOK AWAY.</p>
+          <button class="level-25__try-again" type="button">TRY AGAIN</button>
+        `;
+        hitPaths = [];
+        patrolPaths = [];
+        boxes = [];
+        lasers = [];
+        return;
+      }
+
       scene = errorScene;
       armed = false;
       lastPointer = undefined;
@@ -181,11 +237,12 @@ export const level25: LevelDefinition = {
       return hitPaths.some((path) => path.isPointInFill(point));
     };
 
-    const initialErrors: Readonly<Record<string, Exclude<Scene, "puzzle">>> = {
+    const initialErrors: Readonly<Record<string, FailureScene>> = {
       "2": "wall",
       "3": "escape",
       "4": "order",
       "5": "box",
+      "6": "wall",
     };
     const initialError = initialScene ? initialErrors[initialScene] : undefined;
     if (initialError) showError(initialError);
@@ -239,14 +296,16 @@ export const level25: LevelDefinition = {
         return;
       }
       const number = Number(button.dataset.dice);
-      if (number !== expectedButton) {
+      const expectedNumber = revival ? REVIVAL_DICE_ORDER[expectedButtonIndex] : expectedButtonIndex + 1;
+      if (number !== expectedNumber) {
         showError("order");
         return;
       }
       button.classList.add("level-25__dice--pressed");
-      expectedButton += 1;
+      button.disabled = true;
+      expectedButtonIndex += 1;
       boxCollisionGraceUntil = performance.now() + 450;
-      if (expectedButton === 7) {
+      if (expectedButtonIndex === 6) {
         awaitingPassword = true;
         const prompt = screen.querySelector<HTMLElement>(".level-25__password-prompt");
         if (prompt) prompt.hidden = false;
@@ -277,13 +336,17 @@ export const level25: LevelDefinition = {
     listen(document, "keydown", (event) => {
       if (scene !== "puzzle" || event.repeat || event.key.length !== 1) return;
       if (event.ctrlKey || event.altKey || event.metaKey) return;
-      passwordBuffer = `${passwordBuffer}${event.key}`.slice(-6);
-      if (passwordBuffer === "hidden") {
+      passwordBuffer = `${passwordBuffer}${event.key.toLowerCase()}`.slice(-6);
+      const answer = revival ? "ndheid" : "hidden";
+      if (passwordBuffer === answer) {
         if (awaitingPassword) complete();
-        else unlockAchievement(30);
+        else if (!revival) unlockAchievement(30);
         return;
       }
-      if (awaitingPassword && passwordBuffer.length === 6) wrongAnswer();
+      if (awaitingPassword && passwordBuffer.length === 6) {
+        if (revival) goToMenu();
+        else wrongAnswer();
+      }
     });
 
     interval(() => {
@@ -293,7 +356,8 @@ export const level25: LevelDefinition = {
         const route = patrolPaths[index];
         const settings = BRANCHES[index];
         if (!route || !settings) return;
-        const cycle = ((now - puzzleStartedAt) / settings.speed + settings.phase) % 2;
+        const speed = revival ? settings.speed / 3.4 : settings.speed;
+        const cycle = ((now - puzzleStartedAt) / speed + settings.phase) % 2;
         const progress = cycle <= 1 ? cycle : 2 - cycle;
         const patrolProgress = 0.3 + progress * 0.7;
         const point = route.getPointAtLength(route.getTotalLength() * patrolProgress);
@@ -310,6 +374,20 @@ export const level25: LevelDefinition = {
         ) {
           showError("box");
           return;
+        }
+      }
+
+      if (revival) {
+        for (const laser of lasers) {
+          if (Number.parseFloat(getComputedStyle(laser).opacity) < 0.5) continue;
+          const bounds = laser.getBoundingClientRect();
+          if (
+            lastPointer.x >= bounds.left && lastPointer.x <= bounds.right &&
+            lastPointer.y >= bounds.top && lastPointer.y <= bounds.bottom
+          ) {
+            showError("box");
+            return;
+          }
         }
       }
     }, 30);

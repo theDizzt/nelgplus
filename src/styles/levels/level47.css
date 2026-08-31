@@ -1,0 +1,194 @@
+.level-47 {
+  overflow: hidden;
+  color: #0ff;
+  background: #033666;
+}
+
+.level-47__stage {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+}
+
+.level-47__maze,
+.level-47__game-field {
+  position: absolute;
+  inset: 0;
+  background: #073c70;
+}
+
+.level-47__maze i {
+  position: absolute;
+  display: block;
+  background: #619df5;
+}
+
+.level-47__cursor {
+  z-index: 2147483646;
+}
+
+.level-47__cursor-base {
+  width: 30px;
+  height: 44px;
+}
+
+.level-47__cursor-ice {
+  position: absolute;
+  top: -6px;
+  left: -13px;
+  width: 56px;
+  height: 56px;
+  opacity: 0;
+}
+
+.level-47__heading {
+  z-index: 8;
+  color: #0ff;
+  pointer-events: none;
+}
+
+.level-47__heading .level-heading__number,
+.level-47__heading h1 {
+  color: #0ff;
+  text-shadow: none;
+}
+
+.level-47__title-snow,
+.level-47__form-snow {
+  position: absolute;
+  z-index: 14;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.level-47__title-snow {
+  top: 32.2px;
+  left: 49.7%;
+  width: 386px;
+  height: auto;
+  translate: -50% 0;
+}
+
+.level-47__form-snow {
+  bottom: 25px;
+  left: 49.9%;
+  width: 275px;
+  height: auto;
+  translate: -50% 0;
+}
+
+.level-47__target {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  box-sizing: border-box;
+  width: 46px;
+  height: 46px;
+  background: radial-gradient(circle at 44% 42%, #ff8585 0 8%, #f71919 38%, #a00000 72%, #3b0000 100%);
+  border: 3px solid #090909;
+}
+
+.level-47__target.is-hovered {
+  filter: brightness(1.12);
+}
+
+.level-47__form {
+  position: absolute;
+  z-index: 12;
+  bottom: 43px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.level-47__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-47__form input {
+  padding: 4px 8px;
+  color: #f00;
+  background: #000080;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  pointer-events: auto;
+}
+
+.level-47__form input:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.level-47__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ff0;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  pointer-events: auto;
+}
+
+.level-47__form button:hover:not(:disabled),
+.level-47__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-47__form button:active:not(:disabled) {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-47__snow {
+  position: absolute;
+  z-index: 2147483647;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.level-47__snow i {
+  position: absolute;
+  top: -18px;
+  left: var(--snow-left);
+  width: var(--snow-size);
+  height: var(--snow-size);
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 7px 2px rgb(255 255 255 / 72%);
+  opacity: var(--snow-opacity);
+  animation: level-47-snowfall var(--snow-duration) linear var(--snow-delay) infinite;
+}
+
+.level-47__snow i:nth-child(4n) {
+  filter: blur(1px);
+}
+
+.level-47__snow i:nth-child(7n) {
+  filter: blur(2px);
+  scale: 1.5;
+}
+
+@keyframes level-47-snowfall {
+  from { translate: 0 -20px; }
+  to { translate: var(--snow-drift) 638px; }
+}

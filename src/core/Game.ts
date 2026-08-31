@@ -486,7 +486,13 @@ export class Game {
 
       switch (button.dataset.menuAction) {
         case "start":
-          if (revivalMode) this.sessionFlags.add("level50-enhanced-run");
+          if (revivalMode) {
+            this.sessionFlags.add("level50-enhanced-run");
+            if (this.sessionFlags.delete("level50-enhanced-level20-scene10")) {
+              this.showLevel(20, "10");
+              break;
+            }
+          }
           this.showLevel(1);
           break;
         case "warp":
@@ -1485,13 +1491,13 @@ export class Game {
           return;
         }
 
-        const enhancedMatch = selectedScene?.match(/^enhanced-(\d+)$/);
+        const enhancedMatch = selectedScene?.match(/^enhanced-(\d+)(?:-scene-(\d+))?$/);
         if (enhancedMatch) {
           const enhancedLevel = Number(enhancedMatch[1]);
           if (enhancedLevel >= 1 && enhancedLevel <= 25) {
             this.sessionFlags.add("level50-revival-main");
             this.sessionFlags.add("level50-enhanced-run");
-            this.showLevel(enhancedLevel);
+            this.showLevel(enhancedLevel, enhancedMatch[2]);
             return;
           }
         }

@@ -14,6 +14,10 @@ export const level50: LevelDefinition = {
       id: `enhanced-${index + 1}`,
       label: `Enhanced Level ${index + 1}`,
     })),
+    ...Array.from({ length: 10 }, (_, index) => ({
+      id: `enhanced-20-scene-${index + 1}`,
+      label: `Enhanced Level 20 - Scene ${index + 1}`,
+    })),
   ],
   mount({ screen, audio, listen, goToMenu, session }) {
     screen.className = "level-screen level-50";
