@@ -4,6 +4,22 @@
   background: #033666;
 }
 
+.level-47--scene-6 {
+  background: #000096;
+}
+
+.level-47--scene-7 {
+  background: #111;
+}
+
+.level-47--scene-8 {
+  background: #350000 url("/assets/images/level47bge1.jpg") center / cover no-repeat;
+}
+
+.level-47--scene-9 {
+  background: #000;
+}
+
 .level-47__stage {
   position: absolute;
   z-index: 2;
@@ -14,13 +30,204 @@
 .level-47__game-field {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   background: #073c70;
 }
 
-.level-47__maze i {
+.level-47__safe-path {
   position: absolute;
   display: block;
   background: #619df5;
+}
+
+.level-47__moving-obstacle {
+  position: absolute;
+  z-index: 5;
+  box-sizing: border-box;
+  background: #c90000;
+  border: 3px solid #111;
+}
+
+.level-47__maze-wall {
+  position: absolute;
+  z-index: 4;
+  box-sizing: border-box;
+  background: #073c70;
+  border: 0;
+  box-shadow: none;
+}
+
+.level-47__fire-zone {
+  position: absolute;
+  z-index: 4;
+  top: 432px;
+  left: 358px;
+  width: 128px;
+  height: 128px;
+  background:
+    radial-gradient(circle at 50% 55%, rgb(255 255 225 / 95%) 0 7%, rgb(255 234 84 / 92%) 15%,
+      rgb(255 151 24 / 76%) 35%, rgb(255 98 0 / 42%) 57%, rgb(255 177 0 / 16%) 76%, transparent 100%);
+  border: 1px solid rgb(255 199 69 / 38%);
+  border-radius: 50%;
+  box-shadow: 0 0 22px 8px rgb(255 187 37 / 42%), 0 0 52px 18px rgb(255 104 0 / 23%);
+  animation: level-47-firelight 1.7s ease-in-out infinite alternate;
+}
+
+.level-47__fire-zone::before,
+.level-47__fire-zone::after {
+  position: absolute;
+  inset: 11px;
+  content: "";
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.level-47__fire-zone::before {
+  background: radial-gradient(circle, rgb(255 251 193 / 38%), transparent 67%);
+  filter: blur(6px);
+}
+
+.level-47__fire-zone::after {
+  inset: -18px;
+  border: 1px solid rgb(255 205 94 / 15%);
+  box-shadow: inset 0 0 30px rgb(255 126 0 / 13%);
+}
+
+.level-47__campfire {
+  position: absolute;
+  top: 39px;
+  left: 50%;
+  width: 48px;
+  height: 58px;
+  translate: -50% 0;
+}
+
+.level-47__campfire i {
+  position: absolute;
+  bottom: 13px;
+  left: 50%;
+  width: 29px;
+  height: 43px;
+  background: #ff4a00;
+  border-radius: 58% 42% 55% 45% / 72% 65% 35% 28%;
+  filter: drop-shadow(0 0 7px #ff0);
+  transform-origin: 50% 100%;
+  translate: -50% 0;
+  rotate: 45deg;
+  animation: level-47-fire-flicker 480ms ease-in-out infinite alternate;
+}
+
+.level-47__campfire i:nth-child(2) {
+  bottom: 14px;
+  width: 17px;
+  height: 29px;
+  background: #ffe600;
+  animation-delay: -220ms;
+}
+
+.level-47__campfire b {
+  position: absolute;
+  bottom: 7px;
+  left: 5px;
+  width: 40px;
+  height: 8px;
+  background: #5b260b;
+  border: 2px solid #211005;
+  border-radius: 4px;
+  rotate: 18deg;
+}
+
+.level-47__campfire b:last-child {
+  rotate: -18deg;
+}
+
+.level-47__press-well {
+  position: absolute;
+  z-index: 3;
+  top: 21px;
+  left: 560px;
+  width: 132px;
+  height: 546px;
+  background: rgb(150 150 150 / 14%);
+  border-right: 4px solid rgb(175 175 175 / 42%);
+  border-left: 4px solid rgb(175 175 175 / 42%);
+}
+
+.level-47__press {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  left: 560px;
+  width: 132px;
+  height: 548px;
+  background: linear-gradient(90deg, #444 0, #8c8c8c 18%, #5b5b5b 54%, #262626 100%);
+  border: 4px solid #171717;
+  box-shadow: inset 8px 0 0 rgb(255 255 255 / 14%), inset -10px 0 0 rgb(0 0 0 / 28%);
+  will-change: translate;
+}
+
+.level-47__press::after {
+  position: absolute;
+  right: -13px;
+  bottom: -13px;
+  left: -13px;
+  height: 25px;
+  content: "";
+  background: #353535;
+  border: 4px solid #111;
+}
+
+.level-47__press.is-slammed::after {
+  box-shadow: 0 10px 25px rgb(255 255 255 / 72%);
+  animation: level-47-press-impact 220ms linear;
+}
+
+.level-47__destination {
+  position: absolute;
+  z-index: 7;
+  top: 37px;
+  left: 714px;
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  background: #91d24f;
+  border: 3px solid #111;
+  animation: level-47-destination-pulse 1.15s ease-in-out infinite alternate;
+}
+
+.level-47__temperature {
+  position: absolute;
+  z-index: 24;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  pointer-events: none;
+  font-family: "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+}
+
+.level-47__temperature-track {
+  width: 105px;
+  height: 11px;
+  overflow: hidden;
+  background: #111;
+  border: 2px solid #050505;
+}
+
+.level-47__temperature-track i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffeb00, #ff7900);
+}
+
+.level-47__temperature strong {
+  min-width: 48px;
+  color: #ffbd00;
+  font-size: 18px;
+  font-weight: 400;
+  text-shadow: 1px 1px 0 #111;
 }
 
 .level-47__cursor {
@@ -28,16 +235,16 @@
 }
 
 .level-47__cursor-base {
-  width: 30px;
-  height: 44px;
+  width: 15px;
+  height: 22px;
 }
 
 .level-47__cursor-ice {
   position: absolute;
-  top: -6px;
-  left: -13px;
-  width: 56px;
-  height: 56px;
+  top: -3px;
+  left: -6.5px;
+  width: 28px;
+  height: 28px;
   opacity: 0;
 }
 
@@ -81,8 +288,8 @@
 
 .level-47__target {
   position: absolute;
-  right: 30px;
-  bottom: 30px;
+  left: 55px;
+  bottom: 55px;
   box-sizing: border-box;
   width: 46px;
   height: 46px;
@@ -90,8 +297,79 @@
   border: 3px solid #090909;
 }
 
+button.level-47__target {
+  z-index: 20;
+  right: 30px !important;
+  left: auto !important;
+  padding: 0;
+  cursor: pointer;
+}
+
+button.level-47__restart-target {
+  position: absolute;
+  right: auto !important;
+  bottom: 55px !important;
+  left: 55px !important;
+}
+
 .level-47__target.is-hovered {
   filter: brightness(1.12);
+}
+
+.level-47__death-label {
+  position: absolute;
+  z-index: 8;
+  top: 225px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 88px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.level-47__death-label--scene-6 {
+  color: #ff0;
+}
+
+.level-47__death-label--scene-7,
+.level-47__death-label--scene-8,
+.level-47__death-label--scene-9 {
+  color: #f00;
+}
+
+.level-47__death-label--scene-9 {
+  font-size: 76px;
+}
+
+.level-47__death-cursor {
+  position: absolute;
+  z-index: 6;
+  top: 340px;
+  left: 50%;
+  width: 155px;
+  height: 155px;
+  object-fit: contain;
+  translate: -50% 0;
+  user-select: none;
+}
+
+.level-47__death-cursor--crushed {
+  animation: level-47-cursor-tattered 720ms steps(3, end) infinite;
+}
+
+.level-47__death-cursor--frozen {
+  filter: brightness(1.35) sepia(.2) saturate(3.8) hue-rotate(155deg) contrast(1.15)
+    drop-shadow(0 0 5px #dff) drop-shadow(0 0 15px #39cfff);
+  animation: level-47-cursor-frozen 1.4s steps(2, end) infinite;
+}
+
+.level-47__death-cursor--heated {
+  filter: sepia(1) saturate(8) hue-rotate(325deg) drop-shadow(0 0 12px #f00);
+  animation: level-47-cursor-boil 620ms ease-in-out infinite alternate;
 }
 
 .level-47__form {
@@ -191,4 +469,55 @@
 @keyframes level-47-snowfall {
   from { translate: 0 -20px; }
   to { translate: var(--snow-drift) 638px; }
+}
+
+@keyframes level-47-fire-flicker {
+  from { scale: .88 1.04; rotate: 40deg; }
+  to { scale: 1.08 .9; rotate: 49deg; }
+}
+
+@keyframes level-47-firelight {
+  from {
+    filter: brightness(.92) saturate(1.05);
+    box-shadow: 0 0 20px 7px rgb(255 187 37 / 38%), 0 0 46px 15px rgb(255 104 0 / 18%);
+  }
+  to {
+    filter: brightness(1.16) saturate(1.22);
+    box-shadow: 0 0 30px 11px rgb(255 215 70 / 55%), 0 0 65px 24px rgb(255 83 0 / 30%);
+  }
+}
+
+@keyframes level-47-destination-pulse {
+  from {
+    background: #78bd39;
+    box-shadow: inset 0 0 8px rgb(255 255 255 / 20%), 0 0 4px rgb(140 255 64 / 28%);
+    filter: brightness(.92);
+  }
+  to {
+    background: #b4f568;
+    box-shadow: inset 0 0 13px rgb(255 255 255 / 58%), 0 0 17px 6px rgb(126 255 50 / 58%);
+    filter: brightness(1.16);
+  }
+}
+
+@keyframes level-47-press-impact {
+  50% { translate: 0 5px; filter: brightness(2); }
+}
+
+@keyframes level-47-cursor-tattered {
+  0%, 100% { translate: -50% 0; rotate: -2deg; }
+  32% { translate: calc(-50% - 5px) 3px; rotate: 3deg; }
+  65% { translate: calc(-50% + 4px) -2px; rotate: -4deg; }
+}
+
+@keyframes level-47-cursor-frozen {
+  0%, 100% { translate: -50% 0; rotate: 0deg; }
+  48% { translate: calc(-50% - 1px) 1px; rotate: -.5deg; }
+  52% { translate: calc(-50% + 1px) -1px; rotate: .5deg; }
+}
+
+@keyframes level-47-cursor-boil {
+  0% { translate: -50% 2px; scale: .94 1.05; rotate: -2deg; }
+  45% { translate: calc(-50% - 4px) -3px; scale: 1.06 .95; rotate: 2deg; }
+  100% { translate: calc(-50% + 3px) 4px; scale: .98 1.08; rotate: -1deg; }
 }
