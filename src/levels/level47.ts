@@ -44,6 +44,26 @@ const SCENE_THREE_LOOP = {
   left: 170, right: 735, top: 343, bottom: 458, size: 50, speed: 126,
 } as const;
 
+const SCENE_FOUR_FIRES = [
+  { x: 14, y: 10, radius: 60 },
+  { x: 18, y: 447, radius: 60 },
+  { x: 626, y: 240, radius: 60 },
+] as const;
+const SCENE_FOUR_PAD = { x: 54, y: 46, width: 46, height: 46 } as const;
+const SCENE_FOUR_DESTINATION = { x: 308, y: 332, width: 48, height: 48 } as const;
+const SCENE_FOUR_BARS = [
+  { x: 152, y: 25, width: 179, height: 16, travel: 48, speed: 0.72, offset: 0 },
+  { x: 398, y: 40, width: 182, height: 16, travel: 52, speed: 0.82, offset: 1.7 },
+  { x: 285, y: 315, width: 233, height: 16, travel: 130, speed: 0.56, offset: 3.2 },
+] as const;
+const SCENE_FOUR_SNOWBALL = {
+  y: 170, size: 100, startX: 152, travel: 230, speed: 0.78,
+} as const;
+const SCENE_FOUR_CROSSES = [
+  { x: 685, y: 181, armLength: 168, thickness: 16, speed: 22 },
+  { x: 685, y: 432, armLength: 168, thickness: 16, speed: -18 },
+] as const;
+
 interface MazeRect {
   readonly x: number;
   readonly y: number;
@@ -149,7 +169,28 @@ function mazeMarkup(scene: 2 | 3 | 4): string {
       <div class="level-47__maze-door level-47__maze-door--cyan" data-level-47-door="cyan"></div>
       <div class="level-47__maze-door level-47__maze-door--magenta" data-level-47-door="magenta"></div>
       <div class="level-47__destination level-47__destination--scene-3" aria-label="Maze destination"></div>
-    ` : ""}
+    ` : `
+      ${SCENE_FOUR_FIRES.map(({ x, y, radius }, index) => `
+        <div class="level-47__fire-zone level-47__fire-zone--scene-4"
+          style="left:${x}px;top:${y}px;width:${radius * 2}px;height:${radius * 2}px"
+          aria-label="Campfire warming area ${index + 1}">
+          <span class="level-47__campfire" aria-hidden="true"><i></i><i></i><b></b><b></b></span>
+        </div>
+      `).join("")}
+      ${SCENE_FOUR_BARS.map((_, index) => `
+        <div class="level-47__scene-4-bar" data-level-47-scene-4-bar="${index}"
+          aria-label="Moving bar obstacle ${index + 1}"></div>
+      `).join("")}
+      <div class="level-47__snowball" data-level-47-scene-4-snowball aria-label="Rolling snowball"></div>
+      ${SCENE_FOUR_CROSSES.map((_, index) => `
+        <div class="level-47__rotating-cross" data-level-47-scene-4-cross="${index}"
+          aria-label="Rotating cross obstacle ${index + 1}"><i></i><i></i></div>
+      `).join("")}
+      <div class="level-47__door-pad level-47__door-pad--scene-4" data-level-47-scene-4-pad
+        aria-label="Magenta portal control"></div>
+      <div class="level-47__destination level-47__destination--scene-4 is-locked"
+        data-level-47-scene-4-destination aria-label="Inactive maze destination"></div>
+    `}
   </div>`;
 }
 
@@ -163,6 +204,39 @@ function temperatureMarkup(): string {
 function rectanglesOverlap(a: MazeRect, b: MazeRect): boolean {
   return a.x < b.x + b.width && a.x + a.width > b.x
     && a.y < b.y + b.height && a.y + a.height > b.y;
+}
+
+function rotatedRectOverlaps(
+  rect: MazeRect,
+  centerX: number,
+  centerY: number,
+  width: number,
+  height: number,
+  angle: number,
+): boolean {
+  const halfRectWidth = rect.width / 2;
+  const halfRectHeight = rect.height / 2;
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+  const rectCenterX = rect.x + halfRectWidth;
+  const rectCenterY = rect.y + halfRectHeight;
+  const deltaX = rectCenterX - centerX;
+  const deltaY = rectCenterY - centerY;
+  const cosine = Math.cos(angle);
+  const sine = Math.sin(angle);
+
+  return Math.abs(deltaX) <= halfRectWidth + halfWidth * Math.abs(cosine) + halfHeight * Math.abs(sine)
+    && Math.abs(deltaY) <= halfRectHeight + halfWidth * Math.abs(sine) + halfHeight * Math.abs(cosine)
+    && Math.abs(deltaX * cosine + deltaY * sine)
+      <= halfWidth + halfRectWidth * Math.abs(cosine) + halfRectHeight * Math.abs(sine)
+    && Math.abs(-deltaX * sine + deltaY * cosine)
+      <= halfHeight + halfRectWidth * Math.abs(sine) + halfRectHeight * Math.abs(cosine);
+}
+
+function circleOverlapsRect(centerX: number, centerY: number, radius: number, rect: MazeRect): boolean {
+  const closestX = Math.max(rect.x, Math.min(centerX, rect.x + rect.width));
+  const closestY = Math.max(rect.y, Math.min(centerY, rect.y + rect.height));
+  return Math.hypot(centerX - closestX, centerY - closestY) <= radius;
 }
 
 function heading(): string {
@@ -250,6 +324,13 @@ export const level47: LevelDefinition = {
     let sceneThreeCyanOpen = false;
     let sceneThreeMagentaOpen = false;
     let sceneThreeLastPressCycles = [-1, -1, -1];
+    let sceneFourBarElements: HTMLElement[] = [];
+    let sceneFourSnowball: HTMLElement | undefined;
+    let sceneFourCrossElements: HTMLElement[] = [];
+    let sceneFourPad: HTMLElement | undefined;
+    let sceneFourDestination: HTMLElement | undefined;
+    let sceneFourPadHoldSeconds = 0;
+    let sceneFourPortalActive = false;
     let temperatureBar: HTMLElement | undefined;
     let temperatureValue: HTMLElement | undefined;
     let animationFrame = 0;
@@ -447,6 +528,53 @@ export const level47: LevelDefinition = {
       };
     };
 
+    const updateSceneFourHazards = (now: number) => {
+      const elapsedSeconds = (now - sceneStartedAt) / 1_000;
+      const barBounds = SCENE_FOUR_BARS.map((bar, index) => {
+        const progress = (Math.sin(elapsedSeconds * bar.speed + bar.offset) + 1) / 2;
+        const y = bar.y + bar.travel * progress;
+        const element = sceneFourBarElements[index];
+        if (element) {
+          element.style.left = `${bar.x}px`;
+          element.style.top = `${y}px`;
+          element.style.width = `${bar.width}px`;
+          element.style.height = `${bar.height}px`;
+        }
+        return { x: bar.x, y, width: bar.width, height: bar.height };
+      });
+
+      const snowballProgress = (Math.sin(elapsedSeconds * SCENE_FOUR_SNOWBALL.speed) + 1) / 2;
+      const snowballX = SCENE_FOUR_SNOWBALL.startX + SCENE_FOUR_SNOWBALL.travel * snowballProgress;
+      if (sceneFourSnowball) {
+        sceneFourSnowball.style.left = `${snowballX}px`;
+        sceneFourSnowball.style.top = `${SCENE_FOUR_SNOWBALL.y}px`;
+        const rollAngle = (snowballX - SCENE_FOUR_SNOWBALL.startX) / (SCENE_FOUR_SNOWBALL.size / 2);
+        sceneFourSnowball.style.rotate = `${rollAngle}rad`;
+      }
+
+      const crosses = SCENE_FOUR_CROSSES.map((cross, index) => {
+        const angle = elapsedSeconds * cross.speed * Math.PI / 180;
+        const element = sceneFourCrossElements[index];
+        if (element) {
+          element.style.left = `${cross.x}px`;
+          element.style.top = `${cross.y}px`;
+          element.style.rotate = `${angle}rad`;
+        }
+        return { ...cross, angle };
+      });
+
+      return {
+        barBounds,
+        snowballBounds: {
+          x: snowballX,
+          y: SCENE_FOUR_SNOWBALL.y,
+          width: SCENE_FOUR_SNOWBALL.size,
+          height: SCENE_FOUR_SNOWBALL.size,
+        },
+        crosses,
+      };
+    };
+
     const animateCursor = (now: number) => {
       const deltaSeconds = Math.min(0.034, Math.max(0.001, (now - previousAnimationTime) / 1_000));
       previousAnimationTime = now;
@@ -457,6 +585,7 @@ export const level47: LevelDefinition = {
       const previousCursorY = cursorY;
       const sceneTwoHazards = sceneNumber === 2 ? updateSceneTwoObstacles(now) : undefined;
       const sceneThreeHazards = sceneNumber === 3 ? updateSceneThreeHazards(now) : undefined;
+      const sceneFourHazards = sceneNumber === 4 ? updateSceneFourHazards(now) : undefined;
       const changeScene = (nextScene: number) => {
         sceneNumber = nextScene;
         renderScene();
@@ -490,8 +619,11 @@ export const level47: LevelDefinition = {
             width: Math.abs(cursorX - previousCursorX) + CURSOR_WIDTH,
             height: Math.abs(cursorY - previousCursorY) + CURSOR_HEIGHT,
           };
-          if (!mazeStarted && pointInsideRect(centerX, centerY, maze.start)) {
+          let collisionBounds = movementBounds;
+          if (!mazeStarted && (pointInsideRect(centerX, centerY, maze.start)
+            || (sceneNumber === 4 && cursorFitsSafePath(maze)))) {
             mazeStarted = true;
+            collisionBounds = cursorBounds();
           }
           if (sceneNumber === 2 && mazeStarted) {
             inFire = Math.hypot(centerX - (SCENE_TWO_FIRE.x + SCENE_TWO_FIRE.radius),
@@ -534,21 +666,68 @@ export const level47: LevelDefinition = {
             );
             sceneThreeMagentaHoldSeconds = magenta.hold;
             sceneThreeMagentaOpen = magenta.opened;
+          } else if (sceneNumber === 4 && mazeStarted) {
+            inFire = SCENE_FOUR_FIRES.some((fire) => Math.hypot(
+              centerX - (fire.x + fire.radius),
+              centerY - (fire.y + fire.radius),
+            ) <= fire.radius);
+            const onPad = pointInsideRect(centerX, centerY, SCENE_FOUR_PAD);
+            sceneFourPadHoldSeconds = sceneFourPortalActive
+              ? 3
+              : (onPad ? sceneFourPadHoldSeconds + deltaSeconds : 0);
+            sceneFourPortalActive = sceneFourPortalActive || sceneFourPadHoldSeconds >= 3;
+            sceneFourPad?.style.setProperty("--door-hold", `${Math.min(1, sceneFourPadHoldSeconds / 3)}`);
+            sceneFourPad?.classList.toggle("is-complete", sceneFourPortalActive);
+            sceneFourDestination?.classList.toggle("is-locked", !sceneFourPortalActive);
+            sceneFourDestination?.classList.toggle("is-active", sceneFourPortalActive);
+            sceneFourDestination?.setAttribute(
+              "aria-label",
+              sceneFourPortalActive ? "Active maze destination" : "Inactive maze destination",
+            );
+            inDestination = sceneFourPortalActive
+              && pointInsideRect(centerX, centerY, SCENE_FOUR_DESTINATION);
           }
 
           if (!invincible) {
             if (mazeStarted && !cursorFitsSafePath(maze)) {
               changeScene(7);
             } else if (mazeStarted && sceneTwoHazards
-              && (sceneTwoHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(movementBounds, obstacle))
-                || rectanglesOverlap(movementBounds, sceneTwoHazards.pressBounds)
-                || SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(movementBounds, wall)))) {
+              && (sceneTwoHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(collisionBounds, obstacle))
+                || rectanglesOverlap(collisionBounds, sceneTwoHazards.pressBounds)
+                || SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(collisionBounds, wall)))) {
               changeScene(7);
             } else if (mazeStarted && sceneThreeHazards
-              && (sceneThreeHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(movementBounds, obstacle))
-                || sceneThreeHazards.pressBounds.some((press) => rectanglesOverlap(movementBounds, press))
-                || (!sceneThreeCyanOpen && rectanglesOverlap(movementBounds, SCENE_THREE_DOORS.cyan))
-                || (!sceneThreeMagentaOpen && rectanglesOverlap(movementBounds, SCENE_THREE_DOORS.magenta)))) {
+              && (sceneThreeHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(collisionBounds, obstacle))
+                || sceneThreeHazards.pressBounds.some((press) => rectanglesOverlap(collisionBounds, press))
+                || (!sceneThreeCyanOpen && rectanglesOverlap(collisionBounds, SCENE_THREE_DOORS.cyan))
+                || (!sceneThreeMagentaOpen && rectanglesOverlap(collisionBounds, SCENE_THREE_DOORS.magenta)))) {
+              changeScene(7);
+            } else if (mazeStarted && sceneFourHazards
+              && (sceneFourHazards.barBounds.some((bar) => rectanglesOverlap(collisionBounds, bar))
+                || circleOverlapsRect(
+                  sceneFourHazards.snowballBounds.x + SCENE_FOUR_SNOWBALL.size / 2,
+                  sceneFourHazards.snowballBounds.y + SCENE_FOUR_SNOWBALL.size / 2,
+                  SCENE_FOUR_SNOWBALL.size / 2,
+                  collisionBounds,
+                )
+                || sceneFourHazards.crosses.some((cross) => (
+                  rotatedRectOverlaps(
+                    collisionBounds,
+                    cross.x,
+                    cross.y,
+                    cross.armLength,
+                    cross.thickness,
+                    cross.angle,
+                  )
+                  || rotatedRectOverlaps(
+                    collisionBounds,
+                    cross.x,
+                    cross.y,
+                    cross.thickness,
+                    cross.armLength,
+                    cross.angle,
+                  )
+                )))) {
               changeScene(7);
             }
           }
@@ -556,15 +735,16 @@ export const level47: LevelDefinition = {
       }
 
       if (!transitioned && isGameScene()) {
-        if ((sceneNumber === 2 || sceneNumber === 3) && inFire) temperature += WARMING_RATE * deltaSeconds;
-        else if (!((sceneNumber === 2 || sceneNumber === 3) && inDestination)) temperature -= COOLING_RATE * deltaSeconds;
+        const usesMazeTemperature = sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4;
+        if (usesMazeTemperature && inFire) temperature += WARMING_RATE * deltaSeconds;
+        else if (!(usesMazeTemperature && inDestination)) temperature -= COOLING_RATE * deltaSeconds;
         temperature = Math.max(0, Math.min(MAX_TEMPERATURE, temperature));
 
-        overheatHoldSeconds = (sceneNumber === 2 || sceneNumber === 3)
+        overheatHoldSeconds = usesMazeTemperature
           && inFire && temperature >= MAX_TEMPERATURE - 0.001
           ? overheatHoldSeconds + deltaSeconds
           : 0;
-        destinationHoldSeconds = (sceneNumber === 2 || sceneNumber === 3) && inDestination
+        destinationHoldSeconds = usesMazeTemperature && inDestination
           ? destinationHoldSeconds + deltaSeconds
           : 0;
 
@@ -606,6 +786,13 @@ export const level47: LevelDefinition = {
       sceneThreeCyanOpen = false;
       sceneThreeMagentaOpen = false;
       sceneThreeLastPressCycles = [-1, -1, -1];
+      sceneFourBarElements = [];
+      sceneFourSnowball = undefined;
+      sceneFourCrossElements = [];
+      sceneFourPad = undefined;
+      sceneFourDestination = undefined;
+      sceneFourPadHoldSeconds = 0;
+      sceneFourPortalActive = false;
       temperatureBar = undefined;
       temperatureValue = undefined;
       mazeStarted = false;
@@ -634,6 +821,18 @@ export const level47: LevelDefinition = {
           sceneThreeMagentaPad = stage.querySelector<HTMLElement>('[data-level-47-door-pad="magenta"]') ?? undefined;
           sceneThreeCyanDoor = stage.querySelector<HTMLElement>('[data-level-47-door="cyan"]') ?? undefined;
           sceneThreeMagentaDoor = stage.querySelector<HTMLElement>('[data-level-47-door="magenta"]') ?? undefined;
+        } else if (sceneNumber === 4) {
+          sceneFourBarElements = Array.from(
+            stage.querySelectorAll<HTMLElement>("[data-level-47-scene-4-bar]"),
+          );
+          sceneFourSnowball = stage.querySelector<HTMLElement>("[data-level-47-scene-4-snowball]") ?? undefined;
+          sceneFourCrossElements = Array.from(
+            stage.querySelectorAll<HTMLElement>("[data-level-47-scene-4-cross]"),
+          );
+          sceneFourPad = stage.querySelector<HTMLElement>("[data-level-47-scene-4-pad]") ?? undefined;
+          sceneFourDestination = stage.querySelector<HTMLElement>(
+            "[data-level-47-scene-4-destination]",
+          ) ?? undefined;
         }
         temperatureBar = stage.querySelector<HTMLElement>("[data-level-47-temperature-bar]") ?? undefined;
         temperatureValue = stage.querySelector<HTMLElement>("[data-level-47-temperature-value]") ?? undefined;

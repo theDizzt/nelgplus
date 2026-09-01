@@ -262,7 +262,22 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
   42: {
     message:
       "This time, I’ve prepared a batch of Level Killer-style levels designed to kick your ass. Level 40 is based on LK’s Level 130, while Level 41 has been brought over directly from LK’s Level 41! For Level 42, I took NELG’s Level 297—infamous for being its final Level Jump—and reimagined it in the style of LK. And before long, you’ll be seeing some truly diabolical TEDNE-style levels as well...",
+    password: "operaSeria",
+  },
+  46: {
+    message:
+      "...",
+    password: "403 forbidden",
+  },
+  50: {
+    message:
+      "...",
     password: "BronZwong",
+  },
+  55: {
+    message:
+      "...",
+    password: "VIVID WAVE",
   },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
