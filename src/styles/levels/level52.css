@@ -1,0 +1,409 @@
+.level-52 {
+  overflow: hidden;
+  color: #000;
+  background: #00ff7f;
+}
+
+.level-52__heading {
+  color: #000;
+}
+
+.level-52--dark {
+  background: #393939;
+}
+
+.level-52__form {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.level-52__form[hidden] {
+  display: none;
+}
+
+.level-52__form--hex {
+  bottom: 43px;
+}
+
+.level-52__form--red {
+  bottom: 101px;
+}
+
+.level-52__form.level-52__form--red button {
+  color: #fff;
+  background: #e00000;
+}
+
+.level-52__form--moving {
+  top: 305px;
+  left: 0;
+  transform: translateX(850px);
+  animation: level-52-travel-left 13s linear infinite;
+}
+
+.level-52__form.level-52__form--moving input {
+  color: #f01818;
+  background: #5a2f1c;
+}
+
+.level-52__form--moving button {
+  opacity: 0.78;
+}
+
+.level-52__form--menu {
+  top: 360px;
+  left: 38px;
+  transform: none;
+}
+
+.level-52 .level-52__form.level-52__form--menu input {
+  width: 174px;
+  height: 43px;
+  color: #f01818;
+  background: #050505;
+  border: 3px solid #f4f4f4;
+  box-shadow: 0 0 0 2px #666;
+}
+
+.level-52 .level-52__form.level-52__form--menu .level-52__controls {
+  gap: 14px;
+}
+
+.level-52 .level-52__form.level-52__form--menu button {
+  position: relative;
+  width: 58px;
+  height: 42px;
+  color: #0b0b00;
+  background: #111;
+  border: 0;
+  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0 100%);
+  transform: none;
+  font-size: 25px;
+}
+
+.level-52 .level-52__form.level-52__form--menu button span {
+  position: absolute;
+  inset: 3px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #8f8500;
+  clip-path: polygon(16% 0, 100% 0, 84% 100%, 0 100%);
+  pointer-events: none;
+}
+
+.level-52 .level-52__form.level-52__form--menu button:hover:not(:disabled),
+.level-52 .level-52__form.level-52__form--menu button:focus-visible:not(:disabled),
+.level-52 .level-52__form.level-52__form--menu button.is-hinting {
+  background: #111;
+}
+
+.level-52 .level-52__form.level-52__form--menu button:hover:not(:disabled) span,
+.level-52 .level-52__form.level-52__form--menu button:focus-visible:not(:disabled) span,
+.level-52 .level-52__form.level-52__form--menu button.is-hinting span {
+  background: #aaa000;
+}
+
+.level-52__form--secret {
+  z-index: 8;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  transform: none;
+}
+
+.level-52__form.level-52__form--secret input {
+  width: 174px;
+  height: 43px;
+  color: #111;
+  background: linear-gradient(90deg, #238eff 0%, #fff 40%, #bc8c00 51%, #fff7a6 100%);
+  border: 2px solid #ff1010;
+}
+
+.level-52__form.level-52__form--secret button {
+  width: 52px;
+  height: 40px;
+  color: #16775e;
+  background: #78ff91;
+  border: 2px solid #00b6a0;
+  font-size: 24px;
+}
+
+.level-52__form.level-52__form--secret button:hover:not(:disabled),
+.level-52__form.level-52__form--secret button:focus-visible:not(:disabled) {
+  background: #48e877;
+}
+
+.level-52__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-52__form input {
+  box-sizing: border-box;
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-52__form input.is-wrong {
+  background: #ff8b8b;
+  translate: 6px 0;
+}
+
+.level-52__form button {
+  box-sizing: border-box;
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-52__form button:hover:not(:disabled),
+.level-52__form button:focus-visible:not(:disabled),
+.level-52__form button.is-hinting {
+  background: #f01818;
+  outline: none;
+}
+
+.level-52__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-52 .custom-cursor img {
+  width: auto;
+  height: auto;
+}
+
+.level-52--large-cursor .custom-cursor img {
+  transform: scale(2);
+  transform-origin: left top;
+}
+
+.level-52__stairs {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 20px;
+  width: 760px;
+  height: 570px;
+  pointer-events: auto;
+}
+
+.level-52__stairs.is-removable {
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.level-52__stairs[hidden],
+.level-52__stars[hidden],
+.level-52__tab-clue[hidden] {
+  display: none;
+}
+
+.level-52__stairs button {
+  position: absolute;
+  top: var(--stair-top);
+  left: var(--stair-left);
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #eee;
+  border: 3px solid #050505;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 rgb(0 0 0 / 42%);
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.level-52__stairs.is-removable button {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.level-52__stairs:not(.is-removable) button:active {
+  transform: scale(0.94);
+}
+
+.level-52__stairs button.is-hit {
+  animation: level-52-stair-hit 110ms ease-out;
+}
+
+.level-52__stairs .is-aqua {
+  background: #00eaea;
+}
+
+.level-52__stairs .is-blue {
+  background: #1111d8;
+}
+
+.level-52__stairs .is-magenta {
+  background: #ed00ed;
+}
+
+.level-52__stairs .is-yellow {
+  background: #ffff00;
+  color: #aaa;
+}
+
+.level-52__stars {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.level-52__stars span {
+  position: absolute;
+  top: var(--top);
+  left: var(--left);
+  color: #fff;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: var(--size);
+  line-height: 1;
+  text-shadow: 0 0 5px #fff, 0 0 12px #fff;
+  animation: level-52-star-twinkle 1.35s ease-in-out var(--delay) infinite alternate;
+}
+
+.level-52__tab-clue {
+  position: absolute;
+  z-index: 5;
+  top: 24px;
+  right: 28px;
+  width: 112px;
+  height: 96px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.level-52__rewind-clue {
+  position: absolute;
+  z-index: 1;
+  top: 195px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: rgb(255 255 255 / 24%);
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 112px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
+}
+
+.level-52__rewind-clue[hidden] {
+  display: none;
+}
+
+.level-52__context-menu {
+  position: absolute;
+  z-index: 100;
+  width: 246px;
+  padding: 4px 2px;
+  color: #111;
+  background: #f4f4f4;
+  border: 1px solid #707070;
+  border-radius: 2px;
+  box-shadow: 3px 4px 10px rgb(0 0 0 / 48%);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  user-select: none;
+}
+
+.level-52__context-menu[hidden] {
+  display: none;
+}
+
+.level-52__context-menu button {
+  display: block;
+  width: 100%;
+  height: 28px;
+  padding: 2px 8px;
+  color: #111;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: default;
+  text-align: left;
+  font: inherit;
+  white-space: pre;
+}
+
+.level-52__context-menu button:hover,
+.level-52__context-menu button:focus-visible {
+  color: #fff;
+  background: #316ac5;
+  outline: none;
+}
+
+.level-52__menu-separator {
+  height: 1px;
+  margin: 4px 5px;
+  background: #aaa;
+  border-bottom: 1px solid #fff;
+}
+
+.level-52__player-label {
+  padding: 4px 10px 3px;
+  color: #777;
+  font-size: 12px;
+  text-align: right;
+}
+
+@keyframes level-52-travel-left {
+  from {
+    transform: translateX(850px);
+  }
+
+  to {
+    transform: translateX(-280px);
+  }
+}
+
+@keyframes level-52-star-twinkle {
+  from {
+    opacity: 0.18;
+    scale: 0.62;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1.24;
+  }
+}
+
+@keyframes level-52-stair-hit {
+  50% {
+    filter: brightness(1.7);
+    transform: scale(0.9);
+  }
+}

@@ -112,7 +112,6 @@ export const level34: LevelDefinition = {
         return;
       }
 
-      maskedInput.clear();
       input.classList.remove("is-wrong");
       void input.offsetWidth;
       input.classList.add("is-wrong");

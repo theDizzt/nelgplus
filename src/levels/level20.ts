@@ -169,7 +169,6 @@ export const level20: LevelDefinition = {
           return;
         }
         if (wrongAnswer()) return;
-        maskedInput.clear();
         input.classList.remove("is-wrong");
         void input.offsetWidth;
         input.classList.add("is-wrong");

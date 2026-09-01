@@ -44,6 +44,7 @@ Whenever a level's mechanics, timing, password, scene flow, success condition, o
 - The instructional label above Level 5's input (`Type the background color`) is level content, not part of the reusable password-control design. Do not copy or reserve space for that label unless the new level specification explicitly requests one.
 - Level-specific colors may override the Level 5 palette when the specification requires them, but ordinary field and button dimensions, border proportions, font roles, and interaction states should remain consistent.
 - Record whether Enter submits the form in the level specification. When allowed, Enter and GO must use the same validation path.
+- An incorrect password must keep the player's entered value in the field while the wrong-answer animation, color, sound, and focus behavior play. Do not call `clear()` or assign an empty/default value in an incorrect-answer branch unless a level specification explicitly defines clearing the answer as part of that puzzle. Clearing after a successfully consumed answer in a multi-step password puzzle is still allowed.
 
 ## Repetition and Composite Levels
 

@@ -161,7 +161,6 @@ export const level36: LevelDefinition = {
         event.preventDefault();
         if (maskedInput.getValue() === "continue") complete();
         else {
-          maskedInput.clear();
           input.classList.remove("is-wrong");
           void input.offsetWidth;
           input.classList.add("is-wrong");

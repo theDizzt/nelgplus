@@ -186,7 +186,6 @@ export const level51: LevelDefinition = {
     }, 430);
 
     const showWrongInput = () => {
-      maskedInput.clear();
       input.classList.remove("is-wrong");
       void input.offsetWidth;
       input.classList.add("is-wrong");

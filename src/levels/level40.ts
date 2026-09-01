@@ -496,7 +496,6 @@ export const level40: LevelDefinition = {
       form.classList.remove("is-wrong");
       void form.offsetWidth;
       form.classList.add("is-wrong");
-      passwordInput?.clear();
       form.querySelector<HTMLInputElement>("input")?.focus();
     });
 

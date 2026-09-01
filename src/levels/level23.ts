@@ -195,7 +195,6 @@ export const level23: LevelDefinition = {
       if (answer === "?") unlockAchievement(28);
       if (answer === "/") { button.disabled = true; complete(); return; }
       if (wrongAnswer()) return;
-      masked.clear();
       input.classList.remove("is-wrong"); void input.offsetWidth; input.classList.add("is-wrong"); input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);
     });

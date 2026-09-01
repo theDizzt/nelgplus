@@ -59,7 +59,6 @@ export const level41: LevelDefinition = {
         complete();
         return;
       }
-      maskedInput.clear();
       input.focus();
     });
 

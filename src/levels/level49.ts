@@ -134,7 +134,6 @@ export const level49: LevelDefinition = {
       }
 
       const input = form.querySelector<HTMLInputElement>("#level-49-answer");
-      maskedInput.clear();
       input?.classList.add("is-wrong");
       input?.focus();
       if (input) timeout(() => input.classList.remove("is-wrong"), 360);

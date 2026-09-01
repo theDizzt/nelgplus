@@ -55,7 +55,6 @@ export const level26: LevelDefinition = {
 
       checking = false;
       button.disabled = false;
-      input.value = "";
       input.classList.remove("is-wrong");
       void input.offsetWidth;
       input.classList.add("is-wrong");

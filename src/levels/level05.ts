@@ -56,7 +56,6 @@ export const level05: LevelDefinition = {
 
       checking = false;
       submitButton.disabled = false;
-      maskedInput.clear();
       input.classList.add("is-wrong");
       input.focus();
       timeout(() => input.classList.remove("is-wrong"), 360);

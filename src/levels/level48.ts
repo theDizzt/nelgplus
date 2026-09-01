@@ -154,7 +154,7 @@ const DISTANCE_MESSAGES: readonly DistanceMessage[] = [
   { centimeters: 849_200, text: "Operation Doodlebug", color: "#808000" },
   {
     centimeters: 884_886,
-    text: "The official height of Mount Everest\nYou did it!!!\nThe password is \"push lock\"!\nThanks for playing!!",
+    text: "The official height of Mount Everest\nYou did it!!!\nThe password is \"plus lock\"!\nThanks for playing!!",
     color: RAINBOW,
     terminal: true,
   },
@@ -201,7 +201,11 @@ function formatDistance(centimeters: number): string {
 export const level48: LevelDefinition = {
   number: 48,
   title: "Scroll",
-  mount({ screen, complete, listen, timeout }) {
+  scenes: [
+    { id: "start", label: "Start - 0.00m" },
+    { id: "8848m", label: "Near Everest - 8,848.00m" },
+  ],
+  mount({ screen, initialScene, complete, listen, timeout }) {
     screen.className = "level-screen level-48";
     screen.style.setProperty("--level-48-background", `url("${assetUrl("images/level48bg.gif")}")`);
     screen.innerHTML = `
@@ -234,7 +238,7 @@ export const level48: LevelDefinition = {
     const submitButton = form?.querySelector<HTMLButtonElement>("button");
     if (!scrollImage || !messageStage || !distanceOutput || !form || !input || !submitButton) return;
 
-    let centimeters = 0;
+    let centimeters = initialScene === "8848m" ? 884_800 : 0;
     let boostCycleStarted = false;
     let terminalMessagePending = false;
     let terminalMessageShown = false;
@@ -258,11 +262,18 @@ export const level48: LevelDefinition = {
     const spawnMessage = (text: string, color: string, terminal = false) => {
       const message = document.createElement("p");
       message.className = "level-48__message";
-      if (color === RAINBOW) message.classList.add("is-rainbow");
+      if (color === RAINBOW && !terminal) message.classList.add("is-rainbow");
       else message.style.setProperty("--level-48-message-color", color);
-      if (terminal) message.classList.add("is-terminal");
-      message.textContent = text;
-      message.style.left = `${Math.round(70 + Math.random() * 660)}px`;
+      if (terminal) {
+        message.classList.add("is-terminal");
+        const textLayer = document.createElement("span");
+        textLayer.className = "level-48__terminal-text";
+        textLayer.textContent = text;
+        message.append(textLayer);
+      } else {
+        message.textContent = text;
+      }
+      message.style.left = terminal ? "400px" : `${Math.round(70 + Math.random() * 660)}px`;
       message.dataset.scrollY = "618";
       message.style.top = "618px";
       messageStage.append(message);
@@ -431,5 +442,10 @@ export const level48: LevelDefinition = {
       input.classList.add("is-wrong");
       timeout(() => input.classList.remove("is-wrong"), 360);
     });
+
+    if (centimeters > 0) {
+      renderDistance();
+      ensureBoostCycle();
+    }
   },
 };

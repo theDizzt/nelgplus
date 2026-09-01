@@ -568,7 +568,6 @@ export const level44: LevelDefinition = {
           complete();
           return;
         }
-        maskedInput.clear();
         input.classList.add("is-wrong");
         input.focus();
         timeout(() => input.classList.remove("is-wrong"), 360);

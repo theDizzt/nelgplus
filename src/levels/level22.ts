@@ -60,7 +60,6 @@ export const level22: LevelDefinition = {
 
       checking = false;
       submitButton.disabled = false;
-      maskedInput.clear();
       input.classList.remove("is-wrong");
       void input.offsetWidth;
       input.classList.add("is-wrong");

@@ -27,9 +27,9 @@ const SCENE_THREE_TOP_OBSTACLE = {
   y: 112, width: 50, height: 50, startX: 147, travel: 410, speed: 1.25,
 } as const;
 const SCENE_THREE_PRESSES = [
-  { x: 150, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0.64 },
-  { x: 312, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0.32 },
-  { x: 474, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0 },
+  { x: 150, top: -160, width: 132, height: 420, travel: 220, wellTop: 106, wellHeight: 154, delay: 0.64 },
+  { x: 312, top: -160, width: 132, height: 420, travel: 220, wellTop: 106, wellHeight: 154, delay: 0.32 },
+  { x: 474, top: -160, width: 132, height: 420, travel: 220, wellTop: 106, wellHeight: 154, delay: 0 },
 ] as const;
 const SCENE_THREE_PRESS_CYCLE_SECONDS = 3.6;
 const SCENE_THREE_PADS = {
@@ -57,7 +57,7 @@ interface MazeDefinition {
   readonly finish: MazeRect;
 }
 
-const MAZES: Readonly<Record<2 | 3, MazeDefinition>> = {
+const MAZES: Readonly<Record<2 | 3 | 4, MazeDefinition>> = {
   2: {
     safe: [
       { x: 30, y: 454, width: 131, height: 113 },
@@ -86,13 +86,31 @@ const MAZES: Readonly<Record<2 | 3, MazeDefinition>> = {
     start: { x: 690, y: 21, width: 92, height: 85 },
     finish: { x: 47, y: 421, width: 90, height: 70 },
   },
+  4: {
+    safe: [
+      { x: 21, y: 19, width: 111, height: 96 },
+      { x: 132, y: 40, width: 467, height: 51 },
+      { x: 599, y: 19, width: 165, height: 547 },
+      { x: 21, y: 171, width: 446, height: 96 },
+      { x: 243, y: 130, width: 83, height: 41 },
+      { x: 21, y: 267, width: 37, height: 299 },
+      { x: 58, y: 403, width: 74, height: 163 },
+      { x: 132, y: 267, width: 84, height: 42 },
+      { x: 424, y: 267, width: 134, height: 205 },
+      { x: 291, y: 314, width: 176, height: 158 },
+      { x: 291, y: 472, width: 59, height: 43 },
+      { x: 291, y: 515, width: 473, height: 51 },
+    ],
+    start: { x: 21, y: 403, width: 111, height: 163 },
+    finish: { x: 21, y: 19, width: 111, height: 96 },
+  },
 };
 
 function pointInsideRect(x: number, y: number, rect: MazeRect): boolean {
   return x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height;
 }
 
-function mazeMarkup(scene: 2 | 3): string {
+function mazeMarkup(scene: 2 | 3 | 4): string {
   return `<div class="level-47__maze" aria-label="Frozen cursor maze">
     ${MAZES[scene].safe.map(({ x, y, width, height }) =>
       `<i class="level-47__safe-path" style="left:${x}px;top:${y}px;width:${width}px;height:${height}px"></i>`).join("")}
@@ -107,7 +125,7 @@ function mazeMarkup(scene: 2 | 3): string {
       <div class="level-47__press-well" aria-hidden="true"></div>
       <div class="level-47__press" data-level-47-press aria-label="Descending press"></div>
       <div class="level-47__destination" aria-label="Maze destination"></div>
-    ` : `
+    ` : scene === 3 ? `
       <div class="level-47__fire-zone level-47__fire-zone--scene-3" aria-label="Campfire warming area">
         <span class="level-47__campfire" aria-hidden="true"><i></i><i></i><b></b><b></b></span>
       </div>
@@ -131,7 +149,7 @@ function mazeMarkup(scene: 2 | 3): string {
       <div class="level-47__maze-door level-47__maze-door--cyan" data-level-47-door="cyan"></div>
       <div class="level-47__maze-door level-47__maze-door--magenta" data-level-47-door="magenta"></div>
       <div class="level-47__destination level-47__destination--scene-3" aria-label="Maze destination"></div>
-    `}
+    ` : ""}
   </div>`;
 }
 
@@ -362,13 +380,13 @@ export const level47: LevelDefinition = {
         const phaseSeconds = ((cyclePosition % SCENE_THREE_PRESS_CYCLE_SECONDS)
           + SCENE_THREE_PRESS_CYCLE_SECONDS) % SCENE_THREE_PRESS_CYCLE_SECONDS;
         const phase = phaseSeconds / SCENE_THREE_PRESS_CYCLE_SECONDS;
-        let translateY = -press.height;
+        let translateY = -press.travel;
         if (phase >= 0.18 && phase < 0.3) {
-          translateY = -press.height * (1 - (phase - 0.18) / 0.12);
+          translateY = -press.travel * (1 - (phase - 0.18) / 0.12);
         } else if (phase >= 0.3 && phase < 0.5) {
           translateY = 0;
         } else if (phase >= 0.5 && phase < 0.68) {
-          translateY = -press.height * ((phase - 0.5) / 0.18);
+          translateY = -press.travel * ((phase - 0.5) / 0.18);
         }
         const element = sceneThreePressElements[index];
         if (element) {
@@ -462,7 +480,7 @@ export const level47: LevelDefinition = {
         cursor.style.left = `${cursorX}px`;
         cursor.style.top = `${cursorY}px`;
 
-        if (sceneNumber === 2 || sceneNumber === 3) {
+        if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4) {
           const maze = MAZES[sceneNumber];
           const centerX = cursorX + CURSOR_WIDTH / 2;
           const centerY = cursorY + CURSOR_HEIGHT / 2;
@@ -472,7 +490,7 @@ export const level47: LevelDefinition = {
             width: Math.abs(cursorX - previousCursorX) + CURSOR_WIDTH,
             height: Math.abs(cursorY - previousCursorY) + CURSOR_HEIGHT,
           };
-          if (!mazeStarted && (pointInsideRect(centerX, centerY, maze.start) || cursorFitsSafePath(maze))) {
+          if (!mazeStarted && pointInsideRect(centerX, centerY, maze.start)) {
             mazeStarted = true;
           }
           if (sceneNumber === 2 && mazeStarted) {
@@ -600,7 +618,7 @@ export const level47: LevelDefinition = {
       lastPressSlamCycle = -1;
       sceneStartedAt = performance.now();
 
-      if (sceneNumber === 2 || sceneNumber === 3) {
+      if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4) {
         stage.innerHTML = `${mazeMarkup(sceneNumber)}${heading()}${temperatureMarkup()}`;
         obstacleElements = Array.from(stage.querySelectorAll<HTMLElement>("[data-level-47-obstacle]"));
         pressElement = stage.querySelector<HTMLElement>("[data-level-47-press]") ?? undefined;
@@ -623,7 +641,7 @@ export const level47: LevelDefinition = {
         return;
       }
 
-      if (sceneNumber >= 4 && sceneNumber <= 5) {
+      if (sceneNumber === 5) {
         stage.innerHTML = `<div class="level-47__game-field"></div>${heading()}${temperatureMarkup()}`;
         temperatureBar = stage.querySelector<HTMLElement>("[data-level-47-temperature-bar]") ?? undefined;
         temperatureValue = stage.querySelector<HTMLElement>("[data-level-47-temperature-value]") ?? undefined;
@@ -704,7 +722,6 @@ export const level47: LevelDefinition = {
           return;
         }
 
-        maskedInput?.clear();
         input.focus();
       });
     };
