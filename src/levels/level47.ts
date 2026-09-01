@@ -8,6 +8,7 @@ const CURSOR_HEIGHT = 22;
 const MAX_TEMPERATURE = 100;
 const COOLING_RATE = (50 / 6);
 const WARMING_RATE = (50 / 8);
+const INVINCIBLE_CODE = "melonsoda84";
 
 const SCENE_TWO_FIRE = { x: 358, y: 432, radius: 64 } as const;
 const SCENE_TWO_DESTINATION = { x: 714, y: 37, width: 50, height: 50 } as const;
@@ -19,6 +20,29 @@ const SCENE_TWO_OBSTACLES = [
   { y: 212, width: 50, height: 52, startX: 89, travel: 292, speed: 1.9, offset: 1.8 },
 ] as const;
 const SCENE_TWO_PRESS = { x: 560, width: 132, height: 548, cycleSeconds: 1.5 } as const;
+
+const SCENE_THREE_FIRE = { x: 672, y: 8, radius: 64 } as const;
+const SCENE_THREE_DESTINATION = { x: 54, y: 429, width: 50, height: 50 } as const;
+const SCENE_THREE_TOP_OBSTACLE = {
+  y: 112, width: 50, height: 50, startX: 147, travel: 410, speed: 1.25,
+} as const;
+const SCENE_THREE_PRESSES = [
+  { x: 150, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0.64 },
+  { x: 312, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0.32 },
+  { x: 474, top: 40, width: 132, height: 220, wellTop: 106, wellHeight: 154, delay: 0 },
+] as const;
+const SCENE_THREE_PRESS_CYCLE_SECONDS = 3.6;
+const SCENE_THREE_PADS = {
+  cyan: { x: 61, y: 112, width: 50, height: 50 },
+  magenta: { x: 711, y: 515, width: 50, height: 50 },
+} as const;
+const SCENE_THREE_DOORS = {
+  cyan: { x: 690, y: 276, width: 92, height: 24 },
+  magenta: { x: 112, y: 419, width: 22, height: 72 },
+} as const;
+const SCENE_THREE_LOOP = {
+  left: 170, right: 735, top: 343, bottom: 458, size: 50, speed: 126,
+} as const;
 
 interface MazeRect {
   readonly x: number;
@@ -57,9 +81,10 @@ const MAZES: Readonly<Record<2 | 3, MazeDefinition>> = {
       { x: 690, y: 21, width: 92, height: 553 },
       { x: 47, y: 106, width: 735, height: 69 },
       { x: 137, y: 175, width: 484, height: 85 },
+      { x: 137, y: 421, width: 645, height: 70 },
     ],
-    start: { x: 47, y: 421, width: 90, height: 70 },
-    finish: { x: 690, y: 21, width: 92, height: 85 },
+    start: { x: 690, y: 21, width: 92, height: 85 },
+    finish: { x: 47, y: 421, width: 90, height: 70 },
   },
 };
 
@@ -82,7 +107,31 @@ function mazeMarkup(scene: 2 | 3): string {
       <div class="level-47__press-well" aria-hidden="true"></div>
       <div class="level-47__press" data-level-47-press aria-label="Descending press"></div>
       <div class="level-47__destination" aria-label="Maze destination"></div>
-    ` : ""}
+    ` : `
+      <div class="level-47__fire-zone level-47__fire-zone--scene-3" aria-label="Campfire warming area">
+        <span class="level-47__campfire" aria-hidden="true"><i></i><i></i><b></b><b></b></span>
+      </div>
+      <div class="level-47__moving-obstacle level-47__moving-obstacle--scene-3-top"
+        data-level-47-scene-3-top-obstacle></div>
+      ${SCENE_THREE_PRESSES.map(({ x, top, width, height, wellTop, wellHeight }, index) => `
+        <div class="level-47__press-well level-47__press-well--scene-3"
+          style="left:${x}px;top:${wellTop}px;width:${width}px;height:${wellHeight}px" aria-hidden="true"></div>
+        <div class="level-47__press level-47__press--scene-3" data-level-47-scene-3-press="${index}"
+          style="left:${x}px;top:${top}px;width:${width}px;height:${height}px"
+          aria-label="Descending press ${index + 1}"></div>
+      `).join("")}
+      ${Array.from({ length: 6 }, (_, index) => `
+        <div class="level-47__moving-obstacle level-47__moving-obstacle--scene-3-loop"
+          data-level-47-scene-3-loop-obstacle="${index}"></div>
+      `).join("")}
+      <div class="level-47__door-pad level-47__door-pad--cyan" data-level-47-door-pad="cyan"
+        aria-label="Cyan door control"></div>
+      <div class="level-47__door-pad level-47__door-pad--magenta" data-level-47-door-pad="magenta"
+        aria-label="Magenta door control"></div>
+      <div class="level-47__maze-door level-47__maze-door--cyan" data-level-47-door="cyan"></div>
+      <div class="level-47__maze-door level-47__maze-door--magenta" data-level-47-door="magenta"></div>
+      <div class="level-47__destination level-47__destination--scene-3" aria-label="Maze destination"></div>
+    `}
   </div>`;
 }
 
@@ -171,9 +220,23 @@ export const level47: LevelDefinition = {
     let lastPressSlamCycle = -1;
     let obstacleElements: HTMLElement[] = [];
     let pressElement: HTMLElement | undefined;
+    let sceneThreeTopObstacle: HTMLElement | undefined;
+    let sceneThreeLoopObstacles: HTMLElement[] = [];
+    let sceneThreePressElements: HTMLElement[] = [];
+    let sceneThreeCyanPad: HTMLElement | undefined;
+    let sceneThreeMagentaPad: HTMLElement | undefined;
+    let sceneThreeCyanDoor: HTMLElement | undefined;
+    let sceneThreeMagentaDoor: HTMLElement | undefined;
+    let sceneThreeCyanHoldSeconds = 0;
+    let sceneThreeMagentaHoldSeconds = 0;
+    let sceneThreeCyanOpen = false;
+    let sceneThreeMagentaOpen = false;
+    let sceneThreeLastPressCycles = [-1, -1, -1];
     let temperatureBar: HTMLElement | undefined;
     let temperatureValue: HTMLElement | undefined;
     let animationFrame = 0;
+    let invincible = false;
+    let invincibleCodeBuffer = "";
 
     const isGameScene = () => sceneNumber >= 2 && sceneNumber <= 5;
 
@@ -199,11 +262,24 @@ export const level47: LevelDefinition = {
     const triggerCheatScene = (event?: Event) => {
       if (!isGameScene()) return;
       event?.preventDefault();
+      if (invincible) return;
       sceneNumber = 9;
       renderScene();
     };
     listen(screen, "contextmenu", (event) => triggerCheatScene(event));
     listen(document, "keydown", (event) => {
+      if (isGameScene() && !invincible && event.key.length === 1
+        && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        invincibleCodeBuffer = `${invincibleCodeBuffer}${event.key.toLowerCase()}`
+          .slice(-INVINCIBLE_CODE.length);
+        if (invincibleCodeBuffer === INVINCIBLE_CODE) {
+          invincible = true;
+          invincibleCodeBuffer = "";
+          screen.dataset.invincible = "true";
+          screen.classList.add("level-47--invincible");
+          audio.playEffect(SOUND_EFFECTS.pop);
+        }
+      }
       if (event.key === "Meta" || (event.altKey && event.key === "Tab")) triggerCheatScene(event);
     });
     listen(window, "blur", () => triggerCheatScene());
@@ -272,6 +348,87 @@ export const level47: LevelDefinition = {
       };
     };
 
+    const updateSceneThreeHazards = (now: number) => {
+      const elapsedSeconds = (now - sceneStartedAt) / 1_000;
+      const topProgress = (Math.sin(elapsedSeconds * SCENE_THREE_TOP_OBSTACLE.speed) + 1) / 2;
+      const topX = SCENE_THREE_TOP_OBSTACLE.startX + SCENE_THREE_TOP_OBSTACLE.travel * topProgress;
+      if (sceneThreeTopObstacle) {
+        sceneThreeTopObstacle.style.left = `${topX}px`;
+        sceneThreeTopObstacle.style.top = `${SCENE_THREE_TOP_OBSTACLE.y}px`;
+      }
+
+      const pressBounds = SCENE_THREE_PRESSES.map((press, index) => {
+        const cyclePosition = elapsedSeconds - press.delay;
+        const phaseSeconds = ((cyclePosition % SCENE_THREE_PRESS_CYCLE_SECONDS)
+          + SCENE_THREE_PRESS_CYCLE_SECONDS) % SCENE_THREE_PRESS_CYCLE_SECONDS;
+        const phase = phaseSeconds / SCENE_THREE_PRESS_CYCLE_SECONDS;
+        let translateY = -press.height;
+        if (phase >= 0.18 && phase < 0.3) {
+          translateY = -press.height * (1 - (phase - 0.18) / 0.12);
+        } else if (phase >= 0.3 && phase < 0.5) {
+          translateY = 0;
+        } else if (phase >= 0.5 && phase < 0.68) {
+          translateY = -press.height * ((phase - 0.5) / 0.18);
+        }
+        const element = sceneThreePressElements[index];
+        if (element) {
+          element.style.translate = `0 ${translateY}px`;
+          element.classList.toggle("is-slammed", phase >= 0.3 && phase < 0.38);
+        }
+        const cycle = Math.floor(cyclePosition / SCENE_THREE_PRESS_CYCLE_SECONDS);
+        if (phase >= 0.3 && phase < 0.38 && sceneThreeLastPressCycles[index] !== cycle) {
+          sceneThreeLastPressCycles[index] = cycle;
+          audio.playEffect("sounds/thump.mp3");
+        }
+        return {
+          x: press.x,
+          y: press.top + translateY,
+          width: press.width,
+          height: press.height,
+        };
+      });
+
+      const horizontal = SCENE_THREE_LOOP.right - SCENE_THREE_LOOP.left;
+      const vertical = SCENE_THREE_LOOP.bottom - SCENE_THREE_LOOP.top;
+      const perimeter = 2 * (horizontal + vertical);
+      const loopBounds = sceneThreeLoopObstacles.map((element, index) => {
+        let distance = (elapsedSeconds * SCENE_THREE_LOOP.speed + index * perimeter / 6) % perimeter;
+        let centerX: number = SCENE_THREE_LOOP.right;
+        let centerY: number = SCENE_THREE_LOOP.top;
+        if (distance <= horizontal) {
+          centerX -= distance;
+        } else if ((distance -= horizontal) <= vertical) {
+          centerX = SCENE_THREE_LOOP.left;
+          centerY += distance;
+        } else if ((distance -= vertical) <= horizontal) {
+          centerX = SCENE_THREE_LOOP.left + distance;
+          centerY = SCENE_THREE_LOOP.bottom;
+        } else {
+          distance -= horizontal;
+          centerX = SCENE_THREE_LOOP.right;
+          centerY = SCENE_THREE_LOOP.bottom - distance;
+        }
+        const x = centerX - SCENE_THREE_LOOP.size / 2;
+        const y = centerY - SCENE_THREE_LOOP.size / 2;
+        element.style.left = `${x}px`;
+        element.style.top = `${y}px`;
+        return { x, y, width: SCENE_THREE_LOOP.size, height: SCENE_THREE_LOOP.size };
+      });
+
+      return {
+        obstacleBounds: [
+          {
+            x: topX,
+            y: SCENE_THREE_TOP_OBSTACLE.y,
+            width: SCENE_THREE_TOP_OBSTACLE.width,
+            height: SCENE_THREE_TOP_OBSTACLE.height,
+          },
+          ...loopBounds,
+        ],
+        pressBounds,
+      };
+    };
+
     const animateCursor = (now: number) => {
       const deltaSeconds = Math.min(0.034, Math.max(0.001, (now - previousAnimationTime) / 1_000));
       previousAnimationTime = now;
@@ -281,6 +438,7 @@ export const level47: LevelDefinition = {
       const previousCursorX = cursorX;
       const previousCursorY = cursorY;
       const sceneTwoHazards = sceneNumber === 2 ? updateSceneTwoObstacles(now) : undefined;
+      const sceneThreeHazards = sceneNumber === 3 ? updateSceneThreeHazards(now) : undefined;
       const changeScene = (nextScene: number) => {
         sceneNumber = nextScene;
         renderScene();
@@ -321,37 +479,81 @@ export const level47: LevelDefinition = {
             inFire = Math.hypot(centerX - (SCENE_TWO_FIRE.x + SCENE_TWO_FIRE.radius),
               centerY - (SCENE_TWO_FIRE.y + SCENE_TWO_FIRE.radius)) <= SCENE_TWO_FIRE.radius;
             inDestination = pointInsideRect(centerX, centerY, SCENE_TWO_DESTINATION);
+          } else if (sceneNumber === 3 && mazeStarted) {
+            inFire = Math.hypot(centerX - (SCENE_THREE_FIRE.x + SCENE_THREE_FIRE.radius),
+              centerY - (SCENE_THREE_FIRE.y + SCENE_THREE_FIRE.radius)) <= SCENE_THREE_FIRE.radius;
+            inDestination = pointInsideRect(centerX, centerY, SCENE_THREE_DESTINATION);
+
+            const updateDoorControl = (
+              inside: boolean,
+              holdSeconds: number,
+              pad: HTMLElement | undefined,
+              door: HTMLElement | undefined,
+              opened: boolean,
+            ) => {
+              const nextHold = opened ? 3 : (inside ? holdSeconds + deltaSeconds : 0);
+              const nextOpened = opened || nextHold >= 3;
+              pad?.style.setProperty("--door-hold", `${Math.min(1, nextHold / 3)}`);
+              pad?.classList.toggle("is-complete", nextOpened);
+              door?.classList.toggle("is-open", nextOpened);
+              return { hold: nextHold, opened: nextOpened };
+            };
+            const cyan = updateDoorControl(
+              pointInsideRect(centerX, centerY, SCENE_THREE_PADS.cyan),
+              sceneThreeCyanHoldSeconds,
+              sceneThreeCyanPad,
+              sceneThreeCyanDoor,
+              sceneThreeCyanOpen,
+            );
+            sceneThreeCyanHoldSeconds = cyan.hold;
+            sceneThreeCyanOpen = cyan.opened;
+            const magenta = updateDoorControl(
+              pointInsideRect(centerX, centerY, SCENE_THREE_PADS.magenta),
+              sceneThreeMagentaHoldSeconds,
+              sceneThreeMagentaPad,
+              sceneThreeMagentaDoor,
+              sceneThreeMagentaOpen,
+            );
+            sceneThreeMagentaHoldSeconds = magenta.hold;
+            sceneThreeMagentaOpen = magenta.opened;
           }
 
-          if (mazeStarted && !cursorFitsSafePath(maze)) {
-            changeScene(7);
-          } else if (mazeStarted && sceneTwoHazards
-            && (sceneTwoHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(movementBounds, obstacle))
-              || rectanglesOverlap(movementBounds, sceneTwoHazards.pressBounds)
-              || SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(movementBounds, wall)))) {
-            changeScene(7);
-          } else if (mazeStarted && sceneNumber === 3 && pointInsideRect(centerX, centerY, maze.finish)) {
-            changeScene(4);
+          if (!invincible) {
+            if (mazeStarted && !cursorFitsSafePath(maze)) {
+              changeScene(7);
+            } else if (mazeStarted && sceneTwoHazards
+              && (sceneTwoHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(movementBounds, obstacle))
+                || rectanglesOverlap(movementBounds, sceneTwoHazards.pressBounds)
+                || SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(movementBounds, wall)))) {
+              changeScene(7);
+            } else if (mazeStarted && sceneThreeHazards
+              && (sceneThreeHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(movementBounds, obstacle))
+                || sceneThreeHazards.pressBounds.some((press) => rectanglesOverlap(movementBounds, press))
+                || (!sceneThreeCyanOpen && rectanglesOverlap(movementBounds, SCENE_THREE_DOORS.cyan))
+                || (!sceneThreeMagentaOpen && rectanglesOverlap(movementBounds, SCENE_THREE_DOORS.magenta)))) {
+              changeScene(7);
+            }
           }
         }
       }
 
       if (!transitioned && isGameScene()) {
-        if (sceneNumber === 2 && inFire) temperature += WARMING_RATE * deltaSeconds;
-        else if (!(sceneNumber === 2 && inDestination)) temperature -= COOLING_RATE * deltaSeconds;
+        if ((sceneNumber === 2 || sceneNumber === 3) && inFire) temperature += WARMING_RATE * deltaSeconds;
+        else if (!((sceneNumber === 2 || sceneNumber === 3) && inDestination)) temperature -= COOLING_RATE * deltaSeconds;
         temperature = Math.max(0, Math.min(MAX_TEMPERATURE, temperature));
 
-        overheatHoldSeconds = sceneNumber === 2 && inFire && temperature >= MAX_TEMPERATURE - 0.001
+        overheatHoldSeconds = (sceneNumber === 2 || sceneNumber === 3)
+          && inFire && temperature >= MAX_TEMPERATURE - 0.001
           ? overheatHoldSeconds + deltaSeconds
           : 0;
-        destinationHoldSeconds = sceneNumber === 2 && inDestination
+        destinationHoldSeconds = (sceneNumber === 2 || sceneNumber === 3) && inDestination
           ? destinationHoldSeconds + deltaSeconds
           : 0;
 
         updateTemperatureDisplay();
-        if (overheatHoldSeconds >= 8) changeScene(8);
-        else if (destinationHoldSeconds >= 3) changeScene(3);
-        else if (temperature <= 0) changeScene(6);
+        if (!invincible && overheatHoldSeconds >= 8) changeScene(8);
+        else if (destinationHoldSeconds >= 3) changeScene(sceneNumber + 1);
+        else if (!invincible && temperature <= 0) changeScene(6);
       }
       animationFrame = window.requestAnimationFrame(animateCursor);
     };
@@ -371,9 +573,21 @@ export const level47: LevelDefinition = {
       targetHovered = false;
       maskedInput = undefined;
       screen.dataset.scene = String(sceneNumber);
-      screen.className = `level-screen level-47 level-47--scene-${sceneNumber}`;
+      screen.className = `level-screen level-47 level-47--scene-${sceneNumber}${invincible ? " level-47--invincible" : ""}`;
       obstacleElements = [];
       pressElement = undefined;
+      sceneThreeTopObstacle = undefined;
+      sceneThreeLoopObstacles = [];
+      sceneThreePressElements = [];
+      sceneThreeCyanPad = undefined;
+      sceneThreeMagentaPad = undefined;
+      sceneThreeCyanDoor = undefined;
+      sceneThreeMagentaDoor = undefined;
+      sceneThreeCyanHoldSeconds = 0;
+      sceneThreeMagentaHoldSeconds = 0;
+      sceneThreeCyanOpen = false;
+      sceneThreeMagentaOpen = false;
+      sceneThreeLastPressCycles = [-1, -1, -1];
       temperatureBar = undefined;
       temperatureValue = undefined;
       mazeStarted = false;
@@ -390,6 +604,19 @@ export const level47: LevelDefinition = {
         stage.innerHTML = `${mazeMarkup(sceneNumber)}${heading()}${temperatureMarkup()}`;
         obstacleElements = Array.from(stage.querySelectorAll<HTMLElement>("[data-level-47-obstacle]"));
         pressElement = stage.querySelector<HTMLElement>("[data-level-47-press]") ?? undefined;
+        if (sceneNumber === 3) {
+          sceneThreeTopObstacle = stage.querySelector<HTMLElement>("[data-level-47-scene-3-top-obstacle]") ?? undefined;
+          sceneThreeLoopObstacles = Array.from(
+            stage.querySelectorAll<HTMLElement>("[data-level-47-scene-3-loop-obstacle]"),
+          );
+          sceneThreePressElements = Array.from(
+            stage.querySelectorAll<HTMLElement>("[data-level-47-scene-3-press]"),
+          );
+          sceneThreeCyanPad = stage.querySelector<HTMLElement>('[data-level-47-door-pad="cyan"]') ?? undefined;
+          sceneThreeMagentaPad = stage.querySelector<HTMLElement>('[data-level-47-door-pad="magenta"]') ?? undefined;
+          sceneThreeCyanDoor = stage.querySelector<HTMLElement>('[data-level-47-door="cyan"]') ?? undefined;
+          sceneThreeMagentaDoor = stage.querySelector<HTMLElement>('[data-level-47-door="magenta"]') ?? undefined;
+        }
         temperatureBar = stage.querySelector<HTMLElement>("[data-level-47-temperature-bar]") ?? undefined;
         temperatureValue = stage.querySelector<HTMLElement>("[data-level-47-temperature-value]") ?? undefined;
         updateTemperatureDisplay();
@@ -487,6 +714,7 @@ export const level47: LevelDefinition = {
     return () => {
       window.cancelAnimationFrame(animationFrame);
       delete screen.dataset.customCursorRoot;
+      delete screen.dataset.invincible;
     };
   },
 };

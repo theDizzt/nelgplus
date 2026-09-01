@@ -48,6 +48,13 @@
   border: 3px solid #111;
 }
 
+.level-47__moving-obstacle--scene-3-top,
+.level-47__moving-obstacle--scene-3-loop {
+  width: 50px;
+  height: 50px;
+  will-change: left, top;
+}
+
 .level-47__maze-wall {
   position: absolute;
   z-index: 4;
@@ -91,6 +98,11 @@
   inset: -18px;
   border: 1px solid rgb(255 205 94 / 15%);
   box-shadow: inset 0 0 30px rgb(255 126 0 / 13%);
+}
+
+.level-47__fire-zone--scene-3 {
+  top: 8px;
+  left: 672px;
 }
 
 .level-47__campfire {
@@ -182,6 +194,86 @@
   animation: level-47-press-impact 220ms linear;
 }
 
+.level-47__press-well--scene-3 {
+  background: #aaa;
+  border-right: 3px solid #c8c8c8;
+  border-left: 3px solid #7e7e7e;
+}
+
+.level-47__press--scene-3 {
+  background: linear-gradient(90deg, #363636 0, #8f8f8f 18%, #555 55%, #202020 100%);
+  will-change: translate;
+}
+
+.level-47__door-pad {
+  --door-hold: 0;
+  position: absolute;
+  z-index: 7;
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border: 2px solid #111;
+}
+
+.level-47__door-pad::after {
+  position: absolute;
+  inset: 3px;
+  content: "";
+  background: rgb(255 255 255 / 72%);
+  transform: scaleY(var(--door-hold));
+  transform-origin: 50% 100%;
+  transition: transform 80ms linear;
+}
+
+.level-47__door-pad--cyan {
+  top: 112px;
+  left: 61px;
+  background: #0ff;
+}
+
+.level-47__door-pad--magenta {
+  top: 515px;
+  left: 711px;
+  background: #f0f;
+}
+
+.level-47__door-pad.is-complete {
+  animation: level-47-door-pad-complete 680ms ease-in-out infinite alternate;
+}
+
+.level-47__maze-door {
+  position: absolute;
+  z-index: 8;
+  box-sizing: border-box;
+  border: 2px solid #111;
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.level-47__maze-door--cyan {
+  top: 276px;
+  left: 690px;
+  width: 92px;
+  height: 24px;
+  background: #0ff;
+  transform-origin: 100% 50%;
+}
+
+.level-47__maze-door--magenta {
+  top: 419px;
+  left: 112px;
+  width: 22px;
+  height: 72px;
+  background: #f0f;
+  transform-origin: 50% 100%;
+}
+
+.level-47__maze-door.is-open {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(.06);
+}
+
 .level-47__destination {
   position: absolute;
   z-index: 7;
@@ -193,6 +285,11 @@
   background: #91d24f;
   border: 3px solid #111;
   animation: level-47-destination-pulse 1.15s ease-in-out infinite alternate;
+}
+
+.level-47__destination--scene-3 {
+  top: 429px;
+  left: 54px;
 }
 
 .level-47__temperature {
@@ -498,6 +595,11 @@ button.level-47__restart-target {
     box-shadow: inset 0 0 13px rgb(255 255 255 / 58%), 0 0 17px 6px rgb(126 255 50 / 58%);
     filter: brightness(1.16);
   }
+}
+
+@keyframes level-47-door-pad-complete {
+  from { filter: brightness(1); box-shadow: 0 0 4px currentColor; }
+  to { filter: brightness(1.45); box-shadow: 0 0 16px 5px currentColor; }
 }
 
 @keyframes level-47-press-impact {

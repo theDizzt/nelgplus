@@ -352,9 +352,57 @@ export const level20: LevelDefinition = {
             renderShell(
               3,
               "#570000",
-              `<p class="level-20__revival-type-twice">TYPE TWICE</p>${passwordForm("level-20-scene-3-answer")}`,
+              `
+                <canvas class="level-20__hidden-question level-20__revival-type-hidden" width="700" height="150"
+                  aria-label="TYPE TWICE"></canvas>
+                <canvas class="level-20__question-trace level-20__revival-type-trace" width="700" height="150"
+                  aria-hidden="true"></canvas>
+                ${passwordForm("level-20-scene-3-answer")}
+              `,
               "black",
             );
+            const hidden = screen.querySelector<HTMLCanvasElement>(".level-20__revival-type-hidden");
+            const trace = screen.querySelector<HTMLCanvasElement>(".level-20__revival-type-trace");
+            const hiddenContext = hidden?.getContext("2d", { willReadFrequently: true });
+            const traceContext = trace?.getContext("2d");
+            if (hidden && trace && hiddenContext && traceContext) {
+              const drawClue = () => {
+                hiddenContext.clearRect(0, 0, hidden.width, hidden.height);
+                hiddenContext.fillStyle = "#570000";
+                hiddenContext.font = '700 76px "NELG Chiller", fantasy';
+                hiddenContext.textAlign = "center";
+                hiddenContext.textBaseline = "middle";
+                hiddenContext.fillText("TYPE TWICE", hidden.width / 2, hidden.height / 2 + 4, 660);
+              };
+              drawClue();
+              void document.fonts.load('700 76px "NELG Chiller"').then(() => {
+                if (hidden.isConnected) drawClue();
+              });
+              on(hidden, "pointermove", (event) => {
+                const bounds = hidden.getBoundingClientRect();
+                const x = Math.min(
+                  hidden.width - 1,
+                  Math.max(0, Math.floor(((event.clientX - bounds.left) / bounds.width) * hidden.width)),
+                );
+                const y = Math.min(
+                  hidden.height - 1,
+                  Math.max(0, Math.floor(((event.clientY - bounds.top) / bounds.height) * hidden.height)),
+                );
+                const alpha = hiddenContext.getImageData(x, y, 1, 1).data[3] ?? 0;
+                hidden.style.cursor = alpha > 0 ? "pointer" : "default";
+                if (alpha === 0) return;
+                traceContext.save();
+                traceContext.beginPath();
+                traceContext.arc(x, y, 23, 0, Math.PI * 2);
+                traceContext.clip();
+                traceContext.globalAlpha = 0.82;
+                traceContext.drawImage(hidden, 0, 0);
+                traceContext.restore();
+              });
+              on(hidden, "pointerleave", () => {
+                hidden.style.cursor = "default";
+              });
+            }
             bindPassword("hiddenhidden", 4);
             break;
           }
@@ -831,7 +879,7 @@ export const level20: LevelDefinition = {
               "#f00",
               `<img class="level-20__revival-scene-ten-image" src="${assetUrl("images/level50u20a10.png")}" alt="A hidden color clue" />
                ${passwordForm("level-20-scene-10-answer")}`,
-              "white",
+              "black",
             );
             const form = screen.querySelector<HTMLFormElement>(".level-20__password-form");
             const input = screen.querySelector<HTMLInputElement>(".level-20__password-form input");
