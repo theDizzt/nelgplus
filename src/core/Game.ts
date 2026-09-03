@@ -7,12 +7,12 @@ import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
-const DEVELOPMENT_PERIOD = "08/03/2026 – 08/19/2026";
-const GAME_VERSION = "1.0.47";
-const VERSION_DATE = "08/19/2026";
+const DEVELOPMENT_PERIOD = "08/03/2026 – 09/19/2026";
+const GAME_VERSION = "1.1.73";
+const VERSION_DATE = "09/04/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
-const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1539230162175000627";
+const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
@@ -1290,7 +1290,36 @@ export class Game {
 
            <section>
              <h2>HOW TO USE THE CHATBOT</h2>
-             <p>Coming in a future update.</p>
+              <p>
+                You can use the Discord chatbot to check your NELG+ profile, view achievements,
+                and enter achievement codes.
+              </p>
+
+              <h5>Basic Commands</h5>
+              <ul>
+                <li><code>;nelgp help</code> - Show the NELG++ command help page.</li>
+                <li><code>;nelgp user</code> - Show your NELG++ profile.</li>
+                <li><code>;nelgp u</code> - Short version of <code>;nelgp user</code>.</li>
+                <li><code>;nelgp achievements</code> - Show your NELG++ achievement list.</li>
+                <li><code>;nelgp a</code> - Short version of <code>;nelgp achievements</code>.</li>
+                <li><code>;nelgp hint</code> - Coming soon...</li>
+                <li><code>;nelgp a</code> - Short version of <code>;nelgp hint</code>.</li>
+              </ul>
+
+              <h5>Achievement Pages</h5>
+              <p>
+                You can move through the achievement list by adding a page number after the command.
+              </p>
+              <ul>
+                <li><code>;nelgp achievements 1</code> - Open page 1 of the achievement list.</li>
+                <li><code>;nelgp a 2</code> - Open page 2 using the short command.</li>
+              </ul>
+
+              <h5>Entering Achievement Codes</h5>
+              <p>
+                Open the achievement list with <code>;nelgp achievements</code>, then press the
+                <strong>CODE</strong> button and enter the achievement code you found in NELG++.
+              </p>
            </section>
 
            <p class="help-section__thanks">Thank you!</p>
