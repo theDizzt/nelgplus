@@ -60,8 +60,6 @@ export const level53: LevelDefinition = {
         <span aria-hidden="true"></span>
       </button>
 
-      <p class="level-53__progress" role="status" aria-live="polite">0 / 22</p>
-
       <form class="level-53__form" autocomplete="off">
         <input class="nelg-password-input" id="level-53-answer" name="nelg-level-fifty-three-answer"
           data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
@@ -73,20 +71,18 @@ export const level53: LevelDefinition = {
 
     const board = screen.querySelector<HTMLElement>(".level-53__board");
     const excavate = screen.querySelector<HTMLButtonElement>(".level-53__excavate");
-    const progress = screen.querySelector<HTMLElement>(".level-53__progress");
     const form = screen.querySelector<HTMLFormElement>(".level-53__form");
     const input = screen.querySelector<HTMLInputElement>("#level-53-answer");
-    if (!board || !excavate || !progress || !form || !input) return;
+    if (!board || !excavate || !form || !input) return;
 
     const maskedInput = attachStarMaskedInput(input, listen);
     const remainingLetters = new Set(Object.keys(LETTERS));
     let activeLetter: string | undefined;
     let lastLetter: string | undefined;
+    let retryLetter: string | undefined;
     let boardActive = false;
 
-    const updateProgress = () => {
-      const completedCount = Object.keys(LETTERS).length - remainingLetters.size;
-      progress.textContent = `${completedCount} / ${Object.keys(LETTERS).length}`;
+    const updateCompletionState = () => {
       if (remainingLetters.size !== 0) return;
       excavate.disabled = true;
       excavate.setAttribute("aria-label", "All excavation boards completed");
@@ -95,6 +91,7 @@ export const level53: LevelDefinition = {
 
     const closeBoard = (state: "failed" | "cleared") => {
       boardActive = false;
+      retryLetter = state === "failed" ? activeLetter : undefined;
       board.classList.add(state === "failed" ? "is-failed" : "is-cleared");
       timeout(() => {
         board.hidden = true;
@@ -120,12 +117,14 @@ export const level53: LevelDefinition = {
       remainingLetters.delete(activeLetter);
       lastLetter = activeLetter;
       closeBoard("cleared");
-      updateProgress();
+      updateCompletionState();
     };
 
     const loadBoard = () => {
       if (boardActive || remainingLetters.size === 0) return;
-      const choices = [...remainingLetters].filter((letter) => remainingLetters.size === 1 || letter !== lastLetter);
+      const choices = retryLetter
+        ? [retryLetter].filter((letter) => remainingLetters.has(letter))
+        : [...remainingLetters].filter((letter) => remainingLetters.size === 1 || letter !== lastLetter);
       const selectedLetter = choices[Math.floor(Math.random() * choices.length)];
       if (!selectedLetter) return;
       const pattern = LETTERS[selectedLetter];

@@ -33,7 +33,6 @@
   background: linear-gradient(135deg, #ff5656 0%, #e10c0c 48%, #8f0000 100%);
   border: 2px solid #090000;
   border-radius: 0;
-  box-shadow: inset 2px 2px 2px rgb(255 255 255 / 28%), inset -2px -2px 2px rgb(65 0 0 / 38%);
   cursor: default;
   transition: opacity 90ms linear, transform 90ms linear;
 }
@@ -81,7 +80,6 @@
   display: block;
   background: linear-gradient(135deg, #ff5a5a, #d90000 52%, #8c0000);
   border: 3px solid #090000;
-  box-shadow: inset 3px 3px 3px rgb(255 255 255 / 25%), 4px 4px 0 rgb(0 0 0 / 20%);
 }
 
 .level-53__excavate:hover span,
@@ -107,26 +105,17 @@
   filter: none;
 }
 
-.level-53__progress {
-  position: absolute;
-  bottom: 16px;
-  left: 38px;
-  width: 92px;
-  margin: 0;
-  color: #000;
-  font-family: "NELG Courier", Courier, monospace;
-  font-size: 14px;
-  text-align: center;
-}
-
 .level-53__form {
   position: absolute;
   z-index: 5;
-  right: 46px;
+  left: 50%;
   bottom: 43px;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 7px;
+  width: auto;
+  transform: translateX(-50%);
 }
 
 .level-53__form input {
@@ -137,7 +126,7 @@
   border-radius: 0;
   outline: none;
   caret-color: #f01818;
-  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-family: "NELG Perpetua", serif;
   font-size: 25px;
 }
 
@@ -146,18 +135,24 @@
   height: 40px;
   padding: 0;
   color: #000;
-  background: #d00000;
+  background: #ff0;
   border: 3px solid #000;
   border-radius: 0;
   cursor: pointer;
   font-family: "NELG Arial", Arial, sans-serif;
   font-size: 25px;
+  line-height: 1;
 }
 
 .level-53__form button:hover,
 .level-53__form button:focus-visible {
   background: #f33;
   outline: none;
+}
+
+.level-53__form button:active {
+  color: #111;
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
 }
 
 @keyframes level-53-failure {

@@ -1,0 +1,240 @@
+.level-46 {
+  overflow: hidden;
+  color: #fff;
+  background: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+}
+
+.level-46__heading {
+  top: 16px;
+  z-index: 2;
+  color: #fff;
+}
+
+.level-46__heading .level-heading__number {
+  line-height: 0.95;
+}
+
+.level-46__heading h1 {
+  margin-top: 7px;
+  color: #fff;
+  font-size: 35px;
+  line-height: 1;
+}
+
+.level-46__warning-copy {
+  position: absolute;
+  z-index: 1;
+  top: 174px;
+  left: 14px;
+  width: 742px;
+  color: #fff;
+  font: 700 32px/1.28 "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+}
+
+.level-46__warning-copy p {
+  margin: 0 0 27px;
+}
+
+.level-46__warning-copy p:nth-child(2) {
+  margin-bottom: 34px;
+}
+
+.level-46__continue {
+  position: absolute;
+  z-index: 3;
+  right: 36px;
+  bottom: 27px;
+  min-width: 119px;
+  height: 69px;
+  padding: 0 10px;
+  color: #000;
+  background: #a12cff;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font: 700 19px/1 "NELG ITC Kristen", "Comic Sans MS", cursive;
+}
+
+.level-46--scene-2 .level-46__continue {
+  top: 31px;
+  right: auto;
+  bottom: auto;
+  left: 8px;
+}
+
+.level-46--scene-3 .level-46__continue {
+  right: 36px;
+  bottom: 22px;
+}
+
+.level-46__continue:hover,
+.level-46__continue:focus-visible {
+  background: #bd55ff;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.level-46__continue:active {
+  background: #7c18d6;
+}
+
+.level-46__pending {
+  position: absolute;
+  top: 285px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  font: 700 38px/1 "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  letter-spacing: 0;
+}
+
+.level-46--scene-4 {
+  background:
+    radial-gradient(ellipse at 86% 45%, rgb(255 240 0 / 20%) 0 12%, transparent 37%),
+    linear-gradient(95deg, #a79e00 0%, #615d00 34%, #373500 66%, #191a00 100%);
+}
+
+.level-46--scene-4 .level-46__heading {
+  z-index: 4;
+  color: #ffff00;
+}
+
+.level-46--scene-4 .level-46__heading h1 {
+  color: #ffff00;
+}
+
+.level-46__hazard-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 104% 52%, rgb(255 239 0 / 34%) 0 14%, transparent 40%),
+    linear-gradient(102deg, #b0a900 0%, #6c6900 31%, #454300 58%, #242500 100%);
+}
+
+.level-46__hazard-bg::before {
+  position: absolute;
+  inset: -80px -120px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgb(255 230 0 / 33%) 0 11%, transparent 37%),
+    radial-gradient(ellipse at 97% 100%, rgb(255 238 0 / 28%) 0 15%, transparent 43%);
+  content: "";
+}
+
+.level-46__hazard-stripes {
+  position: absolute;
+  z-index: 1;
+  inset: 0 -64px 0 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='600' viewBox='0 0 64 600'%3E%3Cpath d='M22 -28 C16 10 15 32 27 42 C39 52 37 74 23 82 C8 91 8 118 24 127 C40 137 39 160 24 170 C9 181 8 207 25 218 C42 229 42 252 25 263 C8 274 8 301 25 313 C42 324 42 348 25 359 C8 370 8 397 25 409 C42 421 42 445 25 457 C8 469 8 495 25 508 C42 520 42 544 25 556 C8 568 8 595 25 608' fill='none' stroke='black' stroke-width='2.3' stroke-linecap='round'/%3E%3Cpath d='M58 -28 C52 10 51 32 63 42 C75 52 73 74 59 82 C44 91 44 118 60 127 C76 137 75 160 60 170 C45 181 44 207 61 218 C78 229 78 252 61 263 C44 274 44 301 61 313 C78 324 78 348 61 359 C44 370 44 397 61 409 C78 421 78 445 61 457 C44 469 44 495 61 508 C78 520 78 544 61 556 C44 568 44 595 61 608' fill='none' stroke='black' stroke-width='2.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 64px 600px;
+  opacity: 0.88;
+  animation: level-46-stripes-drift 1.9s linear infinite;
+  will-change: background-position;
+}
+
+.level-46__hazard-wave,
+.level-46__hazard-shadow {
+  position: absolute;
+  left: -48px;
+  right: -48px;
+  display: block;
+}
+
+.level-46__hazard-wave {
+  z-index: 2;
+  background: linear-gradient(90deg, #e0d700 0%, #938c00 55%, #fff000 100%);
+}
+
+.level-46__hazard-wave--top {
+  top: 70px;
+  height: 108px;
+  clip-path: polygon(0 0, 18% 33%, 40% 58%, 61% 79%, 83% 89%, 100% 78%, 100% 100%, 76% 91%, 49% 76%, 26% 49%, 0 22%);
+  opacity: 0.82;
+}
+
+.level-46__hazard-wave--middle {
+  top: 264px;
+  height: 58px;
+  clip-path: polygon(0 16%, 22% 23%, 40% 36%, 59% 32%, 77% 20%, 100% 4%, 100% 54%, 76% 67%, 58% 70%, 38% 61%, 19% 49%, 0 45%);
+  opacity: 0.73;
+}
+
+.level-46__hazard-wave--bottom {
+  bottom: 3px;
+  height: 132px;
+  clip-path: polygon(0 12%, 17% 29%, 35% 42%, 56% 50%, 77% 62%, 100% 74%, 100% 100%, 0 100%);
+  opacity: 0.9;
+}
+
+.level-46__hazard-shadow {
+  z-index: 3;
+  background: linear-gradient(90deg, rgb(32 31 0 / 82%), rgb(4 5 0 / 72%));
+}
+
+.level-46__hazard-shadow--upper {
+  top: 191px;
+  height: 93px;
+  clip-path: polygon(0 23%, 20% 21%, 40% 16%, 59% 10%, 78% 2%, 100% 0, 100% 70%, 76% 72%, 56% 78%, 37% 83%, 18% 85%, 0 82%);
+}
+
+.level-46__hazard-shadow--lower {
+  bottom: 82px;
+  height: 69px;
+  clip-path: polygon(0 0, 18% 17%, 40% 29%, 62% 39%, 81% 50%, 100% 67%, 100% 100%, 76% 82%, 54% 67%, 33% 50%, 14% 34%, 0 23%);
+  opacity: 0.57;
+}
+
+.level-46__open-button {
+  position: absolute;
+  z-index: 5;
+  top: 265px;
+  left: 50%;
+  width: 520px;
+  height: 135px;
+  padding: 0 42px;
+  color: #140000;
+  background:
+    radial-gradient(ellipse at 50% 42%, #ff4a2d 0 21%, #f00000 47%, #a80000 74%, #590000 100%);
+  border: 5px solid #210000;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 12px 28px rgb(255 190 120 / 36%),
+    inset 0 -16px 26px rgb(25 0 0 / 44%),
+    0 9px 0 #1c0000,
+    0 14px 24px rgb(0 0 0 / 52%);
+  cursor: pointer;
+  translate: -50% -50%;
+  text-align: center;
+  font: 700 34px/0.95 "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+}
+
+.level-46__open-button:hover,
+.level-46__open-button:focus-visible {
+  background:
+    radial-gradient(ellipse at 50% 42%, #ff7156 0 21%, #ff1111 47%, #bd0000 74%, #640000 100%);
+  outline: 3px solid #ffff00;
+  outline-offset: 3px;
+}
+
+.level-46__open-button:active {
+  translate: -50% calc(-50% + 7px);
+  box-shadow:
+    inset 0 9px 22px rgb(255 190 120 / 28%),
+    inset 0 -10px 18px rgb(25 0 0 / 48%),
+    0 2px 0 #1c0000,
+    0 8px 14px rgb(0 0 0 / 46%);
+}
+
+@keyframes level-46-stripes-drift {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: -64px 0;
+  }
+}

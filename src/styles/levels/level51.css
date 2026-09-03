@@ -101,7 +101,7 @@
   box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
   outline: none;
   caret-color: #f00;
-  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-family: "NELG Perpetua", serif;
   font-size: 25px;
   transition: background 80ms ease, translate 80ms ease;
 }
