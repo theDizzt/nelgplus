@@ -1,0 +1,296 @@
+.level-55 {
+  overflow: hidden;
+  color: #fff;
+  background: #050008;
+}
+
+.level-55::before {
+  position: absolute;
+  inset: -96px;
+  background: var(--level-55-bg) center center / cover no-repeat;
+  content: "";
+  filter: saturate(1.35) contrast(1.08) brightness(.75);
+  transform-origin: 50% 50%;
+  animation: level-55-bg-contract 1.8s ease-in-out infinite alternate;
+}
+
+.level-55::after {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 54%, rgb(0 20 190 / 58%), transparent 96%),
+    linear-gradient(100deg, transparent 0 30%, rgb(0 0 255 / 16%) 43%, transparent 96%);
+  content: "";
+  pointer-events: none;
+}
+
+.level-55--green::after {
+  background:
+    radial-gradient(ellipse at 50% 54%, rgb(0 170 45 / 58%), transparent 96%),
+    linear-gradient(100deg, transparent 0 30%, rgb(0 180 45 / 20%) 43%, transparent 96%);
+}
+
+.level-55--yellow::after {
+  background:
+    radial-gradient(ellipse at 50% 54%, rgb(255 230 0 / 58%), transparent 96%),
+    linear-gradient(100deg, transparent 0 30%, rgb(255 215 0 / 22%) 43%, transparent 96%);
+}
+
+.level-55__heading {
+  position: absolute;
+  z-index: 3;
+  top: 32px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.level-55__title {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 116px;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 116px;
+  font-weight: 400;
+  line-height: .9;
+}
+
+.level-55__letter,
+.level-55__digit-five {
+  display: inline-block;
+  min-width: .45em;
+  text-align: center;
+  text-shadow: none;
+}
+
+.level-55__letter--rainbow {
+  background: linear-gradient(135deg, #f00 0 20%, #ff0 30%, #0f0 44%, #0ff 56%, #00f 70%, #f0f 90%);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+}
+
+.level-55__letter--gold {
+  background: linear-gradient(90deg, #2c8dff 0%, #d9ecff 34%, #fff 43%, #8b6500 47%, #ffd900 65%, #fff7cc 100%);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  transform: translateY(6px) rotate(-2deg);
+}
+
+.level-55__letter--blue {
+  background: radial-gradient(red, black);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  transform: translateY(3px) skewX(-8deg);
+}
+
+.level-55__letter--violet {
+  background: linear-gradient(270deg, white 30%, black 85%);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  transform: translateY(7px) rotate(4deg);
+}
+
+.level-55__letter--one {
+  min-width: .33em;
+  background: linear-gradient(180deg, lime 30%, green 85%);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  font-size: 1.1em;
+  line-height: .82;
+  text-shadow: none;
+  transform: translate(-2px, -8px);
+}
+
+.level-55__spacer {
+  width: 32px;
+}
+
+.level-55__digit-five {
+  color: #10142a;
+  transform-origin: 50% 53%;
+}
+
+.level-55__digit-five--first {
+  background: radial-gradient(ivory, gold);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  animation: level-55-spin 1.65s linear infinite;
+}
+
+.level-55__digit-five--second {
+  background: radial-gradient(blue, black);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  margin-left: -5px;
+  text-shadow: none;
+}
+
+.level-55__subtitle {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1px;
+  margin: -4px 0 0;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 31px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.level-55__subtitle-letter {
+  display: inline-block;
+  text-shadow: 0 0 5px currentColor, 1px 1px 0 #01000a;
+}
+
+.level-55__subtitle-letter--n { color: #ffea00; transform: rotate(-4deg); }
+.level-55__subtitle-letter--e { color: #58efff; transform: translateY(2px); }
+.level-55__subtitle-letter--g { color: #ff5cff; transform: rotate(5deg); }
+.level-55__subtitle-letter--a { color: #89ff3e; transform: translateY(-3px); }
+.level-55__subtitle-letter--t { color: #f01818; transform: skewX(-10deg); }
+.level-55__subtitle-letter--i { color: #ffffff; transform: translateY(2px) rotate(7deg); }
+.level-55__subtitle-letter--v { color: #6d83ff; transform: translateY(-1px); }
+.level-55__subtitle-letter--last-e { color: #ffb12b; transform: rotate(-6deg); }
+
+.level-55__green-letter {
+  position: absolute;
+  z-index: 2;
+  top: 222px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  transform: rotate(15deg);
+  background: radial-gradient(green, lime);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  filter: none;
+  text-align: center;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 178px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.level-55__yellow-message {
+  position: absolute;
+  z-index: 2;
+  top: 176px;
+  left: 50px;
+  width: 700px;
+  margin: 0;
+  color: #211700;
+  text-align: center;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 52px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.14;
+  pointer-events: none;
+}
+
+.level-55__green-letter[hidden],
+.level-55__yellow-message[hidden] {
+  display: none;
+}
+
+.level-55__form {
+  position: absolute;
+  z-index: 4;
+  bottom: 33px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.level-55__form input {
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #f5f6ff;
+  background: rgb(0 0 35 / 16%);
+  border: 3px solid #4f67ff;
+  border-radius: 0;
+  box-shadow: inset 0 0 18px rgb(255 255 255 / 16%), 0 0 12px rgb(0 40 255 / 35%);
+  outline: none;
+  caret-color: #fff;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+
+.level-55__form input:focus {
+  border-color: #ffe900;
+}
+
+.level-55__form button {
+  width: 52px;
+  height: 40px;
+  transform: rotate(135deg);
+  padding: 0;
+  color: #070000;
+  background: linear-gradient(180deg, #2c8dff 0%, #d9ecff 34%, #fff 43%, #8b6500 47%, #ffd900 65%, #fff7cc 100%);
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  font: 400 25px/1 "NELG Arial", Arial, sans-serif;
+}
+
+.level-55__form button span {
+  display: block;
+}
+
+.level-55__form button:hover,
+.level-55__form button:focus-visible {
+  filter: brightness(1.25) saturate(1.2);
+  outline: none;
+}
+
+.level-55__form button:active {
+  filter: brightness(.42);
+}
+
+@keyframes level-55-bg-contract {
+  0% {
+    transform: scale(1.08, 1.065) skewX(-1deg) skewY(.65deg);
+  }
+
+  48% {
+    transform: scale(1.045, 1.025) skewX(1.35deg) skewY(-.85deg);
+  }
+
+  100% {
+    transform: scale(1.015, 1) skewX(-1.55deg) skewY(1.05deg);
+  }
+}
+
+@keyframes level-55-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-55::before,
+  .level-55__digit-five--first {
+    animation: none;
+  }
+}

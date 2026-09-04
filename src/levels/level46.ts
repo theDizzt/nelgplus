@@ -77,7 +77,7 @@ export const level46: LevelDefinition = {
   number: 46,
   title: "Hazard",
   scenes: SCENES,
-  mount({ screen, initialScene, listen, timeout }) {
+  mount({ screen, initialScene, listen, timeout, complete }) {
     let currentScene = sceneFromId(initialScene);
 
     const renderScene = () => {
@@ -97,6 +97,8 @@ export const level46: LevelDefinition = {
       }
 
       screen.innerHTML = currentScene === 4 ? renderMainScene() : renderPendingScene(currentScene);
+      const openButton = screen.querySelector<HTMLButtonElement>(".level-46__open-button");
+      if (openButton) listen(openButton, "click", complete, { once: true });
     };
 
     renderScene();

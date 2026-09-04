@@ -1,4 +1,6 @@
 import type { LevelDefinition } from "../core/types";
+import { levelMinus01 } from "./levelMinus01";
+import { level00 } from "./level00";
 import { level01 } from "./level01";
 import { level02 } from "./level02";
 import { level03 } from "./level03";
@@ -53,8 +55,11 @@ import { level51 } from "./level51";
 import { level52 } from "./level52";
 import { level53 } from "./level53";
 import { level54 } from "./level54";
+import { level55 } from "./level55";
 
 const levels: LevelDefinition[] = [
+  levelMinus01,
+  level00,
   level01,
   level02,
   level03,
@@ -109,6 +114,7 @@ const levels: LevelDefinition[] = [
   level52,
   level53,
   level54,
+  level55,
 ];
 
 const levelMap = new Map(levels.map((level) => [level.number, level]));

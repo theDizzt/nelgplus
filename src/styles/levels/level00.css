@@ -1,0 +1,134 @@
+.level-00 {
+  color: #fff;
+  background: #000;
+}
+
+.level-00__heading {
+  color: #fff;
+}
+
+.level-00__origin-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 210px;
+  height: 92px;
+  padding: 0;
+  background: radial-gradient(ellipse at 42% 34%, #d96cff 0 18%, #8b23cc 46%, #3b0c65 100%);
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: inset 0 0 18px rgb(255 255 255 / 32%);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.level-00__origin-button:hover,
+.level-00__origin-button:focus-visible {
+  background: radial-gradient(ellipse at 42% 34%, #f1a2ff 0 18%, #a53aed 46%, #501181 100%);
+  outline: 3px solid #fff;
+  outline-offset: 5px;
+}
+
+.level-00__origin-button:active {
+  transform: translate(-50%, calc(-50% + 3px)) scale(.97);
+}
+
+.level-00__context-menu {
+  z-index: 100;
+}
+
+.level-00--negative-zero {
+  color: #fff;
+  background: #000;
+}
+
+.level-00__heading--negative {
+  color: #fff;
+}
+
+.level-00__heading--negative .level-heading__number {
+  text-shadow: 2px 2px 0 #1b5878;
+}
+
+.level-00__heading--negative h1 {
+  margin: 0;
+  color: #fff;
+  text-shadow: 1px 1px 0 #1b5878;
+}
+
+.level-00__go-back {
+  position: absolute;
+  top: 205px;
+  left: 50%;
+  width: 410px;
+  height: 94px;
+  padding: 0 16px;
+  color: rgb(255 255 255 / 26%);
+  background: #494b00;
+  border: 4px solid #333;
+  box-shadow: inset 0 0 0 2px #777;
+  cursor: pointer;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 76px;
+  line-height: 1;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.level-00__go-back:hover,
+.level-00__go-back:focus-visible {
+  color: rgb(255 255 255 / 38%);
+  background: #5d6000;
+  outline: none;
+}
+
+.level-00__go-back:active {
+  transform: translateX(-50%) translateY(2px);
+}
+
+.level-00__red-button {
+  position: absolute;
+  top: 330px;
+  left: 34px;
+  width: 145px;
+  height: 72px;
+  padding: 0;
+  background:
+    radial-gradient(ellipse at 72% 22%, #fff 0 5%, transparent 6%),
+    radial-gradient(ellipse at 84% 25%, #fff 0 9%, transparent 10%),
+    radial-gradient(ellipse at 48% 45%, #ff1515 0 57%, #b20000 100%);
+  border: 3px solid #111;
+  border-radius: 50%;
+  box-shadow:
+    0 22px 0 -10px #ddd,
+    0 29px 0 -11px #808080,
+    0 33px 0 -14px #222;
+  cursor: pointer;
+}
+
+.level-00__red-button:hover,
+.level-00__red-button:focus-visible {
+  filter: brightness(1.12);
+  outline: none;
+}
+
+.level-00__red-button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 18px 0 -10px #ddd,
+    0 25px 0 -11px #808080,
+    0 29px 0 -14px #222;
+}
+
+.level-00__button-copy {
+  position: absolute;
+  top: 334px;
+  left: 212px;
+  margin: 0;
+  color: #fff;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 31px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #1b5878;
+}

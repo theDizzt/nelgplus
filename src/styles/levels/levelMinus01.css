@@ -1,0 +1,50 @@
+.level-minus-01 {
+  color: #0ff;
+  background: #1f51ff;
+}
+
+.level-minus-01__heading {
+  color: #0ff;
+}
+
+.level-minus-01__counter {
+  position: absolute;
+  top: 285px;
+  left: 50%;
+  width: 760px;
+  padding: 0;
+  overflow: hidden;
+  color: #00f;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-size: 86px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.level-minus-01__counter:focus {
+  outline: none;
+}
+
+.level-minus-01__hint-letter {
+  position: absolute;
+  z-index: 2;
+  top: 318px;
+  left: 50%;
+  margin: 0;
+  color: rgb(255 255 255 / 18%);
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 190px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.level-minus-01__hint-letter[hidden] {
+  display: none;
+}

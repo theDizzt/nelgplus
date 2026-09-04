@@ -266,17 +266,17 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
   },
   46: {
     message:
-      "...",
+      "You've made it through the warning signs and reached another Warp Zone. The next stretch keeps twisting familiar rules into stranger shapes, so keep your eyes open and don't trust anything that looks too convenient...",
     password: "403 forbidden",
   },
   50: {
     message:
-      "...",
+      "You survived the return of old memories and reached the next Warp Zone. From here on, the game will keep digging through its own history, pulling buried tricks back into the present in less friendly forms...",
     password: "BronZwong",
   },
   55: {
     message:
-      "...",
+      "Excellent work finding what was hidden outside Level 55. The road ahead will not be any kinder, but at least this Warp Zone gives you one more place to breathe before the next descent...",
     password: "VIVID WAVE",
   },
 };

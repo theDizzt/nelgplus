@@ -19,7 +19,7 @@ export const level50: LevelDefinition = {
       label: `Enhanced Level 20 - Scene ${index + 1}`,
     })),
   ],
-  mount({ screen, audio, listen, goToMenu, session }) {
+  mount({ screen, audio, listen, goToMenu, session, complete }) {
     screen.className = "level-screen level-50";
     screen.innerHTML = `
       <header class="level-heading level-50__heading" aria-label="Level 50, Revival">
@@ -143,6 +143,8 @@ export const level50: LevelDefinition = {
           goToMenu();
           return;
         case "forward":
+          complete();
+          return;
         case "back":
           return;
       }
