@@ -91,6 +91,11 @@
   letter-spacing: 0;
 }
 
+.level-46--scene-4,
+.level-46--scene-4 * {
+  cursor: none !important;
+}
+
 .level-46--scene-4 {
   background:
     radial-gradient(ellipse at 86% 45%, rgb(255 240 0 / 20%) 0 12%, transparent 37%),
@@ -228,6 +233,199 @@
     0 2px 0 #1c0000,
     0 8px 14px rgb(0 0 0 / 46%);
 }
+
+.level-46__error {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  left: 50%;
+  width: 440px;
+  height: 250px;
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+  padding: 3px 3px 14px;
+  transform: translate(-50%, -50%);
+  color: #000;
+  background: #c0c0c0;
+  border: 3px outset #eee;
+  box-shadow: 5px 6px 0 #000;
+  font: 16px/1.25 Arial, sans-serif;
+}
+
+.level-46__error-bar {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 4px;
+  color: #fff;
+  background: #000080;
+  font-weight: 700;
+}
+
+.level-46__error button {
+  color: #000;
+  background: #c0c0c0;
+  border: 3px outset #eee;
+  border-radius: 0;
+  cursor: pointer;
+  font: 700 16px/1 Arial, sans-serif;
+}
+
+.level-46__error button:active {
+  border-style: inset;
+}
+
+.level-46__error button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -6px;
+}
+
+.level-46__error-close {
+  flex: 0 0 25px;
+  height: 25px;
+  padding: 0;
+}
+
+.level-46__error-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 23px 16px 20px 12px;
+  height: 166px;
+  box-sizing: border-box;
+}
+
+.level-46__error-icon {
+  flex: 0 0 46px;
+  height: 44px;
+  margin-top: 7px;
+  color: #fff;
+  background: #f00;
+  border: 2px solid #800000;
+  border-radius: 45%;
+  box-shadow: 2px 2px 0 #808080;
+  text-align: center;
+  font: 700 38px/44px Arial, sans-serif;
+}
+
+.level-46__error-body p {
+  margin: 0 0 14px;
+}
+
+.level-46__error-body small {
+  font: 12px/1.4 "Courier New", monospace;
+}
+
+.level-46__error-ok {
+  display: block;
+  width: 88px;
+  height: 32px;
+  margin: 0 auto;
+}
+
+.level-46__passwords {
+  position: absolute;
+  z-index: 5;
+  bottom: 33px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.level-46__password-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  --field-color: #ff86b5;
+}
+
+.level-46__password-form:nth-child(2) { --field-color: #72ff93; }
+.level-46__password-form:nth-child(3) { --field-color: #70cbff; }
+
+.level-46__password-form input,
+.level-46__last-password {
+  box-sizing: border-box;
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  border: 3px solid #111;
+  border-radius: 0;
+  color: #000;
+  background: var(--field-color, #fff);
+  font: 25px "NELG Perpetua", Perpetua, serif;
+}
+
+.level-46__password-form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  border: 3px solid #111;
+  border-radius: 0;
+  color: #000;
+  background: var(--field-color);
+  font: 25px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.level-46__password-form input[aria-invalid="true"] { outline: 3px solid #f00; }
+.level-46__password-form.is-solved { outline: 3px solid #fff; outline-offset: 3px; }
+.level-46__password-form input:disabled { opacity: 1; -webkit-text-fill-color: #000; }
+.level-46__password-form button:disabled { cursor: default; }
+
+.level-46__last-password {
+  position: absolute;
+  z-index: 4;
+  top: 265px;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.level-46__open-button.is-draggable {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-46__fake-cursor {
+  position: absolute;
+  z-index: 20;
+  left: 70%;
+  top: 65%;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.level-46--scene-5 { background: #00f; }
+.level-46__fatal {
+  margin: 0;
+  padding: 32px;
+  color: #fff;
+  font: 700 40px/1.2 "Courier New", monospace;
+}
+
+.level-46__browser {
+  position: absolute;
+  z-index: 30;
+  box-sizing: border-box;
+  width: 300px;
+  height: 160px;
+  border: 3px outset #eee;
+  background: #fff;
+  color: #000;
+  font: 16px Arial, sans-serif;
+  box-shadow: 4px 4px #000;
+}
+
+.level-46__browser p { padding: 8px; }
+.level-46__browser button { cursor: pointer; }
 
 @keyframes level-46-stripes-drift {
   from {

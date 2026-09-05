@@ -395,7 +395,7 @@ export class Game {
     const menuCopy = revivalMode
       ? {
           kicker: "WELCOME BACK. IT REMEMBERED YOU.",
-          title: "Never Ending Level Game <span>666</span>",
+          title: "Never Ending Level Game <span>++</span>",
           description: `
             Your last run was not erased. It has been waiting underneath this screen, learning every click.
             There are no levels left to finish. There are only doors that remember how you failed.
@@ -1133,6 +1133,8 @@ export class Game {
            <article class="credits-track"><span>LEVEL 39</span><strong>Final Doom — M05: More</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Animal Company Soundtrack — Old Map Music | The End | ERROR</strong></article>
            <article class="credits-track"><span>LEVEL 42</span><strong>Final Doom — M20: Horizon</strong></article>
+           <article class="credits-track"><span>LEVEL 47</span><strong>Snowy Weather SFX</strong></article>
+           <article class="credits-track"><span>LEVEL 50</span><strong>GMP Music — Horror Village</strong></article>
          </section>
        </div>`,
     );
