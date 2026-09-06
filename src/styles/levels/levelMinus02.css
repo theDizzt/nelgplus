@@ -1,0 +1,59 @@
+.level-minus-02 {
+  color: #fff;
+  background: #555;
+}
+
+.level-minus-02__object {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2400px;
+  height: 800px;
+  max-width: none;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-minus-02__heading {
+  z-index: 1;
+  color: #fff;
+  pointer-events: none;
+}
+
+.level-minus-02__form {
+  position: absolute;
+  z-index: 2;
+  bottom: 33px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.level-minus-02__form input {
+  padding: 4px 8px;
+  color: #fff;
+  background: #222;
+  border: 3px solid #fff;
+  border-radius: 0;
+  font: 25px "NELG Perpetua", Perpetua, serif;
+}
+
+.level-minus-02__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #fff;
+  background: #222;
+  border: 3px solid #fff;
+  border-radius: 0;
+  font: 25px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.level-minus-02__form :focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}

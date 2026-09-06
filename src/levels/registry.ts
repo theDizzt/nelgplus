@@ -1,5 +1,8 @@
 import type { LevelDefinition } from "../core/types";
 import { levelMinus01 } from "./levelMinus01";
+import { levelMinus02 } from "./levelMinus02";
+import { levelMinus03 } from "./levelMinus03";
+import { levelMinus05 } from "./levelMinus05";
 import { level00 } from "./level00";
 import { level01 } from "./level01";
 import { level02 } from "./level02";
@@ -58,6 +61,9 @@ import { level54 } from "./level54";
 import { level55 } from "./level55";
 
 const levels: LevelDefinition[] = [
+  levelMinus05,
+  levelMinus03,
+  levelMinus02,
   levelMinus01,
   level00,
   level01,

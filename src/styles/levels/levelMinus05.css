@@ -1,0 +1,71 @@
+.level-minus-05 {
+  color: #008000;
+  background: #000;
+  touch-action: none;
+}
+
+.level-minus-05 .level-heading { z-index: 2; pointer-events: none; }
+.level-minus-05__copy {
+  position: absolute;
+  top: 205px;
+  left: 24px;
+  margin: 0;
+  font: 22px "NELG Perpetua", Perpetua, serif;
+}
+.level-minus-05__rings { position: absolute; inset: 0; width: 800px; height: 600px; pointer-events: none; }
+.level-minus-05__center {
+  position: absolute;
+  top: 350px;
+  left: 380px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid #222;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 40%, #fff, #999 25%, #333 60%, #000 85%);
+}
+.level-minus-05__form {
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.level-minus-05__form input {
+  padding: 4px 8px;
+  border: 3px solid #888;
+  border-radius: 0;
+  color: #008000;
+  background: #fff;
+  font: 25px "NELG Perpetua", Perpetua, serif;
+}
+.level-minus-05__form button,
+.level-minus-05__retry {
+  height: 40px;
+  padding: 0 8px;
+  border: 2px solid #888;
+  border-radius: 0;
+  color: #008000;
+  background: #ff0;
+  font: 25px Arial, sans-serif;
+}
+.level-minus-05__form button { width: 52px; padding: 0; }
+.level-minus-05__hint {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  margin: 0;
+  font: 32px "NELG Perpetua", Perpetua, serif;
+}
+.level-minus-05__hint.is-secret span { color: #ff0; }
+.level-minus-05__failure {
+  position: absolute;
+  top: 275px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font: 700 62px/1.2 "NELG Courier", Courier, monospace;
+}
+.level-minus-05__retry { position: absolute; bottom: 25px; right: 25px; }
