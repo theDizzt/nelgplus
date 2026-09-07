@@ -153,11 +153,11 @@ export const levelMinus05: LevelDefinition = {
           if (touchesRing(pointer, (sampleTime - startedAt) / 1000)) fail();
         }
       }
-      const blueBackground = Math.floor(seconds / 3) % 2 === 1;
-      screen.style.backgroundColor = blueBackground ? "#00f" : "#000";
+      const blue = Math.round(255 * (1 - Math.cos(seconds * TAU / 6)) / 2);
+      screen.style.backgroundColor = `rgb(0, 0, ${blue})`;
       if (!failed && canvasContext) {
         canvasContext.clearRect(0, 0, 800, 600);
-        canvasContext.strokeStyle = blueBackground ? "#000" : "#00f";
+        canvasContext.strokeStyle = "#00f";
         for (const ring of RINGS) {
           const angle = ring.offset + seconds * ring.speed;
           canvasContext.beginPath();

@@ -1,14 +1,17 @@
 .level-minus-02 {
   color: #fff;
-  background: #555;
+  background-color: #000;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .level-minus-02__object {
   position: absolute;
   top: 0;
   left: 0;
-  width: 2400px;
-  height: 800px;
+  width: 9600px;
+  height: 3200px;
   max-width: none;
   touch-action: none;
   user-select: none;
@@ -53,7 +56,21 @@
   cursor: pointer;
 }
 
-.level-minus-02__form :focus-visible {
+.level-minus-02__form input:focus {
+  outline: none;
+}
+
+.level-minus-02__form button:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
+}
+
+.level-minus-02__form button:hover:not(:disabled),
+.level-minus-02__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-minus-02__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
 }

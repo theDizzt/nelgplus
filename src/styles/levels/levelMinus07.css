@@ -1,0 +1,135 @@
+.level-minus-07 {
+  color: #000;
+  background: #124dcc;
+  isolation: isolate;
+}
+.level-minus-07__background {
+  position: absolute;
+  z-index: 0;
+  inset: -24px;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: level-minus-07-quake 190ms steps(1, end) infinite;
+}
+.level-minus-07__object {
+  position: absolute;
+  z-index: 2;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  animation: level-minus-07-quake 200ms linear infinite;
+}
+.level-minus-07__object--c { z-index: 1; }
+.level-minus-07__heading { z-index: 11; pointer-events: none; }
+.level-minus-07__heading span {
+  display: inline-block;
+  color: transparent;
+  background-image: linear-gradient(90deg, #f00, #ff7f00, #ff0, #00c000, #00bfff, #0000ff, #b000ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: level-minus-07-quake 210ms steps(1, end) infinite;
+}
+.level-minus-07 .level-minus-07__heading h1 {
+  font-family: "NELG Comic Sans", "Comic Sans MS", cursive;
+}
+.level-minus-07__heading h1 span { animation-name: level-minus-07-wobble; animation-duration: 180ms; animation-delay: -75ms; }
+.level-minus-07__form {
+  position: absolute;
+  z-index: 12;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+}
+.level-minus-07__form input {
+  padding: 4px 8px;
+  border: 3px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #fff;
+  outline: none;
+  font: 25px "NELG Perpetua", Perpetua, serif;
+  animation: level-minus-07-horizontal 240ms linear infinite;
+}
+.level-minus-07__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  border: 3px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #ff0;
+  font: 25px Arial, sans-serif;
+  cursor: pointer;
+  animation: level-minus-07-vertical 270ms linear infinite;
+  animation-delay: -110ms;
+}
+.level-minus-07__form button:hover:not(:disabled),
+.level-minus-07__form button:focus-visible:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+  outline: none;
+}
+
+.level-minus-07__form button:active:not(:disabled) {
+  background: #f00;
+}
+.level-minus-07__overlay {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  background: #008000;
+  opacity: 0.35;
+  pointer-events: none;
+}
+@keyframes level-minus-07-quake {
+  0%, 100% { transform: translate(-12px, 7px); }
+  14% { transform: translate(11px, -10px); }
+  28% { transform: translate(-7px, -12px); }
+  42% { transform: translate(14px, 9px); }
+  57% { transform: translate(-14px, -3px); }
+  71% { transform: translate(6px, 12px); }
+  85% { transform: translate(-2px, -8px); }
+}
+@keyframes level-minus-07-horizontal {
+  0%, 100% { transform: translateX(-12px); }
+  50% { transform: translateX(12px); }
+}
+@keyframes level-minus-07-wobble {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+@keyframes level-minus-07-rumble {
+  0%, 100% { transform: translate(-8px, 4px); }
+  33% { transform: translate(7px, -3px); }
+  66% { transform: translate(-3px, -4px); }
+}
+@keyframes level-minus-07-vertical {
+  0%, 100% { transform: translateY(-12px); }
+  50% { transform: translateY(12px); }
+}
+@keyframes level-minus-07-diagonal {
+  0%, 100% { transform: translate(-10px, 10px); }
+  50% { transform: translate(10px, -10px); }
+}
+@keyframes level-minus-07-twist {
+  0%, 100% { transform: translate(-7px, -4px) rotate(-4deg); }
+  50% { transform: translate(7px, 4px) rotate(4deg); }
+}
+@keyframes level-minus-07-orbit {
+  0%, 100% { transform: translate(10px, 0); }
+  25% { transform: translate(0, 10px); }
+  50% { transform: translate(-10px, 0); }
+  75% { transform: translate(0, -10px); }
+}
+@keyframes level-minus-07-bounce {
+  0%, 100% { transform: translateY(5px) scale(1.04, 0.94); }
+  50% { transform: translateY(-12px) scale(0.97, 1.05); }
+}
+@keyframes level-minus-07-skew {
+  0%, 100% { transform: translateX(-6px) skewX(-7deg); }
+  50% { transform: translateX(6px) skewX(7deg); }
+}

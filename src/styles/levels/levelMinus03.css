@@ -48,7 +48,21 @@
   cursor: pointer;
 }
 
+.level-minus-03__form input:focus {
+  outline: none;
+}
+
 .level-minus-03__form button:focus-visible {
   outline: 2px solid #f00;
   outline-offset: 3px;
+}
+
+.level-minus-03__form button:hover:not(:disabled),
+.level-minus-03__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-minus-03__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
 }

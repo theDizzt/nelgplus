@@ -8,6 +8,7 @@ export const levelMinus02: LevelDefinition = {
   title: "Gigantic",
   mount({ screen, listen, goToLevel, wrongAnswer }) {
     screen.className = "level-screen level-minus-02";
+    screen.style.backgroundImage = `url("${assetUrl("images/levelm2bg.png")}")`;
     screen.innerHTML = `
       <img class="level-minus-02__object" src="${assetUrl("images/levelm2a.png")}" draggable="false" alt="" aria-hidden="true">
       <header class="level-heading level-minus-02__heading">

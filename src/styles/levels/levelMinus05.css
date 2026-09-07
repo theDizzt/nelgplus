@@ -40,6 +40,10 @@
   background: #fff;
   font: 25px "NELG Perpetua", Perpetua, serif;
 }
+.level-minus-05__form input:focus {
+  outline: none;
+}
+
 .level-minus-05__form button,
 .level-minus-05__retry {
   height: 40px;
@@ -50,6 +54,7 @@
   background: #ff0;
   font: 25px Arial, sans-serif;
 }
+
 .level-minus-05__form button { width: 52px; padding: 0; }
 .level-minus-05__hint {
   position: absolute;
@@ -58,6 +63,17 @@
   margin: 0;
   font: 32px "NELG Perpetua", Perpetua, serif;
 }
+
+.level-minus-05__form button:hover:not(:disabled),
+.level-minus-05__form button:focus-visible:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+  outline: none;
+}
+
+.level-minus-05__form button:active:not(:disabled) {
+  background: #ff0;
+}
+
 .level-minus-05__hint.is-secret span { color: #ff0; }
 .level-minus-05__failure {
   position: absolute;
@@ -69,3 +85,12 @@
   font: 700 62px/1.2 "NELG Courier", Courier, monospace;
 }
 .level-minus-05__retry { position: absolute; bottom: 25px; right: 25px; }
+
+.level-minus-05__retry button:focus-visible:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+  outline: none;
+}
+
+.level-minus-05__retry button:active:not(:disabled) {
+  background: #ff0;
+}
