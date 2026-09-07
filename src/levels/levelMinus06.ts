@@ -1,7 +1,8 @@
-import { assetUrl } from "../core/assets";
+import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import { clientPointToLocal, type LocalPoint } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { tryBackwardsPassword } from "./negativeBackwards";
 
 type Scene = "main" | "fail" | "success";
 const COLORS = ["#f00", "#0f0", "#00f"] as const;
@@ -28,7 +29,7 @@ export const levelMinus06: LevelDefinition = {
     { id: "fail", label: "Screen 2 - Fail" },
     { id: "success", label: "Screen 3 - Success" },
   ],
-  mount({ screen, initialScene, listen, goToLevel, wrongAnswer }) {
+  mount({ screen, initialScene, listen, goToLevel, wrongAnswer, audio, session }) {
     screen.className = "level-screen level-minus-06";
     screen.innerHTML = `
       <div class="level-minus-06__rain" aria-hidden="true"></div>
@@ -145,8 +146,14 @@ export const levelMinus06: LevelDefinition = {
     listen(input, "keydown", (event) => {
       if (event.key === "Enter") event.preventDefault();
     });
+    listen(submit, "pointerdown", (event) => {
+      if (event.button !== 0 || scene !== "main" || rainbowY === undefined) return;
+      // Keep the release/click on the falling button even after it moves away.
+      submit.setPointerCapture(event.pointerId);
+    });
     listen(submit, "click", () => {
       if (scene !== "main" || rainbowY === undefined) return;
+      if (tryBackwardsPassword(password.getValue(), { session, goToLevel })) return;
       if (password.getValue() === "poppin' and cursors") goToLevel(-7);
       else wrongAnswer();
     });
@@ -194,6 +201,7 @@ export const levelMinus06: LevelDefinition = {
             }
           }
           if (caught) {
+            audio.playEffect(SOUND_EFFECTS.pop);
             // Integer tenths keep the strict 0%, 99.0%, and 100% boundaries exact.
             points += drop.color === color ? drop.size.value : -drop.size.value;
             drop.element.remove();

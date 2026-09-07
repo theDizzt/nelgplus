@@ -36,7 +36,7 @@ export interface LevelContext {
   wrongAnswer: () => boolean;
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
-  goToLevel: (levelNumber: number) => void;
+  goToLevel: (levelNumber: number, initialScene?: string) => void;
   goToMenu: () => void;
   listen: <K extends keyof HTMLElementEventMap>(
     target: HTMLElement | Document | Window,

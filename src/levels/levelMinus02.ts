@@ -2,11 +2,12 @@ import { assetUrl } from "../core/assets";
 import { clientPointToLocal } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { tryBackwardsPassword } from "./negativeBackwards";
 
 export const levelMinus02: LevelDefinition = {
   number: -2,
   title: "Gigantic",
-  mount({ screen, listen, goToLevel, wrongAnswer }) {
+  mount({ screen, listen, goToLevel, wrongAnswer, session }) {
     screen.className = "level-screen level-minus-02";
     screen.style.backgroundImage = `url("${assetUrl("images/levelm2bg.png")}")`;
     screen.innerHTML = `
@@ -49,8 +50,8 @@ export const levelMinus02: LevelDefinition = {
 
     const isOpaque = (localX: number, localY: number) => {
       if (!pixels) return false;
-      const px = Math.floor(localX - x);
-      const py = Math.floor(localY - y);
+      const px = Math.floor((localX - x) * pixels.width / object.offsetWidth);
+      const py = Math.floor((localY - y) * pixels.height / object.offsetHeight);
       return px >= 0 && py >= 0 && px < pixels.width && py < pixels.height
         && pixels.data[(py * pixels.width + px) * 4 + 3]! > 0;
     };
@@ -71,8 +72,8 @@ export const levelMinus02: LevelDefinition = {
       }
       if (drag.id !== event.pointerId) return;
       // Keep the oversized image covering the viewport so it cannot get lost.
-      x = Math.max(screen.clientWidth - object.naturalWidth, Math.min(0, point.x - drag.x));
-      y = Math.max(screen.clientHeight - object.naturalHeight, Math.min(0, point.y - drag.y));
+      x = Math.max(screen.clientWidth - object.offsetWidth, Math.min(0, point.x - drag.x));
+      y = Math.max(screen.clientHeight - object.offsetHeight, Math.min(0, point.y - drag.y));
       renderPosition();
     });
     const stopDrag = (event: PointerEvent) => {
@@ -91,6 +92,7 @@ export const levelMinus02: LevelDefinition = {
     });
     listen(form, "submit", (event) => {
       event.preventDefault();
+      if (tryBackwardsPassword(password.getValue(), { session, goToLevel })) return;
       if (password.getValue() === "QUEEN!") {
         goToLevel(-3);
       } else {

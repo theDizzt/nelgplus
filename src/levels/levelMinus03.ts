@@ -1,9 +1,10 @@
 import type { LevelDefinition } from "../core/types";
+import { tryBackwardsPassword } from "./negativeBackwards";
 
 export const levelMinus03: LevelDefinition = {
   number: -3,
   title: "Out of Range",
-  mount({ screen, listen, goToLevel, wrongAnswer }) {
+  mount({ screen, listen, goToLevel, wrongAnswer, session }) {
     screen.className = "level-screen level-minus-03";
     screen.innerHTML = `
       <header class="level-heading">
@@ -22,6 +23,7 @@ export const levelMinus03: LevelDefinition = {
     // Keep native text selection and copying so the initial letter is discoverable.
     listen(form, "submit", (event) => {
       event.preventDefault();
+      if (tryBackwardsPassword(input.value, { session, goToLevel })) return;
       if (input.value === "hidden") goToLevel(-4);
       else wrongAnswer();
     });

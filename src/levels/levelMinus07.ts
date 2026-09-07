@@ -1,6 +1,7 @@
 import { assetUrl } from "../core/assets";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { tryBackwardsPassword } from "./negativeBackwards";
 
 const OBJECTS = [
   { name: "a", x: 350, y: 195, width: 190, height: 180, motion: "horizontal", duration: 145 },
@@ -17,7 +18,7 @@ const OBJECTS = [
 export const levelMinus07: LevelDefinition = {
   number: -7,
   title: "AWESOME",
-  mount({ screen, listen, goToLevel, wrongAnswer }) {
+  mount({ screen, listen, goToLevel, wrongAnswer, session }) {
     screen.className = "level-screen level-minus-07";
     screen.innerHTML = `
       <div class="level-minus-07__background" aria-hidden="true" style="background-image:url('${assetUrl("images/levelm7bg.jpg")}')"></div>
@@ -45,6 +46,7 @@ export const levelMinus07: LevelDefinition = {
     });
     listen(form, "submit", (event) => {
       event.preventDefault();
+      if (tryBackwardsPassword(password.getValue(), { session, goToLevel })) return;
       if (password.getValue() === "bold and brash") goToLevel(-8);
       else {
         wrongAnswer();

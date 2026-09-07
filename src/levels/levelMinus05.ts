@@ -2,6 +2,7 @@ import { attachCustomCursor } from "../core/CustomCursor";
 import { clientPointToLocal, type LocalPoint } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { tryBackwardsPassword } from "./negativeBackwards";
 
 const TAU = Math.PI * 2;
 const CENTER = { x: 400, y: 370 };
@@ -107,6 +108,7 @@ export const levelMinus05: LevelDefinition = {
       listen(form, "submit", (event) => {
         event.preventDefault();
         if (failed) return;
+        if (tryBackwardsPassword(password.getValue(), context)) return;
         if (password.getValue() === "constant") goToLevel(-6);
         else {
           wrongAnswer();

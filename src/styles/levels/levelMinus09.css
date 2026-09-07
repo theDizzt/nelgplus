@@ -1,0 +1,88 @@
+.level-minus-09 {
+  color: #000;
+  background-color: #390076;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.level-minus-09__colors {
+  position: absolute;
+  top: 235px;
+  left: 74px;
+  display: flex;
+  gap: 20px;
+}
+.level-minus-09__color {
+  box-sizing: border-box;
+  width: 64px;
+  height: 192px;
+  border: 3px solid #000;
+}
+.level-minus-09__form {
+  position: absolute;
+  bottom: 28px;
+  left: 282px;
+}
+.level-minus-09__form input {
+  padding: 4px 8px;
+  border: 3px solid #000;
+  border-radius: 0;
+  background: #fff;
+  color: #000;
+  outline: none;
+  font: 25px "NELG Perpetua", Perpetua, serif;
+}
+.level-minus-09__go {
+  position: absolute;
+  z-index: 2;
+  left: 466px;
+  top: 529px;
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  border: 3px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #ff0;
+  font: 25px Arial, sans-serif;
+  touch-action: none;
+  user-select: none;
+}
+.level-minus-09__go:hover:not(:disabled),
+.level-minus-09__go:focus-visible:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+  outline: none;
+}
+
+.level-minus-09__go:active:not(:disabled) {
+  background: #f00;
+}
+.level-minus-09__hint {
+  position: absolute;
+  left: 478px;
+  top: 538px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.level-minus-09 :disabled { opacity: 1; color: #000; -webkit-text-fill-color: #000; }
+
+.minus-ending {
+  color: #666;
+  background-color: #000;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.minus-ending__message {
+  position: absolute;
+  top: 64%;
+  right: 28px;
+  width: 388px;
+  transform: translateY(-50%);
+  font: 20px/1.45 "NELG Comic Sans", "Comic Sans MS", cursive;
+  letter-spacing: 0;
+}
+.minus-ending__message p { margin: 0 0 16px; }
+.minus-ending__message .minus-ending__credit { margin: 0; text-align: right; }

@@ -1,0 +1,74 @@
+.level-minus-08 {
+  color: #000;
+  background-color: #800000;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.level-minus-08__s {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+.level-minus-08__s:disabled { opacity: 1; cursor: default; }
+.level-minus-08__s:not(:disabled) { cursor: pointer; }
+.level-minus-08__destination {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  translate: -50% 0;
+  width: 170px;
+  height: 40px;
+  border: 2px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #fff;
+  font: 22px "NELG Courier", Courier, monospace;
+}
+.level-minus-08__form {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.level-minus-08__form input {
+  padding: 4px 8px;
+  border: 3px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #fff;
+  outline: none;
+  font: 25px "NELG Perpetua", Perpetua, serif;
+}
+.level-minus-08__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  border: 3px solid #000;
+  border-radius: 0;
+  color: #000;
+  background: #fff;
+  font: 25px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.level-minus-08__form button:hover:not(:disabled),
+.level-minus-08__form button:focus-visible:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+  outline: none;
+}
+
+.level-minus-08__form button:active:not(:disabled) {
+  background: #ff0;
+}

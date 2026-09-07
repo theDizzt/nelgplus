@@ -9,7 +9,7 @@ interface ScopeOptions {
   wrongAnswer: () => boolean;
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
-  goToLevel: (levelNumber: number) => void;
+  goToLevel: (levelNumber: number, initialScene?: string) => void;
   goToMenu: () => void;
   audio: AudioManager;
   hasSessionFlag: (flag: string) => boolean;

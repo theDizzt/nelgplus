@@ -6,6 +6,8 @@ import { levelMinus04 } from "./levelMinus04";
 import { levelMinus05 } from "./levelMinus05";
 import { levelMinus06 } from "./levelMinus06";
 import { levelMinus07 } from "./levelMinus07";
+import { levelMinus08 } from "./levelMinus08";
+import { levelMinus09 } from "./levelMinus09";
 import { level00 } from "./level00";
 import { level01 } from "./level01";
 import { level02 } from "./level02";
@@ -64,6 +66,8 @@ import { level54 } from "./level54";
 import { level55 } from "./level55";
 
 const levels: LevelDefinition[] = [
+  levelMinus09,
+  levelMinus08,
   levelMinus07,
   levelMinus04,
   levelMinus06,

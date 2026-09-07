@@ -43,7 +43,7 @@ const ADMIN_FONT_OPTIONS = [
   { id: "nexa", label: "Nexa", family: '"NELG Nexa", sans-serif' },
   { id: "wanted-sans", label: "Wanted Sans", family: '"NELG Wanted Sans", sans-serif' },
 ] as const;
-const MINIMUM_LEVEL = -8;
+const MINIMUM_LEVEL = -9;
 const MAXIMUM_LEVEL = 150;
 const PUBLIC_LEVEL_COUNT = 35;
 const REVIVAL_LEVEL_SUBTITLES: Readonly<Record<number, string>> = {
@@ -1617,7 +1617,7 @@ export class Game {
       wrongAnswer: () => this.handleRevivalWrongAnswer(levelNumber),
       unlockAchievement: (achievementId) => this.unlockAchievement(achievementId),
       restart: () => this.showLevel(levelNumber, initialScene),
-      goToLevel: (targetLevel) => this.showLevel(targetLevel),
+      goToLevel: (targetLevel, targetScene) => this.showLevel(targetLevel, targetScene),
       goToMenu: () => this.renderMainMenu(),
       audio: this.audioManager,
       hasSessionFlag: (flag) => this.sessionFlags.has(flag),
