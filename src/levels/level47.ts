@@ -5,9 +5,11 @@ import type { LevelDefinition } from "../core/types";
 const SCENE_COUNT = 9;
 const CURSOR_WIDTH = 15;
 const CURSOR_HEIGHT = 22;
+const MAX_LIVES = 3;
+const DAMAGE_INVINCIBLE_SECONDS = 1;
 const MAX_TEMPERATURE = 100;
-const COOLING_RATE = (50 / 6);
-const WARMING_RATE = (50 / 8);
+const COOLING_RATE = (50 / 8);
+const WARMING_RATE = (50 / 4);
 const INVINCIBLE_CODE = "melonsoda84";
 
 const SCENE_TWO_FIRE = { x: 358, y: 432, radius: 64 } as const;
@@ -19,7 +21,7 @@ const SCENE_TWO_OBSTACLES = [
   { y: 162, width: 52, height: 50, startX: 80, travel: 300, speed: 1.45, offset: 0 },
   { y: 212, width: 50, height: 52, startX: 89, travel: 292, speed: 1.9, offset: 1.8 },
 ] as const;
-const SCENE_TWO_PRESS = { x: 560, width: 132, height: 548, cycleSeconds: 1.5 } as const;
+const SCENE_TWO_PRESS = { x: 560, width: 132, height: 548, cycleSeconds: 1.6 } as const;
 
 const SCENE_THREE_FIRE = { x: 672, y: 8, radius: 64 } as const;
 const SCENE_THREE_DESTINATION = { x: 54, y: 429, width: 50, height: 50 } as const;
@@ -31,7 +33,7 @@ const SCENE_THREE_PRESSES = [
   { x: 312, top: -160, width: 132, height: 420, travel: 220, wellTop: 106, wellHeight: 154, delay: 0.32 },
   { x: 474, top: -160, width: 132, height: 420, travel: 220, wellTop: 106, wellHeight: 154, delay: 0 },
 ] as const;
-const SCENE_THREE_PRESS_CYCLE_SECONDS = 3.6;
+const SCENE_THREE_PRESS_CYCLE_SECONDS = 3.9;
 const SCENE_THREE_PADS = {
   cyan: { x: 61, y: 112, width: 50, height: 50 },
   magenta: { x: 711, y: 515, width: 50, height: 50 },
@@ -41,7 +43,7 @@ const SCENE_THREE_DOORS = {
   magenta: { x: 112, y: 419, width: 22, height: 72 },
 } as const;
 const SCENE_THREE_LOOP = {
-  left: 170, right: 735, top: 343, bottom: 458, size: 50, speed: 126,
+  left: 170, right: 735, top: 343, bottom: 458, size: 50, speed: 144,
 } as const;
 
 const SCENE_FOUR_FIRES = [
@@ -57,12 +59,41 @@ const SCENE_FOUR_BARS = [
   { x: 285, y: 315, width: 233, height: 16, travel: 130, speed: 0.56, offset: 3.2 },
 ] as const;
 const SCENE_FOUR_SNOWBALL = {
-  y: 170, size: 100, startX: 152, travel: 230, speed: 0.78,
+  y: 170, size: 100, startX: 152, travel: 230, speed: 0.94,
 } as const;
 const SCENE_FOUR_CROSSES = [
-  { x: 685, y: 181, armLength: 168, thickness: 16, speed: 22 },
-  { x: 685, y: 432, armLength: 168, thickness: 16, speed: -18 },
+  { x: 685, y: 181, armLength: 168, thickness: 16, speed: 30 },
+  { x: 685, y: 432, armLength: 168, thickness: 16, speed: -30 },
 ] as const;
+const SCENE_FIVE_FIRE = { x: 336, y: 251, radius: 64 } as const;
+const SCENE_FIVE_DESTINATION = { x: 714, y: 136, width: 50, height: 50 } as const;
+const SCENE_FIVE_PAD_COLORS = ["cyan", "magenta", "yellow", "purple", "orange"] as const;
+type SceneFivePadColor = typeof SCENE_FIVE_PAD_COLORS[number];
+const SCENE_FIVE_PADS: Readonly<Record<SceneFivePadColor, MazeRect>> = {
+  cyan: { x: 43, y: 292, width: 50, height: 50 },
+  magenta: { x: 714, y: 442, width: 50, height: 50 },
+  yellow: { x: 43, y: 136, width: 50, height: 50 },
+  purple: { x: 714, y: 292, width: 50, height: 50 },
+  orange: { x: 43, y: 442, width: 50, height: 50 },
+} as const;
+const SCENE_FIVE_DOORS: Readonly<Record<SceneFivePadColor, MazeRect>> = {
+  cyan: { x: 650, y: 432, width: 24, height: 71 },
+  magenta: { x: 130, y: 126, width: 24, height: 70 },
+  yellow: { x: 650, y: 279, width: 24, height: 71 },
+  purple: { x: 130, y: 432, width: 24, height: 71 },
+  orange: { x: 650, y: 126, width: 24, height: 70 },
+} as const;
+const SCENE_FIVE_LOOP_LANES = [
+  { left: 211, top: 73, right: 589, bottom: 529, count: 6, speed: 94, direction: -1 },
+  { left: 270, top: 129, right: 530, bottom: 459, count: 6, speed: 94, direction: 1 },
+] as const;
+const SCENE_FIVE_CENTER_OBSTACLE = {
+  x: 375, top: 167, bottom: 402, size: 50, speed: 86,
+} as const;
+const HEART_PICKUPS: Readonly<Partial<Record<2 | 3 | 4 | 5, MazeRect>>> = {
+  3: { x: 730, y: 320, width: 24, height: 24 },
+  4: { x: 165, y: 254, width: 24, height: 24 },
+} as const;
 
 interface MazeRect {
   readonly x: number;
@@ -77,7 +108,7 @@ interface MazeDefinition {
   readonly finish: MazeRect;
 }
 
-const MAZES: Readonly<Record<2 | 3 | 4, MazeDefinition>> = {
+const MAZES: Readonly<Record<2 | 3 | 4 | 5, MazeDefinition>> = {
   2: {
     safe: [
       { x: 30, y: 454, width: 131, height: 113 },
@@ -124,16 +155,30 @@ const MAZES: Readonly<Record<2 | 3 | 4, MazeDefinition>> = {
     start: { x: 21, y: 403, width: 111, height: 163 },
     finish: { x: 21, y: 19, width: 111, height: 96 },
   },
+  5: {
+    safe: [
+      { x: 174, y: 44, width: 452, height: 542 },
+      { x: 25, y: 126, width: 748, height: 70 },
+      { x: 25, y: 279, width: 748, height: 71 },
+      { x: 25, y: 432, width: 748, height: 71 },
+    ],
+    start: { x: 25, y: 432, width: 149, height: 71 },
+    finish: { x: 714, y: 126, width: 59, height: 70 },
+  },
 };
 
 function pointInsideRect(x: number, y: number, rect: MazeRect): boolean {
   return x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height;
 }
 
-function mazeMarkup(scene: 2 | 3 | 4): string {
+function mazeMarkup(scene: 2 | 3 | 4 | 5): string {
   return `<div class="level-47__maze" aria-label="Frozen cursor maze">
     ${MAZES[scene].safe.map(({ x, y, width, height }) =>
       `<i class="level-47__safe-path" style="left:${x}px;top:${y}px;width:${width}px;height:${height}px"></i>`).join("")}
+    ${HEART_PICKUPS[scene]
+      ? `<div class="level-47__heart-pickup" data-level-47-heart-pickup
+          aria-label="Life pickup"></div>`
+      : ""}
     ${scene === 2 ? `
       <div class="level-47__moving-obstacle" data-level-47-obstacle="0"></div>
       <div class="level-47__moving-obstacle" data-level-47-obstacle="1"></div>
@@ -169,7 +214,7 @@ function mazeMarkup(scene: 2 | 3 | 4): string {
       <div class="level-47__maze-door level-47__maze-door--cyan" data-level-47-door="cyan"></div>
       <div class="level-47__maze-door level-47__maze-door--magenta" data-level-47-door="magenta"></div>
       <div class="level-47__destination level-47__destination--scene-3" aria-label="Maze destination"></div>
-    ` : `
+    ` : scene === 4 ? `
       ${SCENE_FOUR_FIRES.map(({ x, y, radius }, index) => `
         <div class="level-47__fire-zone level-47__fire-zone--scene-4"
           style="left:${x}px;top:${y}px;width:${radius * 2}px;height:${radius * 2}px"
@@ -190,6 +235,33 @@ function mazeMarkup(scene: 2 | 3 | 4): string {
         aria-label="Magenta portal control"></div>
       <div class="level-47__destination level-47__destination--scene-4 is-locked"
         data-level-47-scene-4-destination aria-label="Inactive maze destination"></div>
+    ` : `
+      ${SCENE_FIVE_LOOP_LANES.map((lane, laneIndex) => `
+        <div class="level-47__scene-5-rail level-47__scene-5-rail--loop"
+          style="left:${lane.left}px;top:${lane.top}px;width:${lane.right - lane.left}px;
+            height:${lane.bottom - lane.top}px" aria-hidden="true"></div>
+        ${Array.from({ length: lane.count }, (_, index) => `
+          <div class="level-47__scene-5-obstacle"
+            data-level-47-scene-5-loop-obstacle="${laneIndex}:${index}"
+            aria-label="Moving red obstacle"></div>
+        `).join("")}
+      `).join("")}
+      <div class="level-47__scene-5-rail level-47__scene-5-rail--center"
+        aria-hidden="true"></div>
+      <div class="level-47__scene-5-obstacle" data-level-47-scene-5-center-obstacle
+        aria-label="Moving red obstacle"></div>
+      <div class="level-47__fire-zone level-47__fire-zone--scene-5"
+        aria-label="Campfire warming area">
+        <span class="level-47__campfire" aria-hidden="true"><i></i><i></i><b></b><b></b></span>
+      </div>
+      ${SCENE_FIVE_PAD_COLORS.map((color) => `
+        <div class="level-47__door-pad level-47__door-pad--scene-5 level-47__door-pad--${color}"
+          data-level-47-scene-5-pad="${color}" aria-label="${color} door control"></div>
+        <div class="level-47__maze-door level-47__maze-door--scene-5 level-47__maze-door--${color}"
+          data-level-47-scene-5-door="${color}" aria-label="${color} door"></div>
+      `).join("")}
+      <div class="level-47__destination level-47__destination--scene-5"
+        aria-label="Maze destination"></div>
     `}
   </div>`;
 }
@@ -198,6 +270,7 @@ function temperatureMarkup(): string {
   return `<div class="level-47__temperature" aria-label="Cursor temperature">
     <div class="level-47__temperature-track"><i data-level-47-temperature-bar></i></div>
     <strong data-level-47-temperature-value>100°C</strong>
+    <span class="level-47__lives" data-level-47-lives aria-label="Remaining lives"></span>
   </div>`;
 }
 
@@ -269,7 +342,7 @@ export const level47: LevelDefinition = {
     label: index === 0 ? "Scene 1 - Start Screen" : `Scene ${index + 1}`,
   })),
   mount(context) {
-    const { screen, initialScene, listen, audio } = context;
+    const { screen, initialScene, listen, audio, complete } = context;
     const parsedScene = Number(initialScene ?? "1");
     let sceneNumber = Number.isInteger(parsedScene) && parsedScene >= 1 && parsedScene <= SCENE_COUNT
       ? parsedScene
@@ -331,8 +404,32 @@ export const level47: LevelDefinition = {
     let sceneFourDestination: HTMLElement | undefined;
     let sceneFourPadHoldSeconds = 0;
     let sceneFourPortalActive = false;
+    let sceneFivePadElements: Partial<Record<SceneFivePadColor, HTMLElement>> = {};
+    let sceneFiveDoorElements: Partial<Record<SceneFivePadColor, HTMLElement>> = {};
+    let sceneFivePadHoldSeconds: Record<SceneFivePadColor, number> = {
+      cyan: 0,
+      magenta: 0,
+      yellow: 0,
+      purple: 0,
+      orange: 0,
+    };
+    let sceneFiveDoorsOpen: Record<SceneFivePadColor, boolean> = {
+      cyan: false,
+      magenta: false,
+      yellow: false,
+      purple: false,
+      orange: false,
+    };
+    let sceneFiveLoopObstacleElements: HTMLElement[] = [];
+    let sceneFiveCenterObstacle: HTMLElement | undefined;
+    let absoluteZeroRevealed = false;
+    let lives = MAX_LIVES;
+    let damageInvincibleUntil = 0;
+    let collectedHeartPickups = new Set<number>();
+    let heartPickupElement: HTMLElement | undefined;
     let temperatureBar: HTMLElement | undefined;
     let temperatureValue: HTMLElement | undefined;
+    let livesElement: HTMLElement | undefined;
     let animationFrame = 0;
     let invincible = false;
     let invincibleCodeBuffer = "";
@@ -406,6 +503,68 @@ export const level47: LevelDefinition = {
       if (temperatureBar) temperatureBar.style.width = `${percentage}%`;
       if (temperatureValue) temperatureValue.textContent = `${Math.round(temperature)}°C`;
       cursorIce.style.opacity = String(1 - percentage / 100);
+    };
+
+    const updateLivesDisplay = () => {
+      if (!livesElement) return;
+      livesElement.innerHTML = Array.from({ length: MAX_LIVES }, (_, index) =>
+        `<i class="${index < lives ? "is-full" : ""}" aria-hidden="true">&#9829;</i>`).join("");
+      livesElement.setAttribute("aria-label", `${lives} lives remaining`);
+    };
+
+    const updateHeartPickupDisplay = () => {
+      const pickup = HEART_PICKUPS[sceneNumber as 2 | 3 | 4 | 5];
+      if (!heartPickupElement || !pickup) return;
+      heartPickupElement.style.left = `${pickup.x}px`;
+      heartPickupElement.style.top = `${pickup.y}px`;
+      heartPickupElement.style.width = `${pickup.width}px`;
+      heartPickupElement.style.height = `${pickup.height}px`;
+      heartPickupElement.hidden = collectedHeartPickups.has(sceneNumber);
+    };
+
+    const snapCursorToSafePath = (maze: MazeDefinition) => {
+      let bestX = cursorX;
+      let bestY = cursorY;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      maze.safe.forEach((rect) => {
+        const minX = rect.x;
+        const maxX = rect.x + rect.width - CURSOR_WIDTH;
+        const minY = rect.y;
+        const maxY = rect.y + rect.height - CURSOR_HEIGHT;
+        if (maxX < minX || maxY < minY) return;
+        const x = Math.max(minX, Math.min(cursorX, maxX));
+        const y = Math.max(minY, Math.min(cursorY, maxY));
+        const distance = Math.hypot(cursorX - x, cursorY - y);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestX = x;
+          bestY = y;
+        }
+      });
+      cursorX = bestX;
+      cursorY = bestY;
+      targetX = bestX;
+      targetY = bestY;
+      cursorVelocityX = 0;
+      cursorVelocityY = 0;
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+    };
+
+    const updateHoldControl = (
+      inside: boolean,
+      holdSeconds: number,
+      deltaSeconds: number,
+      pad: HTMLElement | undefined,
+      door: HTMLElement | undefined,
+      opened: boolean,
+    ) => {
+      const nextHold = opened ? 3 : (inside ? holdSeconds + deltaSeconds : 0);
+      const nextOpened = opened || nextHold >= 3;
+      pad?.style.setProperty("--door-hold", `${Math.min(1, nextHold / 3)}`);
+      pad?.classList.toggle("is-complete", nextOpened);
+      door?.classList.toggle("is-open", nextOpened);
+      return { hold: nextHold, opened: nextOpened };
     };
 
     const updateSceneTwoObstacles = (now: number) => {
@@ -575,6 +734,70 @@ export const level47: LevelDefinition = {
       };
     };
 
+    const updateSceneFiveHazards = (now: number) => {
+      const elapsedSeconds = (now - sceneStartedAt) / 1_000;
+      const loopBounds: MazeRect[] = [];
+      let elementIndex = 0;
+
+      SCENE_FIVE_LOOP_LANES.forEach((lane) => {
+        const horizontal = lane.right - lane.left;
+        const vertical = lane.bottom - lane.top;
+        const perimeter = 2 * (horizontal + vertical);
+        for (let index = 0; index < lane.count; index += 1) {
+          const rawDistance = elapsedSeconds * lane.speed * lane.direction + index * perimeter / lane.count;
+          let distance = ((rawDistance % perimeter) + perimeter) % perimeter;
+          let centerX: number = lane.left;
+          let centerY: number = lane.top;
+          if (distance <= horizontal) {
+            centerX = lane.left + distance;
+          } else if ((distance -= horizontal) <= vertical) {
+            centerX = lane.right;
+            centerY = lane.top + distance;
+          } else if ((distance -= vertical) <= horizontal) {
+            centerX = lane.right - distance;
+            centerY = lane.bottom;
+          } else {
+            distance -= horizontal;
+            centerX = lane.left;
+            centerY = lane.bottom - distance;
+          }
+
+          const x = centerX - SCENE_FIVE_CENTER_OBSTACLE.size / 2;
+          const y = centerY - SCENE_FIVE_CENTER_OBSTACLE.size / 2;
+          const element = sceneFiveLoopObstacleElements[elementIndex];
+          if (element) {
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+          }
+          loopBounds.push({
+            x,
+            y,
+            width: SCENE_FIVE_CENTER_OBSTACLE.size,
+            height: SCENE_FIVE_CENTER_OBSTACLE.size,
+          });
+          elementIndex += 1;
+        }
+      });
+
+      const centerTravel = SCENE_FIVE_CENTER_OBSTACLE.bottom - SCENE_FIVE_CENTER_OBSTACLE.top;
+      const centerProgress = (Math.sin(elapsedSeconds * SCENE_FIVE_CENTER_OBSTACLE.speed * Math.PI / 180) + 1) / 2;
+      const centerY = SCENE_FIVE_CENTER_OBSTACLE.top + centerTravel * centerProgress;
+      if (sceneFiveCenterObstacle) {
+        sceneFiveCenterObstacle.style.left = `${SCENE_FIVE_CENTER_OBSTACLE.x}px`;
+        sceneFiveCenterObstacle.style.top = `${centerY}px`;
+      }
+
+      return [
+        ...loopBounds,
+        {
+          x: SCENE_FIVE_CENTER_OBSTACLE.x,
+          y: centerY,
+          width: SCENE_FIVE_CENTER_OBSTACLE.size,
+          height: SCENE_FIVE_CENTER_OBSTACLE.size,
+        },
+      ];
+    };
+
     const animateCursor = (now: number) => {
       const deltaSeconds = Math.min(0.034, Math.max(0.001, (now - previousAnimationTime) / 1_000));
       previousAnimationTime = now;
@@ -586,10 +809,28 @@ export const level47: LevelDefinition = {
       const sceneTwoHazards = sceneNumber === 2 ? updateSceneTwoObstacles(now) : undefined;
       const sceneThreeHazards = sceneNumber === 3 ? updateSceneThreeHazards(now) : undefined;
       const sceneFourHazards = sceneNumber === 4 ? updateSceneFourHazards(now) : undefined;
+      const sceneFiveHazards = sceneNumber === 5 ? updateSceneFiveHazards(now) : undefined;
       const changeScene = (nextScene: number) => {
         sceneNumber = nextScene;
         renderScene();
         transitioned = true;
+      };
+      if (now >= damageInvincibleUntil) {
+        screen.classList.remove("level-47--damage-invincible");
+        cursor.classList.remove("is-damage-invincible");
+      }
+      const takeDamage = (snapToPath?: MazeDefinition) => {
+        lives -= 1;
+        updateLivesDisplay();
+        audio.playEffect(SOUND_EFFECTS.smack);
+        if (snapToPath) snapCursorToSafePath(snapToPath);
+        if (lives <= 0) {
+          changeScene(7);
+          return;
+        }
+        damageInvincibleUntil = now + DAMAGE_INVINCIBLE_SECONDS * 1_000;
+        screen.classList.add("level-47--damage-invincible");
+        cursor.classList.add("is-damage-invincible");
       };
 
       if (cursorVisible) {
@@ -609,7 +850,7 @@ export const level47: LevelDefinition = {
         cursor.style.left = `${cursorX}px`;
         cursor.style.top = `${cursorY}px`;
 
-        if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4) {
+        if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4 || sceneNumber === 5) {
           const maze = MAZES[sceneNumber];
           const centerX = cursorX + CURSOR_WIDTH / 2;
           const centerY = cursorY + CURSOR_HEIGHT / 2;
@@ -621,7 +862,7 @@ export const level47: LevelDefinition = {
           };
           let collisionBounds = movementBounds;
           if (!mazeStarted && (pointInsideRect(centerX, centerY, maze.start)
-            || (sceneNumber === 4 && cursorFitsSafePath(maze)))) {
+            || ((sceneNumber === 4 || sceneNumber === 5) && cursorFitsSafePath(maze)))) {
             mazeStarted = true;
             collisionBounds = cursorBounds();
           }
@@ -634,32 +875,20 @@ export const level47: LevelDefinition = {
               centerY - (SCENE_THREE_FIRE.y + SCENE_THREE_FIRE.radius)) <= SCENE_THREE_FIRE.radius;
             inDestination = pointInsideRect(centerX, centerY, SCENE_THREE_DESTINATION);
 
-            const updateDoorControl = (
-              inside: boolean,
-              holdSeconds: number,
-              pad: HTMLElement | undefined,
-              door: HTMLElement | undefined,
-              opened: boolean,
-            ) => {
-              const nextHold = opened ? 3 : (inside ? holdSeconds + deltaSeconds : 0);
-              const nextOpened = opened || nextHold >= 3;
-              pad?.style.setProperty("--door-hold", `${Math.min(1, nextHold / 3)}`);
-              pad?.classList.toggle("is-complete", nextOpened);
-              door?.classList.toggle("is-open", nextOpened);
-              return { hold: nextHold, opened: nextOpened };
-            };
-            const cyan = updateDoorControl(
+            const cyan = updateHoldControl(
               pointInsideRect(centerX, centerY, SCENE_THREE_PADS.cyan),
               sceneThreeCyanHoldSeconds,
+              deltaSeconds,
               sceneThreeCyanPad,
               sceneThreeCyanDoor,
               sceneThreeCyanOpen,
             );
             sceneThreeCyanHoldSeconds = cyan.hold;
             sceneThreeCyanOpen = cyan.opened;
-            const magenta = updateDoorControl(
+            const magenta = updateHoldControl(
               pointInsideRect(centerX, centerY, SCENE_THREE_PADS.magenta),
               sceneThreeMagentaHoldSeconds,
+              deltaSeconds,
               sceneThreeMagentaPad,
               sceneThreeMagentaDoor,
               sceneThreeMagentaOpen,
@@ -686,22 +915,60 @@ export const level47: LevelDefinition = {
             );
             inDestination = sceneFourPortalActive
               && pointInsideRect(centerX, centerY, SCENE_FOUR_DESTINATION);
+          } else if (sceneNumber === 5 && mazeStarted) {
+            inFire = Math.hypot(centerX - (SCENE_FIVE_FIRE.x + SCENE_FIVE_FIRE.radius),
+              centerY - (SCENE_FIVE_FIRE.y + SCENE_FIVE_FIRE.radius)) <= SCENE_FIVE_FIRE.radius;
+            SCENE_FIVE_PAD_COLORS.forEach((color) => {
+              const control = updateHoldControl(
+                pointInsideRect(centerX, centerY, SCENE_FIVE_PADS[color]),
+                sceneFivePadHoldSeconds[color],
+                deltaSeconds,
+                sceneFivePadElements[color],
+                sceneFiveDoorElements[color],
+                sceneFiveDoorsOpen[color],
+              );
+              sceneFivePadHoldSeconds[color] = control.hold;
+              sceneFiveDoorsOpen[color] = control.opened;
+            });
+            inDestination = pointInsideRect(centerX, centerY, SCENE_FIVE_DESTINATION);
           }
 
-          if (!invincible) {
-            if (mazeStarted && !cursorFitsSafePath(maze)) {
-              changeScene(7);
+          const heartPickup = HEART_PICKUPS[sceneNumber as 2 | 3 | 4 | 5];
+          if (mazeStarted && heartPickup && lives < MAX_LIVES && !collectedHeartPickups.has(sceneNumber)
+            && rectanglesOverlap(cursorBounds(), heartPickup)) {
+            lives += 1;
+            collectedHeartPickups.add(sceneNumber);
+            updateLivesDisplay();
+            updateHeartPickupDisplay();
+            audio.playEffect(SOUND_EFFECTS.pop);
+          }
+
+          const damageInvincible = now < damageInvincibleUntil;
+          screen.classList.toggle("level-47--damage-invincible", damageInvincible);
+          cursor.classList.toggle("is-damage-invincible", damageInvincible);
+          const outsideSafePath = mazeStarted && !cursorFitsSafePath(maze);
+          const sceneTwoWallHit = mazeStarted && sceneNumber === 2
+            && SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(collisionBounds, wall));
+
+          if (!invincible && damageInvincible && (outsideSafePath || sceneTwoWallHit)) {
+            snapCursorToSafePath(maze);
+          }
+
+          if (!invincible && !damageInvincible) {
+            if (outsideSafePath) {
+              takeDamage(maze);
             } else if (mazeStarted && sceneTwoHazards
               && (sceneTwoHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(collisionBounds, obstacle))
-                || rectanglesOverlap(collisionBounds, sceneTwoHazards.pressBounds)
-                || SCENE_TWO_WALLS.some((wall) => rectanglesOverlap(collisionBounds, wall)))) {
-              changeScene(7);
+                || rectanglesOverlap(collisionBounds, sceneTwoHazards.pressBounds))) {
+              takeDamage();
+            } else if (sceneTwoWallHit) {
+              takeDamage(maze);
             } else if (mazeStarted && sceneThreeHazards
               && (sceneThreeHazards.obstacleBounds.some((obstacle) => rectanglesOverlap(collisionBounds, obstacle))
                 || sceneThreeHazards.pressBounds.some((press) => rectanglesOverlap(collisionBounds, press))
                 || (!sceneThreeCyanOpen && rectanglesOverlap(collisionBounds, SCENE_THREE_DOORS.cyan))
                 || (!sceneThreeMagentaOpen && rectanglesOverlap(collisionBounds, SCENE_THREE_DOORS.magenta)))) {
-              changeScene(7);
+              takeDamage();
             } else if (mazeStarted && sceneFourHazards
               && (sceneFourHazards.barBounds.some((bar) => rectanglesOverlap(collisionBounds, bar))
                 || circleOverlapsRect(
@@ -728,14 +995,19 @@ export const level47: LevelDefinition = {
                     cross.angle,
                   )
                 )))) {
-              changeScene(7);
+              takeDamage();
+            } else if (mazeStarted && sceneNumber === 5
+              && ((sceneFiveHazards?.some((obstacle) => rectanglesOverlap(collisionBounds, obstacle)) ?? false)
+                || SCENE_FIVE_PAD_COLORS.some((color) => !sceneFiveDoorsOpen[color]
+                  && rectanglesOverlap(collisionBounds, SCENE_FIVE_DOORS[color])))) {
+              takeDamage();
             }
           }
         }
       }
 
       if (!transitioned && isGameScene()) {
-        const usesMazeTemperature = sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4;
+        const usesMazeTemperature = sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4 || sceneNumber === 5;
         if (usesMazeTemperature && inFire) temperature += WARMING_RATE * deltaSeconds;
         else if (!(usesMazeTemperature && inDestination)) temperature -= COOLING_RATE * deltaSeconds;
         temperature = Math.max(0, Math.min(MAX_TEMPERATURE, temperature));
@@ -750,7 +1022,13 @@ export const level47: LevelDefinition = {
 
         updateTemperatureDisplay();
         if (!invincible && overheatHoldSeconds >= 8) changeScene(8);
-        else if (destinationHoldSeconds >= 3) changeScene(sceneNumber + 1);
+        else if (destinationHoldSeconds >= 3) {
+          if (sceneNumber === 5) {
+            absoluteZeroRevealed = true;
+            changeScene(1);
+          }
+          else changeScene(sceneNumber + 1);
+        }
         else if (!invincible && temperature <= 0) changeScene(6);
       }
       animationFrame = window.requestAnimationFrame(animateCursor);
@@ -762,6 +1040,9 @@ export const level47: LevelDefinition = {
       listen(restartTarget, "pointerenter", () => audio.playEffect(SOUND_EFFECTS.pop));
       listen(restartTarget, "click", () => {
         temperature = MAX_TEMPERATURE;
+        lives = MAX_LIVES;
+        damageInvincibleUntil = 0;
+        collectedHeartPickups = new Set<number>();
         sceneNumber = 2;
         renderScene();
       });
@@ -793,10 +1074,31 @@ export const level47: LevelDefinition = {
       sceneFourDestination = undefined;
       sceneFourPadHoldSeconds = 0;
       sceneFourPortalActive = false;
+      sceneFivePadElements = {};
+      sceneFiveDoorElements = {};
+      sceneFivePadHoldSeconds = {
+        cyan: 0,
+        magenta: 0,
+        yellow: 0,
+        purple: 0,
+        orange: 0,
+      };
+      sceneFiveDoorsOpen = {
+        cyan: false,
+        magenta: false,
+        yellow: false,
+        purple: false,
+        orange: false,
+      };
+      sceneFiveLoopObstacleElements = [];
+      sceneFiveCenterObstacle = undefined;
       temperatureBar = undefined;
       temperatureValue = undefined;
+      livesElement = undefined;
+      heartPickupElement = undefined;
       mazeStarted = false;
       cursor.classList.toggle("is-lagging", isGameScene());
+      cursor.classList.remove("is-damage-invincible");
       cursorIce.style.opacity = sceneNumber === 1 || sceneNumber === 6 ? "1" : "0";
       cursorVelocityX = 0;
       cursorVelocityY = 0;
@@ -805,7 +1107,7 @@ export const level47: LevelDefinition = {
       lastPressSlamCycle = -1;
       sceneStartedAt = performance.now();
 
-      if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4) {
+      if (sceneNumber === 2 || sceneNumber === 3 || sceneNumber === 4 || sceneNumber === 5) {
         stage.innerHTML = `${mazeMarkup(sceneNumber)}${heading()}${temperatureMarkup()}`;
         obstacleElements = Array.from(stage.querySelectorAll<HTMLElement>("[data-level-47-obstacle]"));
         pressElement = stage.querySelector<HTMLElement>("[data-level-47-press]") ?? undefined;
@@ -833,18 +1135,29 @@ export const level47: LevelDefinition = {
           sceneFourDestination = stage.querySelector<HTMLElement>(
             "[data-level-47-scene-4-destination]",
           ) ?? undefined;
+        } else if (sceneNumber === 5) {
+          sceneFiveLoopObstacleElements = Array.from(
+            stage.querySelectorAll<HTMLElement>("[data-level-47-scene-5-loop-obstacle]"),
+          );
+          sceneFiveCenterObstacle = stage.querySelector<HTMLElement>(
+            "[data-level-47-scene-5-center-obstacle]",
+          ) ?? undefined;
+          SCENE_FIVE_PAD_COLORS.forEach((color) => {
+            sceneFivePadElements[color] = stage.querySelector<HTMLElement>(
+              `[data-level-47-scene-5-pad="${color}"]`,
+            ) ?? undefined;
+            sceneFiveDoorElements[color] = stage.querySelector<HTMLElement>(
+              `[data-level-47-scene-5-door="${color}"]`,
+            ) ?? undefined;
+          });
         }
         temperatureBar = stage.querySelector<HTMLElement>("[data-level-47-temperature-bar]") ?? undefined;
         temperatureValue = stage.querySelector<HTMLElement>("[data-level-47-temperature-value]") ?? undefined;
+        livesElement = stage.querySelector<HTMLElement>("[data-level-47-lives]") ?? undefined;
+        heartPickupElement = stage.querySelector<HTMLElement>("[data-level-47-heart-pickup]") ?? undefined;
         updateTemperatureDisplay();
-        return;
-      }
-
-      if (sceneNumber === 5) {
-        stage.innerHTML = `<div class="level-47__game-field"></div>${heading()}${temperatureMarkup()}`;
-        temperatureBar = stage.querySelector<HTMLElement>("[data-level-47-temperature-bar]") ?? undefined;
-        temperatureValue = stage.querySelector<HTMLElement>("[data-level-47-temperature-value]") ?? undefined;
-        updateTemperatureDisplay();
+        updateLivesDisplay();
+        updateHeartPickupDisplay();
         return;
       }
 
@@ -877,6 +1190,7 @@ export const level47: LevelDefinition = {
 
       stage.innerHTML = `
         ${heading()}
+        ${absoluteZeroRevealed ? `<p class="level-47__absolute-zero">Absolute Zero</p>` : ""}
         <div class="level-47__target" aria-label="Red gradient square"></div>
         <form class="level-47__form" autocomplete="off">
           <div class="level-47__controls">
@@ -915,7 +1229,15 @@ export const level47: LevelDefinition = {
       listen(form, "submit", (event) => {
         event.preventDefault();
         const answer = maskedInput?.getValue().trim().toLowerCase() ?? "";
+        if (answer.replace(/\s+/g, "") === "absolutezero") {
+          complete();
+          return;
+        }
+
         if (targetHovered && answer === "hidden") {
+          lives = MAX_LIVES;
+          damageInvincibleUntil = 0;
+          collectedHeartPickups = new Set<number>();
           sceneNumber = 2;
           renderScene();
           return;

@@ -7,7 +7,7 @@ import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
-const DEVELOPMENT_PERIOD = "08/03/2026 – 09/19/2026";
+const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
 const GAME_VERSION = "1.1.73";
 const VERSION_DATE = "09/04/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";

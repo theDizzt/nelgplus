@@ -109,6 +109,65 @@
   z-index: 4;
 }
 
+.level-47__fire-zone--scene-5 {
+  top: 251px;
+  left: 336px;
+  width: 128px;
+  height: 128px;
+}
+
+.level-47__scene-5-rail {
+  position: absolute;
+  z-index: 5;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.level-47__scene-5-rail--loop {
+  border: 2px solid #111;
+}
+
+.level-47__scene-5-rail--center {
+  top: 192px;
+  left: 399px;
+  width: 2px;
+  height: 235px;
+  background: #111;
+}
+
+.level-47__scene-5-obstacle {
+  position: absolute;
+  z-index: 9;
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  background: #c90000;
+  border: 2px solid #111;
+  will-change: left, top;
+}
+
+.level-47__heart-pickup {
+  position: absolute;
+  z-index: 11;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.level-47__heart-pickup::before {
+  content: "\2665";
+  color: #ff2448;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 #111,
+    1px -1px 0 #111,
+    -1px 1px 0 #111,
+    1px 1px 0 #111;
+  animation: level-47-heart-pickup-pulse 760ms ease-in-out infinite alternate;
+}
+
 .level-47__scene-4-bar {
   position: absolute;
   z-index: 6;
@@ -302,6 +361,41 @@
   background: #f0f;
 }
 
+.level-47__door-pad--scene-5 {
+  width: 50px;
+  height: 50px;
+}
+
+.level-47__door-pad--scene-5.level-47__door-pad--cyan {
+  top: 292px;
+  left: 43px;
+  background: #0ee;
+}
+
+.level-47__door-pad--scene-5.level-47__door-pad--magenta {
+  top: 442px;
+  left: 714px;
+  background: #f0c;
+}
+
+.level-47__door-pad--scene-5.level-47__door-pad--yellow {
+  top: 136px;
+  left: 43px;
+  background: #ff0;
+}
+
+.level-47__door-pad--scene-5.level-47__door-pad--purple {
+  top: 292px;
+  left: 714px;
+  background: #c000f0;
+}
+
+.level-47__door-pad--scene-5.level-47__door-pad--orange {
+  top: 442px;
+  left: 43px;
+  background: #f47c24;
+}
+
 .level-47__door-pad.is-complete {
   animation: level-47-door-pad-complete 680ms ease-in-out infinite alternate;
 }
@@ -330,6 +424,46 @@
   height: 72px;
   background: #f0f;
   transform-origin: 50% 100%;
+}
+
+.level-47__maze-door--scene-5 {
+  width: 24px;
+  transform-origin: 50% 50%;
+}
+
+.level-47__maze-door--scene-5.level-47__maze-door--cyan {
+  top: 432px;
+  left: 650px;
+  height: 71px;
+  background: #0ee;
+}
+
+.level-47__maze-door--scene-5.level-47__maze-door--magenta {
+  top: 126px;
+  left: 130px;
+  height: 70px;
+  background: #f0c;
+}
+
+.level-47__maze-door--scene-5.level-47__maze-door--yellow {
+  top: 279px;
+  left: 650px;
+  height: 71px;
+  background: #ff0;
+}
+
+.level-47__maze-door--scene-5.level-47__maze-door--purple {
+  top: 432px;
+  left: 130px;
+  height: 71px;
+  background: #c000f0;
+}
+
+.level-47__maze-door--scene-5.level-47__maze-door--orange {
+  top: 126px;
+  left: 650px;
+  height: 70px;
+  background: #f47c24;
 }
 
 .level-47__maze-door.is-open {
@@ -376,6 +510,14 @@
   animation: level-47-destination-pulse 1.15s ease-in-out infinite alternate;
 }
 
+.level-47__destination--scene-5 {
+  top: 136px;
+  left: 714px;
+  width: 50px;
+  height: 50px;
+  background: #92cf4b;
+}
+
 .level-47__temperature {
   position: absolute;
   z-index: 24;
@@ -411,8 +553,36 @@
   text-shadow: 1px 1px 0 #111;
 }
 
+.level-47__lives {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: -6px;
+  color: #ff2448;
+  font-size: 19px;
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 #111,
+    1px -1px 0 #111,
+    -1px 1px 0 #111,
+    1px 1px 0 #111;
+}
+
+.level-47__lives i {
+  color: #33465a;
+  font-style: normal;
+}
+
+.level-47__lives i.is-full {
+  color: #ff2448;
+}
+
 .level-47__cursor {
   z-index: 2147483646;
+}
+
+.level-47__cursor.is-damage-invincible img {
+  animation: level-47-damage-blink 120ms steps(2, end) infinite;
 }
 
 .level-47__cursor-base {
@@ -495,6 +665,24 @@ button.level-47__restart-target {
 
 .level-47__target.is-hovered {
   filter: brightness(1.12);
+}
+
+.level-47__absolute-zero {
+  position: absolute;
+  z-index: 13;
+  top: 270px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: #ff0;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 54px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: none;
+  pointer-events: none;
 }
 
 .level-47__death-label {
@@ -679,6 +867,16 @@ button.level-47__restart-target {
     box-shadow: inset 0 0 13px rgb(255 255 255 / 58%), 0 0 17px 6px rgb(126 255 50 / 58%);
     filter: brightness(1.16);
   }
+}
+
+@keyframes level-47-damage-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .18; }
+}
+
+@keyframes level-47-heart-pickup-pulse {
+  from { scale: .92; filter: brightness(.95); }
+  to { scale: 1.12; filter: brightness(1.25); }
 }
 
 @keyframes level-47-door-pad-complete {
