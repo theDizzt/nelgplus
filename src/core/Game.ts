@@ -45,7 +45,7 @@ const ADMIN_FONT_OPTIONS = [
 ] as const;
 const MINIMUM_LEVEL = -9;
 const MAXIMUM_LEVEL = 150;
-const PUBLIC_LEVEL_COUNT = 35;
+const PUBLIC_LEVEL_COUNT = 55;
 const REVIVAL_LEVEL_SUBTITLES: Readonly<Record<number, string>> = {
   1: "IT STARTS AGAIN",
   2: "DO NOT LOOK AWAY",
@@ -213,6 +213,33 @@ const MINIMUM_PRELOADER_TIME = 700;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 22, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 97,
 ] as const;
+const WARP_ACCENT_COLORS: Readonly<Record<number, string>> = {
+  8: "#0088ff",
+  14: "#0b4d1f",
+  19: "#8f8f8f",
+  22: "#ff2020",
+  25: "#c98a2a",
+  29: "#00a79d",
+  32: "#6f5418",
+  35: "#ff00c8",
+  39: "#ffff00",
+  42: "#ff8a00",
+  46: "#00ff7f",
+  50: "#3d3d3d",
+  55: "#003f8f",
+  58: "#7a3f1d",
+  61: "#152e8f",
+  65: "#ff7abc",
+  69: "#ffffff",
+  74: "#8b35ff",
+  78: "#a0005c",
+  81: "#c8a2ff",
+  84: "#00c853",
+  87: "#b7ff00",
+  91: "#000000",
+  94: "#00ffff",
+  97: "#7b1438",
+};
 const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: string }>> = {
   8: {
     message:
@@ -266,17 +293,17 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
   },
   46: {
     message:
-      "You've made it through the warning signs and reached another Warp Zone. The next stretch keeps twisting familiar rules into stranger shapes, so keep your eyes open and don't trust anything that looks too convenient...",
+      "The best way to fix a machine is to turn it off and on. This time, levels that require quite a bit of brainpower have been prepared, and if you’re looking at this screen, I don’t think your intelligence is very low. Excellent! Anyway, the next levels will give you a hard one. Go forward slowly...",
     password: "403 forbidden",
   },
   50: {
     message:
-      "You survived the return of old memories and reached the next Warp Zone. From here on, the game will keep digging through its own history, pulling buried tricks back into the present in less friendly forms...",
+      "I heard that the very early levels of this game, from Level 1 to 25, are too easy, so these levels have been turned into something devilish. Weren’t practically every level not suited to cause you pain? Anyway, the levels that will appear next will probably take quite a while. Your patience will be your greatest weapon...",
     password: "BronZwong",
   },
   55: {
     message:
-      "Excellent work finding what was hidden outside Level 55. The road ahead will not be any kinder, but at least this Warp Zone gives you one more place to breathe before the next descent...",
+      "You’ve seen all the way to the deepest part of this game! This game was hiding a tremendous secret. From now on, hidden shocking secrets will be with you... If you are playing version 1.1, you will try to find the hidden password. The password is my favorite Pokémon. You probably would have known if you had played this game diligently.",
     password: "VIVID WAVE",
   },
 };
@@ -295,6 +322,10 @@ const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
   50: 109,
   55: 123,
 };
+
+function warpAccentStyle(levelNumber: number): string {
+  return ` style="--warp-accent:${WARP_ACCENT_COLORS[levelNumber] ?? "#0088ff"}"`;
+}
 
 export class Game {
   private readonly audioManager = new AudioManager();
@@ -1015,7 +1046,7 @@ export class Game {
     this.disposeCurrentLevel();
     this.audioManager.stopMusic();
     this.root.innerHTML = `
-      <main class="game-frame warp-gate" aria-label="Level ${levelNumber}, Warp Zone ${warpNumber}">
+      <main class="game-frame warp-gate" aria-label="Level ${levelNumber}, Warp Zone ${warpNumber}"${warpAccentStyle(levelNumber)}>
         <header class="warp-gate__heading">
           <h1>Level ${levelNumber}</h1>
           <p>Warp Zone ${warpNumber}</p>
@@ -1086,7 +1117,7 @@ export class Game {
     if (reachedByCompletion && checkpointAchievement) this.unlockAchievement(checkpointAchievement);
     this.root.innerHTML = `
       <main class="game-frame warp-gate warp-checkpoint"
-        aria-label="Level ${levelNumber}, Warp Zone ${warpNumber} checkpoint">
+        aria-label="Level ${levelNumber}, Warp Zone ${warpNumber} checkpoint"${warpAccentStyle(levelNumber)}>
         <header class="warp-gate__heading">
           <h1>Level ${levelNumber}</h1>
           <p>Warp Zone ${warpNumber}</p>
@@ -1094,14 +1125,15 @@ export class Game {
 
         <p class="warp-checkpoint__message">${checkpoint.message}</p>
         <button class="warp-checkpoint__next" type="button">Next</button>
-        <strong class="warp-checkpoint__password">${checkpoint.password}</strong>
+        <p class="warp-checkpoint__password-label">The password to <strong>get</strong> back here is</p>
+        <strong class="warp-checkpoint__password" data-allow-select>${checkpoint.password}</strong>
       </main>
     `;
 
     this.root
       .querySelector<HTMLButtonElement>(".warp-checkpoint__next")
       ?.addEventListener("click", () => {
-        if (levelNumber === 35) this.renderLevel35Winner();
+        if (levelNumber === 55) this.renderLevel35Winner();
         else this.showLevel(levelNumber + 1);
       }, { once: true });
   }
@@ -1206,7 +1238,7 @@ export class Game {
         <p class="winner-screen__kicker">LEVEL 35 WINNER</p>
         <h1>Congratulations!</h1>
         <div class="winner-screen__message">
-          <p>Congratulations!!! You have won all <strong class="winner-screen__level-count">35</strong> levels in this game. Complete the short form below to submit your name to the Hall of Fame. Please note that it may take some time for your entry to appear in an update.</p>
+          <p>Congratulations!!! You have won all <strong class="winner-screen__level-count">${PUBLIC_LEVEL_COUNT}</strong> levels in this game. Complete the short form below to submit your name to the Hall of Fame. Please note that it may take some time for your entry to appear in an update.</p>
           <p>Enter your nickname and a message you would like to leave, and they may be permanently preserved in the Hall of Fame!</p>
           <p>To discourage bug abuse, a secret password has been hidden somewhere you can discover naturally while playing the game. Please enter it in the Hidden Password field.</p>
           <p>More levels will be added in the future, so take a well-earned break and meet us again after the next update. Thank you from the bottom of our hearts for playing this game!!!</p>
