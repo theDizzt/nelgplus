@@ -100,7 +100,7 @@ export const level42: LevelDefinition = {
     { id: "game", label: "Game Screen" },
     { id: "death", label: "Death Screen" },
   ],
-  mount({ screen, initialScene, listen, audio, complete }) {
+  mount({ screen, initialScene, listen, audio, complete, unlockAchievement }) {
     let scene: Scene = initialScene === "game" || initialScene === "death" ? initialScene : "start";
     let animationFrame = 0;
     let previousTime = 0;
@@ -343,6 +343,7 @@ export const level42: LevelDefinition = {
         let invincible = time < invincibleUntil;
         screen.classList.toggle("is-invincible", invincible);
         if (boostCharge >= 100) {
+          unlockAchievement(77);
           fail("You died from booster overheating.");
           return;
         }
@@ -515,6 +516,8 @@ export const level42: LevelDefinition = {
           }
 
           if (fatalReason && !invincible) {
+            if (time < invertedUntil) unlockAchievement(78);
+            if (elapsed >= SURVIVAL_TIME) unlockAchievement(79);
             fail(fatalReason);
             return;
           }

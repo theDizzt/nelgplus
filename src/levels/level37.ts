@@ -15,7 +15,7 @@ export const level37: LevelDefinition = {
     { id: "scene-1", label: "Scene 1 - Blockhead" },
     { id: "scene-2", label: "Scene 2 - Hidden cursor" },
   ],
-  mount({ screen, initialScene, complete, wrongAnswer, listen, timeout, audio, goToMenu }) {
+  mount({ screen, initialScene, complete, wrongAnswer, listen, timeout, audio, goToMenu, unlockAchievement }) {
     screen.className = "level-screen level-37";
     screen.innerHTML = `
       <div class="level-37__world" data-level-37-world>
@@ -291,10 +291,12 @@ export const level37: LevelDefinition = {
       if (checking || activeScene !== "scene-1") return;
       checking = true;
       submitButton.disabled = true;
-      if (maskedInput.getValue().trim().toLowerCase() === ANSWER) {
+      const answer = maskedInput.getValue().trim().toLowerCase();
+      if (answer === ANSWER) {
         complete();
         return;
       }
+      if (answer === "argentumb must cheat") unlockAchievement(48);
       if (wrongAnswer()) return;
       checking = false;
       submitButton.disabled = false;

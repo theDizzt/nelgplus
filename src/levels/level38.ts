@@ -45,7 +45,7 @@ function isOpaqueAtPointer(state: RouteState, clientX: number, clientY: number):
 export const level38: LevelDefinition = {
   number: 38,
   title: "Massive",
-  mount({ screen, complete, listen, timeout }) {
+  mount({ screen, complete, listen, timeout, unlockAchievement }) {
     screen.className = "level-screen level-38";
     screen.innerHTML = `
       <header class="level-heading level-38__heading">
@@ -145,11 +145,13 @@ export const level38: LevelDefinition = {
     listen(input, "animationend", () => input.classList.remove("is-wrong"));
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (maskedInput.getValue() === "G") {
+      const answer = maskedInput.getValue();
+      if (answer === "G") {
         submit.disabled = true;
         complete();
         return;
       }
+      if (answer === "4761") unlockAchievement(49);
       input.classList.remove("is-wrong");
       void input.offsetWidth;
       input.classList.add("is-wrong");

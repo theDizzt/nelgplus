@@ -105,6 +105,7 @@ function launchFakeLevelWorld(
   audio: LevelContext["audio"],
   goToMenu: LevelContext["goToMenu"],
   complete: LevelContext["complete"],
+  unlockAchievement: LevelContext["unlockAchievement"],
   adminTargetLevel?: number,
 ): void {
   if (screen.querySelector(".level-39__fake-stage")) return;
@@ -128,6 +129,7 @@ function launchFakeLevelWorld(
   const spawnedFakeLevels = new Set<number>();
   const fakeAnswers = new Map<string, ReturnType<typeof attachStarMaskedInput>>();
   const completedFake47Fields = new Set<string>();
+  const hiddenFake47Fields = new Set<string>();
   let fake44Sequence: string[] = [];
   let fake44Locked = false;
   let fake49HintRevealed = false;
@@ -951,6 +953,7 @@ function launchFakeLevelWorld(
     } else if (command === "rewind") {
       goToMenu();
     } else if (command === "forward" || command === "back") {
+      if (command === "forward") unlockAchievement(58);
       const canvas = fake55Level.querySelector<HTMLElement>("[data-fake-level-canvas]");
       if (canvas) {
         canvas.classList.remove("is-blackout");
@@ -1332,9 +1335,12 @@ function launchFakeLevelWorld(
 
     const fake86Object = target?.closest<HTMLButtonElement>("button[data-fake-86-object]");
     if (fake86Object && !fake86Object.disabled) {
+      const level = fake86Object.closest<HTMLElement>('[data-fake-level="86"]');
+      const remainingObjects = level?.querySelectorAll<HTMLButtonElement>("button[data-fake-86-object]:not(:disabled)").length ?? 0;
       fake86Object.disabled = true;
       fake86Object.classList.add("is-breaking");
       audio.playEffect(SOUND_EFFECTS.break);
+      if (remainingObjects <= 1) unlockAchievement(68);
       window.setTimeout(() => fake86Object.remove(), 460);
       return;
     }
@@ -1370,6 +1376,9 @@ function launchFakeLevelWorld(
       if (fake44Sequence.length === requiredOrder.length && level) {
         fake44Locked = true;
         const isCorrect = fake44Sequence.every((color, index) => color === requiredOrder[index]);
+        const yellowGreen = fake44Sequence.every((color, index) => color === (index % 2 === 0 ? "daisy" : "emerald"));
+        const greenYellow = fake44Sequence.every((color, index) => color === (index % 2 === 0 ? "emerald" : "daisy"));
+        if (yellowGreen || greenYellow) unlockAchievement(53);
         level.classList.toggle("is-correct", isCorrect);
         level.classList.toggle("is-wrong", !isCorrect);
         if (result) result.textContent = isCorrect ? "CORRECT" : "WRONG";
@@ -1456,6 +1465,7 @@ function launchFakeLevelWorld(
         complete();
         return;
       }
+      if (answer === ":)") unlockAchievement(73);
       form.classList.remove("is-wrong");
       void form.offsetWidth;
       form.classList.add("is-wrong");
@@ -1470,6 +1480,7 @@ function launchFakeLevelWorld(
         completeFakeLevel(89, level89);
         return;
       }
+      if (answer === "hidden") unlockAchievement(62);
       if (answer !== "") {
         form.classList.remove("is-wrong");
         void form.offsetWidth;
@@ -1486,6 +1497,27 @@ function launchFakeLevelWorld(
       form.querySelector<HTMLInputElement>("input")?.focus();
       return;
     }
+    if (levelNumber === 42 && answer === "???") unlockAchievement(51);
+    if (levelNumber === 43 && answer === "?") unlockAchievement(52);
+    if (levelNumber === 45 && answer === "Σ") unlockAchievement(54);
+    if (levelNumber === 47 && answer === "hidden") {
+      hiddenFake47Fields.add(answerKey);
+      if (hiddenFake47Fields.size === 3) unlockAchievement(55);
+    }
+    if (levelNumber === 49 && answer === "fake" && !fake49HintRevealed) unlockAchievement(56);
+    if (levelNumber === 52 && answer === "135") unlockAchievement(57);
+    if (levelNumber === 59 && answer === "leaf") unlockAchievement(59);
+    if (levelNumber === 60 && answer === "61") unlockAchievement(60);
+    if (levelNumber === 61 && answer === "hiding") unlockAchievement(61);
+    if (levelNumber === 69 && (answer === "117" || answer === "207")) unlockAchievement(63);
+    if (levelNumber === 79 && answer === "1009") unlockAchievement(64);
+    if (levelNumber === 80 && answer === "135") unlockAchievement(65);
+    if (levelNumber === 83 && answer === "83") unlockAchievement(66);
+    if (levelNumber === 84 && answer === "time" && fake84Step === 0) unlockAchievement(67);
+    if (levelNumber === 87 && answer === "Q8A3") unlockAchievement(69);
+    if (levelNumber === 91 && answer === "space") unlockAchievement(70);
+    if (levelNumber === 95 && (answer === "ok" || answer === "okay")) unlockAchievement(71);
+    if (levelNumber === 96 && answer === "ivory") unlockAchievement(72);
     if (levelNumber === 77) {
       const level = form.closest<HTMLElement>('[data-fake-level="77"]');
       if (answer === "hidden" && fake77SpawnedButtons < 76 && level) {
@@ -1633,7 +1665,7 @@ export const level39: LevelDefinition = {
     { id: "fake-666", label: "Fake Level 666" },
   ],
   mount(context) {
-    const { screen, listen, timeout, audio, goToMenu, complete, initialScene } = context;
+    const { screen, listen, timeout, audio, goToMenu, complete, initialScene, unlockAchievement } = context;
     screen.className = "level-screen level-39";
     screen.innerHTML = `
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
@@ -1724,8 +1756,10 @@ return void 0x000000;</code></pre>
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (maskedInput.getValue() === "hidden") {
-        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete);
+      const answer = maskedInput.getValue();
+      if (answer === "607") unlockAchievement(50);
+      if (answer === "hidden") {
+        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, unlockAchievement);
         return;
       }
       form.classList.remove("is-malfunctioning");
@@ -1745,7 +1779,7 @@ return void 0x000000;</code></pre>
     if (requestedFakeLevel) {
       const targetLevel = Number(requestedFakeLevel[1]);
       if (targetLevel === 666 || FAKE_LEVEL_SEQUENCE.includes(targetLevel)) {
-        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, targetLevel);
+        launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, unlockAchievement, targetLevel);
       }
     }
     return () => {

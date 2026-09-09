@@ -51,10 +51,13 @@ export const level36: LevelDefinition = {
     { id: "killed", label: "Killed drink" },
   ],
   mount(context) {
-    const { screen, complete, audio, initialScene } = context;
+    const { screen, complete, audio, initialScene, unlockAchievement } = context;
     let sceneController = new AbortController();
     let selectedDrink: DrinkDefinition = DRINKS[0]!;
     let clickCount = 0;
+    let titleEligible = true;
+    let titleSelections = new Set<DrinkId>();
+    let redBullSelectionStreak = 0;
 
     screen.style.setProperty("--level-36-warp", `url("${assetUrl("images/warp.png")}")`);
     screen.style.setProperty("--level-36-magic", `url("${assetUrl("images/level36bg.png")}")`);
@@ -94,6 +97,19 @@ export const level36: LevelDefinition = {
           button.classList.remove("is-hovered");
           const drink = DRINKS.find((candidate) => candidate.id === button.dataset.drink);
           if (!drink) return;
+          if (drink.id === "e") {
+            redBullSelectionStreak += 1;
+            if (redBullSelectionStreak >= 33) unlockAchievement(47);
+          } else {
+            redBullSelectionStreak = 0;
+          }
+          if (titleEligible && (drink.id === "b" || drink.id === "d" || drink.id === "h")) {
+            titleSelections.add(drink.id);
+            if (titleSelections.size === 3) unlockAchievement(46);
+          } else {
+            titleEligible = false;
+            titleSelections = new Set<DrinkId>();
+          }
           playSmack();
           renderDrink(drink);
         });

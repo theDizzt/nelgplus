@@ -205,7 +205,7 @@ export const level48: LevelDefinition = {
     { id: "start", label: "Start - 0.00m" },
     { id: "8848m", label: "Near Everest - 8,848.00m" },
   ],
-  mount({ screen, initialScene, complete, listen, timeout }) {
+  mount({ screen, initialScene, complete, listen, timeout, unlockAchievement }) {
     screen.className = "level-screen level-48";
     screen.style.setProperty("--level-48-background", `url("${assetUrl("images/level48bg.gif")}")`);
     screen.innerHTML = `
@@ -331,6 +331,7 @@ export const level48: LevelDefinition = {
         && centimeters >= TERMINAL_MESSAGE_DISTANCE) {
         terminalMessagePending = true;
       }
+      if (centimeters >= MAXIMUM_DISTANCE) unlockAchievement(88);
       renderDistance();
     };
 
@@ -374,6 +375,7 @@ export const level48: LevelDefinition = {
       if (terminalMessagePending) spawnTerminalMessage();
       if (centimeters >= MAXIMUM_DISTANCE) return;
       centimeters += 1;
+      if (centimeters >= MAXIMUM_DISTANCE) unlockAchievement(88);
       renderDistance();
       spawnDistanceMessages();
       ensureBoostCycle();

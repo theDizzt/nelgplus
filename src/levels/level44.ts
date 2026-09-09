@@ -66,7 +66,7 @@ function renderMirrors(): string {
 export const level44: LevelDefinition = {
   number: 44,
   title: "Mirror",
-  mount({ screen, complete, listen, timeout, audio, goToMenu }) {
+  mount({ screen, complete, listen, timeout, audio, goToMenu, unlockAchievement }) {
     screen.className = "level-screen level-44";
     screen.innerHTML = `
       <div class="level-44__world" data-level-44-world>
@@ -540,6 +540,10 @@ export const level44: LevelDefinition = {
         mirror.classList.add("is-broken");
         face.disabled = true;
         face.setAttribute("aria-label", "Broken mirror");
+        if (Array.from(screen.querySelectorAll<HTMLElement>("[data-mirror]"))
+          .every((candidate) => candidate.classList.contains("is-broken"))) {
+          unlockAchievement(81);
+        }
         return;
       }
 

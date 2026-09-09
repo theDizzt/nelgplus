@@ -284,7 +284,7 @@ export const level40: LevelDefinition = {
   number: 40,
   title: "Limitation",
   scenes: SCENES.map((_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
-  mount({ screen, listen, interval, audio, complete, initialScene }) {
+  mount({ screen, listen, interval, audio, complete, initialScene, unlockAchievement }) {
     let sceneIndex = Math.max(0, Math.min(SCENES.length - 1, Number(initialScene ?? "1") - 1));
     let previousPointer: { readonly point: LocalPoint; readonly time: number } | undefined;
     let maximumDisplaySpeed = 0;
@@ -387,6 +387,7 @@ export const level40: LevelDefinition = {
 
     const updateSpeedometer = (displaySpeed: number) => {
       maximumDisplaySpeed = Math.max(maximumDisplaySpeed, displaySpeed);
+      if (Math.round(maximumDisplaySpeed * 10) / 10 === 39.9) unlockAchievement(75);
       const speedOutput = screen.querySelector<HTMLOutputElement>("[data-speed]");
       const maxSpeedOutput = screen.querySelector<HTMLOutputElement>("[data-max-speed]");
       if (speedOutput) speedOutput.value = displaySpeed.toFixed(1);

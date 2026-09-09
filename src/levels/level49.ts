@@ -37,7 +37,7 @@ export const level49: LevelDefinition = {
   number: 49,
   title: "Acoustic",
   scenes: Array.from({ length: 9 }, (_, index) => ({ id: String(index + 1), label: `Scene ${index + 1}` })),
-  mount({ screen, complete, listen, timeout, audio, initialScene }) {
+  mount({ screen, complete, listen, timeout, audio, initialScene, unlockAchievement }) {
     let sceneIndex = Math.max(0, Math.min(8, Number(initialScene ?? "1") - 1));
     let maskedInput: ReturnType<typeof attachStarMaskedInput> | undefined;
     let cursorDecoration: HTMLElement | undefined;
@@ -126,6 +126,7 @@ export const level49: LevelDefinition = {
         complete();
         return;
       }
+      if (answer === "etude op. 25 no. 9") unlockAchievement(89);
 
       const nextScene = CLUE_SCENES[answer];
       if (nextScene !== undefined) {

@@ -8,7 +8,7 @@ export const level41: LevelDefinition = {
   number: 41,
   title: "Distinguish",
   mount(context) {
-    const { screen, listen, complete, goToLevel } = context;
+    const { screen, listen, complete, goToLevel, unlockAchievement } = context;
     const removeCustomCursor = attachCustomCursor(context, {
       source: "cursor/level41.png",
       hotspot: "top-left",
@@ -62,7 +62,10 @@ export const level41: LevelDefinition = {
       input.focus();
     });
 
-    listen(returnButton, "click", () => goToLevel(40));
+    listen(returnButton, "click", () => {
+      unlockAchievement(76);
+      goToLevel(40);
+    });
     return removeCustomCursor;
   },
 };

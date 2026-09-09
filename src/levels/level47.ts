@@ -342,7 +342,7 @@ export const level47: LevelDefinition = {
     label: index === 0 ? "Scene 1 - Start Screen" : `Scene ${index + 1}`,
   })),
   mount(context) {
-    const { screen, initialScene, listen, audio, complete } = context;
+    const { screen, initialScene, listen, audio, complete, unlockAchievement } = context;
     const parsedScene = Number(initialScene ?? "1");
     let sceneNumber = Number.isInteger(parsedScene) && parsedScene >= 1 && parsedScene <= SCENE_COUNT
       ? parsedScene
@@ -423,6 +423,7 @@ export const level47: LevelDefinition = {
     let sceneFiveLoopObstacleElements: HTMLElement[] = [];
     let sceneFiveCenterObstacle: HTMLElement | undefined;
     let absoluteZeroRevealed = false;
+    let retriedMaze = false;
     let lives = MAX_LIVES;
     let damageInvincibleUntil = 0;
     let collectedHeartPickups = new Set<number>();
@@ -1021,7 +1022,10 @@ export const level47: LevelDefinition = {
           : 0;
 
         updateTemperatureDisplay();
-        if (!invincible && overheatHoldSeconds >= 8) changeScene(8);
+        if (!invincible && overheatHoldSeconds >= 8) {
+          unlockAchievement(86);
+          changeScene(8);
+        }
         else if (destinationHoldSeconds >= 3) {
           if (sceneNumber === 5) {
             absoluteZeroRevealed = true;
@@ -1043,6 +1047,7 @@ export const level47: LevelDefinition = {
         lives = MAX_LIVES;
         damageInvincibleUntil = 0;
         collectedHeartPickups = new Set<number>();
+        retriedMaze = true;
         sceneNumber = 2;
         renderScene();
       });
@@ -1230,6 +1235,7 @@ export const level47: LevelDefinition = {
         event.preventDefault();
         const answer = maskedInput?.getValue().trim().toLowerCase() ?? "";
         if (answer.replace(/\s+/g, "") === "absolutezero") {
+          if (absoluteZeroRevealed && !retriedMaze) unlockAchievement(87);
           complete();
           return;
         }

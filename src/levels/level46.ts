@@ -102,7 +102,7 @@ export const level46: LevelDefinition = {
   number: 46,
   title: "Hazard",
   scenes: SCENES,
-  mount({ screen, initialScene, listen, timeout, complete, audio, wrongAnswer }) {
+  mount({ screen, initialScene, listen, timeout, complete, audio, wrongAnswer, unlockAchievement }) {
     let currentScene = sceneFromId(initialScene);
 
     const renderScene = () => {
@@ -152,6 +152,7 @@ export const level46: LevelDefinition = {
           audio.playEffect(SOUND_EFFECTS.smack);
           if (accepted.size === 3 && popupClosed) {
             currentScene = 5;
+            unlockAchievement(84);
             renderScene();
           }
         });
@@ -167,6 +168,7 @@ export const level46: LevelDefinition = {
       });
       const startFlood = () => {
         clickGeneration += 1;
+        unlockAchievement(83);
         if (flooding) return;
         flooding = true;
         const generation = ++floodGeneration;

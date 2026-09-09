@@ -8,8 +8,8 @@ import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
-const GAME_VERSION = "1.1.73";
-const VERSION_DATE = "09/04/2026";
+const GAME_VERSION = "1.1.81";
+const VERSION_DATE = "09/09/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
 const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
@@ -289,6 +289,9 @@ const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
   29: 34,
   32: 38,
   35: 45,
+  39: 74,
+  42: 80,
+  46: 85,
 };
 
 export class Game {
@@ -484,11 +487,17 @@ export class Game {
 
     this.startMainMenuParade();
 
+    const revivalRejectedActions = new Set<string>();
+    const nonStartMenuActions = ["warp", "achievements", "hall", "help", "options", "credits"] as const;
     this.root.querySelector<HTMLElement>(".main-menu__buttons")?.addEventListener("click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-menu-action]");
       if (!button) return;
 
       if (revivalMode && button.dataset.menuAction !== "start") {
+        if (button.dataset.menuAction) {
+          revivalRejectedActions.add(button.dataset.menuAction);
+          if (nonStartMenuActions.every((action) => revivalRejectedActions.has(action))) this.unlockAchievement(91);
+        }
         const mainMenu = this.root.querySelector<HTMLElement>(".main-menu--revival");
         if (mainMenu) {
           mainMenu.classList.remove("is-shaking");
@@ -1665,6 +1674,7 @@ export class Game {
 
   private handleRevivalWrongAnswer(levelNumber: number): boolean {
     if (!this.sessionFlags.has("level50-enhanced-run") || levelNumber < 1 || levelNumber > 25) return false;
+    this.unlockAchievement(92);
     if (levelNumber === 1) {
       this.renderMainMenu();
       return true;

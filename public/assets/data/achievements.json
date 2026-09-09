@@ -321,6 +321,335 @@
       "name": "hakótel hama'araví",
       "condition": "Reach the eighth Warp Zone (beat Level 35).",
       "inputCodes": "6430-9332-5671"
+    },
+    {
+      "id": 46,
+      "secret": true,
+      "name": "Title",
+      "condition": "Click only Pepsi Zero Lime, Mountain Dew, and Monster in Level 36.",
+      "inputCodes": "4652-4251-3921"
+    },
+    {
+      "id": 47,
+      "secret": true,
+      "name": "Super MAX!",
+      "condition": "Choose Red Bull 33 times in a row in Level 36.",
+      "inputCodes": "8631-5539-7969"
+    },
+    {
+      "id": 48,
+      "secret": true,
+      "name": "False ban ;(",
+      "condition": "Enter 'argentumb must cheat' in Level 37.",
+      "inputCodes": "1652-2819-0366"
+    },
+    {
+      "id": 49,
+      "secret": true,
+      "name": "I'm gonna do it anyway",
+      "condition": "Enter '4761' in Level 38.",
+      "inputCodes": "3342-0808-1476"
+    },
+    {
+      "id": 50,
+      "secret": true,
+      "name": "Legacy LK 39",
+      "condition": "Enter '607' as the first password in Level 39.",
+      "inputCodes": "3994-2260-9247"
+    },
+    {
+      "id": 51,
+      "secret": true,
+      "name": "IDK",
+      "condition": "Enter '???' in Fake Level 42 of Level 39.",
+      "inputCodes": "3758-0681-7086"
+    },
+    {
+      "id": 52,
+      "secret": true,
+      "name": "Galaxy Brain",
+      "condition": "Enter '?' in Fake Level 43 of Level 39.",
+      "inputCodes": "5998-3100-1367"
+    },
+    {
+      "id": 53,
+      "secret": true,
+      "name": "Critical Error",
+      "condition": "Click yellow-green-yellow-green-yellow-green or green-yellow-green-yellow-green-yellow in Fake Level 44 of Level 39.",
+      "inputCodes": "6944-0405-2803"
+    },
+    {
+      "id": 54,
+      "secret": true,
+      "name": "Σ",
+      "condition": "Enter 'Σ' in Fake Level 45 of Level 39.",
+      "inputCodes": "5978-5297-4198"
+    },
+    {
+      "id": 55,
+      "secret": true,
+      "name": "Monkey Neuron Activation",
+      "condition": "Enter 'hidden' in every input field in Fake Level 47 of Level 39.",
+      "inputCodes": "4639-6039-7839"
+    },
+    {
+      "id": 56,
+      "secret": true,
+      "name": "Nice try, Dizzt",
+      "condition": "Enter 'fake' directly in Fake Level 49 of Level 39 without entering 'hidden' first.",
+      "inputCodes": "7797-6610-8374"
+    },
+    {
+      "id": 57,
+      "secret": true,
+      "name": "High Strike Number",
+      "condition": "Enter '135' in Fake Level 52 of Level 39.",
+      "inputCodes": "9339-6622-5711"
+    },
+    {
+      "id": 58,
+      "secret": true,
+      "name": "넌 못 지나간다!",
+      "condition": "Click Forward in the right-click menu in Fake Level 55 of Level 39.",
+      "inputCodes": "1734-4662-2211"
+    },
+    {
+      "id": 59,
+      "secret": true,
+      "name": "NELG 59",
+      "condition": "Enter 'leaf' in Fake Level 59 of Level 39.",
+      "inputCodes": "7883-6955-1067"
+    },
+    {
+      "id": 60,
+      "secret": true,
+      "name": "Prime number",
+      "condition": "Enter '61' in Fake Level 60 of Level 39.",
+      "inputCodes": "3508-7796-2075"
+    },
+    {
+      "id": 61,
+      "secret": true,
+      "name": "Mutant",
+      "condition": "Enter 'hiding' in Fake Level 61 of Level 39.",
+      "inputCodes": "9821-1987-3694"
+    },
+    {
+      "id": 62,
+      "secret": true,
+      "name": "Delirium",
+      "condition": "Enter 'hidden' in Fake Level 68 of Level 39. This does not work on Fake Level 89.",
+      "inputCodes": "1172-8792-6609"
+    },
+    {
+      "id": 63,
+      "secret": true,
+      "name": "Stacker 3",
+      "condition": "Enter '117' or '207' in Fake Level 69 of Level 39.",
+      "inputCodes": "6653-6814-5331"
+    },
+    {
+      "id": 64,
+      "secret": true,
+      "name": "Ancient Roman",
+      "condition": "Enter '1009' in Fake Level 79 of Level 39.",
+      "inputCodes": "1682-1740-1253"
+    },
+    {
+      "id": 65,
+      "secret": true,
+      "name": "Area 52",
+      "condition": "Enter '135' in Fake Level 80 of Level 39.",
+      "inputCodes": "6395-3129-5047"
+    },
+    {
+      "id": 66,
+      "secret": true,
+      "name": "The Bite of '83",
+      "condition": "Enter '83' in Fake Level 83 of Level 39.",
+      "inputCodes": "1761-1036-1470"
+    },
+    {
+      "id": 67,
+      "secret": true,
+      "name": "Ight, Imma Head Out",
+      "condition": "Enter 'time' in Fake Level 84 of Level 39 without playing the route game.",
+      "inputCodes": "1919-5859-9474"
+    },
+    {
+      "id": 68,
+      "secret": true,
+      "name": "Eighty-sixed",
+      "condition": "Remove everything that can be removed in Fake Level 86 of Level 39.",
+      "inputCodes": "1845-4169-3686"
+    },
+    {
+      "id": 69,
+      "secret": true,
+      "name": "Brainrot",
+      "condition": "Enter 'Q8A3' in Fake Level 87 of Level 39.",
+      "inputCodes": "4884-3559-0746"
+    },
+    {
+      "id": 70,
+      "secret": true,
+      "name": "Chatterbox",
+      "condition": "Enter 'space' in Fake Level 91 of Level 39.",
+      "inputCodes": "7499-8468-5564"
+    },
+    {
+      "id": 71,
+      "secret": true,
+      "name": "GG",
+      "condition": "Enter 'ok' or 'okay' in Fake Level 95 of Level 39.",
+      "inputCodes": "4237-6657-9711"
+    },
+    {
+      "id": 72,
+      "secret": true,
+      "name": "Blue-haired Girl",
+      "condition": "Enter 'ivory' in Fake Level 96 of Level 39.",
+      "inputCodes": "2920-0144-6942"
+    },
+    {
+      "id": 73,
+      "secret": true,
+      "name": "Hide the Pain Harold",
+      "condition": "Enter ':)' in Fake Level 666 of Level 39.",
+      "inputCodes": "5615-6849-5351"
+    },
+    {
+      "id": 74,
+      "secret": false,
+      "name": "EPIC Journey",
+      "condition": "Reach the ninth Warp Zone (beat Level 39).",
+      "inputCodes": "2978-3594-6778"
+    },
+    {
+      "id": 75,
+      "secret": true,
+      "name": "Extreme Speed",
+      "condition": "Record a maximum speed of 39.9 in Level 40.",
+      "inputCodes": "0149-4081-2951"
+    },
+    {
+      "id": 76,
+      "secret": true,
+      "name": "EJECT BUTTON",
+      "condition": "Click the yellow button in Level 41 to return to Level 40.",
+      "inputCodes": "1384-5269-9408"
+    },
+    {
+      "id": 77,
+      "secret": true,
+      "name": "Shitbox",
+      "condition": "Overheat in Level 42 by not using the booster.",
+      "inputCodes": "2077-7131-4314"
+    },
+    {
+      "id": 78,
+      "secret": true,
+      "name": "420 Drop It Like It's Hot",
+      "condition": "Die in Level 42 while affected by a green magic circle.",
+      "inputCodes": "0349-7731-1036"
+    },
+    {
+      "id": 79,
+      "secret": true,
+      "name": "Fallen Sky",
+      "condition": "Fail to escape Level 42 after 20 seconds have passed.",
+      "inputCodes": "1620-0057-3242"
+    },
+    {
+      "id": 80,
+      "secret": false,
+      "name": "Gladiator",
+      "condition": "Reach the tenth Warp Zone (beat Level 42).",
+      "inputCodes": "3547-2532-3914"
+    },
+    {
+      "id": 81,
+      "secret": true,
+      "name": "Destr0yer",
+      "condition": "Break all 44 mirrors in Level 44.",
+      "inputCodes": "9458-2508-9700"
+    },
+    {
+      "id": 82,
+      "secret": true,
+      "name": "Oh boy 3 AM!",
+      "condition": "Have the computer clock reach 3 AM in Level 45. It's burger time!",
+      "inputCodes": "4279-5770-4523"
+    },
+    {
+      "id": 83,
+      "secret": true,
+      "name": "DDOS",
+      "condition": "Press the red button in Level 46 and open unlimited localhost windows.",
+      "inputCodes": "7983-5976-8464"
+    },
+    {
+      "id": 84,
+      "secret": true,
+      "name": "400 Bad Request",
+      "condition": "Enter the ERROR screen in Level 46.",
+      "inputCodes": "0721-4242-4296"
+    },
+    {
+      "id": 85,
+      "secret": false,
+      "name": "Have you tried turning it off and on again?",
+      "condition": "Reach the eleventh Warp Zone (beat Level 46).",
+      "inputCodes": "4952-0536-3724"
+    },
+    {
+      "id": 86,
+      "secret": true,
+      "name": "Medium well",
+      "condition": "Overheat by staying near a campfire too long in Level 47.",
+      "inputCodes": "3760-8135-7011"
+    },
+    {
+      "id": 87,
+      "secret": true,
+      "name": "Perfect Rush",
+      "condition": "Find the password in Level 47 without retrying.",
+      "inputCodes": "4631-0578-2168"
+    },
+    {
+      "id": 88,
+      "secret": true,
+      "name": "It's Over Nine Thousand!",
+      "condition": "Reach 9,000.01 m in Level 48.",
+      "inputCodes": "9000-9001-4888"
+    },
+    {
+      "id": 89,
+      "secret": true,
+      "name": "The King of Rubato",
+      "condition": "Enter 'Etude Op. 25 No. 9' in Level 49. Case insensitive.",
+      "inputCodes": "1596-4738-2097"
+    },
+    {
+      "id": 90,
+      "secret": true,
+      "name": "I nearly shit my pants!",
+      "condition": "Click Back in the right-click menu on the first screen of Level 50.",
+      "inputCodes": "7875-7192-6600"
+    },
+    {
+      "id": 91,
+      "secret": true,
+      "name": "Keep Out",
+      "condition": "Click every button other than Start Game on Level 50's main screen.",
+      "inputCodes": "8469-3716-1869"
+    },
+    {
+      "id": 92,
+      "secret": true,
+      "name": "Confidently Wrong",
+      "condition": "Return to the previous level from an enhanced Level 50 level by using the wrong solution.",
+      "inputCodes": "8379-4496-7671"
     }
   ]
 }

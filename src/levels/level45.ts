@@ -38,7 +38,7 @@ function formatClockTime(date: Date): string {
 export const level45: LevelDefinition = {
   number: 45,
   title: "Clockwork",
-  mount({ screen, complete, listen, interval, timeout }) {
+  mount({ screen, complete, listen, interval, timeout, unlockAchievement }) {
     screen.className = "level-screen level-45";
     screen.style.setProperty("--level-45-background", `url("${assetUrl("images/level45bg.png")}")`);
     screen.innerHTML = `
@@ -79,6 +79,7 @@ export const level45: LevelDefinition = {
     let lastClockTime = "";
     const updateClock = () => {
       const now = new Date();
+      if (now.getHours() === 3) unlockAchievement(82);
       const milliseconds = now.getMilliseconds();
       const seconds = now.getSeconds() + milliseconds / 1_000;
       const minutes = now.getMinutes() + seconds / 60;
