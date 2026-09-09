@@ -16,7 +16,7 @@ function caesar(text: string): string {
 export const levelMinus04: LevelDefinition = {
   number: -4,
   title: caesar("Caesar"),
-  mount({ screen, listen, interval, audio, goToLevel, wrongAnswer, session }) {
+  mount({ screen, listen, interval, audio, goToLevel, wrongAnswer, unlockAchievement, session }) {
     screen.className = "level-screen level-minus-04";
     screen.style.backgroundImage = `url("${assetUrl("images/levelm4bg.png")}")`;
     screen.innerHTML = `
@@ -52,8 +52,12 @@ export const levelMinus04: LevelDefinition = {
       event.preventDefault();
       const answer = password.getValue();
       if (tryBackwardsPassword(answer, { session, goToLevel })) return;
+      if (answer === "glylqj") unlockAchievement(117);
       if (answer === "diving") goToLevel(-5);
-      else if (answer === "recreative") goToLevel(-3);
+      else if (answer === "recreative") {
+        unlockAchievement(118);
+        goToLevel(-3);
+      }
       else {
         wrongAnswer();
         password.clear();

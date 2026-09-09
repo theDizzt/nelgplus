@@ -4,7 +4,7 @@ import { attachStarMaskedInput } from "../core/StarMaskedInput";
 export const level05: LevelDefinition = {
   number: 5,
   title: "Colour I",
-  mount({ screen, complete, wrongAnswer, listen, timeout, session }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
     const revivalMode = session.hasFlag("level50-enhanced-run");
     screen.className = `level-screen level-05${revivalMode ? " level-05--revival" : ""}`;
     screen.innerHTML = `
@@ -48,10 +48,12 @@ export const level05: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === (revivalMode ? "hidden" : "orange")) {
+      const answer = maskedInput.getValue();
+      if (answer === "orange") {
         complete();
         return;
       }
+      if (revivalMode && answer.toLowerCase() === "hidden") unlockAchievement(95);
       if (wrongAnswer()) return;
 
       checking = false;

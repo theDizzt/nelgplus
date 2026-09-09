@@ -11,7 +11,7 @@ function toBinary(value: number): string {
 export const levelMinus01: LevelDefinition = {
   number: -1,
   title: "Countdown",
-  mount({ screen, listen, goToLevel }) {
+  mount({ screen, listen, goToLevel, unlockAchievement }) {
     let value = START_VALUE;
     screen.className = "level-screen level-minus-01";
     screen.innerHTML = `
@@ -37,6 +37,7 @@ export const levelMinus01: LevelDefinition = {
       if (value <= MINIMUM_VALUE) return;
       value -= 1;
       renderValue();
+      if (value <= MINIMUM_VALUE) unlockAchievement(116);
     });
     listen(screen, "click", () => {
       if (value > 0) {

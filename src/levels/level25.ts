@@ -344,7 +344,10 @@ export const level25: LevelDefinition = {
         return;
       }
       if (awaitingPassword && passwordBuffer.length === 6) {
-        if (revival) goToMenu();
+        if (revival) {
+          unlockAchievement(108);
+          goToMenu();
+        }
         else wrongAnswer();
       }
     });

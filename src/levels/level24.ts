@@ -169,7 +169,9 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");`}</code></pre>
     listen(form, "submit", (event) => {
       event.preventDefault();
       if (scene !== "puzzle") return;
-      if (maskedInput.getValue() === "hidden") unlockAchievement(29);
+      const answer = maskedInput.getValue();
+      if (!revival && answer === "hidden") unlockAchievement(29);
+      if (revival && answer === "hiddenhidden") unlockAchievement(107);
       if (wrongAnswer()) return;
       showWrong();
     });

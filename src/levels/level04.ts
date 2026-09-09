@@ -58,7 +58,7 @@ export const level04: LevelDefinition = {
         return;
       }
 
-      if (answer.toLowerCase() === "hidden") unlockAchievement(6);
+      if (answer.toLowerCase() === "hidden") unlockAchievement(revivalMode ? 94 : 6);
       if (wrongAnswer()) return;
 
       checking = false;

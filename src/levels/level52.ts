@@ -34,7 +34,7 @@ export const level52: LevelDefinition = {
   number: 52,
   title: "Trasition",
   mount(context) {
-    const { screen, complete, listen, audio } = context;
+    const { screen, complete, listen, audio, unlockAchievement } = context;
     screen.className = "level-screen level-52";
     screen.innerHTML = `
       <header class="level-heading level-52__heading">
@@ -179,6 +179,7 @@ export const level52: LevelDefinition = {
     listen(hex.form, "submit", (event) => {
       event.preventDefault();
       if (quest === 1) {
+        if (hex.input.value === "52") unlockAchievement(111);
         if (hex.input.value !== "00FF7F") {
           showWrong(hex);
           return;

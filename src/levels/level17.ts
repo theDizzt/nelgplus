@@ -27,6 +27,7 @@ export const level17: LevelDefinition = {
         return;
       }
       if (revival) {
+        if (/^Level\s+-?\d+$/i.test(requestedLevel)) unlockAchievement(101);
         wrongAnswer();
         return;
       }

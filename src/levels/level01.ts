@@ -28,7 +28,7 @@ function menuMarkup(): string {
 export const level01: LevelDefinition = {
   number: 1,
   title: "Tutorial I",
-  mount({ screen, complete, wrongAnswer, listen, audio, session, goToLevel }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, audio, session, goToLevel }) {
     const revivalMode = session.hasFlag("level50-enhanced-run");
     screen.className = `level-screen level-01${revivalMode ? " level-01--revival" : ""}`;
     screen.innerHTML = `
@@ -155,6 +155,7 @@ export const level01: LevelDefinition = {
             else volumeMenu.hidden = true;
             return;
           case "forward":
+            unlockAchievement(114);
             complete();
             return;
           case "back":

@@ -4,7 +4,7 @@ import type { LevelDefinition } from "../core/types";
 export const level14: LevelDefinition = {
   number: 14,
   title: "Form",
-  mount({ screen, complete, wrongAnswer, listen, timeout, session }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
     const revival = session.hasFlag("level50-enhanced-run");
     screen.className = `level-screen level-14${revival ? " level-14--revival" : ""}`;
     screen.innerHTML = `
@@ -119,10 +119,12 @@ export const level14: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === (revival ? "night" : "hidden")) {
+      const answer = maskedInput.getValue();
+      if (answer === (revival ? "night" : "hidden")) {
         complete();
         return;
       }
+      if (revival && answer.toLowerCase() === "hidden") unlockAchievement(98);
       if (wrongAnswer()) return;
 
       checking = false;

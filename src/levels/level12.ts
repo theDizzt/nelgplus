@@ -108,7 +108,8 @@ export const level12: LevelDefinition = {
       submitButton.disabled = true;
 
       const answer = maskedInput.getValue().trim().toLowerCase();
-      if (answer === "dark purple") unlockAchievement(11);
+      if (!revival && answer === "dark purple") unlockAchievement(11);
+      if (revival && answer === "dark purple") unlockAchievement(97);
       if (revival ? answer === "dark green" : ACCEPTED_NAMES.has(answer)) {
         complete();
         return;

@@ -46,7 +46,7 @@ export const level53: LevelDefinition = {
   number: 53,
   title: "Excavation",
   mount(context) {
-    const { screen, complete, listen, timeout, wrongAnswer } = context;
+    const { screen, complete, listen, timeout, wrongAnswer, unlockAchievement } = context;
     screen.className = "level-screen level-53";
     screen.innerHTML = `
       <header class="level-heading level-53__heading">
@@ -116,6 +116,7 @@ export const level53: LevelDefinition = {
 
       remainingLetters.delete(activeLetter);
       lastLetter = activeLetter;
+      unlockAchievement(112);
       closeBoard("cleared");
       updateCompletionState();
     };

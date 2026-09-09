@@ -18,7 +18,7 @@ const OBJECTS = [
 export const levelMinus07: LevelDefinition = {
   number: -7,
   title: "AWESOME",
-  mount({ screen, listen, goToLevel, wrongAnswer, session }) {
+  mount({ screen, listen, goToLevel, wrongAnswer, unlockAchievement, session }) {
     screen.className = "level-screen level-minus-07";
     screen.innerHTML = `
       <div class="level-minus-07__background" aria-hidden="true" style="background-image:url('${assetUrl("images/levelm7bg.jpg")}')"></div>
@@ -46,8 +46,10 @@ export const levelMinus07: LevelDefinition = {
     });
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (tryBackwardsPassword(password.getValue(), { session, goToLevel })) return;
-      if (password.getValue() === "bold and brash") goToLevel(-8);
+      const answer = password.getValue();
+      if (tryBackwardsPassword(answer, { session, goToLevel })) return;
+      if (answer === "ivory") unlockAchievement(120);
+      if (answer === "bold and brash") goToLevel(-8);
       else {
         wrongAnswer();
         password.clear();

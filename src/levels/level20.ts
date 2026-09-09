@@ -342,7 +342,7 @@ export const level20: LevelDefinition = {
               on(object, "pointercancel", finish);
             });
           }
-          bindPassword("hidden", 3, { neddih: 18 }, () => !revival || remainingObjects === 0);
+          bindPassword("hidden", 3, revival ? {} : { neddih: 18 }, () => !revival || remainingObjects === 0);
           break;
         }
 
@@ -402,7 +402,7 @@ export const level20: LevelDefinition = {
                 hidden.style.cursor = "default";
               });
             }
-            bindPassword("hiddenhidden", 4);
+            bindPassword("hiddenhidden", 4, { twice: 103 });
             break;
           }
           renderShell(
@@ -569,7 +569,7 @@ export const level20: LevelDefinition = {
               `<p class="level-20__revival-efface">I WILL EFFACE YOU</p>${passwordForm("level-20-scene-6-answer")}`,
               "black",
             );
-            bindPassword("15727310", 7);
+            bindPassword("15727310", 7, { ok: 104, okay: 104 });
             break;
           }
           renderShell(6, "#ffff00", `<img class="level-20__face" src="${assetUrl("images/level20a.png")}" alt="A smiling face" />${passwordForm("level-20-scene-6-answer")}`, "blue");
@@ -891,10 +891,12 @@ export const level20: LevelDefinition = {
             });
             on(form, "submit", (event) => {
               event.preventDefault();
-              if (maskedInput.getValue().trim().toLowerCase() === "red") {
+              const answer = maskedInput.getValue().trim().toLowerCase();
+              if (answer === "red") {
                 complete();
                 return;
               }
+              if (answer === "black") unlockAchievement(105);
               renderScene(9);
             });
             input.focus();

@@ -106,6 +106,7 @@ export const level19: LevelDefinition = {
       if (revival) {
         const point = clientPointToLocal(screen, event.clientX, event.clientY);
         const polar = getPolarCoordinates(Math.floor(point.x), Math.floor(point.y));
+        if (polar.radius === 242 && polar.theta === 242) unlockAchievement(102);
         if ((revivalButton && event.target === revivalButton) || (polar.radius === 50 && polar.theta === 50)) {
           if (revivalButton) revivalButton.hidden = true;
           form.hidden = false;

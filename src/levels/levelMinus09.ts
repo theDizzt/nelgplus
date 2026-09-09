@@ -14,8 +14,9 @@ export const levelMinus09: LevelDefinition = {
   title: "Least",
   scenes: [{ id: "fail", label: "Screen 1 - Fail" }, { id: "success", label: "Screen 2 - Success" }, { id: "ending", label: "Minus Ending" }],
   mount(context) {
-    const { screen, initialScene, listen, goToLevel, wrongAnswer } = context;
+    const { screen, initialScene, listen, goToLevel, wrongAnswer, unlockAchievement } = context;
     if (initialScene === "ending") {
+      unlockAchievement(121);
       screen.className = "level-screen minus-ending";
       screen.style.backgroundImage = `url("${assetUrl("images/hiddenpicture.png")}")`;
       screen.innerHTML = `

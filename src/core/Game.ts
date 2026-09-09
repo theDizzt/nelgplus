@@ -292,6 +292,8 @@ const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
   39: 74,
   42: 80,
   46: 85,
+  50: 109,
+  55: 123,
 };
 
 export class Game {
@@ -309,6 +311,7 @@ export class Game {
   private transitioning = false;
   private adminTitleFont = "";
   private adminSubtitleFont = "";
+  private revivalWrongAnswerStreak = 0;
 
   constructor(private readonly root: HTMLElement) {}
 
@@ -1117,7 +1120,7 @@ export class Game {
            <article class="credits-person"><h3>C-Tall Ball</h3><p>The original creator of NELG, who kindly allowed derivative works. Most of this game's designs and ideas pay homage to NELG, making him a truly extraordinary person!</p></article>
            <article class="credits-person"><h3>Dapur <span>(bumchiDP)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although he could not participate in NELG++, some levels still feature his puzzles!</p></article>
            <article class="credits-person"><h3>NTG</h3><p>Former winner of NELG Level 300.</p><p>Although he could not participate in NELG++, he tested Level Killer and TEDNE and contributed ideas long ago. Some of his unrealized ideas have finally appeared in NELG++.</p></article>
-           <article class="credits-person"><h3>ArgentumB <span>(dmsql3935)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although she could not participate in NELG++, some levels still feature her vicious puzzles!</p></article>
+           <article class="credits-person"><h3>Matchoi <span>(dmsql3935, aka ArgentumB)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although she could not participate in NELG++, some levels still feature her vicious puzzles!</p></article>
            <article class="credits-person"><h3>Kukui <span>(kukui91)</span></h3><p>Former winner of NELG Level 300 and creator of Level Killer.</p><p>Although she could not participate in NELG++, some levels still feature her vicious puzzles!</p></article>
          </section>
          <section class="credits-section">
@@ -1604,6 +1607,7 @@ export class Game {
     this.audioManager.stopMusic();
     this.transitioning = false;
     this.currentLevel = levelNumber;
+    if (levelNumber === 0) this.unlockAchievement(113);
     const revivalMode = this.sessionFlags.has("level50-enhanced-run")
       && levelNumber >= 1
       && levelNumber <= 25;
@@ -1675,6 +1679,8 @@ export class Game {
   private handleRevivalWrongAnswer(levelNumber: number): boolean {
     if (!this.sessionFlags.has("level50-enhanced-run") || levelNumber < 1 || levelNumber > 25) return false;
     this.unlockAchievement(92);
+    this.revivalWrongAnswerStreak += 1;
+    if (this.revivalWrongAnswerStreak >= 5) this.unlockAchievement(93);
     if (levelNumber === 1) {
       this.renderMainMenu();
       return true;
@@ -1689,6 +1695,7 @@ export class Game {
     if (this.transitioning) return;
     this.transitioning = true;
     const enhancedRun = this.sessionFlags.has("level50-enhanced-run");
+    if (enhancedRun) this.revivalWrongAnswerStreak = 0;
     if (!enhancedRun && WARP_CHECKPOINTS[this.currentLevel]) {
       this.renderWarpCheckpoint(this.currentLevel, true);
       return;

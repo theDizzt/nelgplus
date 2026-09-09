@@ -650,6 +650,223 @@
       "name": "Confidently Wrong",
       "condition": "Return to the previous level from an enhanced Level 50 level by using the wrong solution.",
       "inputCodes": "8379-4496-7671"
+    },
+    {
+      "id": 93,
+      "secret": true,
+      "name": "You bought? Dump it.",
+      "condition": "Return to the previous level 5 times in a row in Level 50's enhanced levels.",
+      "inputCodes": "8360-1690-9917"
+    },
+    {
+      "id": 94,
+      "secret": true,
+      "name": "本当?",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 4.",
+      "inputCodes": "5946-9716-0414"
+    },
+    {
+      "id": 95,
+      "secret": true,
+      "name": "Is hidden a color?",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 5.",
+      "inputCodes": "8534-0467-9102"
+    },
+    {
+      "id": 96,
+      "secret": true,
+      "name": "Sixth Sense",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 8.",
+      "inputCodes": "6719-8561-8674"
+    },
+    {
+      "id": 97,
+      "secret": true,
+      "name": "Color Blind",
+      "condition": "Enter 'Dark Purple' in Level 50's enhanced Level 12.",
+      "inputCodes": "4716-8180-4163"
+    },
+    {
+      "id": 98,
+      "secret": true,
+      "name": "Hidden is hidden",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 14.",
+      "inputCodes": "0372-9565-7443"
+    },
+    {
+      "id": 99,
+      "secret": true,
+      "name": "Immutability",
+      "condition": "Enter 'hide?' in Level 50's enhanced Level 15.",
+      "inputCodes": "3047-5094-2359"
+    },
+    {
+      "id": 100,
+      "secret": true,
+      "name": "Not Level 16",
+      "condition": "Enter '22' in Level 50's enhanced Level 16.",
+      "inputCodes": "9580-8137-1383"
+    },
+    {
+      "id": 101,
+      "secret": true,
+      "name": "Do Not Exploit This",
+      "condition": "Try to move to any level other than the next level, Level 51, in Level 50's enhanced Level 17.",
+      "inputCodes": "6515-5052-6032"
+    },
+    {
+      "id": 102,
+      "secret": true,
+      "name": "242 AGAIN",
+      "condition": "Click the point r=242, θ=242 in Level 50's enhanced Level 19.",
+      "inputCodes": "5917-0749-6438"
+    },
+    {
+      "id": 103,
+      "secret": true,
+      "name": "It's a frappe!",
+      "condition": "Enter 'twice' in Level 50's enhanced Level 20, Scene 3.",
+      "inputCodes": "0492-2829-4054"
+    },
+    {
+      "id": 104,
+      "secret": true,
+      "name": "Emotional Punching Bag",
+      "condition": "Enter 'ok' or 'okay' in Level 50's enhanced Level 20, Scene 6.",
+      "inputCodes": "1348-6397-7088"
+    },
+    {
+      "id": 105,
+      "secret": true,
+      "name": "Angry Upvote",
+      "condition": "Enter 'black' in Level 50's enhanced Level 20, Scene 10.",
+      "inputCodes": "7830-7715-7800"
+    },
+    {
+      "id": 106,
+      "secret": true,
+      "name": "Math is not mathing",
+      "condition": "Enter 'no' in Level 50's enhanced Level 21.",
+      "inputCodes": "2768-0521-2255"
+    },
+    {
+      "id": 107,
+      "secret": true,
+      "name": "Diggy Diggy Hole",
+      "condition": "Enter 'hiddenhidden' in the password field in Level 50's enhanced Level 24.",
+      "inputCodes": "2289-1685-9487"
+    },
+    {
+      "id": 108,
+      "secret": true,
+      "name": "Factory Reset",
+      "condition": "Enter the wrong password in Level 50's enhanced Level 25 and return to the beginning.",
+      "inputCodes": "5964-7430-8753"
+    },
+    {
+      "id": 109,
+      "secret": false,
+      "name": "Parousia",
+      "condition": "Reach the twelfth Warp Zone (beat Level 50).",
+      "inputCodes": "5078-8521-1147"
+    },
+    {
+      "id": 110,
+      "secret": true,
+      "name": "A silent Outcry",
+      "condition": "Enter the nickname of someone listed in the Credits as the password in Level 51.",
+      "inputCodes": "7762-5329-8157"
+    },
+    {
+      "id": 111,
+      "secret": true,
+      "name": "2952~",
+      "condition": "Enter '52' as the first password in Level 52.",
+      "inputCodes": "3525-5670-7337"
+    },
+    {
+      "id": 112,
+      "secret": true,
+      "name": "Dalgona Candy Challenge",
+      "condition": "Clear one board in Level 53 perfectly on the first try.",
+      "inputCodes": "5766-4668-9558"
+    },
+    {
+      "id": 113,
+      "secret": true,
+      "name": "Extension of Integers",
+      "condition": "Enter Level 0.",
+      "inputCodes": "0845-4717-8354"
+    },
+    {
+      "id": 114,
+      "secret": false,
+      "name": "Plan B",
+      "condition": "Move to Level 2 by clicking Forward in the right-click menu in Level 1.",
+      "inputCodes": "2355-7791-6884"
+    },
+    {
+      "id": 115,
+      "secret": true,
+      "name": "-∞",
+      "condition": "Enter Level -0.",
+      "inputCodes": "5563-7042-3408"
+    },
+    {
+      "id": 116,
+      "secret": true,
+      "name": "I Am Under The Water",
+      "condition": "Reduce the number to -4096 in Level -1.",
+      "inputCodes": "3939-3242-6247"
+    },
+    {
+      "id": 117,
+      "secret": true,
+      "name": "Brute Force",
+      "condition": "Enter 'glylqj' in Level -4.",
+      "inputCodes": "3093-5465-2650"
+    },
+    {
+      "id": 118,
+      "secret": true,
+      "name": "Tactical Retreat",
+      "condition": "Enter 'recreative' in Level -4.",
+      "inputCodes": "6086-1071-9675"
+    },
+    {
+      "id": 119,
+      "secret": true,
+      "name": "BLACKLAND 66.6",
+      "condition": "Reach a score of 66.6% in Level -6.",
+      "inputCodes": "6891-2196-6179"
+    },
+    {
+      "id": 120,
+      "secret": true,
+      "name": "Memento",
+      "condition": "Enter 'ivory' in Level -7.",
+      "inputCodes": "0642-3455-0509"
+    },
+    {
+      "id": 121,
+      "secret": true,
+      "name": "Challenger Deep",
+      "condition": "Reach the minus ending (beat Level -9).",
+      "inputCodes": "1491-8932-0160"
+    },
+    {
+      "id": 122,
+      "secret": true,
+      "name": "Happy Birthday!!",
+      "condition": "Complete Level 55 while the computer clock is August 1. It's Matchoi's birthday!",
+      "inputCodes": "3684-1114-0801"
+    },
+    {
+      "id": 123,
+      "secret": false,
+      "name": "Mariana Trench",
+      "condition": "Reach the thirteenth Warp Zone (beat Level 55).",
+      "inputCodes": "6897-5610-9844"
     }
   ]
 }

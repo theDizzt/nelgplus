@@ -39,11 +39,13 @@ const FRIENDS: readonly FriendDefinition[] = [
   { name: "level-builder", image: "level-builder.png", width: 74, x: 692, y: 420, vx: -34, vy: -18 },
 ];
 
+const CREDIT_NICKNAMES = new Set(["dizzt3942", "highstrike300", "bumchidp", "dmsql3935", "kukui91"]);
+
 export const level51: LevelDefinition = {
   number: 51,
   title: "Inspection",
   mount(context) {
-    const { screen, complete, listen, timeout } = context;
+    const { screen, complete, listen, timeout, unlockAchievement } = context;
     const removeCustomCursor = attachCustomCursor(context, {
       source: "cursor/level51.png",
       hotspot: "top-left",
@@ -202,6 +204,7 @@ export const level51: LevelDefinition = {
     listen(form, "submit", (event) => {
       event.preventDefault();
       const answer = maskedInput.getValue().trim().toLowerCase();
+      if (CREDIT_NICKNAMES.has(answer)) unlockAchievement(110);
       const friend = stateByName.get(answer);
       if (!friend || friend.exiting || friend.removed) {
         showWrongInput();

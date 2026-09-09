@@ -103,11 +103,13 @@ export const level21: LevelDefinition = {
       });
       on(form, "submit", (event) => {
         event.preventDefault();
-        if (maskedInput.getValue() === (revival ? "294" : "3")) {
+        const answer = maskedInput.getValue();
+        if (answer === (revival ? "294" : "3")) {
           if (pastedThree && !session.hasFlag(NO_SCREEN_VISITED_FLAG)) unlockAchievement(25);
           complete();
           return;
         }
+        if (revival && answer.trim().toLowerCase() === "no") unlockAchievement(106);
         if (wrongAnswer()) return;
 
         input.classList.remove("is-wrong");

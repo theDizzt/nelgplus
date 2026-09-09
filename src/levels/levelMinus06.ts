@@ -29,7 +29,7 @@ export const levelMinus06: LevelDefinition = {
     { id: "fail", label: "Screen 2 - Fail" },
     { id: "success", label: "Screen 3 - Success" },
   ],
-  mount({ screen, initialScene, listen, goToLevel, wrongAnswer, audio, session }) {
+  mount({ screen, initialScene, listen, goToLevel, wrongAnswer, unlockAchievement, audio, session }) {
     screen.className = "level-screen level-minus-06";
     screen.innerHTML = `
       <div class="level-minus-06__rain" aria-hidden="true"></div>
@@ -72,6 +72,7 @@ export const levelMinus06: LevelDefinition = {
     const updateProgress = () => {
       progress.value = points;
       output.value = `${(points / 10).toFixed(1)}%`;
+      if (points === 666) unlockAchievement(119);
     };
     const changeScene = (next: Scene) => {
       scene = next;

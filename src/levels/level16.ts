@@ -49,7 +49,8 @@ export const level16: LevelDefinition = {
       submitButton.disabled = true;
 
       const answer = maskedInput.getValue();
-      if (answer === "22" || answer === "4.58203125") unlockAchievement(14);
+      if (!revival && (answer === "22" || answer === "4.58203125")) unlockAchievement(14);
+      if (revival && answer === "22") unlockAchievement(100);
       if (answer === (revival ? "80" : "51966")) {
         complete();
         return;

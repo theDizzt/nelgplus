@@ -83,6 +83,7 @@ export const level15: LevelDefinition = {
 
       const answer = maskedInput.getValue();
       if (new Set(["hide", "hidden", "?????"]).has(answer)) unlockAchievement(13);
+      if (revival && answer === "hide?") unlockAchievement(99);
       if (answer === (revival ? "!#%&(" : "hide?")) {
         complete();
         return;

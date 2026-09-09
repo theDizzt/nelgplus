@@ -27,7 +27,7 @@ function menuMarkup(): string {
 export const level00: LevelDefinition = {
   number: 0,
   title: "Origin",
-  mount({ screen, listen, goToLevel, audio }) {
+  mount({ screen, listen, goToLevel, unlockAchievement, audio }) {
     let activeVolumeKind: "music" | "effects" = "music";
     let activeButton: HTMLButtonElement | undefined;
     let menu: HTMLElement | undefined;
@@ -116,6 +116,7 @@ export const level00: LevelDefinition = {
       effectsVolumeItem = menu?.querySelector<HTMLButtonElement>("[data-menu-command='effects-volume']") ?? undefined;
 
       if (negativeZero) {
+        unlockAchievement(115);
         screen.querySelectorAll<HTMLButtonElement>(".level-00__go-back, .level-00__red-button")
           .forEach((button) => listen(button, "click", () => bindScreen(false)));
         return;

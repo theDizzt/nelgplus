@@ -23,7 +23,7 @@ function clamp(value: number): number {
 export const level08: LevelDefinition = {
   number: 8,
   title: "Colour II",
-  mount({ screen, complete, wrongAnswer, listen, timeout, session }) {
+  mount({ screen, complete, wrongAnswer, unlockAchievement, listen, timeout, session }) {
     const revival = session.hasFlag("level50-enhanced-run");
     const mazeMarkup = MAZES.map(
       ({ color, letter, path }, index) => `
@@ -147,10 +147,12 @@ export const level08: LevelDefinition = {
       checking = true;
       submitButton.disabled = true;
 
-      if (maskedInput.getValue() === (revival ? "gold" : "silver")) {
+      const answer = maskedInput.getValue();
+      if (answer === (revival ? "gold" : "silver")) {
         complete();
         return;
       }
+      if (revival && answer.toLowerCase() === "hidden") unlockAchievement(96);
       if (wrongAnswer()) return;
 
       checking = false;
