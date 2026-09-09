@@ -20,7 +20,7 @@ export const levelMinus04: LevelDefinition = {
     screen.className = "level-screen level-minus-04";
     screen.style.backgroundImage = `url("${assetUrl("images/levelm4bg.png")}")`;
     screen.innerHTML = `
-      <div class="level-minus-04__placeholder" role="img" aria-label="levelm4a image placeholder">levelm4a</div>
+      <img class="level-minus-04__image" src="${assetUrl("images/levelm4a.png")}" alt="levelm4a">
       <header class="level-heading">
         <div class="level-heading__number">Level -4</div>
         <h1>${caesar("Caesar")}</h1>

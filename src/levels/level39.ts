@@ -1,5 +1,4 @@
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
-import { attachCustomCursor } from "../core/CustomCursor";
 import { SOUND_EFFECTS, assetUrl } from "../core/assets";
 import { clientPointToLocal } from "../core/floatingPosition";
 import type { LevelContext, LevelDefinition } from "../core/types";
@@ -797,6 +796,16 @@ function launchFakeLevelWorld(
     const level55 = fakeLevelPoint(55);
     const level666 = makeFakeLevel(666, { x: level55.x, y: level55.y - 4000 }, true);
     level666.classList.add("is-materializing");
+    const level97Canvas = world.querySelector<HTMLElement>('[data-fake-level="97"] [data-fake-level-canvas]');
+    if (level97Canvas && !level97Canvas.querySelector("[data-fake-666a-clue]")) {
+      const clueImage = document.createElement("img");
+      clueImage.className = "level-39__fake-666a-clue";
+      clueImage.dataset.fake666aClue = "";
+      clueImage.src = assetUrl("images/level39fake666a.png");
+      clueImage.alt = "A clue that appears over Fake Level 97 after Fake Level 666 appears";
+      clueImage.draggable = false;
+      level97Canvas.append(clueImage);
+    }
     const level69Canvas = world.querySelector<HTMLElement>('[data-fake-level="69"] [data-fake-level-canvas]');
     if (level69Canvas && !level69Canvas.querySelector("[data-fake-666-extra]")) {
       const clue = document.createElement("p");
@@ -1625,11 +1634,6 @@ export const level39: LevelDefinition = {
   ],
   mount(context) {
     const { screen, listen, timeout, audio, goToMenu, complete, initialScene } = context;
-    const removeCustomCursor = attachCustomCursor(context, {
-      source: "cursor/level39.png",
-      hotspot: "center",
-      rotating: true,
-    });
     screen.className = "level-screen level-39";
     screen.innerHTML = `
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
@@ -1701,7 +1705,7 @@ return void 0x000000;</code></pre>
     const form = screen.querySelector<HTMLFormElement>(".level-39__form");
     const input = screen.querySelector<HTMLInputElement>("#level-39-answer");
     const submit = screen.querySelector<HTMLButtonElement>(".level-39__form button");
-    if (!xOutput || !yOutput || !sigil || !form || !input || !submit) return removeCustomCursor;
+    if (!xOutput || !yOutput || !sigil || !form || !input || !submit) return undefined;
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
@@ -1746,7 +1750,6 @@ return void 0x000000;</code></pre>
     }
     return () => {
       audio.stopMusic();
-      removeCustomCursor();
     };
   },
 };

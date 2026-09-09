@@ -1962,6 +1962,17 @@
 .level-39__fake-97-errors code:nth-child(3n + 2) { translate: 19px -7px; }
 .level-39__fake-97-errors code:nth-child(4n) { scale: -1 1; }
 
+.level-39__fake-666a-clue {
+  position: absolute;
+  z-index: 7;
+  top: 96px;
+  left: 230px;
+  width: 340px;
+  height: 190px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
 .level-39__fake-level--98 {
   color: #000;
   background: #240000;

@@ -32,6 +32,8 @@ const PLAYER_SPEED = 205;
 const BOOSTED_PLAYER_SPEED = 270;
 const BOOST_CHARGE_PER_SECOND = 20;
 const BOOST_DRAIN_PER_SECOND = 55;
+const RAINBOW_SQUARE_SPEED = 290;
+const LIFELINE_INVINCIBLE_TIME = 3_000;
 const SURVIVAL_TIME = 20_000;
 const DOOR_OPEN_TIME = 900;
 const ARENA: Rect = { x: 192, y: 120, width: 520, height: 400 };
@@ -194,11 +196,14 @@ export const level42: LevelDefinition = {
       let rainbowHazards: MovingHazard[] = [];
       let rainbowMessages: MovingHazard[] = [];
       let magicCircles: MovingHazard[] = [];
+      let lifelineCircles: MovingHazard[] = [];
+      let lifelineMessages: MovingHazard[] = [];
       let meteors: MovingHazard[] = [];
       let lasers: LaserHazard[] = [];
       let mines: MineHazard[] = [];
       let chaser: MovingHazard | undefined;
       let invertedUntil = 0;
+      let invincibleUntil = 0;
       let boostCharge = 0;
       let nextRainbowAt = 0;
       let nextMagicAt = 5_000;
@@ -206,6 +211,7 @@ export const level42: LevelDefinition = {
       let nextLaserAt = 10_000;
       let nextMineAt = 13_000;
       let rainbowMessageSpawned = false;
+      let lifelineSpawned = false;
       let magicWave = 0;
       let laserWave = 0;
 
@@ -228,7 +234,7 @@ export const level42: LevelDefinition = {
           rainbowHazards.push(createMovingHazard(
             "level-42__rainbow-square",
             { x: position.x, y: position.y, width: 38, height: 38 },
-            350,
+            RAINBOW_SQUARE_SPEED,
             0,
           ));
         });
@@ -243,6 +249,25 @@ export const level42: LevelDefinition = {
         );
         message.element.textContent = "I SUCK ;(";
         rainbowMessages.push(message);
+      };
+
+      const spawnLifeline = () => {
+        const circle = createMovingHazard(
+          "level-42__lifeline-circle",
+          { x: -96, y: 334, width: 70, height: 70 },
+          430,
+          0,
+        );
+        lifelineCircles.push(circle);
+
+        const message = createMovingHazard(
+          "level-42__lifeline-message",
+          { x: -500, y: 342, width: 390, height: 58 },
+          430,
+          0,
+        );
+        message.element.textContent = "Take it! It's your lifeline!";
+        lifelineMessages.push(message);
       };
 
       const spawnChaser = () => {
@@ -315,6 +340,8 @@ export const level42: LevelDefinition = {
         boostFill.style.width = `${boostCharge}%`;
         boostPercent.value = `${Math.round(boostCharge)}%`;
         screen.classList.toggle("is-boosting", boosting);
+        let invincible = time < invincibleUntil;
+        screen.classList.toggle("is-invincible", invincible);
         if (boostCharge >= 100) {
           fail("You died from booster overheating.");
           return;
@@ -338,10 +365,13 @@ export const level42: LevelDefinition = {
             y: player.y + vertical * (boosting ? BOOSTED_PLAYER_SPEED : PLAYER_SPEED) * delta,
           };
           if (!playerInsideFloor(candidate)) {
-            fail("You died after smashing your head into a wall.");
-            return;
+            if (!invincible) {
+              fail("You died after smashing your head into a wall.");
+              return;
+            }
+          } else {
+            player = candidate;
           }
-          player = candidate;
         }
 
         if (activatedAt === undefined && overlaps(player, GREEN_PORTAL)) {
@@ -380,6 +410,10 @@ export const level42: LevelDefinition = {
             rainbowMessageSpawned = true;
             spawnRainbowMessage();
           }
+          if (!lifelineSpawned && elapsed >= SURVIVAL_TIME - 2_000) {
+            lifelineSpawned = true;
+            spawnLifeline();
+          }
           while (nextMineAt <= elapsed && nextMineAt < SURVIVAL_TIME) {
             spawnMine(elapsed);
             nextMineAt += 3_000;
@@ -397,6 +431,24 @@ export const level42: LevelDefinition = {
             message.x += message.vx * delta;
             place(message.element, message);
             return message.x < 830 || removeMovingHazard(message);
+          });
+
+          lifelineCircles = lifelineCircles.filter((circle) => {
+            circle.x += circle.vx * delta;
+            place(circle.element, circle);
+            if (overlaps(player, circle)) {
+              invincibleUntil = time + LIFELINE_INVINCIBLE_TIME;
+              invincible = true;
+              screen.classList.add("is-invincible");
+              return removeMovingHazard(circle);
+            }
+            return circle.x < 850 || removeMovingHazard(circle);
+          });
+
+          lifelineMessages = lifelineMessages.filter((message) => {
+            message.x += message.vx * delta;
+            place(message.element, message);
+            return message.x < 850 || removeMovingHazard(message);
           });
 
           if (chaser) {
@@ -441,7 +493,7 @@ export const level42: LevelDefinition = {
             mine.element.classList.toggle("is-exploding", exploding);
             if (!exploding && overlaps(player, mine)) fatalReason = "You stepped on a mine and exploded.";
             if (exploding) {
-              const explosion = { x: mine.x - 42, y: mine.y - 42, width: 114, height: 114 };
+              const explosion = { x: mine.x - 33, y: mine.y - 33, width: 96, height: 96 };
               if (overlaps(player, explosion)) fatalReason = "You stepped on a mine and exploded.";
             }
             if (elapsed < mine.expiresAt) return true;
@@ -462,7 +514,7 @@ export const level42: LevelDefinition = {
             if (overlaps(player, crusher)) fatalReason = "You were crushed by the spiked wall.";
           }
 
-          if (fatalReason) {
+          if (fatalReason && !invincible) {
             fail(fatalReason);
             return;
           }
@@ -472,7 +524,7 @@ export const level42: LevelDefinition = {
         screen.classList.toggle("is-controls-inverted", inversionRemaining > 0);
         effectTimer.value = inversionRemaining > 0 ? String(Math.ceil(inversionRemaining / 1_000)) : "";
 
-        if (doorProgress < 1 && overlaps(player, door)) {
+        if (doorProgress < 1 && overlaps(player, door) && !invincible) {
           fail("You charged into the door and died from a scrape.");
           return;
         }
