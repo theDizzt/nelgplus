@@ -109,16 +109,16 @@ export const levelMinus06: LevelDefinition = {
       drops.push({ element, x, y, color: dropColor, size, speed });
     };
     const spawnBatch = () => {
-      if (scene === "main" && points > 990) {
+      if (scene === "main" && points >= 900) {
         const size = SIZES[Math.floor(Math.random() * SIZES.length)]!;
-        const x = randomBetween(0, 800 - size.width * 4);
+        const x = randomBetween(0, 800 - size.width * 3);
         const speed = randomBetween(95, 155);
         const top = -size.height * 5;
-        for (let column = 0; column < 4; column += 1) {
+        for (let column = 0; column < 3; column += 1) {
           addDrop(x + size.width * column, top, column % 3, size, speed);
         }
         for (let row = 1; row <= 4; row += 1) {
-          addDrop(x + size.width * 1.5, top + size.height * row, row % 3, size, speed);
+          addDrop(x + size.width, top + size.height * row, row % 3, size, speed);
         }
       } else {
         for (let i = 0; i < 3; i += 1) {

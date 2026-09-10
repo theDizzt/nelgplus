@@ -22,9 +22,11 @@ export class MobileControls {
   private cursorY = 300;
   private hoverTarget?: Element;
   private primaryTarget?: Element;
+  private keyboardTarget?: Element;
   private primaryPointerId = VIRTUAL_POINTER_ID;
   private cursorMovedWhilePressed = false;
   private animationFrame?: number;
+  private panelHidden = false;
   private readonly directions = new Set<Direction>();
   private readonly directionPointers = new Map<number, Direction>();
   private readonly spacePointers = new Set<number>();
@@ -38,6 +40,8 @@ export class MobileControls {
     panel.className = "mobile-controls";
     panel.setAttribute("aria-label", "Mobile game controls");
     panel.innerHTML = `
+      <button class="mobile-control mobile-controls__toggle" type="button" aria-controls="mobile-controls-panel" aria-expanded="${!this.panelHidden}">${this.panelHidden ? "Show controls" : "Hide controls"}</button>
+      <div id="mobile-controls-panel" ${this.panelHidden ? "hidden" : ""}>
       <div class="mobile-controls__dpad" aria-label="Direction controls">
         <button class="mobile-control mobile-control--up" type="button" data-direction="up" aria-label="Up">▲</button>
         <button class="mobile-control mobile-control--left" type="button" data-direction="left" aria-label="Left">◀</button>
@@ -51,10 +55,12 @@ export class MobileControls {
         <button class="mobile-control mobile-control--secondary" type="button" data-mobile-action="secondary" aria-label="Right click">B</button>
         <button class="mobile-control mobile-control--primary" type="button" data-mobile-action="primary" aria-label="Click or hold">A</button>
         <button class="mobile-control mobile-control--space" type="button" data-mobile-action="space" aria-label="Space key">SPACE</button>
+        <button class="mobile-control mobile-control--enter" type="button" data-mobile-action="enter" aria-label="Enter key">ENTER</button>
       </div>
       <div class="mobile-controls__cursor" aria-hidden="true"></div>
       <input class="mobile-controls__keyboard" type="text" inputmode="text" autocomplete="off"
         autocapitalize="none" spellcheck="false" aria-label="Mobile keyboard input" />
+      </div>
     `;
     this.root.append(panel);
 
@@ -65,6 +71,31 @@ export class MobileControls {
     window.addEventListener("pointerup", (event) => this.handlePointerUp(event), { signal });
     window.addEventListener("pointercancel", (event) => this.handlePointerUp(event), { signal });
     panel.addEventListener("contextmenu", (event) => event.preventDefault(), { signal });
+
+    const toggle = panel.querySelector<HTMLButtonElement>(".mobile-controls__toggle")!;
+    toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      this.panelHidden = !this.panelHidden;
+      if (this.panelHidden) {
+        if (this.animationFrame !== undefined) window.cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = undefined;
+        this.releaseAllKeys();
+        this.releasePrimary(false);
+        panel.querySelector<HTMLInputElement>(".mobile-controls__keyboard")?.blur();
+        this.dispatchPointer("pointerout", this.hoverTarget, 0);
+        this.dispatchPointer("pointerleave", this.hoverTarget, 0);
+        this.hoverTarget = undefined;
+      }
+      panel.querySelector<HTMLElement>("#mobile-controls-panel")!.hidden = this.panelHidden;
+      toggle.setAttribute("aria-expanded", String(!this.panelHidden));
+      toggle.textContent = this.panelHidden ? "Show controls" : "Hide controls";
+      if (!this.panelHidden) {
+        this.updateCursor();
+        this.updateHoverTarget();
+      }
+    }, { signal });
+    toggle.addEventListener("keydown", (event) => event.stopPropagation(), { signal });
+    toggle.addEventListener("keyup", (event) => event.stopPropagation(), { signal });
 
     const keyboard = panel.querySelector<HTMLInputElement>(".mobile-controls__keyboard");
     keyboard?.addEventListener("input", () => {
@@ -81,7 +112,7 @@ export class MobileControls {
     }, { signal });
 
     this.updateCursor();
-    this.updateHoverTarget();
+    if (!this.panelHidden) this.updateHoverTarget();
   }
 
   unmount(): void {
@@ -93,13 +124,15 @@ export class MobileControls {
     this.root.querySelector(".mobile-controls")?.remove();
     this.hoverTarget = undefined;
     this.primaryTarget = undefined;
+    this.keyboardTarget = undefined;
   }
 
   private handlePointerDown(event: PointerEvent): void {
     const button = (event.target as Element).closest<HTMLButtonElement>("button");
     if (!button) return;
-    event.preventDefault();
     event.stopPropagation();
+    if (button.classList.contains("mobile-controls__toggle")) return;
+    event.preventDefault();
 
     const direction = button.dataset.direction as Direction | undefined;
     if (direction) {
@@ -121,7 +154,12 @@ export class MobileControls {
         this.spacePointers.add(event.pointerId);
         if (this.spacePointers.size === 1) this.dispatchKey("keydown", " ", "Space");
         break;
+      case "enter":
+        this.keyboardTarget = this.findKeyboardTarget() ?? this.keyboardTarget;
+        this.tapKey("Enter", "Enter");
+        break;
       case "keyboard":
+        this.keyboardTarget = this.findKeyboardTarget();
         this.root.querySelector<HTMLInputElement>(".mobile-controls__keyboard")?.focus({ preventScroll: true });
         break;
       case "wheel-up":
@@ -134,6 +172,8 @@ export class MobileControls {
   }
 
   private handlePointerUp(event: PointerEvent): void {
+    // Virtual releases also bubble to window; only physical input releases controls.
+    if ((event as MobileControlEvent).__nelgMobileControl) return;
     const direction = this.directionPointers.get(event.pointerId);
     if (direction) {
       this.directionPointers.delete(event.pointerId);
@@ -175,6 +215,7 @@ export class MobileControls {
   private pressPrimary(pointerId: number): void {
     const target = this.elementAtCursor();
     if (!target) return;
+    if (this.acceptsKeyboardInput(target)) this.keyboardTarget = target;
     this.primaryTarget = target;
     this.primaryPointerId = pointerId;
     this.cursorMovedWhilePressed = false;
@@ -188,17 +229,21 @@ export class MobileControls {
     }
   }
 
-  private releasePrimary(): void {
+  private releasePrimary(click = true): void {
     const target = this.primaryTarget;
     if (!target) return;
-    this.dispatchPointer("pointerup", target, 0, 0, this.primaryPointerId);
-    if (!this.cursorMovedWhilePressed) {
+    const pointerId = this.primaryPointerId;
+    const shouldClick = click && !this.cursorMovedWhilePressed;
+    // Clear the hold before dispatching events that can synchronously change levels.
+    this.primaryTarget = undefined;
+    this.primaryPointerId = VIRTUAL_POINTER_ID;
+    this.cursorMovedWhilePressed = false;
+    this.dispatchPointer("pointerup", target, 0, 0, pointerId);
+    if (shouldClick && target.isConnected) {
       target.dispatchEvent(markMobileEvent(new MouseEvent("click", {
         ...this.pointerCoordinates(), bubbles: true, cancelable: true, button: 0,
       })));
     }
-    this.primaryTarget = undefined;
-    this.primaryPointerId = VIRTUAL_POINTER_ID;
   }
 
   private secondaryClick(): void {
@@ -224,9 +269,30 @@ export class MobileControls {
   }
 
   private dispatchKey(type: "keydown" | "keyup", key: string, code = key): void {
-    document.dispatchEvent(markMobileEvent(new KeyboardEvent(type, {
+    this.keyEventTarget().dispatchEvent(markMobileEvent(new KeyboardEvent(type, {
       key, code, bubbles: true, cancelable: true,
     })));
+  }
+
+  private keyEventTarget(): Element | Document {
+    const active = document.activeElement;
+    if (active && active !== document.body && !active.closest(".mobile-controls")) return active;
+    if (this.keyboardTarget?.isConnected && !this.keyboardTarget.closest(".mobile-controls")) return this.keyboardTarget;
+    return document;
+  }
+
+  private findKeyboardTarget(): Element | undefined {
+    const active = document.activeElement;
+    if (active && active !== document.body && !active.closest(".mobile-controls")) return active;
+    const target = this.elementAtCursor();
+    return target && this.acceptsKeyboardInput(target) ? target : undefined;
+  }
+
+  private acceptsKeyboardInput(target: Element): boolean {
+    return target instanceof HTMLInputElement
+      || target instanceof HTMLTextAreaElement
+      || target instanceof HTMLSelectElement
+      || target.getAttribute("contenteditable") === "true";
   }
 
   private releaseAllKeys(): void {

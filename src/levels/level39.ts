@@ -146,6 +146,7 @@ function launchFakeLevelWorld(
   let fake83KeyBuffer = "";
   let fake84Step = 0;
   let fake84Timer: number | undefined;
+  let fake91KeyBuffer = "";
   let fake92KeyBuffer = "";
   let fake94DroppedLetters = 0;
   let fake96LastWordAt = 0;
@@ -976,6 +977,19 @@ function launchFakeLevelWorld(
       completeFakeLevel(51, level);
     }, 30_000);
   };
+  const resetFake51Wait = () => {
+    if (!fake51Waiting) return;
+    fake51Waiting = false;
+    if (fake51Timer !== undefined) window.clearTimeout(fake51Timer);
+    fake51Timer = undefined;
+    const button = world.querySelector<HTMLButtonElement>(
+      '[data-fake-level="51"]:not(.is-cleared) button[data-fake-51-start]',
+    );
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Start";
+    }
+  };
 
   const cancelFake68Hold = () => {
     if (fake68Timer !== undefined) window.clearTimeout(fake68Timer);
@@ -1111,6 +1125,18 @@ function launchFakeLevelWorld(
     stage.setPointerCapture(event.pointerId);
     event.preventDefault();
   });
+
+  listen(stage, "contextmenu", (event) => {
+    const target = event.target instanceof Element ? event.target : undefined;
+    const menu = target?.closest<HTMLElement>(".level-39__fake-55-context-menu");
+    if (menu) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    const fake55 = target?.closest<HTMLElement>('[data-fake-level="55"]');
+    if (fake55) openFake55Menu(fake55, event);
+  }, { capture: true });
 
   listen(stage, "pointerdown", (event) => {
     if (event.button !== 0) return;
@@ -1515,7 +1541,6 @@ function launchFakeLevelWorld(
     if (levelNumber === 83 && answer === "83") unlockAchievement(66);
     if (levelNumber === 84 && answer === "time" && fake84Step === 0) unlockAchievement(67);
     if (levelNumber === 87 && answer === "Q8A3") unlockAchievement(69);
-    if (levelNumber === 91 && answer === "space") unlockAchievement(70);
     if (levelNumber === 95 && (answer === "ok" || answer === "okay")) unlockAchievement(71);
     if (levelNumber === 96 && answer === "ivory") unlockAchievement(72);
     if (levelNumber === 77) {
@@ -1588,6 +1613,13 @@ function launchFakeLevelWorld(
       const level95 = world.querySelector<HTMLElement>('[data-fake-level="95"]:not(.is-cleared)');
       const level98 = world.querySelector<HTMLElement>('[data-fake-level="98"]:not(.is-cleared)');
       const typingInForm = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement;
+      if (world.querySelector('[data-fake-level="91"]:not(.is-cleared)') && !typingInForm && event.key.length === 1) {
+        fake91KeyBuffer = `${fake91KeyBuffer}${key}`.slice(-5);
+        if (fake91KeyBuffer === "space") {
+          unlockAchievement(70);
+          fake91KeyBuffer = "";
+        }
+      }
       if (key === "b" && level46) completeFakeLevel(46, level46);
       if (key === "s" && level48) completeFakeLevel(48, level48);
       if (key === "e" && level56) completeFakeLevel(56, level56);
@@ -1623,14 +1655,14 @@ function launchFakeLevelWorld(
         }
       }
     }
-    if (fake51Waiting) restartFake51Wait();
+    if (fake51Waiting) resetFake51Wait();
   });
 
   listen(window, "pointerdown", () => {
-    if (fake51Waiting) restartFake51Wait();
+    if (fake51Waiting) resetFake51Wait();
   });
   listen(window, "pointermove", () => {
-    if (fake51Waiting) restartFake51Wait();
+    if (fake51Waiting) resetFake51Wait();
   });
   listen(stage, "pointerover", (event) => {
     const target = event.target instanceof Element ? event.target : undefined;
@@ -1671,6 +1703,9 @@ export const level39: LevelDefinition = {
       <div class="level-39__gradient level-39__gradient--yellow" aria-hidden="true"></div>
       <div class="level-39__gradient level-39__gradient--lime" aria-hidden="true"></div>
       <div class="level-39__scanlines" aria-hidden="true"></div>
+      <span class="level-39__cursor-orbit" aria-hidden="true" hidden>
+        <img src="${assetUrl("cursor/level39.png")}" alt="" draggable="false" />
+      </span>
 
       <header class="level-heading level-39__heading" aria-label="Level 39, Glitch">
         <div class="level-heading__number level-39__title">Level 39</div>
@@ -1734,10 +1769,11 @@ return void 0x000000;</code></pre>
     const xOutput = screen.querySelector<HTMLOutputElement>(".level-39__x");
     const yOutput = screen.querySelector<HTMLOutputElement>(".level-39__y");
     const sigil = screen.querySelector<SVGElement>(".level-39__sigil");
+    const cursorOrbit = screen.querySelector<HTMLElement>(".level-39__cursor-orbit");
     const form = screen.querySelector<HTMLFormElement>(".level-39__form");
     const input = screen.querySelector<HTMLInputElement>("#level-39-answer");
     const submit = screen.querySelector<HTMLButtonElement>(".level-39__form button");
-    if (!xOutput || !yOutput || !sigil || !form || !input || !submit) return undefined;
+    if (!xOutput || !yOutput || !sigil || !cursorOrbit || !form || !input || !submit) return undefined;
 
     const maskedInput = attachStarMaskedInput(input, listen);
 
@@ -1747,11 +1783,19 @@ return void 0x000000;</code></pre>
       form.requestSubmit();
     });
 
-    listen(screen, "pointermove", () => {
+    listen(screen, "pointermove", (event) => {
+      const point = clientPointToLocal(screen, event.clientX, event.clientY);
+      cursorOrbit.style.left = `${point.x}px`;
+      cursorOrbit.style.top = `${point.y}px`;
+      cursorOrbit.hidden = false;
       xOutput.value = corruptCoordinate(Math.random() * 800);
       yOutput.value = corruptCoordinate(Math.random() * 600);
       sigil.style.setProperty("--sigil-shift-x", `${Math.floor(Math.random() * 17) - 8}px`);
       sigil.style.setProperty("--sigil-skew", `${Math.floor(Math.random() * 13) - 6}deg`);
+    });
+
+    listen(screen, "pointerleave", () => {
+      cursorOrbit.hidden = true;
     });
 
     listen(form, "submit", (event) => {

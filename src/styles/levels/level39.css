@@ -48,6 +48,28 @@
   animation: level-39-scan 180ms steps(2) infinite;
 }
 
+.level-39__cursor-orbit {
+  position: absolute;
+  z-index: 2147483645;
+  width: 96px;
+  height: 96px;
+  translate: -50% -50%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgb(255 255 0 / 72%));
+}
+
+.level-39__cursor-orbit[hidden] {
+  display: none;
+}
+
+.level-39__cursor-orbit img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  animation: level-39-cursor-orbit-spin 1.2s linear infinite;
+}
+
 .level-39 .level-39__heading {
   z-index: 18;
   top: 30px;
@@ -2155,6 +2177,10 @@
 @keyframes level-39-scan {
   0% { translate: 0 0; }
   50% { translate: 0 3px; }
+}
+
+@keyframes level-39-cursor-orbit-spin {
+  to { rotate: 360deg; }
 }
 
 @keyframes level-39-code-tear {

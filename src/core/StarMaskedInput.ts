@@ -11,9 +11,21 @@ export function attachStarMaskedInput(
 ): StarMaskedInput {
   let rawValue = "";
   const maximumLength = input.maxLength > 0 ? input.maxLength : Number.POSITIVE_INFINITY;
+  const mirror = document.createElement("span");
+
+  input.type = "text";
+  input.inputMode = "text";
+  input.autocomplete = "off";
+  input.setAttribute("autocapitalize", "off");
+  input.spellcheck = false;
+
+  mirror.className = "nelg-password-input-mirror";
+  mirror.setAttribute("aria-label", "Visible password text");
+  input.insertAdjacentElement("afterend", mirror);
 
   const render = (caret = rawValue.length) => {
     input.value = "*".repeat(rawValue.length);
+    mirror.textContent = rawValue;
     input.setSelectionRange(caret, caret);
   };
 

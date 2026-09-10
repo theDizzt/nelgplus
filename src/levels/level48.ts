@@ -205,7 +205,7 @@ export const level48: LevelDefinition = {
     { id: "start", label: "Start - 0.00m" },
     { id: "8848m", label: "Near Everest - 8,848.00m" },
   ],
-  mount({ screen, initialScene, complete, listen, timeout, unlockAchievement }) {
+  mount({ screen, initialScene, complete, listen, timeout, interval, unlockAchievement }) {
     screen.className = "level-screen level-48";
     screen.style.setProperty("--level-48-background", `url("${assetUrl("images/level48bg.gif")}")`);
     screen.innerHTML = `
@@ -228,6 +228,11 @@ export const level48: LevelDefinition = {
           aria-autocomplete="none" spellcheck="false" aria-label="Password" />
         <button type="submit">GO</button>
       </form>
+
+      <div class="level-48__touch-controls" aria-label="Level 48 touch controls">
+        <button type="button" data-level-48-touch-scroll>HOLD SCROLL</button>
+        <button type="button" data-level-48-touch-lock>SCROLL LOCK</button>
+      </div>
     `;
 
     const scrollImage = screen.querySelector<HTMLImageElement>("[data-level-48-scroll]");
@@ -236,7 +241,10 @@ export const level48: LevelDefinition = {
     const form = screen.querySelector<HTMLFormElement>(".level-48__form");
     const input = screen.querySelector<HTMLInputElement>("#level-48-answer");
     const submitButton = form?.querySelector<HTMLButtonElement>("button");
-    if (!scrollImage || !messageStage || !distanceOutput || !form || !input || !submitButton) return;
+    const touchScrollButton = screen.querySelector<HTMLButtonElement>("[data-level-48-touch-scroll]");
+    const touchLockButton = screen.querySelector<HTMLButtonElement>("[data-level-48-touch-lock]");
+    if (!scrollImage || !messageStage || !distanceOutput || !form || !input || !submitButton
+      || !touchScrollButton || !touchLockButton) return;
 
     let centimeters = initialScene === "8848m" ? 884_800 : 0;
     let boostCycleStarted = false;
@@ -422,11 +430,38 @@ export const level48: LevelDefinition = {
     listen(scrollImage, "pointercancel", finishDrag);
 
     const maskedInput = attachStarMaskedInput(input, listen);
+    const tryScrollLock = () => {
+      if (maskedInput.getValue().trim().toLowerCase() === ANSWER) {
+        submitButton.disabled = true;
+        complete();
+        return;
+      }
+      input.classList.add("is-wrong");
+      timeout(() => input.classList.remove("is-wrong"), 360);
+    };
+
     listen(input, "keydown", (event) => {
       if (event.key !== "Enter" || event.repeat) return;
       event.preventDefault();
     });
     listen(form, "submit", (event) => event.preventDefault());
+
+    let touchScrollTimer: number | undefined;
+    const stopTouchScroll = () => {
+      if (touchScrollTimer === undefined) return;
+      window.clearInterval(touchScrollTimer);
+      touchScrollTimer = undefined;
+    };
+    listen(touchScrollButton, "pointerdown", (event) => {
+      event.preventDefault();
+      scrollDown();
+      stopTouchScroll();
+      touchScrollTimer = interval(scrollDown, 34);
+    });
+    listen(touchScrollButton, "pointerup", stopTouchScroll);
+    listen(touchScrollButton, "pointercancel", stopTouchScroll);
+    listen(touchScrollButton, "pointerleave", stopTouchScroll);
+    listen(touchLockButton, "click", () => tryScrollLock());
 
     listen(document, "keydown", (event) => {
       if (event.key === "PageDown" || event.code === "PageDown") {
@@ -436,13 +471,7 @@ export const level48: LevelDefinition = {
       }
       if ((event.key !== "ScrollLock" && event.code !== "ScrollLock") || event.repeat) return;
       event.preventDefault();
-      if (maskedInput.getValue().trim().toLowerCase() === ANSWER) {
-        submitButton.disabled = true;
-        complete();
-        return;
-      }
-      input.classList.add("is-wrong");
-      timeout(() => input.classList.remove("is-wrong"), 360);
+      tryScrollLock();
     });
 
     if (centimeters > 0) {

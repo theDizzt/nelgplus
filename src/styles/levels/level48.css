@@ -147,6 +147,13 @@
   width: 100%;
 }
 
+.level-48__form .nelg-password-input-mirror {
+  color: #000;
+  border-width: 3px;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 23px;
+}
+
 .level-48__form input {
   box-sizing: border-box;
   padding: 4px 8px;
@@ -183,6 +190,68 @@
 .level-48__form button:focus-visible:not(:disabled) {
   background: #00ffff;
   outline: none;
+}
+
+.level-48__touch-controls {
+  position: absolute;
+  right: 14px;
+  bottom: 88px;
+  z-index: 10;
+  display: none;
+  gap: 8px;
+}
+
+.level-48__touch-controls button {
+  min-width: 98px;
+  height: 39px;
+  padding: 0 10px;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #000;
+  cursor: pointer;
+  font: 900 14px/1 "NELG Arial", Arial, sans-serif;
+  touch-action: none;
+}
+
+.level-48__touch-controls button:active {
+  color: #fff;
+  background: #0077ff;
+  translate: 2px 2px;
+  box-shadow: none;
+}
+
+@media (pointer: coarse), (max-width: 760px), (max-height: 540px) {
+  .level-48__touch-controls {
+    display: flex;
+  }
+
+  .level-48__form {
+    bottom: 28px;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 92px 0 12px;
+    box-sizing: border-box;
+  }
+
+  .level-48__form input {
+    width: 150px;
+    height: 39px;
+    font-size: 21px;
+  }
+
+  .level-48__form .nelg-password-input-mirror {
+    max-width: 154px;
+    height: 39px;
+    font-size: 20px;
+  }
+
+  .level-48__form button {
+    width: 48px;
+    height: 38px;
+    font-size: 22px;
+  }
 }
 
 @keyframes level-48-rainbow {
