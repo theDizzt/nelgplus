@@ -77,6 +77,7 @@ export const level25: LevelDefinition = {
     { id: "4", label: "Scene 4 - Order failure" },
     { id: "5", label: "Scene 5 - Obstacle failure" },
     { id: "6", label: "Revival failure" },
+    { id: "7", label: "Scene 7 - Maze success" },
   ],
   mount(context) {
     const { screen, complete, wrongAnswer, unlockAchievement, listen, interval, initialScene, session, goToMenu } = context;
@@ -101,11 +102,11 @@ export const level25: LevelDefinition = {
     let draggedPiecePointer = -1;
     let draggedPieceOffset = { x: 0, y: 0 };
 
-    const renderPuzzle = (startArmed = false) => {
+    const renderPuzzle = (startArmed = false, startAwaitingPassword = false) => {
       scene = "puzzle";
-      armed = startArmed;
-      awaitingPassword = false;
-      expectedButtonIndex = 0;
+      armed = startArmed || startAwaitingPassword;
+      awaitingPassword = startAwaitingPassword;
+      expectedButtonIndex = startAwaitingPassword ? BRANCHES.length : 0;
       passwordBuffer = "";
       lastPointer = undefined;
       puzzleStartedAt = performance.now();
@@ -118,6 +119,7 @@ export const level25: LevelDefinition = {
         ({ x, y }, index) => `
           <button class="level-25__dice level-25__dice--${index + 1}" data-dice="${index + 1}"
             type="button" style="left:${x - 21}px;top:${y - 21}px"
+            ${startAwaitingPassword ? "disabled" : ""}
             aria-label="Dice button ${index + 1}${revival ? `, changes to ${REVIVAL_DICE_VALUES[index]} on hover` : ""}">
             ${diceFace(index + 1, "base")}
             ${revival ? diceFace(REVIVAL_DICE_VALUES[index] ?? index + 1, "hover") : ""}
@@ -166,7 +168,7 @@ export const level25: LevelDefinition = {
           <span class="level-25__revival-laser level-25__revival-laser--horizontal"></span>
           <span class="level-25__revival-laser level-25__revival-laser--vertical"></span>
         </div>` : ""}
-        <p class="level-25__password-prompt" role="status" hidden>
+        <p class="level-25__password-prompt" role="status" ${startAwaitingPassword ? "" : "hidden"}>
           ${revival
             ? "TYPE THE PASSWORD. A WRONG PASSWORD WILL RESET ALL OF YOUR HARD WORKS."
             : "TYPE THE PASSWORD ON YOUR KEYBOARD!"}
@@ -246,6 +248,7 @@ export const level25: LevelDefinition = {
     };
     const initialError = initialScene ? initialErrors[initialScene] : undefined;
     if (initialError) showError(initialError);
+    else if (initialScene === "7") renderPuzzle(true, true);
     else renderPuzzle();
 
     listen(screen, "pointermove", (event) => {

@@ -24,6 +24,9 @@ function updateGameScale() {
   root.style.setProperty("--game-scale", String(scale));
   root.style.setProperty("--game-offset-x", `${offsetX}px`);
   root.style.setProperty("--game-offset-y", `${offsetY}px`);
+  document.documentElement.style.setProperty("--game-scale", String(scale));
+  document.documentElement.style.setProperty("--game-offset-x", `${offsetX}px`);
+  document.documentElement.style.setProperty("--game-offset-y", `${offsetY}px`);
 }
 
 updateGameScale();

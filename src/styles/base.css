@@ -135,3 +135,18 @@ img {
   cursor: pointer;
   font-size: 12px;
 }
+
+.game-clock {
+  position: fixed;
+  z-index: 2000;
+  top: calc(var(--game-offset-y, 0px) + 8px);
+  right: calc(var(--game-offset-x, 0px) + 10px);
+  padding: 3px 7px;
+  color: #fff;
+  background: rgb(0 0 0 / 65%);
+  border: 1px solid rgb(255 255 255 / 55%);
+  font: 700 15px/1.15 "NELG Courier", Courier, "Courier New", monospace;
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+}

@@ -7,6 +7,7 @@ import { MobileControls } from "./MobileControls";
 import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
+import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
 const GAME_VERSION = "1.1.84";
@@ -18,6 +19,13 @@ const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim()
 const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
 const MOBILE_CONTROLS_KEY = "nelg-mobile-controls-enabled";
+const CLOCK_ENABLED_KEY = "nelg-clock-enabled";
+const CLOCK_SHOW_DATE_KEY = "nelg-clock-show-date";
+const CLOCK_HOUR_CYCLE_KEY = "nelg-clock-hour-cycle";
+const CLOCK_FORCE_GAME_TIME_KEY = "nelg-clock-force-game-time";
+const CLOCK_CUSTOM_DATE_KEY = "nelg-clock-custom-date";
+const CLOCK_CUSTOM_TIME_KEY = "nelg-clock-custom-time";
+type ClockHourCycle = "12" | "24";
 interface AchievementData {
   id: number;
   secret: boolean;
@@ -211,6 +219,15 @@ const PRELOAD_IMAGES = [
   "/assets/images/level40bg2.jpg",
 ].map(assetUrl);
 const PRELOAD_EFFECTS = [SOUND_EFFECTS.pop, SOUND_EFFECTS.smack, SOUND_EFFECTS.break] as const;
+const PRELOAD_ASSETS = Array.from(new Set([
+  ...GENERATED_PRELOAD_ASSETS,
+  ...PRELOAD_FONTS,
+  ...PRELOAD_IMAGES,
+  ...PRELOAD_EFFECTS,
+].map(assetUrl)));
+const PRELOAD_IMAGE_PATTERN = /\.(?:apng|avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i;
+const PRELOAD_AUDIO_PATTERN = /\.(?:mp3|ogg|wav|m4a|aac|flac)(?:[?#].*)?$/i;
+const PRELOAD_CONCURRENCY = 8;
 const MINIMUM_PRELOADER_TIME = 700;
 const JUMPABLE_LEVELS = [
   8, 14, 19, 22, 25, 29, 32, 35, 39, 42, 46, 50, 55, 58, 61, 65, 69, 74, 78, 81, 84, 87, 91, 94, 97,
@@ -347,9 +364,52 @@ export class Game {
   private revivalWrongAnswerStreak = 0;
   private readonly mobileControls: MobileControls;
   private mobileControlsEnabled = this.loadMobileControlsEnabled();
+  private clockEnabled = this.loadStoredBoolean(CLOCK_ENABLED_KEY, false);
+  private clockShowDate = this.loadStoredBoolean(CLOCK_SHOW_DATE_KEY, false);
+  private clockHourCycle: ClockHourCycle = this.loadClockHourCycle();
+  private clockForceGameTime = this.loadStoredBoolean(CLOCK_FORCE_GAME_TIME_KEY, false);
+  private clockCustomDate = this.loadStoredDate(CLOCK_CUSTOM_DATE_KEY);
+  private clockCustomTime = this.loadStoredTime(CLOCK_CUSTOM_TIME_KEY);
+  private customGameTimeRealAnchor = Date.now();
+  private customGameTimeAnchor = this.createCustomGameTimeAnchor(new Date());
+  private clockElement?: HTMLTimeElement;
+  private clockTimer = 0;
 
   constructor(private readonly root: HTMLElement) {
     this.mobileControls = new MobileControls(root);
+    this.removePasswordQueryParameters();
+    this.bindPasswordFormUrlGuard();
+    this.syncClockOverlay();
+  }
+
+  private getCustomGameTimeModeLabel(): string {
+    return this.clockForceGameTime ? "CUSTOM TIME" : "PLAYER PC TIME";
+  }
+
+  private bindPasswordFormUrlGuard(): void {
+    this.root.addEventListener("submit", (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.querySelector(".nelg-password-input")) return;
+
+      event.preventDefault();
+      this.removePasswordQueryParameters();
+    }, true);
+  }
+
+  private removePasswordQueryParameters(): void {
+    const url = new URL(window.location.href);
+    let changed = false;
+
+    [...url.searchParams.keys()].forEach((key) => {
+      const normalizedKey = key.toLowerCase();
+      if (!key.startsWith("nelg-") && !normalizedKey.includes("password") && !normalizedKey.includes("answer")) return;
+      url.searchParams.delete(key);
+      changed = true;
+    });
+
+    if (changed) {
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    }
   }
 
   start(): void {
@@ -379,7 +439,7 @@ export class Game {
     let loadedAssets = 0;
 
     const updateProgress = () => {
-      const totalAssets = PRELOAD_FONTS.length + PRELOAD_IMAGES.length + PRELOAD_EFFECTS.length;
+      const totalAssets = Math.max(PRELOAD_ASSETS.length + PRELOAD_FONT_REQUESTS.length, 1);
       const value = Math.round((loadedAssets / totalAssets) * 100);
       if (progress) progress.setAttribute("aria-valuenow", String(value));
       if (bar) bar.style.width = `${value}%`;
@@ -391,42 +451,83 @@ export class Game {
       updateProgress();
     };
 
-    const preloadFontFiles = Promise.all(
-      PRELOAD_FONTS.map(async (source) => {
-        try {
-          const response = await fetch(assetUrl(source), { cache: "force-cache" });
-          if (response.ok) await response.arrayBuffer();
-        } catch {
-          // A missing optional font should not prevent the game from starting.
-        } finally {
-          markLoaded();
-        }
-      }),
-    );
+    const preloadImage = (source: string) => new Promise<void>((resolve) => {
+      const image = new Image();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        resolve();
+      };
 
-    const preloadImages = Promise.all(
-      PRELOAD_IMAGES.map(async (source) => {
-        try {
-          const image = new Image();
-          image.decoding = "async";
-          image.src = source;
-          await image.decode();
-        } catch {
-          // A missing optional image should not prevent the game from starting.
-        } finally {
-          markLoaded();
-        }
-      }),
-    );
-
-    const preloadEffects = this.audioManager.preloadEffects(PRELOAD_EFFECTS).finally(() => {
-      loadedAssets += PRELOAD_EFFECTS.length;
-      updateProgress();
+      image.onload = finish;
+      image.onerror = finish;
+      image.src = source;
+      if (image.decode) void image.decode().then(finish, finish);
     });
+
+    const preloadAudio = (source: string) => new Promise<void>((resolve) => {
+      const audio = new Audio();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        audio.removeEventListener("canplaythrough", finish);
+        audio.removeEventListener("loadeddata", finish);
+        audio.removeEventListener("error", finish);
+        resolve();
+      };
+
+      audio.preload = "auto";
+      audio.addEventListener("canplaythrough", finish);
+      audio.addEventListener("loadeddata", finish);
+      audio.addEventListener("error", finish);
+      audio.src = source;
+      audio.load();
+      window.setTimeout(finish, 3_000);
+    });
+
+    const preloadResource = async (source: string): Promise<void> => {
+      const response = await fetch(source, { cache: "force-cache" });
+      if (response.ok) await response.blob();
+      if (PRELOAD_IMAGE_PATTERN.test(source)) await preloadImage(source);
+      if (PRELOAD_AUDIO_PATTERN.test(source)) await preloadAudio(source);
+    };
+
+    const preloadAssetFiles = (async () => {
+      let nextAssetIndex = 0;
+      const workerCount = Math.min(PRELOAD_CONCURRENCY, PRELOAD_ASSETS.length);
+      const workers = Array.from({ length: workerCount }, async () => {
+        while (nextAssetIndex < PRELOAD_ASSETS.length) {
+          const source = PRELOAD_ASSETS[nextAssetIndex];
+          nextAssetIndex += 1;
+          if (!source) continue;
+          try {
+            await preloadResource(source);
+          } catch {
+            // A missing optional asset should not prevent the game from starting.
+          } finally {
+            markLoaded();
+          }
+        }
+      });
+      await Promise.all(workers);
+    })();
+
+    const preloadFontFaces = Promise.all(
+      PRELOAD_FONT_REQUESTS.map(async (font) => {
+        try {
+          await document.fonts.load(font);
+        } catch {
+          // A missing optional font face should not prevent the game from starting.
+        } finally {
+          markLoaded();
+        }
+      }),
+    );
     const minimumDisplayTime = new Promise<void>((resolve) => window.setTimeout(resolve, MINIMUM_PRELOADER_TIME));
 
-    await Promise.all([preloadFontFiles, preloadImages, preloadEffects]);
-    await Promise.all(PRELOAD_FONT_REQUESTS.map((font) => document.fonts.load(font)));
+    await Promise.all([preloadAssetFiles, preloadFontFaces]);
     await Promise.all([document.fonts.ready, minimumDisplayTime]);
     this.renderMainMenu();
   }
@@ -1411,39 +1512,88 @@ export class Game {
     this.renderMenuPage(
       "Options",
       `<div class="options-panel">
-         <div class="options-panel__audio-row">
-           <label class="options-panel__toggle">
-             <span>MUSIC</span>
-             <input id="music-option" type="checkbox" ${this.audioManager.musicEnabled ? "checked" : ""} />
+         <section class="options-panel__category" aria-labelledby="options-audio-title">
+           <h2 id="options-audio-title">Audio</h2>
+           <div class="options-panel__audio-row">
+             <label class="options-panel__toggle">
+               <span>MUSIC</span>
+               <input id="music-option" type="checkbox" ${this.audioManager.musicEnabled ? "checked" : ""} />
+             </label>
+             <span class="options-panel__volume-controls">
+               <input id="music-volume-range" type="range" min="0" max="100" step="1"
+                 value="${this.audioManager.musicVolume}" aria-label="Music volume" />
+               <input id="music-volume-number" type="number" min="0" max="100" step="1"
+                 value="${this.audioManager.musicVolume}" aria-label="Music volume percentage" autocomplete="off" />
+               <span aria-hidden="true">%</span>
+             </span>
+           </div>
+           <div class="options-panel__audio-row">
+             <label class="options-panel__toggle">
+               <span>SFX</span>
+               <input id="effects-option" type="checkbox" ${this.audioManager.effectsEnabled ? "checked" : ""} />
+             </label>
+             <span class="options-panel__volume-controls">
+               <input id="effects-volume-range" type="range" min="0" max="100" step="1"
+                 value="${this.audioManager.effectsVolume}" aria-label="SFX volume" />
+               <input id="effects-volume-number" type="number" min="0" max="100" step="1"
+                 value="${this.audioManager.effectsVolume}" aria-label="SFX volume percentage" autocomplete="off" />
+               <span aria-hidden="true">%</span>
+             </span>
+           </div>
+         </section>
+         <section class="options-panel__category" aria-labelledby="options-controls-title">
+           <h2 id="options-controls-title">Controls</h2>
+           <label class="options-panel__setting-row" for="mobile-controls-option">
+             <span>
+               <strong>MOBILE CONTROL PANEL</strong>
+               <small>Show a virtual cursor, direction pad, action buttons, scrolling and keyboard access during levels.</small>
+             </span>
+             <input id="mobile-controls-option" type="checkbox" ${this.mobileControlsEnabled ? "checked" : ""} />
            </label>
-           <span class="options-panel__volume-controls">
-             <input id="music-volume-range" type="range" min="0" max="100" step="1"
-               value="${this.audioManager.musicVolume}" aria-label="Music volume" />
-             <input id="music-volume-number" type="number" min="0" max="100" step="1"
-               value="${this.audioManager.musicVolume}" aria-label="Music volume percentage" autocomplete="off" />
-             <span aria-hidden="true">%</span>
-           </span>
-         </div>
-         <div class="options-panel__audio-row">
-           <label class="options-panel__toggle">
-             <span>SFX</span>
-             <input id="effects-option" type="checkbox" ${this.audioManager.effectsEnabled ? "checked" : ""} />
+         </section>
+         <section class="options-panel__category" aria-labelledby="options-clock-title">
+           <h2 id="options-clock-title">Clock</h2>
+           <label class="options-panel__setting-row" for="clock-enabled-option">
+             <span>
+               <strong>SHOW CURRENT TIME</strong>
+               <small>Display the current time at the upper-right corner of the game screen.</small>
+             </span>
+             <input id="clock-enabled-option" type="checkbox" ${this.clockEnabled ? "checked" : ""} />
            </label>
-           <span class="options-panel__volume-controls">
-             <input id="effects-volume-range" type="range" min="0" max="100" step="1"
-               value="${this.audioManager.effectsVolume}" aria-label="SFX volume" />
-             <input id="effects-volume-number" type="number" min="0" max="100" step="1"
-               value="${this.audioManager.effectsVolume}" aria-label="SFX volume percentage" autocomplete="off" />
-             <span aria-hidden="true">%</span>
-           </span>
-         </div>
-         <label class="options-panel__setting-row" for="mobile-controls-option">
-           <span>
-             <strong>MOBILE CONTROL PANEL</strong>
-             <small>Show a virtual cursor, direction pad, action buttons, scrolling and keyboard access during levels.</small>
-           </span>
-           <input id="mobile-controls-option" type="checkbox" ${this.mobileControlsEnabled ? "checked" : ""} />
-         </label>
+           <label class="options-panel__setting-row" for="clock-date-option">
+             <span>
+               <strong>SHOW DATE</strong>
+               <small>Add the current date before the clock.</small>
+             </span>
+             <input id="clock-date-option" type="checkbox" ${this.clockShowDate ? "checked" : ""} />
+           </label>
+           <label class="options-panel__setting-row" for="clock-hour-cycle-option">
+             <span>
+               <strong>TIME FORMAT</strong>
+               <small>Choose whether the clock uses a 12-hour or 24-hour display.</small>
+             </span>
+             <select id="clock-hour-cycle-option" aria-label="Current time format">
+               <option value="24"${this.clockHourCycle === "24" ? " selected" : ""}>24-hour</option>
+               <option value="12"${this.clockHourCycle === "12" ? " selected" : ""}>12-hour</option>
+             </select>
+           </label>
+           <div class="options-panel__setting-row options-panel__clock-custom">
+             <span>
+               <strong>CUSTOM GAME DATE / TIME</strong>
+               <small>PLAYER PC TIME reads the player's computer clock. CUSTOM TIME uses the date and time below.</small>
+             </span>
+             <span class="options-panel__clock-controls">
+               <label class="options-panel__inline-toggle" for="clock-force-game-time-option">
+                 <span>${this.getCustomGameTimeModeLabel()}</span>
+                 <input id="clock-force-game-time-option" type="checkbox" ${this.clockForceGameTime ? "checked" : ""} />
+               </label>
+               <span class="options-panel__clock-inputs">
+                 <input id="clock-custom-date-option" type="date" value="${this.clockCustomDate}" aria-label="Custom game date" />
+                 <input id="clock-custom-time-option" type="time" value="${this.clockCustomTime}" aria-label="Custom game time" />
+               </span>
+             </span>
+           </div>
+         </section>
          <section class="admin-panel" id="admin-panel" hidden>
            <p>ADMIN CONSOLE</p>
            <form id="admin-level-form">
@@ -1487,6 +1637,44 @@ export class Game {
       } catch {
         // Keep the setting for this session if persistent storage is unavailable.
       }
+    });
+    this.root.querySelector<HTMLInputElement>("#clock-enabled-option")?.addEventListener("change", (event) => {
+      this.clockEnabled = (event.currentTarget as HTMLInputElement).checked;
+      this.saveClockSetting(CLOCK_ENABLED_KEY, String(this.clockEnabled));
+      this.syncClockOverlay();
+    });
+    this.root.querySelector<HTMLInputElement>("#clock-date-option")?.addEventListener("change", (event) => {
+      this.clockShowDate = (event.currentTarget as HTMLInputElement).checked;
+      this.saveClockSetting(CLOCK_SHOW_DATE_KEY, String(this.clockShowDate));
+      this.updateClockOverlay();
+    });
+    this.root.querySelector<HTMLSelectElement>("#clock-hour-cycle-option")?.addEventListener("change", (event) => {
+      const value = (event.currentTarget as HTMLSelectElement).value;
+      this.clockHourCycle = value === "12" ? "12" : "24";
+      this.saveClockSetting(CLOCK_HOUR_CYCLE_KEY, this.clockHourCycle);
+      this.updateClockOverlay();
+    });
+    this.root.querySelector<HTMLInputElement>("#clock-force-game-time-option")?.addEventListener("change", (event) => {
+      this.clockForceGameTime = (event.currentTarget as HTMLInputElement).checked;
+      this.root.querySelector<HTMLElement>(".options-panel__inline-toggle span")!.textContent =
+        this.getCustomGameTimeModeLabel();
+      if (this.clockForceGameTime) this.resetCustomGameTimeAnchor();
+      this.saveClockSetting(CLOCK_FORCE_GAME_TIME_KEY, String(this.clockForceGameTime));
+      this.updateClockOverlay();
+    });
+    this.root.querySelector<HTMLInputElement>("#clock-custom-date-option")?.addEventListener("change", (event) => {
+      this.clockCustomDate = this.normalizeDateInput((event.currentTarget as HTMLInputElement).value);
+      (event.currentTarget as HTMLInputElement).value = this.clockCustomDate;
+      this.resetCustomGameTimeAnchor();
+      this.saveClockSetting(CLOCK_CUSTOM_DATE_KEY, this.clockCustomDate);
+      this.updateClockOverlay();
+    });
+    this.root.querySelector<HTMLInputElement>("#clock-custom-time-option")?.addEventListener("change", (event) => {
+      this.clockCustomTime = this.normalizeTimeInput((event.currentTarget as HTMLInputElement).value);
+      (event.currentTarget as HTMLInputElement).value = this.clockCustomTime;
+      this.resetCustomGameTimeAnchor();
+      this.saveClockSetting(CLOCK_CUSTOM_TIME_KEY, this.clockCustomTime);
+      this.updateClockOverlay();
     });
 
     const bindVolumeControls = (
@@ -1687,6 +1875,7 @@ export class Game {
       restart: () => this.showLevel(levelNumber, initialScene),
       goToLevel: (targetLevel, targetScene) => this.showLevel(targetLevel, targetScene),
       goToMenu: () => this.renderMainMenu(),
+      now: () => this.getGameNow(),
       audio: this.audioManager,
       hasSessionFlag: (flag) => this.sessionFlags.has(flag),
       setSessionFlag: (flag) => this.sessionFlags.add(flag),
@@ -1708,6 +1897,145 @@ export class Game {
     } catch {
       return false;
     }
+  }
+
+  private loadStoredBoolean(key: string, fallback: boolean): boolean {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === "true") return true;
+      if (stored === "false") return false;
+    } catch {
+      // Keep the default in restricted browser contexts.
+    }
+    return fallback;
+  }
+
+  private loadClockHourCycle(): ClockHourCycle {
+    try {
+      return localStorage.getItem(CLOCK_HOUR_CYCLE_KEY) === "12" ? "12" : "24";
+    } catch {
+      return "24";
+    }
+  }
+
+  private loadStoredDate(key: string): string {
+    try {
+      return this.normalizeDateInput(localStorage.getItem(key) ?? "");
+    } catch {
+      return this.formatDateInput(new Date());
+    }
+  }
+
+  private loadStoredTime(key: string): string {
+    try {
+      return this.normalizeTimeInput(localStorage.getItem(key) ?? "");
+    } catch {
+      return this.formatTimeInput(new Date());
+    }
+  }
+
+  private saveClockSetting(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      // Keep the setting for this session if persistent storage is unavailable.
+    }
+  }
+
+  private normalizeDateInput(value: string): string {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split("-").map(Number);
+      const date = new Date(year!, month! - 1, day!);
+      if (date.getFullYear() === year && date.getMonth() === month! - 1 && date.getDate() === day) return value;
+    }
+    return this.formatDateInput(new Date());
+  }
+
+  private normalizeTimeInput(value: string): string {
+    if (/^\d{2}:\d{2}$/.test(value)) {
+      const [hour, minute] = value.split(":").map(Number);
+      if (hour! >= 0 && hour! <= 23 && minute! >= 0 && minute! <= 59) return value;
+    }
+    return this.formatTimeInput(new Date());
+  }
+
+  private formatDateInput(date: Date): string {
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0"),
+    ].join("-");
+  }
+
+  private formatTimeInput(date: Date): string {
+    return [
+      String(date.getHours()).padStart(2, "0"),
+      String(date.getMinutes()).padStart(2, "0"),
+    ].join(":");
+  }
+
+  private createCustomGameTimeAnchor(realNow: Date): Date {
+    const [year, month, day] = this.clockCustomDate.split("-").map(Number);
+    const [hour, minute] = this.clockCustomTime.split(":").map(Number);
+    return new Date(
+      year!,
+      month! - 1,
+      day!,
+      hour!,
+      minute!,
+      realNow.getSeconds(),
+      realNow.getMilliseconds(),
+    );
+  }
+
+  private resetCustomGameTimeAnchor(): void {
+    const realNow = new Date();
+    this.customGameTimeRealAnchor = realNow.getTime();
+    this.customGameTimeAnchor = this.createCustomGameTimeAnchor(realNow);
+  }
+
+  private getGameNow(): Date {
+    const realNow = new Date();
+    if (!this.clockForceGameTime) return realNow;
+
+    return new Date(this.customGameTimeAnchor.getTime() + realNow.getTime() - this.customGameTimeRealAnchor);
+  }
+
+  private syncClockOverlay(): void {
+    if (!this.clockEnabled) {
+      this.clockElement?.remove();
+      this.clockElement = undefined;
+      if (this.clockTimer) window.clearInterval(this.clockTimer);
+      this.clockTimer = 0;
+      return;
+    }
+
+    if (!this.clockElement || !this.clockElement.isConnected || this.clockElement.parentElement !== document.body) {
+      this.clockElement = document.createElement("time");
+      this.clockElement.className = "game-clock";
+      this.clockElement.setAttribute("aria-label", "Current time");
+      document.body.append(this.clockElement);
+    }
+    this.updateClockOverlay();
+    if (!this.clockTimer) {
+      this.clockTimer = window.setInterval(() => this.updateClockOverlay(), 100);
+    }
+  }
+
+  private updateClockOverlay(): void {
+    if (!this.clockElement || !this.clockElement.isConnected) return;
+    const now = this.getGameNow();
+    const time = new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: this.clockHourCycle === "12",
+    }).format(now);
+    const date = this.clockShowDate
+      ? `${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}/${now.getFullYear()} `
+      : "";
+    this.clockElement.dateTime = now.toISOString();
+    this.clockElement.textContent = `${date}${time}`;
   }
 
   private bindRevivalLevelPresentation(screen: HTMLElement, levelNumber: number): () => void {

@@ -423,7 +423,6 @@ export const level47: LevelDefinition = {
     let sceneFiveLoopObstacleElements: HTMLElement[] = [];
     let sceneFiveCenterObstacle: HTMLElement | undefined;
     let absoluteZeroRevealed = false;
-    let retriedMaze = false;
     let lives = MAX_LIVES;
     let damageInvincibleUntil = 0;
     let collectedHeartPickups = new Set<number>();
@@ -1028,6 +1027,7 @@ export const level47: LevelDefinition = {
         }
         else if (destinationHoldSeconds >= 3) {
           if (sceneNumber === 5) {
+            unlockAchievement(87);
             absoluteZeroRevealed = true;
             changeScene(1);
           }
@@ -1047,7 +1047,6 @@ export const level47: LevelDefinition = {
         lives = MAX_LIVES;
         damageInvincibleUntil = 0;
         collectedHeartPickups = new Set<number>();
-        retriedMaze = true;
         sceneNumber = 2;
         renderScene();
       });
@@ -1235,7 +1234,6 @@ export const level47: LevelDefinition = {
         event.preventDefault();
         const answer = maskedInput?.getValue().trim().toLowerCase() ?? "";
         if (answer.replace(/\s+/g, "") === "absolutezero") {
-          if (absoluteZeroRevealed && !retriedMaze) unlockAchievement(87);
           complete();
           return;
         }

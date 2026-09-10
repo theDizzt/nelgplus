@@ -94,6 +94,40 @@
   background: #0000ff;
 }
 
+.level-42__invincible-toggle {
+  position: absolute;
+  z-index: 12;
+  top: 18px;
+  right: 18px;
+  min-width: 166px;
+  height: 40px;
+  padding: 0 12px;
+  color: #00114d;
+  background: #0ff;
+  border: 3px solid #00004a;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 55%);
+  cursor: pointer;
+  font: 700 18px/1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  letter-spacing: 0;
+}
+
+.level-42__invincible-toggle[hidden] {
+  display: none;
+}
+
+.level-42__invincible-toggle:hover,
+.level-42__invincible-toggle:focus-visible {
+  background: #ff0;
+  outline: none;
+}
+
+.level-42__invincible-toggle.is-active {
+  color: #fff;
+  background: #d000ff;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 55%), 0 0 14px #0ff;
+}
+
 .level-42--game .level-42__heading {
   color: #ff0;
 }
@@ -128,6 +162,7 @@
 .level-42__magic-circle,
 .level-42__lifeline-circle,
 .level-42__lifeline-message,
+.level-42__meteor-warning,
 .level-42__meteor,
 .level-42__laser,
 .level-42__mine,
@@ -230,6 +265,7 @@
 .level-42__magic-circle,
 .level-42__lifeline-circle,
 .level-42__lifeline-message,
+.level-42__meteor-warning,
 .level-42__meteor,
 .level-42__laser,
 .level-42__mine {
@@ -320,6 +356,18 @@
   font: 700 29px/1.1 "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
   letter-spacing: 0;
   white-space: nowrap;
+}
+
+.level-42__meteor-warning {
+  z-index: 4;
+  border: 3px solid #ff2a00;
+  border-radius: 50%;
+  background:
+    linear-gradient(45deg, transparent 44%, rgb(255 42 0 / 86%) 45% 55%, transparent 56%),
+    linear-gradient(-45deg, transparent 44%, rgb(255 42 0 / 86%) 45% 55%, transparent 56%),
+    radial-gradient(circle, rgb(255 255 0 / 24%) 0 32%, rgb(255 42 0 / 20%) 34% 50%, transparent 52%);
+  box-shadow: 0 0 12px rgb(255 42 0 / 85%), inset 0 0 12px rgb(255 255 0 / 42%);
+  animation: level-42-meteor-warning-pulse 260ms steps(2, jump-none) infinite;
 }
 
 .level-42__meteor {
@@ -536,6 +584,11 @@
   50% { translate: -2px -4px; }
   75% { translate: 3px 3px; }
   100% { translate: 0 0; }
+}
+
+@keyframes level-42-meteor-warning-pulse {
+  0% { opacity: 0.42; scale: 0.88; }
+  100% { opacity: 1; scale: 1; }
 }
 
 @keyframes level-42-invincible-blink {

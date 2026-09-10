@@ -80,6 +80,7 @@ export const level53: LevelDefinition = {
     let activeLetter: string | undefined;
     let lastLetter: string | undefined;
     let retryLetter: string | undefined;
+    let boardRetryCount = 0;
     let boardActive = false;
 
     const updateCompletionState = () => {
@@ -92,6 +93,8 @@ export const level53: LevelDefinition = {
     const closeBoard = (state: "failed" | "cleared") => {
       boardActive = false;
       retryLetter = state === "failed" ? activeLetter : undefined;
+      if (state === "failed") boardRetryCount += 1;
+      else boardRetryCount = 0;
       board.classList.add(state === "failed" ? "is-failed" : "is-cleared");
       timeout(() => {
         board.hidden = true;
@@ -116,7 +119,7 @@ export const level53: LevelDefinition = {
 
       remainingLetters.delete(activeLetter);
       lastLetter = activeLetter;
-      unlockAchievement(112);
+      if (boardRetryCount <= 5) unlockAchievement(112);
       closeBoard("cleared");
       updateCompletionState();
     };
@@ -128,6 +131,7 @@ export const level53: LevelDefinition = {
         : [...remainingLetters].filter((letter) => remainingLetters.size === 1 || letter !== lastLetter);
       const selectedLetter = choices[Math.floor(Math.random() * choices.length)];
       if (!selectedLetter) return;
+      if (selectedLetter !== retryLetter) boardRetryCount = 0;
       const pattern = LETTERS[selectedLetter];
       if (!pattern) return;
       activeLetter = selectedLetter;

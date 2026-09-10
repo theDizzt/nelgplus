@@ -18,8 +18,9 @@ export const level50: LevelDefinition = {
       id: `enhanced-20-scene-${index + 1}`,
       label: `Enhanced Level 20 - Scene ${index + 1}`,
     })),
+    { id: "enhanced-25-scene-7", label: "Enhanced Level 25 - Maze success" },
   ],
-  mount({ screen, audio, listen, goToMenu, session, complete, unlockAchievement }) {
+  mount({ screen, audio, listen, goToMenu, session, unlockAchievement }) {
     screen.className = "level-screen level-50";
     screen.innerHTML = `
       <header class="level-heading level-50__heading" aria-label="Level 50, Revival">
@@ -143,7 +144,6 @@ export const level50: LevelDefinition = {
           goToMenu();
           return;
         case "forward":
-          complete();
           return;
         case "back":
           unlockAchievement(90);

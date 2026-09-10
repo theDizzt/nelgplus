@@ -28,6 +28,7 @@ export const levelMinus06: LevelDefinition = {
     { id: "main", label: "Screen 1 - Main" },
     { id: "fail", label: "Screen 2 - Fail" },
     { id: "success", label: "Screen 3 - Success" },
+    { id: "90", label: "Screen 1 - 90.0% reached" },
   ],
   mount({ screen, initialScene, listen, goToLevel, wrongAnswer, unlockAchievement, audio, session }) {
     screen.className = "level-screen level-minus-06";
@@ -74,7 +75,7 @@ export const levelMinus06: LevelDefinition = {
       output.value = `${(points / 10).toFixed(1)}%`;
       if (points === 666) unlockAchievement(119);
     };
-    const changeScene = (next: Scene) => {
+    const changeScene = (next: Scene, startingPoints = 0) => {
       scene = next;
       screen.dataset.scene = next;
       drops = [];
@@ -88,7 +89,7 @@ export const levelMinus06: LevelDefinition = {
       nextColor = randomBetween(3000, 5000);
       nextSubmit = randomBetween(30000, 42000);
       if (next === "main") {
-        points = 0;
+        points = startingPoints;
         color = Math.floor(Math.random() * COLORS.length);
         basket.style.backgroundColor = COLORS[color]!;
         password.clear();
@@ -159,7 +160,8 @@ export const levelMinus06: LevelDefinition = {
       else wrongAnswer();
     });
 
-    changeScene(initialScene === "fail" || initialScene === "success" ? initialScene : "main");
+    if (initialScene === "fail" || initialScene === "success") changeScene(initialScene);
+    else changeScene("main", initialScene === "90" ? 900 : 0);
     const animate = (now: number) => {
       const delta = Math.min(100, Math.max(0, now - lastTime));
       lastTime = now;

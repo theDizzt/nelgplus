@@ -15,6 +15,13 @@ interface MovingHazard extends Rect {
   vy: number;
 }
 
+interface MeteorWarning extends Rect {
+  element: HTMLElement;
+  spawnAt: number;
+  meteorX: number;
+  meteorVx: number;
+}
+
 interface LaserHazard extends Rect {
   element: HTMLElement;
   activatesAt: number;
@@ -34,6 +41,8 @@ const BOOST_CHARGE_PER_SECOND = 20;
 const BOOST_DRAIN_PER_SECOND = 55;
 const RAINBOW_SQUARE_SPEED = 290;
 const LIFELINE_INVINCIBLE_TIME = 3_000;
+const INVINCIBLE_TOGGLE_CODE = "melonsoda84";
+const METEOR_WARNING_TIME = 2_000;
 const SURVIVAL_TIME = 20_000;
 const DOOR_OPEN_TIME = 900;
 const ARENA: Rect = { x: 192, y: 120, width: 520, height: 400 };
@@ -107,6 +116,10 @@ export const level42: LevelDefinition = {
     let player = { ...PLAYER_START, width: PLAYER_SIZE, height: PLAYER_SIZE };
     let activatedAt: number | undefined;
     let deathReason = "You died in an unknown accident.";
+    let secretBuffer = "";
+    let invincibleToggleVisible = false;
+    let manualInvincible = false;
+    let clearTemporaryInvincibility: (() => void) | undefined;
     const pressedKeys = new Set<string>();
 
     void audio.playMusic("music/level42.mp3", true);
@@ -118,12 +131,33 @@ export const level42: LevelDefinition = {
       pressedKeys.clear();
     };
 
+    const syncInvincibleToggle = () => {
+      const button = screen.querySelector<HTMLButtonElement>("[data-level-42-invincible-toggle]");
+      if (!button) return;
+      button.hidden = !invincibleToggleVisible;
+      button.textContent = manualInvincible ? "INVINCIBLE ON" : "INVINCIBLE OFF";
+      button.classList.toggle("is-active", manualInvincible);
+      button.setAttribute("aria-pressed", String(manualInvincible));
+    };
+
+    const invincibleToggleMarkup = () => `
+      <button
+        class="level-42__invincible-toggle${manualInvincible ? " is-active" : ""}"
+        type="button"
+        data-level-42-invincible-toggle
+        aria-pressed="${manualInvincible}"
+        ${invincibleToggleVisible ? "" : "hidden"}
+      >${manualInvincible ? "INVINCIBLE ON" : "INVINCIBLE OFF"}</button>
+    `;
+
     const renderStart = () => {
       stopGameLoop();
+      clearTemporaryInvincibility = undefined;
       scene = "start";
       screen.className = "level-screen level-42 level-42--start";
       screen.innerHTML = `
         ${heading()}
+        ${invincibleToggleMarkup()}
         <div class="level-42__intro">
           <p class="level-42__intro-warning">You fell into a trap on the way to Level 43!</p>
           <p>This trap has several obstacles, and you have to<br />
@@ -138,10 +172,12 @@ export const level42: LevelDefinition = {
 
     const renderDeath = () => {
       stopGameLoop();
+      clearTemporaryInvincibility = undefined;
       scene = "death";
       screen.className = "level-screen level-42 level-42--death";
       screen.innerHTML = `
         ${heading()}
+        ${invincibleToggleMarkup()}
         <p class="level-42__death-message">YOU DIED</p>
         <p class="level-42__death-reason">${deathReason}</p>
         <button class="level-42__retry" type="button" aria-label="Return to the game screen">&lt;----</button>
@@ -165,6 +201,7 @@ export const level42: LevelDefinition = {
         <div class="level-42__floor level-42__floor--arena" aria-hidden="true"></div>
         <div class="level-42__floor level-42__floor--corridor" aria-hidden="true"></div>
         ${heading()}
+        ${invincibleToggleMarkup()}
         <div class="level-42__exit-portal" aria-label="Warp Zone portal"></div>
         <div class="level-42__trigger-portal" aria-label="Start the survival timer"></div>
         <div class="level-42__door-mask" aria-label="Timed door"><div class="level-42__door"></div></div>
@@ -198,16 +235,20 @@ export const level42: LevelDefinition = {
       let magicCircles: MovingHazard[] = [];
       let lifelineCircles: MovingHazard[] = [];
       let lifelineMessages: MovingHazard[] = [];
+      let meteorWarnings: MeteorWarning[] = [];
       let meteors: MovingHazard[] = [];
       let lasers: LaserHazard[] = [];
       let mines: MineHazard[] = [];
       let chaser: MovingHazard | undefined;
       let invertedUntil = 0;
       let invincibleUntil = 0;
+      clearTemporaryInvincibility = () => {
+        invincibleUntil = 0;
+      };
       let boostCharge = 0;
       let nextRainbowAt = 0;
       let nextMagicAt = 5_000;
-      let nextMeteorAt = 8_000;
+      let nextMeteorWarningAt = 8_000 - METEOR_WARNING_TIME;
       let nextLaserAt = 10_000;
       let nextMineAt = 13_000;
       let rainbowMessageSpawned = false;
@@ -290,11 +331,31 @@ export const level42: LevelDefinition = {
         magicWave += 1;
       };
 
-      const spawnMeteor = () => {
+      const spawnMeteorWarning = (elapsed: number) => {
+        const meteorX = randomBetween(ARENA.x + 24, ARENA.x + ARENA.width - 48);
+        const meteorVx = randomBetween(-55, 55);
+        const element = document.createElement("span");
+        element.className = "level-42__meteor-warning";
+        hazardsLayer.append(element);
+        const warning = {
+          x: meteorX - 17,
+          y: ARENA.y + 22,
+          width: 60,
+          height: 60,
+          element,
+          spawnAt: elapsed + METEOR_WARNING_TIME,
+          meteorX,
+          meteorVx,
+        };
+        place(element, warning);
+        meteorWarnings.push(warning);
+      };
+
+      const spawnMeteor = (x: number, vx: number) => {
         meteors.push(createMovingHazard(
           "level-42__meteor",
-          { x: randomBetween(ARENA.x + 24, ARENA.x + ARENA.width - 48), y: 62, width: 26, height: 58 },
-          randomBetween(-55, 55),
+          { x, y: 62, width: 26, height: 58 },
+          vx,
           510,
         ));
       };
@@ -340,7 +401,7 @@ export const level42: LevelDefinition = {
         boostFill.style.width = `${boostCharge}%`;
         boostPercent.value = `${Math.round(boostCharge)}%`;
         screen.classList.toggle("is-boosting", boosting);
-        let invincible = time < invincibleUntil;
+        let invincible = manualInvincible || time < invincibleUntil;
         screen.classList.toggle("is-invincible", invincible);
         if (boostCharge >= 100) {
           unlockAchievement(77);
@@ -399,9 +460,9 @@ export const level42: LevelDefinition = {
             spawnMagicCircle();
             nextMagicAt += 5_000;
           }
-          while (nextMeteorAt <= elapsed && nextMeteorAt < SURVIVAL_TIME) {
-            spawnMeteor();
-            nextMeteorAt += 2_000;
+          while (nextMeteorWarningAt <= elapsed && nextMeteorWarningAt + METEOR_WARNING_TIME < SURVIVAL_TIME) {
+            spawnMeteorWarning(nextMeteorWarningAt);
+            nextMeteorWarningAt += 2_000;
           }
           while (nextLaserAt <= elapsed && nextLaserAt < SURVIVAL_TIME) {
             spawnLaser(elapsed);
@@ -470,6 +531,13 @@ export const level42: LevelDefinition = {
               return removeMovingHazard(hazard);
             }
             return hazard.x < 850 || removeMovingHazard(hazard);
+          });
+
+          meteorWarnings = meteorWarnings.filter((warning) => {
+            if (elapsed < warning.spawnAt) return true;
+            spawnMeteor(warning.meteorX, warning.meteorVx);
+            warning.element.remove();
+            return false;
           });
 
           meteors = meteors.filter((hazard) => {
@@ -549,6 +617,14 @@ export const level42: LevelDefinition = {
     };
 
     listen(document, "keydown", (event) => {
+      if (!event.repeat && event.key.length === 1 && !event.ctrlKey && !event.altKey && !event.metaKey) {
+        secretBuffer = `${secretBuffer}${event.key.toLowerCase()}`.slice(-INVINCIBLE_TOGGLE_CODE.length);
+        if (secretBuffer === INVINCIBLE_TOGGLE_CODE) {
+          secretBuffer = "";
+          invincibleToggleVisible = true;
+          syncInvincibleToggle();
+        }
+      }
       const control = event.code === "Space" ? "Space" : event.key;
       if (scene !== "game" || (control !== "Space" && !control.startsWith("Arrow"))) return;
       pressedKeys.add(control);
@@ -563,6 +639,16 @@ export const level42: LevelDefinition = {
     listen(window, "blur", () => pressedKeys.clear());
     listen(screen, "click", (event) => {
       const target = event.target as Element;
+      const invincibleToggle = target.closest<HTMLButtonElement>("[data-level-42-invincible-toggle]");
+      if (invincibleToggle && !invincibleToggle.hidden) {
+        manualInvincible = !manualInvincible;
+        if (!manualInvincible) {
+          clearTemporaryInvincibility?.();
+          screen.classList.remove("is-invincible");
+        }
+        syncInvincibleToggle();
+        return;
+      }
       if (target.closest(".level-42__start-button")) renderGame();
       else if (target.closest(".level-42__retry")) renderGame();
     });

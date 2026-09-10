@@ -788,7 +788,7 @@
       "id": 112,
       "secret": true,
       "name": "Dalgona Candy Challenge",
-      "condition": "Clear one board in Level 53 perfectly on the first try.",
+      "condition": "Clear one board in Level 53 after retrying 5 times or fewer.",
       "inputCodes": "5766-4668-9558"
     },
     {

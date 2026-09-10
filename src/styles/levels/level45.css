@@ -68,7 +68,8 @@
   color: #fffffc;
   text-align: center;
   white-space: nowrap;
-  font-family: "NELG Matisse", "Arial Rounded MT Bold", sans-serif;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  font-weight: 700;
   font-size: 15px;
   line-height: 1;
 }

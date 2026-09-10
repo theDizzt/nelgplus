@@ -39,7 +39,12 @@ const FRIENDS: readonly FriendDefinition[] = [
   { name: "level-builder", image: "level-builder.png", width: 74, x: 692, y: 420, vx: -34, vy: -18 },
 ];
 
-const CREDIT_NICKNAMES = new Set(["dizzt3942", "highstrike300", "bumchidp", "dmsql3935", "kukui91"]);
+const CREDIT_NICKNAMES = new Set([
+  "dizzt", "dizzt3942", "perhaptation", "highstrike300",
+  "c-tall ball", "dapur", "bumchidp", "ntg", "matchoi", "argentumb", "dmsql3935", "kukui", "kukui91",
+  "decing", "jw29674", "bin", "monteeplayer", "confringo", "yosemite", "lunaris", "mutsuki",
+  "archbear", "iamwagyu", "mandu", "mandu0730", "hwarang", "bloomin'lady", "pparade", "zeram",
+]);
 
 export const level51: LevelDefinition = {
   number: 51,
@@ -204,7 +209,8 @@ export const level51: LevelDefinition = {
     listen(form, "submit", (event) => {
       event.preventDefault();
       const answer = maskedInput.getValue().trim().toLowerCase();
-      if (CREDIT_NICKNAMES.has(answer)) unlockAchievement(110);
+      const normalizedAnswer = answer.replace(/\s+/g, " ");
+      if (CREDIT_NICKNAMES.has(normalizedAnswer)) unlockAchievement(110);
       const friend = stateByName.get(answer);
       if (!friend || friend.exiting || friend.removed) {
         showWrongInput();

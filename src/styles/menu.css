@@ -1306,7 +1306,7 @@
 
 .options-panel {
   display: grid;
-  gap: 0;
+  gap: 13px;
   box-sizing: border-box;
   width: 100%;
   max-width: none;
@@ -1330,6 +1330,21 @@
   border: 2px solid #100d0a;
 }
 .options-panel::-webkit-scrollbar-thumb:hover { background: #ffb13b; }
+
+.options-panel__category {
+  display: grid;
+  gap: 8px;
+}
+
+.options-panel__category h2 {
+  margin: 0;
+  padding: 0 3px 2px;
+  color: #ff9900;
+  border-bottom: 1px solid #8b5709;
+  font: 700 13px/1.2 "NELG Courier", Courier, "Courier New", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .options-panel label {
   display: flex;
@@ -1392,7 +1407,39 @@
   text-align: right;
 }
 
+.options-panel input[type="date"],
+.options-panel input[type="time"] {
+  width: 132px;
+  height: 32px;
+  padding: 3px 6px;
+  color: #f1e8db;
+  background: #100d0a;
+  border: 1px solid #654d35;
+  border-radius: 3px;
+  outline: none;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+}
+
 .options-panel input[type="number"]:focus {
+  border-color: #ff9900;
+}
+
+.options-panel select {
+  width: 128px;
+  height: 32px;
+  padding: 3px 6px;
+  color: #f1e8db;
+  background: #100d0a;
+  border: 1px solid #654d35;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+}
+
+.options-panel input[type="date"]:focus,
+.options-panel input[type="time"]:focus,
+.options-panel select:focus {
   border-color: #ff9900;
 }
 
@@ -1425,6 +1472,39 @@
 
 .options-panel__setting-row input {
   flex: 0 0 auto;
+}
+
+.options-panel__clock-custom {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options-panel__clock-controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.options-panel__inline-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  color: #f1e8db;
+  font: 700 12px/1 "NELG Courier", Courier, "Courier New", monospace;
+}
+
+.options-panel .options-panel__inline-toggle input {
+  flex: 0 0 auto;
+}
+
+.options-panel__clock-inputs {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
 }
 
 .admin-panel {

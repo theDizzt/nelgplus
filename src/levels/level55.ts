@@ -10,7 +10,7 @@ type Level55Mode = "blue" | "green" | "yellow";
 export const level55: LevelDefinition = {
   number: 55,
   title: "Negative",
-  mount({ screen, complete, unlockAchievement, listen }) {
+  mount({ screen, complete, unlockAchievement, listen, now: getGameNow }) {
     screen.className = "level-screen level-55";
     screen.style.setProperty("--level-55-bg", `url("${assetUrl("images/level55bg.jpg")}")`);
     screen.innerHTML = `
@@ -96,7 +96,7 @@ export const level55: LevelDefinition = {
         return;
       }
       if (mode === "green" && value.toLowerCase() === FINAL_ANSWER) {
-        const now = new Date();
+        const now = getGameNow();
         if (now.getMonth() === 7 && now.getDate() === 1) unlockAchievement(122);
         complete();
         return;

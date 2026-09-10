@@ -11,6 +11,7 @@ interface ScopeOptions {
   restart: () => void;
   goToLevel: (levelNumber: number, initialScene?: string) => void;
   goToMenu: () => void;
+  now: () => Date;
   audio: AudioManager;
   hasSessionFlag: (flag: string) => boolean;
   setSessionFlag: (flag: string) => void;
@@ -62,6 +63,7 @@ export class LevelScope {
       restart: options.restart,
       goToLevel: options.goToLevel,
       goToMenu: options.goToMenu,
+      now: options.now,
       listen: (target, type, listener, eventOptions = {}) => {
         target.addEventListener(type, listener as EventListener, {
           ...eventOptions,

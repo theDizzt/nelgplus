@@ -10,7 +10,10 @@ export function attachStarMaskedInput(
   listen: LevelContext["listen"],
 ): StarMaskedInput {
   let rawValue = "";
-  const maximumLength = input.maxLength > 0 ? input.maxLength : Number.POSITIVE_INFINITY;
+  const requestedMaximumLength = input.maxLength > 0 ? input.maxLength : Number.POSITIVE_INFINITY;
+  const maximumLength = requestedMaximumLength === 12 && input.classList.contains("nelg-password-input")
+    ? Number.POSITIVE_INFINITY
+    : requestedMaximumLength;
   const mirror = document.createElement("span");
 
   input.type = "text";

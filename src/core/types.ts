@@ -38,6 +38,7 @@ export interface LevelContext {
   restart: () => void;
   goToLevel: (levelNumber: number, initialScene?: string) => void;
   goToMenu: () => void;
+  now: () => Date;
   listen: <K extends keyof HTMLElementEventMap>(
     target: HTMLElement | Document | Window,
     type: K,
