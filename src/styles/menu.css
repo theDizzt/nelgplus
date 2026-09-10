@@ -1396,6 +1396,37 @@
   border-color: #ff9900;
 }
 
+.options-panel .options-panel__setting-row {
+  gap: 22px;
+  margin-top: 2px;
+  padding: 14px 16px;
+  background: rgb(255 153 0 / 5%);
+  border: 1px solid #654d35;
+  border-radius: 3px;
+}
+
+.options-panel__setting-row > span {
+  display: grid;
+  gap: 5px;
+}
+
+.options-panel__setting-row strong {
+  color: #f1e8db;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.options-panel__setting-row small {
+  max-width: 390px;
+  color: #aaa196;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.options-panel__setting-row input {
+  flex: 0 0 auto;
+}
+
 .admin-panel {
   margin-top: 22px;
   padding: 14px 16px 12px;

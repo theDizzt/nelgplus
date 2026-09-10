@@ -1,0 +1,127 @@
+.mobile-controls {
+  position: absolute;
+  z-index: 2000;
+  inset: 0;
+  pointer-events: none;
+  touch-action: none;
+  font-family: "NELG Arial", Arial, sans-serif;
+}
+
+.mobile-controls button { -webkit-tap-highlight-color: transparent; }
+
+.mobile-controls__dpad,
+.mobile-controls__actions {
+  position: absolute;
+  bottom: max(calc(var(--game-offset-y, 0px) + 12px), env(safe-area-inset-bottom));
+  pointer-events: auto;
+}
+
+.mobile-controls__dpad {
+  left: max(calc(var(--game-offset-x, 0px) + 12px), env(safe-area-inset-left));
+  display: grid;
+  grid-template: repeat(3, 48px) / repeat(3, 48px);
+  gap: 3px;
+}
+
+.mobile-controls__actions {
+  right: max(calc(var(--game-offset-x, 0px) + 12px), env(safe-area-inset-right));
+  display: grid;
+  grid-template-columns: 42px 42px 54px 62px;
+  grid-template-rows: 46px 46px;
+  align-items: end;
+  gap: 6px;
+}
+
+.mobile-control {
+  min-width: 0;
+  padding: 0;
+  color: #fff8e8;
+  background: rgb(18 15 12 / 78%);
+  border: 2px solid rgb(255 177 59 / 82%);
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 42%);
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 1px 2px #000;
+  touch-action: none;
+  user-select: none;
+}
+
+.mobile-control:active {
+  color: #1b1208;
+  background: rgb(255 177 59 / 94%);
+  transform: translateY(1px);
+}
+
+.mobile-control--up { grid-area: 1 / 2; }
+.mobile-control--left { grid-area: 2 / 1; }
+.mobile-control--center { grid-area: 2 / 2; font-size: 22px; }
+.mobile-control--right { grid-area: 2 / 3; }
+.mobile-control--down { grid-area: 3 / 2; }
+.mobile-control--small { height: 42px; border-color: rgb(180 171 157 / 80%); font-size: 22px; }
+
+.mobile-control--secondary {
+  grid-area: 1 / 3 / 3 / 4;
+  height: 54px;
+  border-radius: 50%;
+  border-color: rgb(112 197 255 / 88%);
+}
+
+.mobile-control--primary {
+  grid-area: 1 / 4 / 3 / 5;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: #fff;
+  background: rgb(149 28 22 / 82%);
+}
+
+.mobile-control--space {
+  grid-area: 2 / 1 / 3 / 3;
+  height: 42px;
+  font-size: 10px;
+  letter-spacing: .06em;
+}
+
+.mobile-controls__cursor {
+  position: absolute;
+  top: -11px;
+  left: -11px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgb(255 153 0 / 30%);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 60%), 0 0 9px #ff9900;
+  pointer-events: none;
+}
+
+.mobile-controls__cursor::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.mobile-controls__keyboard {
+  position: fixed;
+  top: 2px;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  padding: 0;
+  opacity: .01;
+  pointer-events: none;
+}
+
+@media (max-width: 540px), (max-height: 540px) {
+  .mobile-controls__dpad { grid-template: repeat(3, 42px) / repeat(3, 42px); }
+  .mobile-controls__actions { grid-template-columns: 38px 38px 48px 56px; }
+  .mobile-control--primary { width: 56px; height: 56px; }
+  .mobile-control--secondary { height: 48px; }
+}

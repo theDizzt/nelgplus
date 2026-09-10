@@ -3,19 +3,21 @@ import { assetUrl, SOUND_EFFECTS } from "./assets";
 import { InteractionGuard } from "./InteractionGuard";
 import { HallOfFameService, type HallOfFameEntry } from "./HallOfFameService";
 import { LevelScope } from "./LevelScope";
+import { MobileControls } from "./MobileControls";
 import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
-const GAME_VERSION = "1.1.81";
-const VERSION_DATE = "09/09/2026";
+const GAME_VERSION = "1.1.84";
+const VERSION_DATE = "09/10/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
 const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
 const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
+const MOBILE_CONTROLS_KEY = "nelg-mobile-controls-enabled";
 interface AchievementData {
   id: number;
   secret: boolean;
@@ -343,8 +345,12 @@ export class Game {
   private adminTitleFont = "";
   private adminSubtitleFont = "";
   private revivalWrongAnswerStreak = 0;
+  private readonly mobileControls: MobileControls;
+  private mobileControlsEnabled = this.loadMobileControlsEnabled();
 
-  constructor(private readonly root: HTMLElement) {}
+  constructor(private readonly root: HTMLElement) {
+    this.mobileControls = new MobileControls(root);
+  }
 
   start(): void {
     this.interactionGuard.enable();
@@ -1169,6 +1175,8 @@ export class Game {
              <li>Archbear <span>(iamwagyu)</span></li>
              <li>Mandu <span>(mandu0730)</span></li>
              <li>HwaRang<span>(bloomin'lady)</span></li>
+             <li>Pparade</li>
+             <li>Zeram</li>
            </ul>
          </section>
          <section class="credits-section">
@@ -1429,6 +1437,13 @@ export class Game {
              <span aria-hidden="true">%</span>
            </span>
          </div>
+         <label class="options-panel__setting-row" for="mobile-controls-option">
+           <span>
+             <strong>MOBILE CONTROL PANEL</strong>
+             <small>Show a virtual cursor, direction pad, action buttons, scrolling and keyboard access during levels.</small>
+           </span>
+           <input id="mobile-controls-option" type="checkbox" ${this.mobileControlsEnabled ? "checked" : ""} />
+         </label>
          <section class="admin-panel" id="admin-panel" hidden>
            <p>ADMIN CONSOLE</p>
            <form id="admin-level-form">
@@ -1464,6 +1479,14 @@ export class Game {
     });
     this.root.querySelector<HTMLInputElement>("#effects-option")?.addEventListener("change", (event) => {
       this.audioManager.setEffectsEnabled((event.currentTarget as HTMLInputElement).checked);
+    });
+    this.root.querySelector<HTMLInputElement>("#mobile-controls-option")?.addEventListener("change", (event) => {
+      this.mobileControlsEnabled = (event.currentTarget as HTMLInputElement).checked;
+      try {
+        localStorage.setItem(MOBILE_CONTROLS_KEY, String(this.mobileControlsEnabled));
+      } catch {
+        // Keep the setting for this session if persistent storage is unavailable.
+      }
     });
 
     const bindVolumeControls = (
@@ -1676,6 +1699,15 @@ export class Game {
       revivalCleanup?.();
     });
     this.bindDebugControls();
+    if (this.mobileControlsEnabled) this.mobileControls.mount();
+  }
+
+  private loadMobileControlsEnabled(): boolean {
+    try {
+      return localStorage.getItem(MOBILE_CONTROLS_KEY) === "true";
+    } catch {
+      return false;
+    }
   }
 
   private bindRevivalLevelPresentation(screen: HTMLElement, levelNumber: number): () => void {
@@ -1785,6 +1817,7 @@ export class Game {
   }
 
   private disposeCurrentLevel(): void {
+    this.mobileControls?.unmount();
     this.mainMenuCleanup?.();
     this.mainMenuCleanup = undefined;
     this.scope?.dispose();

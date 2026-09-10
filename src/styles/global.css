@@ -4,6 +4,7 @@
 @import "./components/custom-cursor.css";
 @import "./components/red-guy.css";
 @import "./components/buttons.css";
+@import "./components/mobile-controls.css";
 @import "./menu.css";
 @import "./warp-zone.css";
 @import "./levels/test-level.css";

@@ -6,11 +6,13 @@ function isInside(target: EventTarget | null, selector: string): boolean {
 }
 
 function blockContextMenu(event: MouseEvent): void {
+  if ((event as MouseEvent & { __nelgMobileControl?: boolean }).__nelgMobileControl) return;
   event.preventDefault();
   event.returnValue = false;
 }
 
 function blockSecondaryPointer(event: MouseEvent | PointerEvent): void {
+  if ((event as (MouseEvent | PointerEvent) & { __nelgMobileControl?: boolean }).__nelgMobileControl) return;
   if (event.button !== 2) return;
   event.preventDefault();
   event.returnValue = false;

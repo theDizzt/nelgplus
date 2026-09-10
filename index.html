@@ -9,11 +9,13 @@
       (() => {
         window.__NELG_CONTEXT_MENU_BLOCKER_VERSION = "2026-08-30-secondary-pointer";
         const blockContextMenu = (event) => {
+          if (event.__nelgMobileControl) return;
           event.preventDefault();
           event.returnValue = false;
           return false;
         };
         const blockSecondaryPointer = (event) => {
+          if (event.__nelgMobileControl) return;
           if (event.button !== 2) return;
           event.preventDefault();
           event.returnValue = false;
