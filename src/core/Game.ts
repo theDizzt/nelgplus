@@ -1545,7 +1545,7 @@ export class Game {
            <h2 id="options-controls-title">Controls</h2>
            <label class="options-panel__setting-row" for="mobile-controls-option">
              <span>
-               <strong>MOBILE CONTROL PANEL</strong>
+               <strong>MOBILE CONTROL PANEL (EXPERIMENTAL)</strong>
                <small>Show a virtual cursor, direction pad, action buttons, scrolling and keyboard access during levels.</small>
              </span>
              <input id="mobile-controls-option" type="checkbox" ${this.mobileControlsEnabled ? "checked" : ""} />

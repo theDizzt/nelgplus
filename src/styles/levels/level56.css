@@ -1,0 +1,234 @@
+.level-56 {
+  overflow: hidden;
+  color: #fff;
+  background: #000;
+}
+
+.level-56__prompt {
+  position: absolute;
+  top: 177px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font: 24px/1.2 "NELG Perpetua", Georgia, serif;
+}
+
+.level-56__hidden-message {
+  position: absolute;
+  top: 237px;
+  left: 22px;
+  width: 265px;
+  margin: 0;
+  color: #000003;
+  font: 22px/1.3 "NELG Arial", Arial, sans-serif;
+}
+
+.level-56__colors {
+  position: absolute;
+  top: 238px;
+  left: 326px;
+  display: grid;
+  grid-template-columns: repeat(3, 76px);
+  grid-template-rows: repeat(4, 76px);
+  gap: 7px;
+}
+
+.level-56__color {
+  width: 76px;
+  height: 76px;
+  padding: 0;
+  border: 5px solid #fff;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.level-56__symbol {
+  position: absolute;
+  top: 267px;
+  right: 12px;
+  width: 163px;
+  text-align: center;
+  font: 700 250px/1 "NELG Arial", Arial, sans-serif;
+  pointer-events: none;
+}
+
+.level-56__form {
+  position: absolute;
+  bottom: 37px;
+  left: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 269px;
+}
+
+.level-56__form label {
+  display: none;
+}
+
+.level-56[data-scene="1"] .level-56__form label {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  display: block;
+  width: 100%;
+  color: #fff;
+  font: 22px/1.2 "NELG Perpetua", Perpetua, Georgia, serif;
+  text-align: center;
+}
+
+.level-56__form input {
+  box-sizing: border-box;
+  width: 174px;
+  height: 43px;
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  caret-color: #000;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+
+.level-56__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  color: #111;
+  background: #ffff00;
+  border: 3px solid #111;
+  border-radius: 0;
+  font: 25px/1 "NELG Arial", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.level-56 button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.level-56 .nelg-password-input-mirror {
+  color: #111;
+  background: #fff;
+  border-color: #111;
+}
+
+.level-56__form input:focus {
+  outline: none;
+}
+
+.level-56__form button:hover:not(:disabled),
+.level-56__form button:focus-visible:not(:disabled) {
+  background: #f01818;
+  outline: none;
+}
+
+.level-56__form button:active:not(:disabled) {
+  background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%);
+}
+
+.level-56__scene {
+  position: absolute;
+  inset: 0;
+}
+
+.level-56__scene[hidden],
+.level-56__form[hidden] {
+  display: none;
+}
+
+.level-56__hint-grid {
+  position: absolute;
+  top: 42px;
+  left: 75px;
+  display: grid;
+  grid-template-columns: repeat(3, 105px);
+  grid-template-rows: repeat(4, 105px);
+  gap: 8px;
+  font: 48px/1 "NELG Perpetua", Georgia, serif;
+}
+
+.level-56__hint-grid > div {
+  display: grid;
+  place-items: center;
+  border: 5px solid #fff;
+}
+
+.level-56__position-hint,
+.level-56__rgb-hint {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 5px solid #fff;
+  font: 25px/1.3 "NELG Perpetua", Georgia, serif;
+  text-align: center;
+}
+
+.level-56__position-hint {
+  top: 42px;
+  left: 414px;
+  width: 112px;
+  height: 444px;
+  padding: 15px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.level-56__rgb-hint {
+  top: 381px;
+  left: 475px;
+  width: 245px;
+  height: 105px;
+}
+
+.level-56__back {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 16px;
+  color: #fff;
+  background: #000;
+  border: 3px solid #fff;
+  border-radius: 0;
+  font: 26px/1.2 "NELG Arial", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.level-56--fake {
+  color: #000;
+  background: #fff;
+}
+
+.level-56__fake-seven {
+  position: relative;
+  display: inline-block;
+}
+
+.level-56__fake-seven img {
+  position: absolute;
+  top: -4px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: 110px;
+  pointer-events: none;
+}
+
+.level-56--fake .level-56__form {
+  left: 0;
+  bottom: 33px;
+  width: 100%;
+  flex-direction: row;
+  border: 0;
+}

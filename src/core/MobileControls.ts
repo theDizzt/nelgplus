@@ -1,7 +1,10 @@
 const VIRTUAL_POINTER_ID = 9184;
 const CURSOR_STEP = 5.5;
+const JOYSTICK_DEAD_ZONE = 0.22;
+const MOBILE_CONTROL_MODE_KEY = "nelg-mobile-control-mode";
 
 type Direction = "up" | "down" | "left" | "right";
+type MobileControlMode = "dpad" | "joystick";
 type MobileControlEvent = Event & { __nelgMobileControl?: boolean };
 
 const DIRECTION_KEYS: Record<Direction, string> = {
@@ -18,6 +21,7 @@ function markMobileEvent<T extends Event>(event: T): T {
 
 export class MobileControls {
   private controller?: AbortController;
+  private panel?: HTMLElement;
   private cursorX = 400;
   private cursorY = 300;
   private hoverTarget?: Element;
@@ -27,6 +31,10 @@ export class MobileControls {
   private cursorMovedWhilePressed = false;
   private animationFrame?: number;
   private panelHidden = false;
+  private controlMode: MobileControlMode = this.loadControlMode();
+  private joystickPointerId?: number;
+  private joystickX = 0;
+  private joystickY = 0;
   private readonly directions = new Set<Direction>();
   private readonly directionPointers = new Map<number, Direction>();
   private readonly spacePointers = new Set<number>();
@@ -38,6 +46,7 @@ export class MobileControls {
 
     const panel = document.createElement("section");
     panel.className = "mobile-controls";
+    panel.dataset.controlMode = this.controlMode;
     panel.setAttribute("aria-label", "Mobile game controls");
     panel.innerHTML = `
       <button class="mobile-control mobile-controls__toggle" type="button" aria-controls="mobile-controls-panel" aria-expanded="${!this.panelHidden}">${this.panelHidden ? "Show controls" : "Hide controls"}</button>
@@ -45,13 +54,18 @@ export class MobileControls {
       <div class="mobile-controls__dpad" aria-label="Direction controls">
         <button class="mobile-control mobile-control--up" type="button" data-direction="up" aria-label="Up">▲</button>
         <button class="mobile-control mobile-control--left" type="button" data-direction="left" aria-label="Left">◀</button>
-        <button class="mobile-control mobile-control--center" type="button" data-mobile-action="keyboard" aria-label="Open keyboard">⌨</button>
         <button class="mobile-control mobile-control--right" type="button" data-direction="right" aria-label="Right">▶</button>
         <button class="mobile-control mobile-control--down" type="button" data-direction="down" aria-label="Down">▼</button>
       </div>
+      <div class="mobile-controls__joystick" data-mobile-joystick role="button" tabindex="0"
+        aria-label="Move virtual cursor">
+        <span class="mobile-controls__joystick-knob" aria-hidden="true"></span>
+      </div>
       <div class="mobile-controls__actions" aria-label="Action controls">
-        <button class="mobile-control mobile-control--small" type="button" data-mobile-action="wheel-up" aria-label="Scroll up">＋</button>
-        <button class="mobile-control mobile-control--small" type="button" data-mobile-action="wheel-down" aria-label="Scroll down">−</button>
+        <button class="mobile-control mobile-control--mode" type="button" data-mobile-action="mode" aria-label="Switch movement controls">${this.controlMode === "joystick" ? "PAD" : "STICK"}</button>
+        <button class="mobile-control mobile-control--small mobile-control--wheel-up" type="button" data-mobile-action="wheel-up" aria-label="Scroll up">＋</button>
+        <button class="mobile-control mobile-control--small mobile-control--wheel-down" type="button" data-mobile-action="wheel-down" aria-label="Scroll down">−</button>
+        <button class="mobile-control mobile-control--keyboard" type="button" data-mobile-action="keyboard" aria-label="Open keyboard">⌨</button>
         <button class="mobile-control mobile-control--secondary" type="button" data-mobile-action="secondary" aria-label="Right click">B</button>
         <button class="mobile-control mobile-control--primary" type="button" data-mobile-action="primary" aria-label="Click or hold">A</button>
         <button class="mobile-control mobile-control--space" type="button" data-mobile-action="space" aria-label="Space key">SPACE</button>
@@ -62,14 +76,19 @@ export class MobileControls {
         autocapitalize="none" spellcheck="false" aria-label="Mobile keyboard input" />
       </div>
     `;
-    this.root.append(panel);
+    document.documentElement.classList.add("mobile-controls-active");
+    document.body.append(panel);
+    this.panel = panel;
 
     const controller = new AbortController();
     this.controller = controller;
     const signal = controller.signal;
     panel.addEventListener("pointerdown", (event) => this.handlePointerDown(event), { signal });
+    panel.addEventListener("pointermove", (event) => this.handlePointerMove(event), { signal });
+    window.addEventListener("pointermove", (event) => this.handlePointerMove(event), { signal });
     window.addEventListener("pointerup", (event) => this.handlePointerUp(event), { signal });
     window.addEventListener("pointercancel", (event) => this.handlePointerUp(event), { signal });
+    panel.addEventListener("lostpointercapture", (event) => this.handleLostPointerCapture(event), { signal });
     panel.addEventListener("contextmenu", (event) => event.preventDefault(), { signal });
 
     const toggle = panel.querySelector<HTMLButtonElement>(".mobile-controls__toggle")!;
@@ -121,13 +140,48 @@ export class MobileControls {
     if (this.animationFrame !== undefined) window.cancelAnimationFrame(this.animationFrame);
     this.animationFrame = undefined;
     this.releaseAllKeys();
-    this.root.querySelector(".mobile-controls")?.remove();
+    this.panel?.remove();
+    this.panel = undefined;
+    document.documentElement.classList.remove("mobile-controls-active");
     this.hoverTarget = undefined;
     this.primaryTarget = undefined;
     this.keyboardTarget = undefined;
   }
 
+  private loadControlMode(): MobileControlMode {
+    try {
+      return localStorage.getItem(MOBILE_CONTROL_MODE_KEY) === "dpad" ? "dpad" : "joystick";
+    } catch {
+      return "joystick";
+    }
+  }
+
+  private saveControlMode(): void {
+    try {
+      localStorage.setItem(MOBILE_CONTROL_MODE_KEY, this.controlMode);
+    } catch {
+      // Mobile controls should still work when storage is unavailable.
+    }
+  }
+
   private handlePointerDown(event: PointerEvent): void {
+    const joystick = (event.target as Element).closest<HTMLElement>("[data-mobile-joystick]");
+    if (joystick && this.controlMode === "joystick") {
+      event.stopPropagation();
+      event.preventDefault();
+      this.joystickPointerId = event.pointerId;
+      if (joystick.setPointerCapture) {
+        try {
+          joystick.setPointerCapture(event.pointerId);
+        } catch {
+          // Some mobile browsers reject pointer capture for synthetic overlays.
+        }
+      }
+      this.updateJoystick(event, joystick);
+      this.startMoving();
+      return;
+    }
+
     const button = (event.target as Element).closest<HTMLButtonElement>("button");
     if (!button) return;
     event.stopPropagation();
@@ -135,15 +189,19 @@ export class MobileControls {
     event.preventDefault();
 
     const direction = button.dataset.direction as Direction | undefined;
-    if (direction) {
+    if (direction && this.controlMode === "dpad") {
       this.directionPointers.set(event.pointerId, direction);
-      if (!this.directions.has(direction)) this.dispatchKey("keydown", DIRECTION_KEYS[direction]);
-      this.directions.add(direction);
+      const nextDirections = new Set(this.directions);
+      nextDirections.add(direction);
+      this.setDirections(nextDirections);
       this.startMoving();
       return;
     }
 
     switch (button.dataset.mobileAction) {
+      case "mode":
+        this.toggleControlMode(button);
+        break;
       case "primary":
         this.pressPrimary(event.pointerId);
         break;
@@ -160,7 +218,7 @@ export class MobileControls {
         break;
       case "keyboard":
         this.keyboardTarget = this.findKeyboardTarget();
-        this.root.querySelector<HTMLInputElement>(".mobile-controls__keyboard")?.focus({ preventScroll: true });
+        this.panel?.querySelector<HTMLInputElement>(".mobile-controls__keyboard")?.focus({ preventScroll: true });
         break;
       case "wheel-up":
         this.dispatchWheel(-120);
@@ -171,22 +229,106 @@ export class MobileControls {
     }
   }
 
+  private handlePointerMove(event: PointerEvent): void {
+    if (event.pointerId !== this.joystickPointerId) return;
+    const joystick = this.panel?.querySelector<HTMLElement>("[data-mobile-joystick]");
+    if (!joystick) return;
+    event.preventDefault();
+    this.updateJoystick(event, joystick);
+  }
+
+  private handleLostPointerCapture(event: PointerEvent): void {
+    if (event.pointerId !== this.joystickPointerId) return;
+    this.resetJoystick();
+  }
+
   private handlePointerUp(event: PointerEvent): void {
     // Virtual releases also bubble to window; only physical input releases controls.
     if ((event as MobileControlEvent).__nelgMobileControl) return;
+    if (event.pointerId === this.joystickPointerId) {
+      const joystick = this.panel?.querySelector<HTMLElement>("[data-mobile-joystick]");
+      if (joystick?.hasPointerCapture(event.pointerId)) joystick.releasePointerCapture(event.pointerId);
+      this.resetJoystick();
+    }
     const direction = this.directionPointers.get(event.pointerId);
     if (direction) {
       this.directionPointers.delete(event.pointerId);
-      const stillPressed = Array.from(this.directionPointers.values()).includes(direction);
-      if (!stillPressed) {
-        this.directions.delete(direction);
-        this.dispatchKey("keyup", DIRECTION_KEYS[direction]);
-      }
+      const nextDirections = new Set(this.directionPointers.values());
+      this.setDirections(nextDirections);
     }
     if (event.pointerId === this.primaryPointerId && this.primaryTarget) this.releasePrimary();
     if (this.spacePointers.delete(event.pointerId) && this.spacePointers.size === 0) {
       this.dispatchKey("keyup", " ", "Space");
     }
+  }
+
+  private toggleControlMode(button?: HTMLButtonElement): void {
+    this.releaseAllMovement();
+    this.controlMode = this.controlMode === "joystick" ? "dpad" : "joystick";
+    this.panel?.setAttribute("data-control-mode", this.controlMode);
+    const modeButton = button ?? this.panel?.querySelector<HTMLButtonElement>("[data-mobile-action='mode']");
+    if (modeButton) modeButton.textContent = this.controlMode === "joystick" ? "PAD" : "STICK";
+    this.saveControlMode();
+  }
+
+  private resetJoystick(): void {
+    this.joystickPointerId = undefined;
+    this.joystickX = 0;
+    this.joystickY = 0;
+    this.updateJoystickKnob();
+    this.setDirections(new Set(this.directionPointers.values()));
+  }
+
+  private releaseAllMovement(): void {
+    this.setDirections(new Set());
+    this.directionPointers.clear();
+    this.joystickPointerId = undefined;
+    this.joystickX = 0;
+    this.joystickY = 0;
+    this.updateJoystickKnob();
+  }
+
+  private updateJoystick(event: PointerEvent, joystick: HTMLElement): void {
+    const rect = joystick.getBoundingClientRect();
+    const radius = Math.max(1, Math.min(rect.width, rect.height) / 2);
+    const rawX = (event.clientX - rect.left - rect.width / 2) / radius;
+    const rawY = (event.clientY - rect.top - rect.height / 2) / radius;
+    const length = Math.hypot(rawX, rawY);
+    const scale = length > 1 ? 1 / length : 1;
+    this.joystickX = rawX * scale;
+    this.joystickY = rawY * scale;
+    if (Math.hypot(this.joystickX, this.joystickY) < JOYSTICK_DEAD_ZONE) {
+      this.joystickX = 0;
+      this.joystickY = 0;
+    }
+    this.updateJoystickKnob();
+
+    const nextDirections = new Set<Direction>();
+    if (this.joystickX <= -JOYSTICK_DEAD_ZONE) nextDirections.add("left");
+    if (this.joystickX >= JOYSTICK_DEAD_ZONE) nextDirections.add("right");
+    if (this.joystickY <= -JOYSTICK_DEAD_ZONE) nextDirections.add("up");
+    if (this.joystickY >= JOYSTICK_DEAD_ZONE) nextDirections.add("down");
+    this.setDirections(nextDirections);
+  }
+
+  private updateJoystickKnob(): void {
+    const knob = this.panel?.querySelector<HTMLElement>(".mobile-controls__joystick-knob");
+    if (!knob) return;
+    knob.style.translate = `${this.joystickX * 28}px ${this.joystickY * 28}px`;
+  }
+
+  private setDirections(nextDirections: Set<Direction>): void {
+    (Object.keys(DIRECTION_KEYS) as Direction[]).forEach((direction) => {
+      const hasDirection = this.directions.has(direction);
+      const needsDirection = nextDirections.has(direction);
+      if (needsDirection && !hasDirection) {
+        this.dispatchKey("keydown", DIRECTION_KEYS[direction]);
+      } else if (!needsDirection && hasDirection) {
+        this.dispatchKey("keyup", DIRECTION_KEYS[direction]);
+      }
+    });
+    this.directions.clear();
+    nextDirections.forEach((direction) => this.directions.add(direction));
   }
 
   private startMoving(): void {
@@ -196,17 +338,22 @@ export class MobileControls {
       const elapsed = Math.min(32, time - previousTime);
       previousTime = time;
       const distance = CURSOR_STEP * (elapsed / 16.67);
-      if (this.directions.has("left")) this.cursorX -= distance;
-      if (this.directions.has("right")) this.cursorX += distance;
-      if (this.directions.has("up")) this.cursorY -= distance;
-      if (this.directions.has("down")) this.cursorY += distance;
+      if (this.joystickX !== 0 || this.joystickY !== 0) {
+        this.cursorX += this.joystickX * distance;
+        this.cursorY += this.joystickY * distance;
+      } else {
+        if (this.directions.has("left")) this.cursorX -= distance;
+        if (this.directions.has("right")) this.cursorX += distance;
+        if (this.directions.has("up")) this.cursorY -= distance;
+        if (this.directions.has("down")) this.cursorY += distance;
+      }
       this.cursorX = Math.max(0, Math.min(799, this.cursorX));
       this.cursorY = Math.max(0, Math.min(599, this.cursorY));
       this.updateCursor();
       this.updateHoverTarget();
       this.dispatchPointer("pointermove", this.primaryTarget ?? this.hoverTarget, this.primaryTarget ? 1 : 0);
       if (this.primaryTarget) this.cursorMovedWhilePressed = true;
-      if (this.directions.size > 0) this.animationFrame = window.requestAnimationFrame(move);
+      if (this.directions.size > 0 || this.joystickX !== 0 || this.joystickY !== 0) this.animationFrame = window.requestAnimationFrame(move);
       else this.animationFrame = undefined;
     };
     this.animationFrame = window.requestAnimationFrame(move);
@@ -296,9 +443,7 @@ export class MobileControls {
   }
 
   private releaseAllKeys(): void {
-    this.directions.forEach((direction) => this.dispatchKey("keyup", DIRECTION_KEYS[direction]));
-    this.directions.clear();
-    this.directionPointers.clear();
+    this.releaseAllMovement();
     this.spacePointers.clear();
     this.dispatchKey("keyup", " ", "Space");
   }
@@ -332,7 +477,7 @@ export class MobileControls {
 
   private elementAtCursor(): Element | undefined {
     const { clientX, clientY } = this.pointerCoordinates();
-    const panel = this.root.querySelector<HTMLElement>(".mobile-controls");
+    const panel = this.panel;
     if (panel) panel.style.visibility = "hidden";
     const target = document.elementFromPoint(clientX, clientY) ?? undefined;
     if (panel) panel.style.visibility = "";
@@ -350,10 +495,9 @@ export class MobileControls {
   }
 
   private updateCursor(): void {
-    const cursor = this.root.querySelector<HTMLElement>(".mobile-controls__cursor");
+    const cursor = this.panel?.querySelector<HTMLElement>(".mobile-controls__cursor");
     if (!cursor) return;
-    const rootRect = this.root.getBoundingClientRect();
     const { clientX, clientY } = this.pointerCoordinates();
-    cursor.style.translate = `${clientX - rootRect.left}px ${clientY - rootRect.top}px`;
+    cursor.style.translate = `${clientX}px ${clientY}px`;
   }
 }

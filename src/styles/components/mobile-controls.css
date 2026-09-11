@@ -1,5 +1,5 @@
 .mobile-controls {
-  position: absolute;
+  position: fixed;
   z-index: 2000;
   inset: 0;
   pointer-events: none;
@@ -12,11 +12,12 @@
 .mobile-controls .mobile-controls__toggle {
   position: absolute;
   left: 50%;
-  bottom: max(8px, env(safe-area-inset-bottom));
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
   translate: -50% 0;
-  min-height: 44px;
-  padding: 0 14px;
-  font-size: 12px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 10px;
   white-space: nowrap;
   pointer-events: auto;
 }
@@ -27,26 +28,79 @@
 }
 
 .mobile-controls__dpad,
+.mobile-controls__joystick,
 .mobile-controls__actions {
   position: absolute;
-  bottom: max(calc(var(--game-offset-y, 0px) + 12px), calc(env(safe-area-inset-bottom) + 60px));
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
   pointer-events: auto;
 }
 
 .mobile-controls__dpad {
-  left: max(calc(var(--game-offset-x, 0px) + 12px), env(safe-area-inset-left));
+  left: max(12px, calc(env(safe-area-inset-left) + 12px));
   display: grid;
-  grid-template: repeat(3, 48px) / repeat(3, 48px);
-  gap: 3px;
+  grid-template: repeat(3, 32px) / repeat(3, 32px);
+  gap: 4px;
+}
+
+.mobile-controls[data-control-mode="joystick"] .mobile-controls__dpad,
+.mobile-controls[data-control-mode="dpad"] .mobile-controls__joystick {
+  display: none;
+}
+
+.mobile-controls__joystick {
+  left: max(12px, calc(env(safe-area-inset-left) + 12px));
+  width: 104px;
+  height: 104px;
+  border: 2px solid rgb(255 177 59 / 82%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgb(255 248 232 / 16%) 0 18%, transparent 19%),
+    radial-gradient(circle at center, rgb(18 15 12 / 82%) 0 58%, rgb(18 15 12 / 48%) 59% 100%);
+  box-shadow: 0 3px 12px rgb(0 0 0 / 45%), inset 0 0 0 1px rgb(255 255 255 / 14%);
+  touch-action: none;
+  user-select: none;
+}
+
+.mobile-controls__joystick::before,
+.mobile-controls__joystick::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  background: rgb(255 248 232 / 22%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.mobile-controls__joystick::before {
+  width: 70px;
+  height: 2px;
+}
+
+.mobile-controls__joystick::after {
+  width: 2px;
+  height: 70px;
+}
+
+.mobile-controls__joystick-knob {
+  position: absolute;
+  top: calc(50% - 19px);
+  left: calc(50% - 19px);
+  width: 38px;
+  height: 38px;
+  border: 2px solid rgb(255 248 232 / 88%);
+  border-radius: 50%;
+  background: rgb(255 177 59 / 76%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 45%);
+  pointer-events: none;
 }
 
 .mobile-controls__actions {
-  right: max(calc(var(--game-offset-x, 0px) + 12px), env(safe-area-inset-right));
+  right: max(12px, calc(env(safe-area-inset-right) + 12px));
   display: grid;
-  grid-template-columns: 42px 42px 54px 62px;
-  grid-template-rows: 46px 46px 38px;
+  grid-template-columns: 32px 32px 38px 48px;
+  grid-template-rows: 32px 34px 28px 28px;
   align-items: end;
-  gap: 6px;
+  gap: 5px;
 }
 
 .mobile-control {
@@ -71,40 +125,57 @@
   transform: translateY(1px);
 }
 
+.mobile-control--small { height: 32px; border-color: rgb(180 171 157 / 80%); font-size: 17px; }
+
+.mobile-control--mode {
+  grid-area: 1 / 1 / 2 / 3;
+  height: 32px;
+  border-color: rgb(255 177 59 / 82%);
+  font-size: 9px;
+  letter-spacing: 0;
+}
+
+.mobile-control--wheel-up { grid-area: 2 / 1 / 3 / 2; }
+.mobile-control--wheel-down { grid-area: 2 / 2 / 3 / 3; }
 .mobile-control--up { grid-area: 1 / 2; }
 .mobile-control--left { grid-area: 2 / 1; }
-.mobile-control--center { grid-area: 2 / 2; font-size: 22px; }
 .mobile-control--right { grid-area: 2 / 3; }
 .mobile-control--down { grid-area: 3 / 2; }
-.mobile-control--small { height: 42px; border-color: rgb(180 171 157 / 80%); font-size: 22px; }
+
+.mobile-control--keyboard {
+  grid-area: 1 / 3 / 2 / 4;
+  height: 32px;
+  font-size: 16px;
+}
 
 .mobile-control--secondary {
-  grid-area: 1 / 3 / 3 / 4;
-  height: 54px;
+  grid-area: 2 / 3 / 3 / 4;
+  height: 34px;
   border-radius: 50%;
   border-color: rgb(112 197 255 / 88%);
+  font-size: 16px;
 }
 
 .mobile-control--primary {
   grid-area: 1 / 4 / 3 / 5;
-  width: 62px;
-  height: 62px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   color: #fff;
   background: rgb(149 28 22 / 82%);
 }
 
 .mobile-control--space {
-  grid-area: 2 / 1 / 3 / 3;
-  height: 42px;
-  font-size: 10px;
+  grid-area: 3 / 1 / 4 / 4;
+  height: 28px;
+  font-size: 9px;
   letter-spacing: 0;
 }
 
 .mobile-control--enter {
-  grid-area: 3 / 1 / 4 / 5;
-  height: 38px;
-  font-size: 12px;
+  grid-area: 4 / 1 / 5 / 5;
+  height: 28px;
+  font-size: 10px;
   letter-spacing: 0;
 }
 
@@ -144,12 +215,28 @@
 }
 
 @media (max-width: 540px), (max-height: 540px) {
-  .mobile-controls__dpad { grid-template: repeat(3, 42px) / repeat(3, 42px); }
-  .mobile-controls__actions {
-    grid-template-columns: 38px 38px 48px 56px;
-    grid-template-rows: 42px 42px 36px;
+  .mobile-controls__dpad {
+    grid-template: repeat(3, 30px) / repeat(3, 30px);
   }
-  .mobile-control--primary { width: 56px; height: 56px; }
-  .mobile-control--secondary { height: 48px; }
-  .mobile-control--enter { height: 36px; }
+
+  .mobile-controls__joystick {
+    width: 92px;
+    height: 92px;
+  }
+
+  .mobile-controls__joystick-knob {
+    top: calc(50% - 17px);
+    left: calc(50% - 17px);
+    width: 34px;
+    height: 34px;
+  }
+
+  .mobile-controls__actions {
+    grid-template-columns: 30px 30px 36px 46px;
+    grid-template-rows: 30px 32px 26px 26px;
+  }
+  .mobile-control--primary { width: 46px; height: 46px; }
+  .mobile-control--secondary { height: 32px; }
+  .mobile-control--space,
+  .mobile-control--enter { height: 26px; }
 }
