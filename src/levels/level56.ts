@@ -1,4 +1,4 @@
-import { assetUrl, SOUND_EFFECTS } from "../core/assets";
+import { SOUND_EFFECTS } from "../core/assets";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
 
@@ -33,9 +33,12 @@ export const level56: LevelDefinition = {
     { id: "1", label: "Scene 1 — Doubt" },
     { id: "2", label: "Scene 2 — Color positions" },
     { id: "3", label: "Scene 3 — RGB" },
-    { id: "4", label: "Scene 4 — Fake Level 57" },
   ],
-  mount({ screen, audio, listen, interval, complete, initialScene }) {
+  mount({ screen, audio, listen, interval, goToLevel, initialScene }) {
+    if (initialScene === "4") {
+      goToLevel(57, "B");
+      return;
+    }
     screen.className = "level-screen level-56";
     screen.innerHTML = `
       <div class="level-56__scene" data-scene="1">
@@ -66,13 +69,6 @@ export const level56: LevelDefinition = {
         <p class="level-56__rgb-hint">The solution is<br />value &gt;128</p>
         <button class="level-56__back" type="button">BACK</button>
       </div>
-      <div class="level-56__scene" data-scene="4" hidden>
-        <header class="level-heading" aria-label="Level 57: NO WAY">
-          <div class="level-heading__number">Level 5<span class="level-56__fake-seven">7<img
-            src="${assetUrl("images/level56a.png")}" alt="Red X over the 7" draggable="false" /></span></div>
-          <h1>NO WAY</h1>
-        </header>
-      </div>
       <form class="level-56__form" autocomplete="off">
         <input class="nelg-password-input" id="level-56-answer" name="nelg-level-fifty-six-answer"
           data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
@@ -95,7 +91,6 @@ export const level56: LevelDefinition = {
     const showScene = (nextScene: string) => {
       scene = nextScene;
       screen.dataset.scene = scene;
-      screen.classList.toggle("level-56--fake", scene === "4");
       screen.querySelectorAll<HTMLElement>(".level-56__scene").forEach(panel => {
         panel.hidden = panel.dataset.scene !== scene;
       });
@@ -131,12 +126,12 @@ export const level56: LevelDefinition = {
         return;
       }
       if (answer === "512") {
-        showScene("4");
+        goToLevel(57, "B");
         return;
       }
       if (answer === "confringo") {
         solved = true;
-        complete();
+        goToLevel(57, "A");
         return;
       }
       input.focus();
@@ -145,6 +140,6 @@ export const level56: LevelDefinition = {
       if (scene !== "1") return;
       symbol.textContent = symbol.textContent === "?" ? "!" : "?";
     }, 900);
-    showScene(["2", "3", "4"].includes(initialScene ?? "") ? initialScene! : "1");
+    showScene(["2", "3"].includes(initialScene ?? "") ? initialScene! : "1");
   },
 };

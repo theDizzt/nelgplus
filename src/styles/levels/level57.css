@@ -1,0 +1,91 @@
+.level-57 {
+  color: #0ff;
+  background: #00b050;
+}
+
+.level-57::before {
+  position: absolute;
+  inset: 0;
+  background: #cc0099;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  content: "";
+  pointer-events: none;
+}
+
+.level-57 .level-heading {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.level-57__credit {
+  position: absolute;
+  z-index: 2;
+  top: 177px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  color: aqua;
+  text-align: center;
+  font: 25px/1.2 "NELG ITC Kristen", Georgia, serif;
+  pointer-events: none;
+}
+
+.level-57__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.level-57__viewport.is-dragging { cursor: grabbing; }
+
+.level-57__viewport:focus-visible {
+  outline: 2px solid aqua;
+  outline-offset: -2px;
+}
+
+.level-57__board {
+  display: block;
+  max-width: none;
+  overflow: visible;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-weight: 700;
+  will-change: transform;
+}
+
+.level-57__form {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.level-57__form input,
+.level-57__form button,
+.level-57__form .nelg-password-input-mirror {
+  pointer-events: auto;
+}
+
+.level-57__board rect {
+  stroke: #000;
+  stroke-width: 3px;
+}
+
+.level-57-no-way {
+  color: #000;
+  background: #fff;
+}
+
+.level-57-no-way__seven {
+  position: relative;
+  display: inline-block;
+}
+
+.level-57-no-way__seven img {
+  position: absolute;
+  top: -4px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: 110px;
+  pointer-events: none;
+}

@@ -205,30 +205,3 @@
   font: 26px/1.2 "NELG Arial", Arial, sans-serif;
   cursor: pointer;
 }
-
-.level-56--fake {
-  color: #000;
-  background: #fff;
-}
-
-.level-56__fake-seven {
-  position: relative;
-  display: inline-block;
-}
-
-.level-56__fake-seven img {
-  position: absolute;
-  top: -4px;
-  left: -5px;
-  width: calc(100% + 10px);
-  height: 110px;
-  pointer-events: none;
-}
-
-.level-56--fake .level-56__form {
-  left: 0;
-  bottom: 33px;
-  width: 100%;
-  flex-direction: row;
-  border: 0;
-}
