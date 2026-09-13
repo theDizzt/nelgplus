@@ -49,7 +49,7 @@ if errorlevel 1 (
 )
 
 echo [2/4] Building the HTML5 game...
-node "node_modules\vite\bin\vite.js" build --base ./
+node "node_modules\vite\bin\vite.js" build --base ./ --mode newgrounds
 if errorlevel 1 (
   echo.
   echo [ERROR] Vite production build failed. No upload ZIP was created.
@@ -98,6 +98,7 @@ echo.
 echo The ZIP contains index.html at its root and does not include source,
 echo environment, walkthrough, or server-only files. All internal paths use
 echo web-compatible forward slashes.
+echo Background music is excluded except for Levels 34, 35, and 47.
 echo.
 pause
 exit /b 0

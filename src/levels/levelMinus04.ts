@@ -67,7 +67,7 @@ export const levelMinus04: LevelDefinition = {
 
     audio.stopMusic();
     let disposed = false;
-    const tracks = MUSIC.map((filename) => {
+    const tracks = (import.meta.env.MODE === "newgrounds" ? [] : MUSIC).map((filename) => {
       const track = new Audio(assetUrl(`music/${filename}`));
       track.loop = true;
       track.preload = "auto";

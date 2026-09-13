@@ -1,4 +1,5 @@
 import { assetUrl } from "./assets";
+import { isNewgroundsAssetAllowed } from "./newgroundsMusic";
 
 const AUDIO_SETTINGS_KEY = "nelg-plus-plus-audio";
 const DEFAULT_VOLUME = 50;
@@ -89,6 +90,7 @@ export class AudioManager {
 
   async playMusic(source: string, loop = true): Promise<void> {
     this.stopMusic();
+    if (import.meta.env.MODE === "newgrounds" && !isNewgroundsAssetAllowed(source)) return;
     const playbackId = this.musicPlaybackId + 1;
     this.musicPlaybackId = playbackId;
     const audio = new Audio(resolveAudioSource(source));
@@ -109,7 +111,10 @@ export class AudioManager {
   async playMusicSequence(sources: readonly string[]): Promise<void> {
     this.stopMusic();
     if (sources.length === 0) return;
-    const playlist = sources.map(resolveAudioSource);
+    const playlist = sources
+      .filter(source => import.meta.env.MODE !== "newgrounds" || isNewgroundsAssetAllowed(source))
+      .map(resolveAudioSource);
+    if (playlist.length === 0) return;
     const playbackId = this.musicPlaybackId + 1;
     this.musicPlaybackId = playbackId;
     let index = 0;

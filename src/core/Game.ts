@@ -325,6 +325,26 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
       "You’ve seen all the way to the deepest part of this game! This game was hiding a tremendous secret. From now on, hidden shocking secrets will be with you... If you are playing version 1.1, you will try to find the hidden password. The password is my favorite Pokémon. You probably would have known if you had played this game diligently.",
     password: "VIVID WAVE",
   },
+  58: {
+    message:
+      "be me\ndecide to make a 3-part level set parodying NELG Levels 256-257-258\nalso throw in some of TENDE's legendary-tier levels for good measure\nwhat could possibly go wrong\nhuge shoutout to HighStrike (Perhaptation) btw, literally all of this exists because of him\nthe synergy from combining all three levels was probably absolutely fucking nuclear!!!!!!!\nanyway, the next section is gonna be way more painful and cruel than every warp zone so far\nLevel 59, 60, and 61 were already infamous in NELG for being hard as hell\nthey're back\nthey're worse\nthey're evil now\nyou may suffer severe psychological damage\nproceed at your own risk..\ntfw you realize this is only the beginning\nenjoy the suffering, anon",
+    password: "mutsuki",
+  },
+  61: {
+    message:
+      "61",
+    password: "dsfsddsdfssdfsafasfddasfadsf",
+  },
+  65: {
+    message:
+      "65",
+    password: "dsfsddsdfssdfsafasfddasfadsf",
+  },
+  69: {
+    message:
+      "69",
+    password: "dsfsddsdfssdfsafasfddasfadsf",
+  },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
   8: 8,
@@ -1282,6 +1302,7 @@ export class Game {
          </section>
          <section class="credits-section">
            <h2>MUSIC USED</h2>
+           <p>Due to copyright issues, background music does not play in the Newgrounds version, except in Levels 34, 35, and 47.</p>
            <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Final Doom — M05: More</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Animal Company Soundtrack — Old Map Music | The End | ERROR</strong></article>
@@ -2088,7 +2109,7 @@ export class Game {
     this.transitioning = true;
     const enhancedRun = this.sessionFlags.has("level50-enhanced-run");
     if (enhancedRun) this.revivalWrongAnswerStreak = 0;
-    if (!enhancedRun && WARP_CHECKPOINTS[this.currentLevel]) {
+    if ((!enhancedRun || this.currentLevel === 58) && WARP_CHECKPOINTS[this.currentLevel]) {
       this.renderWarpCheckpoint(this.currentLevel, true);
       return;
     }

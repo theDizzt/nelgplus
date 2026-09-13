@@ -1,0 +1,120 @@
+.level-58 {
+  color: #fff;
+  background: #020715 var(--level-58-space) center / cover no-repeat;
+  isolation: isolate;
+}
+
+.level-58::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: radial-gradient(ellipse at 50% 40%, rgb(0 75 255 / 75%), rgb(0 15 100 / 60%) 55%, rgb(0 0 35 / 90%));
+  animation: level-58-pulse 3.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.level-58 .level-heading { pointer-events: none; }
+
+.level-58__quote {
+  position: absolute;
+  top: 218px;
+  left: 95px;
+  width: 610px;
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  font: 30px/1.35 "NELG Perpetua", Perpetua, Georgia, serif;
+  pointer-events: none;
+}
+
+.level-58__quote cite {
+  display: block;
+  margin-top: 16px;
+  font-size: 24px;
+}
+
+.level-58__notes {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level-58__note {
+  position: absolute;
+  box-sizing: border-box;
+  width: 390px;
+  padding: 24px 27px;
+  color: #291b0c;
+  background:
+    radial-gradient(ellipse at 5% 8%, #8a592777, transparent 27%),
+    radial-gradient(ellipse at 90% 95%, #71491a66, transparent 35%),
+    repeating-linear-gradient(6deg, transparent 0 7px, #74461908 8px 9px),
+    linear-gradient(100deg, #bd955d, #efdcaa 16%, #dfc18a 80%, #b6894a);
+  border: 1px solid #77512f;
+  clip-path: polygon(1% 0, 20% 1%, 42% 0, 63% 1%, 81% 0, 99% 1%, 100% 23%, 99% 51%, 100% 74%, 98% 100%, 77% 99%, 55% 100%, 28% 99%, 0 100%, 1% 73%, 0 49%, 1% 25%);
+  box-shadow: inset 0 0 22px #66401966;
+  font: 17px/1.45 "NELG Papyrus", Papyrus, fantasy;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.level-58__note p { margin: 0 0 12px; }
+.level-58__note p:last-child { margin-bottom: 0; }
+.level-58__note strong { font-weight: 700; text-decoration: underline; }
+.level-58__signature { text-align: right; }
+.level-58__note.is-dragging { cursor: grabbing; }
+.level-58__note:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+.level-58__note .ink-red { color: #f00; }
+.level-58__note .ink-purple { color: #800080; }
+.level-58__note .ink-yellow { color: #ff0; text-shadow: 0 1px 1px #654719; }
+.level-58__note .ink-green { color: #008000; }
+.level-58__note .ink-blue { color: #00f; }
+
+.level-58__grid {
+  width: 125px;
+  height: 125px;
+  margin: 12px auto 0;
+  border: 1px solid #4b321c;
+  background: repeating-linear-gradient(0deg, transparent 0 24px, #4b321c 24px 25px),
+    repeating-linear-gradient(90deg, transparent 0 24px, #4b321c 24px 25px);
+}
+
+.level-58__reveal { font-size: 30px; font-weight: 700; text-align: center; }
+.level-58__reveal[hidden] { display: none; }
+
+.level-58__form { z-index: 3; pointer-events: none; }
+.level-58__form input,
+.level-58__form button,
+.level-58__form .nelg-password-input-mirror { pointer-events: auto; }
+
+.level-58__split {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  width: 800px;
+  height: 600px;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.level-58__split-blocker {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+@keyframes level-58-pulse {
+  from { opacity: .38; }
+  to { opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-58::before { animation: none; opacity: .65; }
+}
