@@ -11,8 +11,8 @@ import { getLevel, registeredLevelNumbers } from "../levels/registry";
 import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
-const GAME_VERSION = "1.1.84";
-const VERSION_DATE = "09/10/2026";
+const GAME_VERSION = "1.1.91";
+const VERSION_DATE = "09/14/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
 const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
@@ -1915,6 +1915,10 @@ export class Game {
       unlockAchievement: (achievementId) => this.unlockAchievement(achievementId),
       restart: () => this.showLevel(levelNumber, initialScene),
       goToLevel: (targetLevel, targetScene) => this.showLevel(targetLevel, targetScene),
+      goToWarpZone: (warpNumber) => {
+        const checkpoint = JUMPABLE_LEVELS[warpNumber - 1];
+        if (checkpoint !== undefined) this.renderWarpCheckpoint(checkpoint);
+      },
       goToMenu: () => this.renderMainMenu(),
       now: () => this.getGameNow(),
       audio: this.audioManager,

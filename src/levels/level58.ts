@@ -3,6 +3,7 @@ import { assetUrl } from "../core/assets";
 import { clientPointToLocal } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { COSMIC_NOTES } from "./level58Notes";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 
 export const level58: LevelDefinition = {
   number: 58,
@@ -12,6 +13,7 @@ export const level58: LevelDefinition = {
     { id: "B", label: "Level 58 - Cosmic (Part B)" },
   ],
   mount({ screen, initialScene, listen, complete }) {
+    blockTabNavigation(listen);
     const part = initialScene === "B" ? "B" : "A";
     screen.className = "level-screen level-58";
     screen.dataset.scene = part;
@@ -165,7 +167,6 @@ export const level58: LevelDefinition = {
       }
       if (Object.hasOwn(COSMIC_NOTES, answer)) {
         showNote(answer);
-        masked.clear();
       }
       input.focus();
     });

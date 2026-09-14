@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Level 60 checks</title>
+<link rel="stylesheet" href="/src/styles/global.css">
+<style>body{display:block;margin:0;background:#222}#screen{position:relative;width:800px;height:600px;overflow:clip;transform-origin:top left}#report{color:white;white-space:pre-wrap}</style>
+<section id="screen"></section><pre id="report">Ready</pre>
+<script type="module">
+import { level60 } from '/src/levels/level60.ts';
+const screen=document.querySelector('#screen');
+let cleanup, abort, date, time=0, completed=0;
+const realNow=performance.now.bind(performance);
+const q=s=>screen.querySelector(s), tile=i=>q(`[data-tile="${i}"]`);
+let synthetic=true;
+const audio={musicEnabled:true,effectsEnabled:true,musicVolume:60,effectsVolume:70,
+ setMusicEnabled:v=>audio.musicEnabled=v,setEffectsEnabled:v=>audio.effectsEnabled=v,
+ setMusicVolume:v=>audio.musicVolume=v,setEffectsVolume:v=>audio.effectsVolume=v};
+function mount(scene='1',live=false){
+ cleanup?.();abort?.abort();abort=new AbortController();time=0;completed=0;synthetic=!live;
+ date=new Date(2026,8,14,12,0,0);
+ Object.defineProperty(performance,'now',{configurable:true,value:live?realNow:()=>time});
+ cleanup=level60.mount({screen,initialScene:scene,now:()=>date,audio,complete:()=>completed++,
+ listen:(target,type,fn,options)=>target.addEventListener(type,fn,{...options,signal:abort.signal})});
+ if(synthetic)for(const button of screen.querySelectorAll('[data-tile]')){
+  button.setPointerCapture=()=>{};button.hasPointerCapture=()=>false;
+ }
+}
+function password(value){const input=q('form input');input.select();input.dispatchEvent(new InputEvent('beforeinput',{bubbles:true,cancelable:true,inputType:'insertText',data:value}));q('form').requestSubmit();}
+function pointer(target,type,x,y){const box=q('.level-60__world').getBoundingClientRect();target.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:1,button:0,clientX:box.left+x,clientY:box.top+y}));}
+function drag(i,dx=20,dy=0,ms=200){const button=tile(i),x=parseFloat(button.style.left)+20,y=parseFloat(button.style.top)+20;pointer(button,'pointerdown',x,y);time+=ms;pointer(button,'pointermove',x+dx,y+dy);pointer(button,'pointerup',x+dx,y+dy);return parseFloat(button.style.left)!==x-20||parseFloat(button.style.top)!==y-20;}
+function key(target,key){target.dispatchEvent(new KeyboardEvent('keydown',{bubbles:true,cancelable:true,key}));}
+function command(name){screen.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true,clientX:20,clientY:20}));q(`[data-command="${name}"]`).click();}
+const messages=[];function assert(value,label){if(!value)throw Error(label);messages.push('PASS '+label);}
+async function run(){
+ messages.length=0;
+ mount();
+ assert(!drag(0),'clock tile is locked outside time window');
+ date=new Date(2030,7,1,15,0,0);assert(drag(0),'clock tile opens at 15:00:00');
+ date=new Date(2030,7,1,15,0,3,999);assert(drag(0),'clock tile stays open through second 03');
+ date=new Date(2030,7,1,15,0,4);assert(!drag(0),'clock tile closes at second 04');
+ assert(drag(6),'August 1 works in any year');date=new Date(2030,7,2);assert(!drag(6),'date lock resumes outside August 1');
+ for(const [i,value] of [[1,'47'],[2,'Absolute Zero'],[3,'found'],[4,'tea']]){assert(!drag(i),'phase 1 tile '+i+' starts locked');password(value);assert(drag(i),'phase 1 clue '+value);}
+ screen.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,deltaY:1000}));assert(q('.level-60__found').style.opacity==='1','scroll reveals found');
+ assert(drag(5,300,-400),'free question-mark tile drags');assert(q('.level-60__letters').textContent==='Lunaris','top right changes ? to i');
+ password('RAlNB0W');assert(screen.dataset.scene==='2','phase 2 final fails in phase 1');
+ q('.level-60__failed button').click();assert(screen.dataset.phase==='1'&&!drag(1),'retry resets unlocks');
+ password('Y()UW|N');assert(screen.dataset.scene==='2','phase 3 final fails in phase 1');
+ mount();password('Lunaris');assert(screen.dataset.phase==='2','Lunaris enters phase 2');
+ assert(q('form input').value==='*******','phase final remains in password input');
+ key(tile(0),'Enter');assert(!drag(0),'Enter without Tab does not count');
+ for(let i=0;i<14;i++){key(document,'Tab');key(tile(0),'Enter');}
+ assert(!drag(0),'14 Tab Enter pairs remain locked');key(tile(0),'Enter');assert(!drag(0),'repeated Enter does not count');
+ key(document,'Tab');key(tile(0),'Enter');assert(drag(0),'15 Tab Enter pairs unlock');
+ for(const [i,value] of [[1,'89'],[2,'v'],[4,'microphone'],[6,'15727310']]){password(value);assert(drag(i),'phase 2 clue '+value);}
+ assert(q('form input').value==='********','correct clue remains in password input');
+ command('rewind');assert(!drag(5),'Rewind without password stays locked');password('rewind');assert(!drag(5),'rewind password alone stays locked');command('rewind');assert(drag(5),'armed Rewind unlocks tile');
+ command('forward');command('back');assert(screen.dataset.phase==='2','Forward and Back do not navigate');
+ command('music');assert(!audio.musicEnabled,'menu mute works');command('zoom-in');assert(q('.level-60__world').style.transform.includes('scale(1.25)'),'zoom works');command('show-all');
+ assert(drag(3,20,0,300)&&screen.dataset.scene==='1','slow dragging is allowed');
+ drag(3,120,0,16);assert(screen.dataset.scene==='2','fast dragging fails');
+ q('.level-60__failed button').click();password('Lunaris');assert(!drag(0)&&!drag(5),'retry resets Tab count and rewind');
+ password('Lunaris');assert(screen.dataset.scene==='2','previous phase final also fails');
+ mount();password('Lunaris');password('RAlNB0W');assert(screen.dataset.phase==='3','phase 3 entered');
+ const logs=[],log=console.log;console.log=v=>logs.push(v);for(let i=0;i<7;i++)tile(i).click();console.log=log;
+ assert(logs.join(',')==='0,1,2,9,44,265,1854','console prints derangements');
+ for(const [i,value] of [[0,'14833'],[1,'endive'],[2,'5'],[4,'crop'],[5,'duck'],[6,'I SUCK ;(']]){password(value);assert(drag(i),'phase 3 clue '+value);}
+ assert(!drag(3),'hidden input tile starts locked');key(document,'Tab');assert(document.activeElement===q('.level-60__hidden-input'),'Tab focuses offscreen input');
+ q('.level-60__hidden-input').value='hidden';key(q('.level-60__hidden-input'),'Enter');assert(drag(3),'hidden input unlocks fourth tile');
+ assert(q('.level-60__hidden-input').value==='hidden','hidden answer is retained');
+ assert(screen.scrollLeft===0,'offscreen input does not scroll stage');
+ const duck=q('.level-60__duck');duck.focus();key(duck,'a');duck.select();assert(duck.selectionEnd===duck.value.length&&duck.value.split('=').length===12,'entire hidden duck text can be selected');
+ password('Y()UW|N');assert(completed===1,'final password completes level');
+ mount();password('Lunaris');password('RAlNB0W');password('hidden');assert(screen.dataset.scene==='2','visible hidden answer fails');
+ for(const phase of [0,1,2]){mount();if(phase>0)password('Lunaris');if(phase>1)password('RAlNB0W');
+  await Promise.all([...screen.querySelectorAll('.level-60__tile img:not([hidden])')].map(img=>img.decode()));
+  assert(getComputedStyle(q('.level-60__v')).color==='rgb(0, 0, 3)','near-black v in phase '+phase);
+  assert([...screen.querySelectorAll('.level-60__tile')].every(t=>t.offsetWidth===88&&t.offsetHeight===88),'fixed square geometry phase '+phase);
+  password('wrong');assert(screen.dataset.scene==='2','wrong answer fails phase '+phase);
+ }
+ mount('2');assert(screen.dataset.scene==='2','admin failed scene');
+ document.querySelector('#report').textContent=messages.join('\n');return messages;
+}
+window.level60Test={run,mount,password,tile,screen};mount('1',true);
+</script></html>

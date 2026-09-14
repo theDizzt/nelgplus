@@ -1,8 +1,10 @@
 import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelContext } from "../core/types";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 
 export function mountLevel57NoWay({ screen, listen, goToLevel, audio }: LevelContext): void {
+  blockTabNavigation(listen);
   screen.className = "level-screen level-57-no-way";
   screen.dataset.scene = "B";
   screen.setAttribute("aria-label", "Level 57: NO WAY");

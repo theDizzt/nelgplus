@@ -176,6 +176,12 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");`}</code></pre>
       showWrong();
     });
 
+    listen(input, "keydown", (event) => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     const openMenu = (clientX: number, clientY: number) => {
       if (scene !== "puzzle") return;
       if (!menuUnlocked) {

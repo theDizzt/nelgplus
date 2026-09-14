@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8" /><title>Level 59 browser checks</title>
+<link rel="stylesheet" href="/src/styles/global.css" />
+<style>
+  body { display: block; margin: 16px; background: #222; color: white; overflow: auto; }
+  #screen { position: relative; width: 800px; height: 600px; overflow: hidden; }
+  nav { display: flex; gap: 10px; padding: 10px 0; }
+  #report { white-space: pre-wrap; font: 14px monospace; }
+</style>
+<nav id="nav"></nav><section id="screen"></section><pre id="report">Ready</pre>
+<script type="module">
+import { level59 } from '/src/levels/level59.ts';
+import { loadShapeMasks, SHAPES } from '/src/levels/level59Shapes.ts';
+import { CORRECT_SHAPES } from '/src/levels/level59Sequence.ts';
+const screen = document.querySelector('#screen'), report = document.querySelector('#report');
+const realNow = performance.now.bind(performance);
+const realRandom = Math.random;
+const capture = screen.setPointerCapture.bind(screen), hasCapture = screen.hasPointerCapture.bind(screen), releaseCapture = screen.releasePointerCapture.bind(screen);
+let clock = 0, tick, cleanup, abort, routes = [], effects = 0, liveTimer;
+const messages = [];
+const assert = (condition,message) => { if (!condition) throw new Error(message); messages.push('PASS '+message); };
+function mount(scene='2', live=false) {
+  clearInterval(liveTimer); cleanup?.(); abort?.abort(); abort = new AbortController();
+  clock = 0; routes = []; effects = 0;
+  Math.random = live ? realRandom : () => 0.5;
+  Object.defineProperty(performance,'now',{ configurable:true, value:live ? realNow : () => clock });
+  // Synthetic pointer events have no OS pointer to capture in this fixture.
+  screen.setPointerCapture = live ? capture : () => {};
+  screen.hasPointerCapture = live ? hasCapture : () => false;
+  screen.releasePointerCapture = live ? releaseCapture : () => {};
+  cleanup = level59.mount({ screen, initialScene:scene,
+    audio:{ playEffect:()=>effects++ },
+    listen:(target,type,listener)=>target.addEventListener(type,listener,{signal:abort.signal}),
+    interval:callback=>{tick=callback; if(live) liveTimer=setInterval(callback,16); return 1;},
+    goToLevel:n=>routes.push(`level:${n}`), goToWarpZone:n=>routes.push(`warp:${n}`), wrongAnswer:()=>false,
+  });
+  return new Promise(resolve => {
+    const check = () => {
+      if(screen.dataset.shapesReady === 'true') resolve(); else setTimeout(check,10);
+    };
+    check();
+  });
+}
+const q = selector => screen.querySelector(selector);
+const scene = () => screen.dataset.scene;
+function advance(ms, perTick) { for(let passed=0;passed<ms;passed+=100) { clock+=100; tick(); perTick?.(); } }
+function point(target,type,x,y) {
+  const box=screen.getBoundingClientRect();
+  target.dispatchEvent(new PointerEvent(type,{bubbles:true,pointerId:1,button:0,clientX:box.left+x,clientY:box.top+y}));
+}
+function disarm() {
+  for(const bomb of screen.querySelectorAll('.level-59__bomb')) {
+    point(bomb,'pointerdown',parseFloat(bomb.style.left),parseFloat(bomb.style.top));
+    point(screen,'pointermove',-100,-100); point(screen,'pointerup',-100,-100);
+  }
+}
+function collectUntil(target) {
+  for(let i=0;i<4000 && scene()==='2';i++) {
+    advance(100); disarm();
+    for(const button of screen.querySelectorAll('.level-59__moving-shape')) {
+      if(CORRECT_SHAPES.includes(Number(button.dataset.shape))) button.click();
+      if(Number(q('.level-59__percentage').textContent.replace('%',''))>=target) return;
+    }
+  }
+  throw new Error('Could not reach '+target);
+}
+function password(value) {
+  const input=q('input');
+  input.dispatchEvent(new InputEvent('beforeinput',{bubbles:true,cancelable:true,inputType:'insertText',data:value}));
+  q('form').requestSubmit();
+}
+async function run() {
+  messages.length=0; report.textContent='Running checks...';
+  try {
+    await document.fonts.ready;
+    const masks=loadShapeMasks(); await masks.ready;
+    assert(SHAPES.length===55,'all 55 shape assets load and produce alpha masks');
+    assert(!masks.hit(41,53/120,71/120) && masks.hit(41,.3,.8),'triangle hole is not clickable, solid triangle is');
+    assert(!masks.hit(48,0,0),'transparent raster corner is not clickable');
+    assert(masks.hit(35,76/126,17/126) && !masks.hit(35,76/126,40/126) && masks.hit(35,.42,.7),'shape 35 has a separate blue circle, transparent gap and HS square');
+    await mount('1'); q('.level-59__begin').click();
+    assert(scene()==='2' && effects===1,'BEGIN plays smack and enters Scene 2');
+    q('input').focus();
+    const beforeTab = document.activeElement;
+    const tabEvent = new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true});
+    document.dispatchEvent(tabEvent);
+    assert(tabEvent.defaultPrevented && document.activeElement !== beforeTab,'Tab is blocked while Level 59 is mounted');
+    advance(100); const first=q('.level-59__moving-shape');
+    first.click(); first.click();
+    assert(q('.level-59__percentage').textContent==='4%' && first.classList.contains('is-collected'),'duplicate answer stays at 4% and turns dark');
+    advance(1600);
+    const wrong=[...screen.querySelectorAll('.level-59__moving-shape')].find(b=>!CORRECT_SHAPES.includes(Number(b.dataset.shape)));
+    if(!wrong) throw new Error('Test requires a distractor'); wrong.click();
+    assert(scene()==='3' && !!q('.level-59__failed-shape img').src,'wrong answer enters Scene 3 with the selected shape');
+    q('.level-59__failed-shape').click();
+    assert(scene()==='2' && q('.level-59__percentage').textContent==='0%' && !q('.level-59__bomb'),'retry resets score and hazards');
+    advance(4000);
+    assert(!!q('.level-59__mine.is-warning'),'red warning appears one second before first mine');
+    const mine=q('.level-59__mine');
+    point(screen,'pointermove',parseFloat(mine.style.left),parseFloat(mine.style.top));
+    advance(1000);
+    assert(scene()==='4' && q('.level-59__death-text').textContent.includes('landmine'),'stationary cursor touching a newly active mine dies');
+    await mount(); advance(10000);
+    assert(q('.level-59__bomb-timer').textContent==='5','first bomb spawns at 10 seconds with a 5-second timer');
+    advance(5000); assert(scene()==='4' && q('.level-59__death-text').textContent.includes('bomb'),'expired bomb enters Scene 4');
+    await mount(); advance(10000); disarm(); advance(5000);
+    assert(scene()==='2' && !q('.level-59__bomb'),'dragging bomb completely off-screen removes it and prevents death');
+    await mount(); advance(10000);
+    const overlayBomb=q('.level-59__bomb');
+    point(overlayBomb,'pointerdown',400,300);
+    point(screen,'pointermove',150,530); point(screen,'pointerup',150,530);
+    for(const [x,y,label] of [[150,530,'score display'],[620,550,'password field']]) {
+      const body=screen.getBoundingClientRect();
+      const bx=parseFloat(overlayBomb.style.left), by=parseFloat(overlayBomb.style.top);
+      const target=document.elementFromPoint(body.left+bx,body.top+by);
+      assert(target?.closest('.level-59__bomb')===overlayBomb,`bomb is the pointer target over ${label}`);
+      point(target,'pointerdown',bx,by); point(screen,'pointermove',x,y); point(screen,'pointerup',x,y);
+      assert(parseFloat(overlayBomb.style.left)===x && parseFloat(overlayBomb.style.top)===y,`bomb remains draggable near ${label}`);
+    }
+    const body=screen.getBoundingClientRect();
+    assert(document.elementFromPoint(body.left+620,body.top+550)?.closest('.level-59__bomb')===overlayBomb,'bomb stays above the password input');
+    for(const [x,y,label] of [[32,300,'left'],[768,300,'right'],[400,32,'top'],[400,568,'bottom']]) {
+      await mount(); advance(10000);
+      point(q('.level-59__bomb'),'pointerdown',400,300);
+      // A fast release can arrive without an intermediate pointermove.
+      point(screen,'pointerup',x,y);
+      assert(!q('.level-59__bomb') && scene()==='2',`pointer release at the ${label} edge removes the bomb`);
+      advance(5000);
+      assert(scene()==='2',`removed ${label}-edge bomb cannot explode later`);
+    }
+    await mount(); collectUntil(84);
+    let decoy;
+    for(let i=0;i<100 && !decoy;i++) { advance(100); disarm(); decoy=[...screen.querySelectorAll('.level-59__moving-shape')].find(b=>!CORRECT_SHAPES.includes(Number(b.dataset.shape))); }
+    decoy.click(); assert(scene()==='5','failure at 84% enters reward Scene 5');
+    await mount(); collectUntil(100);
+    assert(scene()==='6','25 unique answers immediately enter 100% Scene 6');
+    q('[data-next]').click(); q('[data-skip]').click();
+    assert(routes.join(',')==='level:60,warp:15','reward buttons route to Level 60 and Warp Zone 15');
+    await mount(); password("bloomin' lady"); assert(routes[0]==='level:60','password routes to Level 60');
+    await mount(); password('ivory'); assert(scene()==='7','ivory opens the hidden catalog');
+    q('.level-59__catalog-shape[data-shape="48"]').click();
+    assert(q('.level-59__shape-name').textContent==='48 — thinking face','catalog shows the object number and requested name');
+    advance(30000); assert(scene()==='7' && !q('.level-59__bomb'),'game timers stop outside Scene 2');
+    report.textContent=messages.join('\n')+'\nALL CHECKS PASSED';
+  } catch(error) { report.textContent=messages.join('\n')+'\nFAIL '+error.stack; }
+}
+const runButton=document.createElement('button'); runButton.textContent='Run checks'; runButton.onclick=run; document.querySelector('#nav').append(runButton);
+const bombButton=document.createElement('button'); bombButton.textContent='Bomb drag';
+bombButton.onclick=async()=>{
+  await mount(); Math.random=realRandom; advance(10000);
+  screen.setPointerCapture=capture; screen.hasPointerCapture=hasCapture; screen.releasePointerCapture=releaseCapture;
+  report.textContent='Paused at 10 seconds: drag the bomb completely outside the playfield.';
+};
+document.querySelector('#nav').append(bombButton);
+for(let id=1;id<=7;id++) { const button=document.createElement('button'); button.textContent='Scene '+id; button.onclick=()=>mount(String(id),true); document.querySelector('#nav').append(button); }
+await mount(new URLSearchParams(location.search).get('scene') || '7',true);
+</script></html>

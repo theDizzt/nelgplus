@@ -20,6 +20,11 @@ export const levelMinus03: LevelDefinition = {
     `;
     const form = screen.querySelector<HTMLFormElement>("form")!;
     const input = form.querySelector("input")!;
+    listen(input, "keydown", event => {
+      if (event.key !== "Enter" || event.repeat) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
     // Keep native text selection and copying so the initial letter is discoverable.
     listen(form, "submit", (event) => {
       event.preventDefault();

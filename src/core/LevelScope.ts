@@ -10,6 +10,7 @@ interface ScopeOptions {
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number, initialScene?: string) => void;
+  goToWarpZone: (warpNumber: number) => void;
   goToMenu: () => void;
   now: () => Date;
   audio: AudioManager;
@@ -62,6 +63,7 @@ export class LevelScope {
       unlockAchievement: options.unlockAchievement,
       restart: options.restart,
       goToLevel: options.goToLevel,
+      goToWarpZone: options.goToWarpZone,
       goToMenu: options.goToMenu,
       now: options.now,
       listen: (target, type, listener, eventOptions = {}) => {

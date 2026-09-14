@@ -2,6 +2,7 @@ import type { LevelDefinition } from "../core/types";
 import { clientPointToLocal } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { mountLevel57NoWay } from "./level57NoWay";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 
 // Grid coordinates from the reference: 400px rooms, separated by 100px.
 const ROOMS = [
@@ -54,6 +55,7 @@ export const level57: LevelDefinition = {
     { id: "B", label: "Level 57B - NO WAY" },
   ],
   mount(context) {
+    blockTabNavigation(context.listen);
     if (context.initialScene === "B") return mountLevel57NoWay(context);
     const { screen, listen, goToLevel } = context;
     screen.className = "level-screen level-57";

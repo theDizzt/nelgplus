@@ -37,6 +37,7 @@ export interface LevelContext {
   unlockAchievement: (achievementId: number) => void;
   restart: () => void;
   goToLevel: (levelNumber: number, initialScene?: string) => void;
+  goToWarpZone: (warpNumber: number) => void;
   goToMenu: () => void;
   now: () => Date;
   listen: <K extends keyof HTMLElementEventMap>(

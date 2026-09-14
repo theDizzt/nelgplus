@@ -1,6 +1,7 @@
 import { SOUND_EFFECTS } from "../core/assets";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 
 // Each control owns one complete row. Preserve all leading and trailing spaces.
 const ASCII_ROWS = [
@@ -35,6 +36,7 @@ export const level56: LevelDefinition = {
     { id: "3", label: "Scene 3 — RGB" },
   ],
   mount({ screen, audio, listen, interval, goToLevel, initialScene }) {
+    blockTabNavigation(listen);
     if (initialScene === "4") {
       goToLevel(57, "B");
       return;
