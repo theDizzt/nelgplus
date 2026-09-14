@@ -4,6 +4,7 @@ import { InteractionGuard } from "./InteractionGuard";
 import { HallOfFameService, type HallOfFameEntry } from "./HallOfFameService";
 import { LevelScope } from "./LevelScope";
 import { MobileControls } from "./MobileControls";
+import { UtilityTools } from "./UtilityTools";
 import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
@@ -19,6 +20,7 @@ const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim()
 const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
 const MOBILE_CONTROLS_KEY = "nelg-mobile-controls-enabled";
+const UTILITY_TOOLS_KEY = "nelg-utility-tools-enabled";
 const CLOCK_ENABLED_KEY = "nelg-clock-enabled";
 const CLOCK_SHOW_DATE_KEY = "nelg-clock-show-date";
 const CLOCK_HOUR_CYCLE_KEY = "nelg-clock-hour-cycle";
@@ -383,6 +385,8 @@ export class Game {
   private adminSubtitleFont = "";
   private revivalWrongAnswerStreak = 0;
   private readonly mobileControls: MobileControls;
+  private readonly utilityTools = new UtilityTools();
+  private utilityToolsEnabled = this.loadStoredBoolean(UTILITY_TOOLS_KEY, false);
   private mobileControlsEnabled = this.loadMobileControlsEnabled();
   private clockEnabled = this.loadStoredBoolean(CLOCK_ENABLED_KEY, false);
   private clockShowDate = this.loadStoredBoolean(CLOCK_SHOW_DATE_KEY, false);
@@ -397,6 +401,7 @@ export class Game {
 
   constructor(private readonly root: HTMLElement) {
     this.mobileControls = new MobileControls(root);
+    this.utilityTools.setEnabled(this.utilityToolsEnabled);
     this.removePasswordQueryParameters();
     this.bindPasswordFormUrlGuard();
     this.syncClockOverlay();
@@ -1572,6 +1577,16 @@ export class Game {
              <input id="mobile-controls-option" type="checkbox" ${this.mobileControlsEnabled ? "checked" : ""} />
            </label>
          </section>
+         <section class="options-panel__category" aria-labelledby="options-utility-title">
+           <h2 id="options-utility-title">Utility tools</h2>
+           <label class="options-panel__setting-row" for="utility-tools-option">
+             <span>
+               <strong>ENABLE UTILITY TOOLS</strong>
+               <small>Use the square pen icon to the left of the clock for drawing, text, rectangular captures with clipboard copy and Markdown notes. The icon also works with the clock hidden.</small>
+             </span>
+             <input id="utility-tools-option" type="checkbox" ${this.utilityToolsEnabled ? "checked" : ""} />
+           </label>
+         </section>
          <section class="options-panel__category" aria-labelledby="options-clock-title">
            <h2 id="options-clock-title">Clock</h2>
            <label class="options-panel__setting-row" for="clock-enabled-option">
@@ -1663,6 +1678,11 @@ export class Game {
       this.clockEnabled = (event.currentTarget as HTMLInputElement).checked;
       this.saveClockSetting(CLOCK_ENABLED_KEY, String(this.clockEnabled));
       this.syncClockOverlay();
+    });
+    this.root.querySelector<HTMLInputElement>("#utility-tools-option")?.addEventListener("change", (event) => {
+      this.utilityToolsEnabled = (event.currentTarget as HTMLInputElement).checked;
+      this.saveClockSetting(UTILITY_TOOLS_KEY, String(this.utilityToolsEnabled));
+      this.utilityTools.setEnabled(this.utilityToolsEnabled);
     });
     this.root.querySelector<HTMLInputElement>("#clock-date-option")?.addEventListener("change", (event) => {
       this.clockShowDate = (event.currentTarget as HTMLInputElement).checked;
@@ -1910,6 +1930,7 @@ export class Game {
     });
     this.bindDebugControls();
     if (this.mobileControlsEnabled) this.mobileControls.mount();
+    this.utilityTools.mount(screen.parentElement!);
   }
 
   private loadMobileControlsEnabled(): boolean {
@@ -2031,11 +2052,11 @@ export class Game {
       return;
     }
 
-    if (!this.clockElement || !this.clockElement.isConnected || this.clockElement.parentElement !== document.body) {
+    if (!this.clockElement || !this.clockElement.isConnected || this.clockElement.parentElement !== this.utilityTools.hud) {
       this.clockElement = document.createElement("time");
       this.clockElement.className = "game-clock";
       this.clockElement.setAttribute("aria-label", "Current time");
-      document.body.append(this.clockElement);
+      this.utilityTools.hud.append(this.clockElement);
     }
     this.updateClockOverlay();
     if (!this.clockTimer) {
@@ -2166,6 +2187,7 @@ export class Game {
   }
 
   private disposeCurrentLevel(): void {
+    this.utilityTools.unmount();
     this.mobileControls?.unmount();
     this.mainMenuCleanup?.();
     this.mainMenuCleanup = undefined;

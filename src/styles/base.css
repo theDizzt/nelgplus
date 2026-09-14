@@ -136,11 +136,17 @@ img {
   font-size: 12px;
 }
 
-.game-clock {
+.game-hud {
   position: fixed;
-  z-index: 2000;
+  z-index: 3100;
   top: calc(var(--game-offset-y, 0px) + 8px);
   right: calc(var(--game-offset-x, 0px) + 10px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-clock {
   padding: 3px 7px;
   color: #fff;
   background: rgb(0 0 0 / 65%);

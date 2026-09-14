@@ -1,0 +1,80 @@
+.utility-toggle {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #c5bbaa;
+  border-radius: 4px;
+  color: #fff8e8;
+  background: #211d18;
+  font: 700 21px/1 Courier, "Courier New", monospace;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.utility-toggle[aria-expanded="true"] { background: #ffb13b; color: #211d18; }
+.utility-toggle[hidden], .utility-tools [hidden], .utility-tools[hidden], .utility-selection[hidden] { display: none !important; }
+.utility-drawing { position: absolute; inset: 0; z-index: 1800; width: 800px; height: 600px; pointer-events: none; visibility: hidden; }
+.utility-drawing--active { pointer-events: auto; touch-action: none; cursor: crosshair; visibility: visible; }
+.utility-selection { position: absolute; z-index: 1801; border: 2px dashed #fff; outline: 1px solid #111; background: #ffb13b26; pointer-events: none; }
+.utility-tools-open .mobile-controls { visibility: hidden; }
+.utility-tools {
+  position: fixed;
+  z-index: 3000;
+  top: max(48px, calc(var(--game-offset-y, 0px) + 46px));
+  right: max(10px, calc(var(--game-offset-x, 0px) + 10px));
+  width: min(310px, calc(100vw - 20px));
+  max-height: calc(100dvh - max(48px, calc(var(--game-offset-y, 0px) + 46px)) - 12px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+  color: #f8f2e6;
+  background: #201d19f5;
+  border: 1px solid #746753;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px #0008;
+  font: 13px/1.4 Courier, "Courier New", monospace;
+  user-select: text;
+}
+.utility-tools header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; cursor: move; touch-action: none; user-select: none; }
+.utility-tools header span { display: flex; gap: 4px; }
+.utility-tools.utility-tools--minimized > :not(header) { display: none; }
+.utility-tools--minimized header { margin-bottom: 0; }
+.utility-tools nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.utility-tools button, .utility-tools__download {
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid #746753;
+  border-radius: 5px;
+  color: #fff8e8;
+  background: #373027;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.utility-tools button:disabled { opacity: .4; cursor: default; }
+.utility-tools button[aria-pressed="true"] { background: #ffb13b; border-color: #ffb13b; color: #211d18; }
+.utility-tools :focus-visible, .utility-toggle:focus-visible { outline: 2px solid #ffb13b; outline-offset: 2px; }
+.utility-tools__settings { display: grid; gap: 8px; padding-top: 12px; }
+.utility-tools label { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
+.utility-tools input, .utility-tools select, .utility-tools textarea { max-width: 100%; min-width: 0; color: #f8f2e6; background: #111; border: 1px solid #746753; border-radius: 3px; padding: 5px; font-size: 14px; user-select: text; }
+.utility-tools input[type="color"] { width: 48px; height: 32px; padding: 2px; }
+.utility-tools input[type="number"] { width: 80px; }
+.utility-tools input[type="range"] { width: 125px; }
+.utility-tools textarea { width: 100%; resize: vertical; min-height: 58px; touch-action: auto; }
+.utility-tools p { margin: 2px 0; color: #d2c7b6; font-size: 12px; }
+.utility-tools footer, .utility-tools__row { display: flex; gap: 6px; margin-top: 10px; }
+.utility-tools .utility-tools__status { margin-top: 10px; color: #ffd188; }
+.utility-tools .utility-tools__hint { margin-top: 8px; font-size: 11px; }
+.utility-tools__preview { display: block; max-width: 100%; max-height: 180px; margin: auto; border: 1px solid #746753; object-fit: contain; }
+.utility-tools__download { display: block; text-decoration: none; }
+.utility-tools__markdown { max-height: 240px; overflow: auto; overflow-wrap: anywhere; padding: 10px; background: #fff9ee; color: #211d18; border-radius: 4px; }
+.utility-tools__markdown p { color: inherit; font-size: inherit; }
+.utility-tools__markdown pre { white-space: pre-wrap; }
+.utility-tools__markdown table { border-collapse: collapse; }
+.utility-tools__markdown th, .utility-tools__markdown td { border: 1px solid #a99; padding: 3px; }
+@media (pointer: coarse) {
+  .utility-toggle { width: 36px; height: 36px; }
+  .utility-tools button { min-height: 40px; }
+  .utility-tools input, .utility-tools textarea, .utility-tools select { font-size: 16px; }
+}
