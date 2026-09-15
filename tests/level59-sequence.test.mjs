@@ -5,7 +5,16 @@ import ts from "typescript";
 
 const source = readFileSync(new URL("../src/levels/level59Sequence.ts", import.meta.url), "utf8");
 const { outputText } = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } });
-const { bombTouchesEdge, CORRECT_SHAPES, createSequence, nextPath, scoreFor, failureScene } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+const { bombTouchesEdge, CORRECT_SHAPES, createSequence, nextPath, scoreFor, failureScene, meteorHits } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+
+test("fast meteor collision covers its full swept path and excludes misses", () => {
+  assert.equal(meteorHits(400,300,100,300,700,300),true);
+  assert.equal(meteorHits(400,328,100,300,700,300),true);
+  assert.equal(meteorHits(400,329,100,300,700,300),false);
+  assert.equal(meteorHits(400,300,100,0,700,600),true);
+  assert.equal(meteorHits(740,300,100,300,700,300),false);
+  assert.equal(meteorHits(100,100,100,100,100,100),true);
+});
 
 test("25 unique answers include thinking face and reach exactly 100%, without duplicate credit", () => {
   assert.equal(CORRECT_SHAPES.length, 25);
@@ -17,13 +26,18 @@ test("25 unique answers include thinking face and reach exactly 100%, without du
   assert.equal(scoreFor(new Set(CORRECT_SHAPES.slice(0,21))), 84);
 });
 
-test("correct order repeats; all 30 shuffled distractors repeat in the same order; gaps stay within 0–3", () => {
+test("shuffled answers and all 30 distractors repeat in their chosen order; gaps stay within 0–3", () => {
   let seed = 591;
   const random = () => ((seed = (seed*1664525+1013904223) >>> 0) / 2**32);
   const next = createSequence(random);
   const stream = Array.from({length:1500},next);
   const correct = stream.filter(id => CORRECT_SHAPES.includes(id));
-  correct.forEach((id,i) => assert.equal(id,CORRECT_SHAPES[i%25]));
+  assert.deepEqual([...correct.slice(0,25)].sort((a,b) => a-b), [...CORRECT_SHAPES]);
+  assert.notDeepEqual(correct.slice(0,25), [...CORRECT_SHAPES]);
+  correct.forEach((id,i) => assert.equal(id,correct[i%25]));
+  const nextAttempt = createSequence(random);
+  const nextAnswers = Array.from({length:150},nextAttempt).filter(id => CORRECT_SHAPES.includes(id)).slice(0,25);
+  assert.notDeepEqual(nextAnswers, correct.slice(0,25));
   const wrong = stream.filter(id => !CORRECT_SHAPES.includes(id));
   assert.equal(new Set(wrong.slice(0,30)).size,30);
   wrong.forEach((id,i) => assert.equal(id,wrong[i%30]));
