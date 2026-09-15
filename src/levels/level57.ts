@@ -136,7 +136,7 @@ export const level57: LevelDefinition = {
     listen(form, "submit", event => {
       event.preventDefault();
       if (solved) return;
-      const answer = masked.getValue().trim().toLowerCase();
+      const answer = masked.getValue().trim();
       if (answer === "endure") {
         solved = true;
         goToLevel(58, "A");

@@ -1,0 +1,60 @@
+.level-63 {
+  color: #666;
+  background: #999;
+  overflow: clip;
+  contain: paint;
+}
+.level-63__heading { z-index: 3; color: #666; }
+.level-63__heading .level-heading__number,
+.level-63__heading h1 { color: #666; }
+.level-63__content { position: absolute; inset: 0; }
+.level-63__copy {
+  position: absolute;
+  z-index: 2;
+  top: 182px;
+  left: 45px;
+  width: 335px;
+  font: italic 18px/1.34 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+.level-63__copy p { margin: 0 0 14px; }
+.level-63__copy .level-63__lead { font-weight: 700; }
+.level-63__link {
+  display: inline-block;
+  color: #20a040;
+  text-shadow: 0 0 4px #80ff98, 0 0 11px #20d050;
+  text-decoration: underline;
+}
+.level-63__art {
+  position: absolute;
+  z-index: 1;
+  top: 116px;
+  right: 0;
+  width: 470px;
+  height: 350px;
+  object-fit: cover;
+  object-position: center;
+  opacity: .72;
+}
+.level-63__form {
+  bottom: 32px;
+  z-index: 3;
+}
+.level-63__form input {
+  color: #666;
+  background: #d0d0d0;
+  border-color: #666;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+}
+.level-63__form .nelg-password-input-mirror {
+  color: #666;
+  background: #d0d0d0;
+  border-color: #666;
+}
+.level-63__form button {
+  color: #666;
+  background: #bdbdbd;
+  border-color: #666;
+}
+.level-63__form button:hover:not(:disabled),
+.level-63__form button:focus-visible:not(:disabled) { background: #e2e2e2; }
+.level-63__form button:active:not(:disabled) { background: #858585; }

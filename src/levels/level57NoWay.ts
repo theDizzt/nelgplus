@@ -34,13 +34,13 @@ export function mountLevel57NoWay({ screen, listen, goToLevel, audio }: LevelCon
   listen(form, "submit", event => {
     event.preventDefault();
     if (leaving) return;
-    const answer = masked.getValue().trim().toLowerCase();
+    const answer = masked.getValue().trim();
     if (answer === "endive") {
       leaving = true;
       goToLevel(58, "B");
     } else if (answer === "!" || answer === "?") {
       goToLevel(56, answer === "!" ? "2" : "3");
-    } else if (answer === "confringo") {
+    } else if (answer === "Confringo") {
       goToLevel(57, "A");
     } else input.focus();
   });

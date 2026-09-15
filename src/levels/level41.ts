@@ -2,7 +2,7 @@ import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import { attachCustomCursor } from "../core/CustomCursor";
 import type { LevelDefinition } from "../core/types";
 
-const ANSWER = "love";
+const ANSWER = "Love";
 
 export const level41: LevelDefinition = {
   number: 41,
@@ -55,7 +55,7 @@ export const level41: LevelDefinition = {
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (maskedInput.getValue().toLowerCase() === ANSWER) {
+      if (maskedInput.getValue() === ANSWER) {
         complete();
         return;
       }

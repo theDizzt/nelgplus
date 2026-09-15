@@ -48,6 +48,23 @@ test("shuffled answers and all 30 distractors repeat in their chosen order; gaps
   }
 });
 
+test("penalty decoys share the shuffled repeating wrong pool and the 0–3 gap limit", () => {
+  let seed = 59;
+  const random = () => ((seed = (seed*1664525+1013904223) >>> 0) / 2**32);
+  const decoys = [101,104,107,109,113,117];
+  const stream = Array.from({length:1500},createSequence(random,decoys));
+  const wrong = stream.filter(id => !CORRECT_SHAPES.includes(id));
+  const pool = wrong.slice(0,36);
+  assert.equal(new Set(pool).size,36);
+  decoys.forEach(id => assert.ok(pool.includes(id)));
+  wrong.forEach((id,i) => assert.equal(id,pool[i%36]));
+  let gap = 0;
+  for (const id of stream) {
+    if (CORRECT_SHAPES.includes(id)) gap = 0;
+    else assert.ok(++gap <= 3);
+  }
+});
+
 test("all eight paths enter and exit off-screen without repeating the previous direction", () => {
   const directions = new Set();
   for (let previous = -1; previous < 8; previous++) {

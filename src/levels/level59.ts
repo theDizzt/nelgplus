@@ -2,7 +2,7 @@ import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
 import { clientPointToLocal } from "../core/floatingPosition";
-import { SHAPES, loadShapeMasks } from "./level59Shapes";
+import { SHAPES, PENALTY_SHAPES, loadShapeMasks } from "./level59Shapes";
 import { BlackoutCycle } from "./level59Blackout";
 import { bombTouchesEdge, CORRECT_SHAPES, createSequence, failureScene, meteorHits, nextPath, scoreFor } from "./level59Sequence";
 
@@ -114,7 +114,9 @@ export const level59: LevelDefinition = {
     const masks = loadShapeMasks();
     let ready = false, disposed = false, scene = "1";
     let collected = new Set<number>();
-    let nextShape = createSequence();
+    let penalty = 0;
+    const decoyIds = PENALTY_SHAPES.map(shape => shape.id);
+    let nextShape = createSequence(Math.random, decoyIds);
     let time = 0, spawnAt = 0, mineAt = 5000, bombAt = 10000, lastDirection = -1;
     let fogAt = 7000, fogStarted = 0, fogDuration = 0;
     let lastTick = performance.now();
@@ -139,17 +141,23 @@ export const level59: LevelDefinition = {
     };
     // The first Tab press can occur before focus enters #level-screen, so capture it at document level.
     listen(document, "keydown", blockTab, { capture: true });
-    const score = () => scoreFor(collected);
+    const score = () => scoreFor(collected)-penalty;
     const updateScore = () => {
-      screen.querySelector(".level-59__percentage")!.textContent = `${score()}%`;
-      screen.querySelector(".level-59__gauge")!.setAttribute("aria-valuenow", String(score()));
-      screen.querySelector<HTMLElement>(".level-59__gauge-fill")!.style.width = `${score()}%`;
+      const value = score();
+      screen.querySelector(".level-59__percentage")!.textContent = `${value}%`;
+      screen.querySelector(".level-59__score")!.classList.toggle("is-negative", value < 0);
+      const gauge = screen.querySelector(".level-59__gauge")!;
+      gauge.setAttribute("aria-valuemin", String(Math.min(-100,value)));
+      gauge.setAttribute("aria-valuenow", String(value));
+      gauge.setAttribute("aria-valuetext", `${value}%`);
+      screen.querySelector<HTMLElement>(".level-59__gauge-fill")!.style.width = `${Math.min(100,Math.abs(value))}%`;
       moving.forEach(item => item.element.classList.toggle("is-collected", collected.has(item.id)));
     };
     const clearGame = () => {
       blackout.reset();
       blackoutLayer.hidden = keypad.hidden = true;
       screen.classList.remove("is-blackout");
+      screen.classList.remove("is-blackout-locked");
       field.inert = controls.inert = false;
       fog.hidden = true;
       fog.style.opacity = "0";
@@ -169,10 +177,12 @@ export const level59: LevelDefinition = {
       screen.querySelectorAll<HTMLElement>(".level-59__scene").forEach(panel => {
         panel.hidden = panel.dataset.scene !== scene;
       });
+      if (scene === "4") audio.playEffect(SOUND_EFFECTS.explosion);
       if (scene === "2") {
         meteorAt = 7000; meteorFailure = false;
         collected = new Set();
-        nextShape = createSequence();
+        penalty = 0;
+        nextShape = createSequence(Math.random, decoyIds);
         time = spawnAt = 0; mineAt = 5000; bombAt = 10000; lastDirection = -1;
         lastTick = performance.now();
         masked.clear();
@@ -203,15 +213,17 @@ export const level59: LevelDefinition = {
       showScene("3");
     };
     const spawn = () => {
-      const id = nextShape();
+      const nextId = nextShape();
+      const shape = nextId > 100 ? PENALTY_SHAPES.find(shape => shape.id === nextId)! : SHAPES[nextId-1]!;
+      const id = shape.id;
       const path = nextPath(lastDirection);
       lastDirection = path.direction;
       const element = document.createElement("button");
       element.type = "button";
       element.className = "level-59__moving-shape";
       element.dataset.shape = String(id);
-      element.setAttribute("aria-label", SHAPES[id-1]!.name);
-      element.innerHTML = `<img src="${SHAPES[id-1]!.src}" alt="" draggable="false"/>`;
+      element.setAttribute("aria-label", shape.name);
+      element.innerHTML = `<img src="${shape.src}" alt="" draggable="false"/>`;
       element.classList.toggle("is-collected", collected.has(id));
       field.append(element);
       moving.push({ id, element, start: time, duration: random(4500,6000) / 1.5, points: path.points, x: path.points[0]!, y: path.points[1]!, flipped: false, suppressFlip: false });
@@ -228,7 +240,7 @@ export const level59: LevelDefinition = {
       if (mines.some(m => time >= m.liveAt && time < m.liveAt+3000 && Math.hypot(pointer!.x-m.x,pointer!.y-m.y) <= 23)) fail("mine");
     };
     listen(field, "pointerdown", event => {
-      if (event.button !== 0 || !event.isPrimary || drag || scene !== "2" || blackout.active) return;
+      if (event.button !== 0 || !event.isPrimary || drag || scene !== "2" || blackout.phase === "locked") return;
       if ((event.target as Element).closest(".level-59__bomb")) return;
       // Resolve the visible pixels at press time, before movement or a hover flip
       // can change the target between pointerdown and the browser's click event.
@@ -242,6 +254,13 @@ export const level59: LevelDefinition = {
       item.flipped = false; item.suppressFlip = true;
       item.element.classList.remove("is-flipped");
       smack();
+      if (item.id > 100) {
+        penalty += 3;
+        item.element.remove();
+        moving.splice(moving.indexOf(item),1);
+        updateScore();
+        return;
+      }
       if (!CORRECT_SHAPES.some(id => id === item.id)) { fail("shape", item.id); return; }
       collected.add(item.id);
       updateScore();
@@ -299,6 +318,7 @@ export const level59: LevelDefinition = {
       if (result === "unlocked") {
         blackoutLayer.hidden = keypad.hidden = true;
         screen.classList.remove("is-blackout");
+        screen.classList.remove("is-blackout-locked");
         moving.forEach(item => { item.element.inert = false; });
         field.inert = controls.inert = false;
         pointer = undefined;
@@ -339,7 +359,7 @@ export const level59: LevelDefinition = {
     listen(screen.querySelector<HTMLFormElement>("form")!, "submit", event => {
       event.preventDefault();
       if (scene !== "2" || blackout.active) return;
-      const answer = masked.getValue().trim().toLowerCase();
+      const answer = masked.getValue().trim();
       smack();
       if (answer === "bloomin' lady") { goToLevel(60); return; }
       if (answer === "ivory") { showScene("7"); return; }
@@ -374,6 +394,7 @@ export const level59: LevelDefinition = {
         blackoutLayer.style.opacity = String(blackout.opacity);
         if (blackout.phase === "locked" && keypad.hidden) {
           keypad.hidden = false;
+          screen.classList.add("is-blackout-locked");
           keypad.focus({ preventScroll: true });
         }
       }
@@ -437,13 +458,13 @@ export const level59: LevelDefinition = {
       }
       for (let i = moving.length-1; i >= 0; i--) {
         const item = moving[i]!;
-        item.element.inert = blackout.active;
+        item.element.inert = blackout.phase === "locked";
         const progress = (time-item.start)/item.duration;
         if (progress >= 1) { item.element.remove(); moving.splice(i,1); continue; }
         item.x = item.points[0]!+(item.points[2]!-item.points[0]!)*progress;
         item.y = item.points[1]!+(item.points[3]!-item.points[1]!)*progress;
         item.element.style.left = `${item.x}px`; item.element.style.top = `${item.y}px`;
-        const hovered = !blackout.active && !!pointer && pointer.x >= item.x-44 && pointer.x <= item.x+44 && pointer.y >= item.y-44 && pointer.y <= item.y+44;
+        const hovered = blackout.phase !== "locked" && !!pointer && pointer.x >= item.x-52 && pointer.x <= item.x+52 && pointer.y >= item.y-52 && pointer.y <= item.y+52;
         if (!hovered) item.suppressFlip = false;
         item.flipped = hovered && !item.suppressFlip;
         item.element.classList.toggle("is-flipped",item.flipped);

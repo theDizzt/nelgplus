@@ -208,7 +208,7 @@ export const level51: LevelDefinition = {
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      const answer = maskedInput.getValue().trim().toLowerCase();
+      const answer = maskedInput.getValue().trim();
       const normalizedAnswer = answer.replace(/\s+/g, " ");
       if (CREDIT_NICKNAMES.has(normalizedAnswer)) unlockAchievement(110);
       const friend = stateByName.get(answer);

@@ -891,7 +891,7 @@ export const level20: LevelDefinition = {
             });
             on(form, "submit", (event) => {
               event.preventDefault();
-              const answer = maskedInput.getValue().trim().toLowerCase();
+              const answer = maskedInput.getValue().trim();
               if (answer === "red") {
                 complete();
                 return;

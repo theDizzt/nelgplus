@@ -1232,7 +1232,7 @@ export const level47: LevelDefinition = {
       });
       listen(form, "submit", (event) => {
         event.preventDefault();
-        const answer = maskedInput?.getValue().trim().toLowerCase() ?? "";
+        const answer = maskedInput?.getValue().trim() ?? "";
         if (answer.replace(/\s+/g, "") === "absolutezero") {
           complete();
           return;

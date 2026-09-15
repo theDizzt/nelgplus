@@ -1,11 +1,12 @@
 export const CORRECT_SHAPES = [1, 4, 7, 9, 11, 12, 16, 19, 23, 24, 25, 27, 30, 33, 36, 38, 39, 41, 42, 44, 46, 47, 48, 53, 55] as const;
-export function createSequence(random = Math.random) {
+export function createSequence(random = Math.random, decoyIds: readonly number[] = []) {
   const correct = [...CORRECT_SHAPES];
   for (let i = correct.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
     [correct[i], correct[j]] = [correct[j]!, correct[i]!];
   }
   const wrong = Array.from({ length: 55 }, (_, i) => i + 1).filter(id => !CORRECT_SHAPES.some(correct => correct === id));
+  wrong.push(...decoyIds);
   for (let i = wrong.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
     [wrong[i], wrong[j]] = [wrong[j]!, wrong[i]!];

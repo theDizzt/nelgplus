@@ -33,7 +33,7 @@ export const testLevel: LevelDefinition = {
 
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (input.value.trim().toLowerCase() === "begin") {
+      if (input.value.trim() === "begin") {
         complete();
         return;
       }

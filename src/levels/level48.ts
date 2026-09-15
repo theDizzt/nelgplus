@@ -431,7 +431,7 @@ export const level48: LevelDefinition = {
 
     const maskedInput = attachStarMaskedInput(input, listen);
     const tryScrollLock = () => {
-      if (maskedInput.getValue().trim().toLowerCase() === ANSWER) {
+      if (maskedInput.getValue().trim() === ANSWER) {
         submitButton.disabled = true;
         complete();
         return;

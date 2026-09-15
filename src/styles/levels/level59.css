@@ -134,6 +134,25 @@
   transition: width 180ms ease-out;
 }
 
+.level-59__score.is-negative { color: #f33; }
+.level-59__score.is-negative .level-59__percentage {
+  text-shadow: 3px 4px 0 #000, 0 0 16px rgb(255 0 0 / 40%);
+}
+.level-59__score.is-negative .level-59__gauge {
+  border-color: #f33;
+  background: linear-gradient(180deg, #160202, #250707);
+  box-shadow: 0 0 0 2px #080202, 3px 4px 0 rgb(0 0 0 / 65%),
+    0 0 14px rgb(255 0 0 / 20%), inset 0 2px 5px #000;
+}
+.level-59__score.is-negative .level-59__gauge::after {
+  background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px),
+    rgb(255 0 0 / 18%) calc(10% - 1px) 10%);
+}
+.level-59__score.is-negative .level-59__gauge-fill {
+  background: linear-gradient(180deg, #ffb4a4, #f33 45%, #b80000);
+  box-shadow: 2px 0 8px rgb(255 0 0 / 65%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .level-59__gauge-fill {
     transition: none;
@@ -196,7 +215,7 @@
 }
 .level-59.is-blackout .level-59__mine { z-index: 12; }
 .level-59.is-blackout .level-59__bomb { z-index: 13; }
-.level-59.is-blackout .level-59__moving-shape { pointer-events: none; }
+.level-59.is-blackout-locked .level-59__moving-shape { pointer-events: none; }
 .level-59__blackout {
   position: absolute;
   inset: 0;
@@ -207,7 +226,9 @@
   justify-content: center;
   align-items: flex-start;
   padding-top: 195px;
+  pointer-events: none;
 }
+.level-59.is-blackout-locked .level-59__blackout { pointer-events: auto; }
 .level-59__blackout[hidden], .level-59__keypad[hidden] { display: none; }
 .level-59__keypad {
   width: 330px;
@@ -247,8 +268,8 @@
 .level-59__catalog-shape,
 .level-59__failed-shape {
   position: absolute;
-  width: 88px;
-  height: 88px;
+  width: 104px;
+  height: 104px;
   padding: 0;
   border: 0;
   background: transparent;

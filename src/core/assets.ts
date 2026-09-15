@@ -13,4 +13,5 @@ export const SOUND_EFFECTS = {
   pop: "sounds/nelgpop.WAV",
   smack: "sounds/nelgsmack.WAV",
   break: "sounds/nelgbreak.wav",
+  explosion: "sounds/explosion.mp3",
 } as const;

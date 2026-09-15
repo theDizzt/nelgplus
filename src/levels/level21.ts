@@ -109,7 +109,7 @@ export const level21: LevelDefinition = {
           complete();
           return;
         }
-        if (revival && answer.trim().toLowerCase() === "no") unlockAchievement(106);
+        if (revival && answer.trim() === "no") unlockAchievement(106);
         if (wrongAnswer()) return;
 
         input.classList.remove("is-wrong");

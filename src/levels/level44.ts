@@ -567,7 +567,7 @@ export const level44: LevelDefinition = {
       }
 
       if (target.closest(".level-44__rainbow-button")) {
-        if (maskedInput.getValue().toLowerCase() === ANSWER) {
+        if (maskedInput.getValue() === ANSWER) {
           rainbowButton.disabled = true;
           complete();
           return;

@@ -120,7 +120,7 @@ export const level49: LevelDefinition = {
       const form = event.target instanceof HTMLFormElement ? event.target : undefined;
       if (!form?.matches(".level-49__form") || !maskedInput) return;
       event.preventDefault();
-      const answer = maskedInput.getValue().trim().toLowerCase();
+      const answer = maskedInput.getValue().trim();
       if (answer === ANSWER) {
         form.querySelectorAll<HTMLButtonElement>("button").forEach((button) => { button.disabled = true; });
         complete();

@@ -159,8 +159,8 @@ export const level58: LevelDefinition = {
     listen(form, "submit", event => {
       event.preventDefault();
       if (solved) return;
-      const answer = masked.getValue().trim().toLowerCase();
-      if (answer === "cosmetic") {
+      const answer = masked.getValue().trim();
+      if (answer === "cosmETic") {
         solved = true;
         complete();
         return;

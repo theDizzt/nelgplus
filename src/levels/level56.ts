@@ -122,7 +122,7 @@ export const level56: LevelDefinition = {
     listen(form, "submit", (event) => {
       event.preventDefault();
       if (solved) return;
-      const answer = maskedInput.getValue().trim().toLowerCase();
+      const answer = maskedInput.getValue().trim();
       if (answer === "!" || answer === "?") {
         showScene(answer === "!" ? "2" : "3");
         return;
@@ -131,7 +131,7 @@ export const level56: LevelDefinition = {
         goToLevel(57, "B");
         return;
       }
-      if (answer === "confringo") {
+      if (answer === "Confringo") {
         solved = true;
         goToLevel(57, "A");
         return;

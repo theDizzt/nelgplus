@@ -52,7 +52,7 @@ export const level22: LevelDefinition = {
 
       const answer = maskedInput.getValue();
       if (answer === "EBOI") unlockAchievement(26);
-      if (revival ? answer.trim().toUpperCase() === "JOKER" : answer === "1083") {
+      if (revival ? answer.trim() === "JOKER" : answer === "1083") {
         complete();
         return;
       }

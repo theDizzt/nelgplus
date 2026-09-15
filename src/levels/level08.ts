@@ -152,7 +152,7 @@ export const level08: LevelDefinition = {
         complete();
         return;
       }
-      if (revival && answer.toLowerCase() === "hidden") unlockAchievement(96);
+      if (revival && answer === "hidden") unlockAchievement(96);
       if (wrongAnswer()) return;
 
       checking = false;

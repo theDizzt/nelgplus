@@ -490,7 +490,7 @@ export const level40: LevelDefinition = {
       const form = event.target instanceof HTMLFormElement ? event.target : undefined;
       if (!form?.matches(".level-40__password-form")) return;
       event.preventDefault();
-      if (passwordInput?.getValue().toLowerCase() === SCENE_SEVEN_PASSWORD) {
+      if (passwordInput?.getValue() === SCENE_SEVEN_PASSWORD) {
         complete();
         return;
       }

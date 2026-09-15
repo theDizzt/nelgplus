@@ -214,10 +214,9 @@ export const level33: LevelDefinition = {
       }
 
       const expectedAnswer = STEP_ANSWERS[expectedStep];
-      const matchesExpected =
-        expectedStep === 8
-          ? normalizeLooseAperyAnswer(answer) === "aperysconstant"
-          : answer === expectedAnswer;
+      const matchesExpected = expectedStep === 8
+        ? normalizeLooseAperyAnswer(answer) === "aperysconstant"
+        : answer === expectedAnswer;
       if (expectedStep < STEP_ANSWERS.length && matchesExpected) {
         expectedStep += 1;
         addFormula(expectedStep);

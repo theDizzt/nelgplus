@@ -95,7 +95,7 @@ export const level55: LevelDefinition = {
         setMode("blue");
         return;
       }
-      if (mode === "green" && value.toLowerCase() === FINAL_ANSWER) {
+      if (mode === "green" && value === FINAL_ANSWER) {
         const now = getGameNow();
         if (now.getMonth() === 7 && now.getDate() === 1) unlockAchievement(122);
         complete();

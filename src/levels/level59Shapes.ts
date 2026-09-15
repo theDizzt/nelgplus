@@ -1,4 +1,5 @@
 import { assetUrl } from "../core/assets";
+import { CORRECT_SHAPES } from "./level59Sequence";
 
 const NAMES = [
   "blue scalene triangle", "gold five-pointed star", "red glowing heart", "green parallelogram", "orange circle", "purple cube",
@@ -93,10 +94,21 @@ export const SHAPES = NAMES.map((name, index) => {
   return { id, name, src: RASTER.has(id) ? assetUrl(`images/level59shape${id}.png`) : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}` };
 });
 
+/** Generated lookalikes that belong to the wrong pool and subtract 3% when clicked. */
+const WRONG_SHAPE_IDS = Array.from({ length: 55 }, (_, i) => i + 1)
+  .filter(id => !(CORRECT_SHAPES as readonly number[]).includes(id) && !RASTER.has(id));
+const PENALTY_BASE_IDS = [...CORRECT_SHAPES.filter(id => !RASTER.has(id)), ...WRONG_SHAPE_IDS.filter((_, index) => index % 2 === 0)];
+export const PENALTY_SHAPES = PENALTY_BASE_IDS.map(baseId => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="-3 -3 126 126">${defs}<filter id="decoy-tint"><feColorMatrix type="hueRotate" values="22"/></filter><g filter="url(#decoy-tint)"><g transform="translate(0 8) skewX(8) scale(.88 .86)" filter="url(#outline)">${art(baseId)}</g></g></svg>`;
+  return { id: 100+baseId, name: `lookalike ${NAMES[baseId-1]}`, src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}` };
+});
+// Kept as an internal compatibility alias for existing level code.
+export const SHAPE_DECOYS = PENALTY_SHAPES;
+
 // A normalized alpha map matches object-fit: contain, including holes inside shapes.
 export function loadShapeMasks() {
   const masks = new Map<number, Uint8ClampedArray>();
-  const ready = Promise.all(SHAPES.map(shape => new Promise<void>((resolve, reject) => {
+  const ready = Promise.all([...SHAPES, ...SHAPE_DECOYS].map(shape => new Promise<void>((resolve, reject) => {
     const image = new Image();
     image.onload = () => {
       const canvas = document.createElement("canvas");

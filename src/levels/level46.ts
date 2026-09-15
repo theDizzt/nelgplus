@@ -138,7 +138,7 @@ export const level46: LevelDefinition = {
           event.preventDefault();
           const input = form.querySelector("input")!;
           if (input.disabled) return;
-          const answer = input.value.trim().toLowerCase();
+          const answer = input.value.trim();
           if (!ANSWERS.includes(answer) || accepted.has(answer)) {
             input.setAttribute("aria-invalid", "true");
             wrongAnswer();
@@ -200,7 +200,7 @@ export const level46: LevelDefinition = {
           // Defer the single click so a double click can trigger the trap instead.
           timeout(() => {
             if (generation !== clickGeneration || flooding || currentScene !== 4 || !buttonMoved) return;
-            const answer = finalInput.value.trim().toLowerCase();
+            const answer = finalInput.value.trim();
             if (ANSWERS.includes(answer) && !accepted.has(answer)) complete();
             else wrongAnswer();
           }, 350);

@@ -291,7 +291,7 @@ export const level37: LevelDefinition = {
       if (checking || activeScene !== "scene-1") return;
       checking = true;
       submitButton.disabled = true;
-      const answer = maskedInput.getValue().trim().toLowerCase();
+      const answer = maskedInput.getValue().trim();
       if (answer === ANSWER) {
         complete();
         return;

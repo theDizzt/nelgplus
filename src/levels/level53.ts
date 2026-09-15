@@ -161,7 +161,7 @@ export const level53: LevelDefinition = {
     });
     listen(form, "submit", (event) => {
       event.preventDefault();
-      if (maskedInput.getValue().trim().toLowerCase() === ANSWER) {
+      if (maskedInput.getValue().trim() === ANSWER) {
         complete();
         return;
       }
