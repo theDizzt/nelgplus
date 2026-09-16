@@ -1,4 +1,5 @@
 import { assetUrl } from "../core/assets";
+import { usesRestrictedMusic } from "../core/newgroundsMusic";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
 import { tryBackwardsPassword } from "./negativeBackwards";
@@ -67,7 +68,7 @@ export const levelMinus04: LevelDefinition = {
 
     audio.stopMusic();
     let disposed = false;
-    const tracks = (import.meta.env.MODE === "newgrounds" ? [] : MUSIC).map((filename) => {
+    const tracks = (usesRestrictedMusic(import.meta.env.MODE) ? [] : MUSIC).map((filename) => {
       const track = new Audio(assetUrl(`music/${filename}`));
       track.loop = true;
       track.preload = "auto";

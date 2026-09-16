@@ -1,7 +1,7 @@
 import { readdirSync, rmSync } from "node:fs";
 import { relative, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
-import { isNewgroundsAssetAllowed } from "./src/core/newgroundsMusic";
+import { isNewgroundsAssetAllowed, usesRestrictedMusic } from "./src/core/newgroundsMusic";
 import { puzzleObfuscationPlugin } from "./build/puzzleObfuscation";
 
 const PRELOAD_ASSETS_MODULE_ID = "virtual:preload-assets";
@@ -21,24 +21,24 @@ function collectAssetFiles(directory: string, root = directory): string[] {
 function preloadAssetsPlugin(): Plugin {
   let assetsRoot = "";
   let outputAssetsRoot = "";
-  let newgrounds = false;
+  let restrictedMusic = false;
   return {
     name: "nelg-preload-assets",
     configResolved(config) {
       assetsRoot = resolve(config.root, "public/assets");
       outputAssetsRoot = resolve(config.root, config.build.outDir, "assets");
-      newgrounds = config.mode === "newgrounds";
+      restrictedMusic = usesRestrictedMusic(config.mode);
     },
     resolveId(id) {
       return id === PRELOAD_ASSETS_MODULE_ID ? RESOLVED_PRELOAD_ASSETS_MODULE_ID : null;
     },
     load(id) {
       if (id !== RESOLVED_PRELOAD_ASSETS_MODULE_ID) return null;
-      const assets = collectAssetFiles(assetsRoot).filter(path => !newgrounds || isNewgroundsAssetAllowed(path));
+      const assets = collectAssetFiles(assetsRoot).filter(path => !restrictedMusic || isNewgroundsAssetAllowed(path));
       return `const assets = ${JSON.stringify(assets, null, 2)};\nexport default assets;\n`;
     },
     closeBundle() {
-      if (!newgrounds) return;
+      if (!restrictedMusic) return;
       for (const path of collectAssetFiles(outputAssetsRoot)) {
         if (isNewgroundsAssetAllowed(path)) continue;
         const target = resolve(outputAssetsRoot, path);

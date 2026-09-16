@@ -45,6 +45,19 @@ On Windows, double-click `build-newgrounds.bat` to compile the game and create
 `release/NELGPlus-Newgrounds.zip` with the correct upload structure. The batch
 file validates that `index.html` is at the root of the archive.
 
+## itch.io build (Windows)
+
+Double-click `build-itch.bat` (requires Node.js). It installs missing packages,
+checks TypeScript, builds into `dist/itch/`, and creates
+`release/creamsoda-itch.zip`. For unattended use, run `build-itch.bat --no-pause`.
+Only music for Levels 34, 35, and 47 is packaged; excluded music is also skipped
+during preloading and playback. Sound effects and source music files are preserved.
+Newgrounds integration is disabled for this package.
+
+On itch.io, choose **HTML Game** and upload `release/creamsoda-itch.zip` as the
+browser-playable game. The ZIP has `index.html` at its root and relative asset
+paths. See the [itch.io HTML5 upload guide](https://itch.io/docs/creators/html5).
+
 ## Adding fonts
 
 The bundled webfont files live under:

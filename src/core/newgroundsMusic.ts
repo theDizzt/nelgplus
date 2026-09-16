@@ -1,4 +1,9 @@
-/** Files retained in the Newgrounds package for Levels 34, 35 and 47. */
+/** Both portal builds retain only the music for Levels 34, 35 and 47. */
+export function usesRestrictedMusic(mode: string): boolean {
+  return mode === "newgrounds" || mode === "itch";
+}
+
+/** Files retained in portal packages. */
 const NEWGROUNDS_MUSIC = new Set([
   "music/level34.mp3",
   "music/level34proto.mp3",
