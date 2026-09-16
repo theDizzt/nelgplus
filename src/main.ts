@@ -1,5 +1,6 @@
 import "./styles/global.css";
 import { Game } from "./core/Game";
+import { newgroundsService } from "./integrations/newgrounds/NewgroundsService";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
@@ -11,6 +12,8 @@ if (!rootElement) {
 }
 
 const root = rootElement;
+
+newgroundsService.initialize();
 
 function updateGameScale() {
   const availableWidth = root.clientWidth;

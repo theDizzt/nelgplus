@@ -27,6 +27,22 @@ A level creates its DOM in `mount(context)` and returns a cleanup function. Use 
 
 The browser never writes Hall of Fame records. Follow `docs/HALL_OF_FAME.md` for the JSON format and manual editing procedure.
 
+## Password Validation Algorithm
+
+Password fields use `attachStarMaskedInput` unless a level explicitly needs native text behavior. The helper keeps the submitted value in a private `rawValue`, renders the same-length `*` string in the visible input, and mirrors the original value only in the controlled mirror element. Keyboard insertion, deletion, selection replacement, and paste must update `rawValue` through the helper rather than reading the masked DOM value.
+
+On submit, a level follows this order:
+
+1. Prevent the browser's native form navigation.
+2. Read the value with `getValue()` (or the level's documented native-input source).
+3. Apply only the normalization explicitly required by that level.
+4. Compare the resulting value with the exact expected password, including letter case, digits, punctuation, and intentional spaces.
+5. Route success, intermediate clue progress, or failure through the level's existing transition callback.
+
+Passwords are case-sensitive by default. Do not call `toLowerCase()` or `toUpperCase()` on password values. The two intentional normalization exceptions are Level 12, whose accepted color names are compared case-insensitively, and Level 33's `apery's constant` step, which uses its authored Unicode/spacing/punctuation normalization. These exceptions must remain local to their level modules and must not be moved into the shared input helper.
+
+Enter and GO must use the same submit path when both are allowed. Incorrect submissions keep the entered value unless the level specification explicitly requires clearing it. A multi-step puzzle may clear a successfully consumed clue password before accepting the next clue, but must not clear a final answer before its success transition is complete.
+
 ## Flash-Style Context Menu Baseline
 
 Use the Level 9 context menu as the default implementation for any level that needs a Flash-player-style right-click menu. The baseline contains Music and Sound Effects toggles, separate Music and SFX volume submenus in 10% increments from 0 to 100, Forward, Back, Rewind, separators, and the player label. A level may intentionally disable or ignore individual navigation commands, but it should preserve the Level 9 layout, typography, hover behavior, and audio controls unless its puzzle specification explicitly requires another design.

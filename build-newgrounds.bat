@@ -19,6 +19,7 @@ if errorlevel 1 (
 
 if not exist "node_modules\typescript\bin\tsc" goto install_packages
 if not exist "node_modules\vite\bin\vite.js" goto install_packages
+if not exist "node_modules\javascript-obfuscator\package.json" goto install_packages
 goto packages_ready
 
 :install_packages
@@ -49,6 +50,10 @@ if errorlevel 1 (
 )
 
 echo [2/4] Building the HTML5 game...
+if not exist ".env.newgrounds" (
+  echo [WARN] .env.newgrounds is missing. Newgrounds medal integration will be disabled.
+  echo        Copy .env.newgrounds.example and fill in the API Tools values if needed.
+)
 node "node_modules\vite\bin\vite.js" build --base ./ --mode newgrounds
 if errorlevel 1 (
   echo.

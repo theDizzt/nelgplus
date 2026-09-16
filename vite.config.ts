@@ -2,6 +2,7 @@ import { readdirSync, rmSync } from "node:fs";
 import { relative, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import { isNewgroundsAssetAllowed } from "./src/core/newgroundsMusic";
+import { puzzleObfuscationPlugin } from "./build/puzzleObfuscation";
 
 const PRELOAD_ASSETS_MODULE_ID = "virtual:preload-assets";
 const RESOLVED_PRELOAD_ASSETS_MODULE_ID = `\0${PRELOAD_ASSETS_MODULE_ID}`;
@@ -52,10 +53,11 @@ function preloadAssetsPlugin(): Plugin {
 
 export default defineConfig({
   base: "./",
-  plugins: [preloadAssetsPlugin()],
+  plugins: [preloadAssetsPlugin(), puzzleObfuscationPlugin()],
   build: {
     outDir: "dist",
     emptyOutDir: true,
     assetsInlineLimit: 0,
+    sourcemap: false,
   },
 });

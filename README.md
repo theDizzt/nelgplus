@@ -18,6 +18,26 @@ npm run dev
 npm run build
 ```
 
+Production builds (including Newgrounds) obfuscate `src/levels/*.ts` and
+`src/core/Game.ts`: local identifiers are renamed and strings are encoded in
+runtime-decoded tables. Development source and the dev server stay readable.
+Source maps are disabled, and `?debug=1` level navigation only works in development.
+The build configuration lives in `build/puzzleObfuscation.ts`.
+It uses the local build-time [javascript-obfuscator](https://github.com/javascript-obfuscator/javascript-obfuscator)
+package; source is not sent to a hosted obfuscation service.
+
+This deters casual source searches and raises the cost of automated analysis; it
+does not make browser code or passwords secret. A determined player can decode
+strings or inspect runtime state. Puzzle clues displayed in the DOM or assets
+remain discoverable. Real secrets and authoritative verification must live on a
+server; do not put them in `VITE_*` variables or upload source/walkthrough files.
+
+To smoke-test the built output, run `npm run preview -- --port 4173`, then
+`node tests/production-obfuscation.browser.mjs` with Playwright and Chrome
+available (`PLAYWRIGHT_MODULE` may point to a shared Playwright module).
+This checks readable warp passwords, source maps, production debug controls,
+and normal progression through the first password puzzle.
+
 Upload the **contents** of `dist/` as a ZIP to Newgrounds. `index.html` must be
 at the root of the ZIP.
 

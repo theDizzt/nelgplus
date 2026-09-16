@@ -1,0 +1,59 @@
+@font-face {
+  font-family: "Mochiy Pop One";
+  src: url("/assets/fonts/mochiy-pop-one/mochiy-pop-one-v12-japanese_latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.level-61 { color: #000; background: radial-gradient(ellipse at center, #600, #000); isolation: isolate; }
+.level-61 .level-heading { z-index: 5; pointer-events: none; }
+.level-61 .level-heading__number,
+.level-61 .level-heading h1 {
+  color: transparent;
+  background: linear-gradient(#fff, #333);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.level-61__scene, .level-61__pulse { position: absolute; inset: 0; }
+.level-61__scene[hidden] { display: none; }
+.level-61__pulse { display: none; pointer-events: none; }
+.level-61[data-scene="2"], .level-61[data-scene="3"] { background: #000; }
+.level-61[data-scene="2"] .level-61__pulse,
+.level-61[data-scene="3"] .level-61__pulse {
+  display: block;
+  background: radial-gradient(ellipse at center, var(--pulse-color), #000);
+  animation: level-61-pulse 5s ease-in-out infinite;
+}
+.level-61[data-scene="2"] { --pulse-color: #00f; }
+.level-61[data-scene="3"] { --pulse-color: #f00; }
+.level-61__art { position: absolute; right: -12px; bottom: 0; width: 465px; height: 465px; object-fit: contain; pointer-events: none; }
+.level-61__copy { position: absolute; top: 200px; left: 35px; width: 400px; margin: 0; font-family: "Mochiy Pop One", sans-serif; font-size: 27px; line-height: 1.65; }
+.level-61__action { position: absolute; bottom: 90px; left: 70px; padding: 12px 22px; border: 3px solid #000; background: #ff0; color: #000; font: 25px "NELG Arial", Arial, sans-serif; }
+.level-61__action:hover { background: #ffd000; }
+.level-61__action:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.level-61[data-scene="1"] .level-61__copy { left: 0; width: 100%; text-align: center; }
+.level-61[data-scene="1"] .level-61__action { left: 50%; transform: translateX(-50%); }
+.level-61[data-scene="3"] .level-61__copy { top: 265px; left: 0; width: 100%; text-align: center; }
+.level-61[data-scene="3"] .level-61__action { left: 50%; transform: translateX(-50%); }
+.level-61[data-scene="4"] { background: #0ff; }
+.level-61[data-scene="4"] .level-heading__number,
+.level-61[data-scene="4"] .level-heading h1 { color: #000; background: none; }
+.level-61__rings { position: absolute; inset: 0; width: 800px; height: 600px; pointer-events: none; }
+.level-61__ring { pointer-events: stroke; touch-action: none; }
+.level-61__ring:focus-visible { outline: none; filter: drop-shadow(0 0 3px #000); }
+.level-61 .level-61__form { left: 175px; bottom: 24px; width: 450px; height: 58px; margin: 0; background: #0ff; }
+.level-61 .level-61__form input { background: radial-gradient(ellipse at center, var(--input-color), #000); color: #fff; text-shadow: 1px 1px #000; }
+.level-61__cursor { width: 28px; height: 42px; translate: -50% -85%; filter: drop-shadow(0 0 5px #f60); }
+.level-61__cursor i { position: absolute; bottom: 0; left: 3px; width: 23px; height: 35px; border-radius: 65% 12% 55% 45%; background: linear-gradient(#ff2a00, #ff9800); transform-origin: 50% 100%; animation: level-61-flame .22s ease-in-out infinite alternate; }
+.level-61__cursor i:nth-child(2) { left: 8px; width: 15px; height: 26px; background: #ffdf00; animation-delay: -.13s; }
+.level-61__cursor i:nth-child(3) { left: 11px; width: 9px; height: 17px; background: #fff6c0; animation-delay: -.07s; }
+.level-61__cursor b { position: absolute; left: 5px; bottom: 25px; width: 3px; height: 5px; background: #ffb000; border-radius: 50%; animation: level-61-ember .7s linear infinite; }
+.level-61__cursor b:last-child { left: 20px; animation-delay: -.35s; }
+@keyframes level-61-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes level-61-flame { from { transform: rotate(-12deg) scale(.9, 1); } to { transform: rotate(9deg) scale(1.1, .83); } }
+@keyframes level-61-ember { from { transform: translateY(0); opacity: 1; } to { transform: translate(4px, -24px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .level-61__pulse, .level-61__cursor i, .level-61__cursor b { animation: none !important; }
+  .level-61__cursor b { display: none; }
+}

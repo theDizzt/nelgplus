@@ -9,10 +9,11 @@ import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
 import { getLevel, registeredLevelNumbers } from "../levels/registry";
 import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
+import { newgroundsService } from "../integrations/newgrounds/NewgroundsService";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
-const GAME_VERSION = "1.1.91";
-const VERSION_DATE = "09/14/2026";
+const GAME_VERSION = "1.1.94";
+const VERSION_DATE = "09/16/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
 const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
@@ -372,7 +373,7 @@ export class Game {
   private readonly audioManager = new AudioManager();
   private readonly hallOfFame = new HallOfFameService();
   private readonly interactionGuard = new InteractionGuard();
-  private readonly debugMode = new URLSearchParams(location.search).get("debug") === "1";
+  private readonly debugMode = import.meta.env.DEV && new URLSearchParams(location.search).get("debug") === "1";
   private readonly completedAchievementIds = this.loadCompletedAchievementIds();
   private readonly pendingAchievementIds = new Set<number>();
   private readonly sessionFlags = new Set<string>();
@@ -647,6 +648,9 @@ export class Game {
           <button class="menu-button" data-menu-action="credits" type="button">
             ${revivalMode ? "FINAL NAMES" : "CREDITS"}
           </button>
+          ${newgroundsService.enabled
+            ? `<button class="menu-button" data-menu-action="newgrounds-login" type="button">NEWGROUNDS LOGIN</button>`
+            : ""}
         </nav>
       </main>
     `;
@@ -654,7 +658,7 @@ export class Game {
     this.startMainMenuParade();
 
     const revivalRejectedActions = new Set<string>();
-    const nonStartMenuActions = ["warp", "achievements", "hall", "help", "options", "credits"] as const;
+    const nonStartMenuActions = ["warp", "achievements", "hall", "help", "options", "credits", "newgrounds-login"] as const;
     this.root.querySelector<HTMLElement>(".main-menu__buttons")?.addEventListener("click", (event) => {
       const button = (event.target as Element).closest<HTMLButtonElement>("button[data-menu-action]");
       if (!button) return;
@@ -702,6 +706,9 @@ export class Game {
           break;
         case "options":
           this.renderOptions();
+          break;
+        case "newgrounds-login":
+          newgroundsService.openLoginPage();
           break;
       }
     });
@@ -926,6 +933,7 @@ export class Game {
         this.completedAchievementIds.add(achievementId);
         this.saveCompletedAchievementIds();
         this.showAchievementPopup(achievement);
+        newgroundsService.unlockForAchievement(achievementId);
       })
       .catch(() => {
         // A missing data file must not interrupt active gameplay.
