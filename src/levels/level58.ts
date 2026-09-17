@@ -149,7 +149,7 @@ export const level58: LevelDefinition = {
       });
     });
     listen(screen, "pointerdown", event => {
-      if (!(event.target as Element).closest("input, button, .nelg-password-input-mirror")) input.blur();
+      if (!(event.target as Element).closest("input, button")) input.blur();
     });
     listen(input, "keydown", event => {
       if (event.key !== "Enter" || event.repeat) return;

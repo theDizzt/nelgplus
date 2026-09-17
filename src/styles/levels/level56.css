@@ -115,12 +115,6 @@
   outline-offset: 3px;
 }
 
-.level-56 .nelg-password-input-mirror {
-  color: #111;
-  background: #fff;
-  border-color: #111;
-}
-
 .level-56__form input:focus {
   outline: none;
 }

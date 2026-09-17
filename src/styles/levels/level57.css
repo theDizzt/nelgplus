@@ -61,8 +61,7 @@
 }
 
 .level-57__form input,
-.level-57__form button,
-.level-57__form .nelg-password-input-mirror {
+.level-57__form button {
   pointer-events: auto;
 }
 

@@ -147,13 +147,6 @@
   width: 100%;
 }
 
-.level-48__form .nelg-password-input-mirror {
-  color: #000;
-  border-width: 3px;
-  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
-  font-size: 23px;
-}
-
 .level-48__form input {
   box-sizing: border-box;
   padding: 4px 8px;
@@ -239,12 +232,6 @@
     width: 150px;
     height: 39px;
     font-size: 21px;
-  }
-
-  .level-48__form .nelg-password-input-mirror {
-    max-width: 154px;
-    height: 39px;
-    font-size: 20px;
   }
 
   .level-48__form button {

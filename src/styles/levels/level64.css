@@ -1,0 +1,81 @@
+.level-64 {
+  /* 100px squares keep the 6 on the white tile at x=450–550, y=25–125. */
+  background-color: #fff;
+  background-image: conic-gradient(#fff 25%, #192236 0 50%, #fff 0 75%, #192236 0);
+  background-size: 200px 200px;
+  background-position: -50px 25px;
+}
+
+.level-64__heading .level-heading__number,
+.level-64__heading h1 {
+  z-index: 3;
+  color: #ff0;
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+}
+
+.level-64__heading h1 {
+  position: relative;
+  z-index: 3;
+}
+
+.level-64__heading .level-64__six {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  color: #192236;
+  transition: transform 220ms ease;
+}
+
+.level-64__heading .level-64__six--dark-tile {
+  -webkit-text-stroke-color: #fff;
+}
+
+.level-64__clues {
+  position: absolute;
+  z-index: 1;
+  left: 50px;
+  top: 125px;
+  display: grid;
+  grid-template-columns: repeat(7, 100px);
+  grid-template-rows: repeat(4, 100px);
+  pointer-events: none;
+  font: 34px/1 "NELG Comic Sans", "Comic Sans MS", cursive;
+}
+
+.level-64__clue {
+  display: grid;
+  place-items: center;
+  white-space: nowrap;
+}
+
+.level-64__clue--dark { color: #192239; }
+.level-64__clue--light { color: #fffffc; }
+.level-64__clue--small { font-size: 24px; }
+
+.level-64__target {
+  position: absolute;
+  left: 150px;
+  top: 425px;
+  width: 100px;
+  height: 100px;
+  padding: 14px 4px;
+  color: #fff;
+  font: 30px/1.4 "NELG Perpetua", Perpetua, Georgia, serif;
+}
+.level-64__form input {
+  color: #fff;
+  background: #000;
+  border-color: #fff;
+  caret-color: #fff;
+  font-family: "NELG Perpetua", Perpetua, Georgia, serif;
+  font-size: 25px;
+}
+.level-64__form button {
+  color: #fff;
+  background: #f00;
+  border-color: #fff;
+}
+.level-64__form button:hover:not(:disabled),
+.level-64__form button:focus-visible:not(:disabled) { background: #00f; }
+.level-64__form button:active:not(:disabled) { background: #ff0; }

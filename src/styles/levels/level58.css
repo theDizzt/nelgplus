@@ -88,8 +88,7 @@
 
 .level-58__form { z-index: 3; pointer-events: none; }
 .level-58__form input,
-.level-58__form button,
-.level-58__form .nelg-password-input-mirror { pointer-events: auto; }
+.level-58__form button { pointer-events: auto; }
 
 .level-58__split {
   position: absolute;
