@@ -33,7 +33,7 @@ export const level60: LevelDefinition = {
           <div class="level-60__tiles">${Array.from({ length: 7 }, (_, i) => `<button class="level-60__tile" type="button" data-tile="${i}" tabindex="-1" aria-label="Square ${i + 1}"><img alt="" draggable="false"></button>`).join("")}</div>
           <span class="level-60__found">found</span>
           <form class="level-08__form level-60__form" autocomplete="off">
-            <input class="nelg-password-input" type="text" maxlength="40" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password">
+            <input class="nelg-password-input" type="text" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password">
             <button type="submit">GO</button>
           </form>
           <input class="level-60__hidden-input" type="text" data-allow-select aria-label="Hidden password" autocomplete="off" autocapitalize="off" spellcheck="false" tabindex="-1">

@@ -80,7 +80,7 @@ function getPolarCoordinates(x: number, y: number): { radius: number; theta: num
 function passwordForm(id: string): string {
   return `
     <form class="level-20__password-form" autocomplete="off">
-      <input class="nelg-password-input" id="${id}" data-allow-select type="text" maxlength="32"
+      <input class="nelg-password-input" id="${id}" data-allow-select type="text"
         autocomplete="off" autocapitalize="off" aria-autocomplete="none" aria-label="Password" spellcheck="false" />
       <button type="submit">GO</button>
     </form>

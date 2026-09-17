@@ -35,7 +35,7 @@ export const level30: LevelDefinition = {
         <div class="level-30__controls">
           <input class="nelg-password-input" id="level-30-answer" name="nelg-level-30-answer"
             data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
-            type="text" maxlength="160" value="${CIPHERTEXT}" autocomplete="off"
+            type="text" value="${CIPHERTEXT}" autocomplete="off"
             autocapitalize="off" aria-autocomplete="none" aria-label="Encoded password"
             spellcheck="false" />
           <button class="level-30__go" type="submit">GO</button>

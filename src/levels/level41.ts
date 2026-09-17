@@ -32,7 +32,7 @@ export const level41: LevelDefinition = {
         <button class="level-41__fake-input" type="submit" aria-label="Submit password"></button>
         <input class="nelg-password-input level-41__answer" id="level-41-answer"
           name="nelg-level-forty-one-answer" data-allow-select data-form-type="other"
-          data-lpignore="true" data-1p-ignore="true" type="text" maxlength="4"
+          data-lpignore="true" data-1p-ignore="true" type="text"
           autocomplete="off" autocapitalize="off" aria-autocomplete="none" spellcheck="false"
           aria-label="Password input in the GO position" />
       </form>

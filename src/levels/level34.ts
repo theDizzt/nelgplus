@@ -19,7 +19,7 @@ export const level34: LevelDefinition = {
         <div class="level-34__controls">
           <input class="nelg-password-input" id="level-34-answer" name="nelg-level-34-answer"
             data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
-            type="text" maxlength="24" autocomplete="off" autocapitalize="off"
+            type="text" autocomplete="off" autocapitalize="off"
             aria-autocomplete="none" aria-label="Voice answer" spellcheck="false" />
           <button type="submit">GO</button>
         </div>

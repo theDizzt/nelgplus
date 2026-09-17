@@ -17,7 +17,7 @@ export function mountLevel57NoWay({ screen, listen, goToLevel, audio }: LevelCon
     <form class="level-08__form level-57__form" autocomplete="off">
       <input class="nelg-password-input" id="level-57-answer" name="nelg-level-fifty-seven-b-answer"
         data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
-        type="text" maxlength="24" autocomplete="off" autocapitalize="off"
+        type="text" autocomplete="off" autocapitalize="off"
         aria-autocomplete="none" spellcheck="false" aria-label="Password" />
       <button type="submit">GO</button>
     </form>`;

@@ -54,7 +54,7 @@ export const level52: LevelDefinition = {
       <form class="level-52__form level-52__form--red" autocomplete="off" hidden>
         <div class="level-52__controls">
           <input id="level-52-red" class="nelg-password-input" data-allow-select type="text"
-            maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false"
+            autocomplete="off" autocapitalize="off" spellcheck="false"
             aria-label="Red button password" />
           <button type="submit">GO</button>
         </div>
@@ -63,7 +63,7 @@ export const level52: LevelDefinition = {
       <form class="level-52__form level-52__form--moving" autocomplete="off" hidden>
         <div class="level-52__controls">
           <input id="level-52-moving" class="nelg-password-input" data-allow-select type="text"
-            maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false"
+            autocomplete="off" autocapitalize="off" spellcheck="false"
             aria-label="Moving password" />
           <button type="submit">GO</button>
         </div>
@@ -71,14 +71,14 @@ export const level52: LevelDefinition = {
 
       <form class="level-52__form level-52__form--menu" autocomplete="off" hidden>
         <div class="level-52__controls">
-          <input class="nelg-password-input" data-allow-select type="text" maxlength="20"
+          <input class="nelg-password-input" data-allow-select type="text"
             autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Menu password" />
           <button type="submit" aria-label="Open menu clue"><span>GO</span></button>
         </div>
       </form>
 
       <form class="level-52__form level-52__form--secret" autocomplete="off" hidden>
-        <input class="nelg-password-input" data-allow-select type="text" maxlength="20"
+        <input class="nelg-password-input" data-allow-select type="text"
           autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Hidden password" />
         <button type="submit">GO</button>
       </form>

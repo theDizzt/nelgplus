@@ -28,7 +28,7 @@ export const level63: LevelDefinition = {
         </div>
         <img class="level-63__art" src="${assetUrl("images/level63a.png")}" alt="A hidden night scene illustration" draggable="false">
         <form class="level-08__form level-63__form" autocomplete="off">
-          <input class="nelg-password-input" type="text" maxlength="24" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password">
+          <input class="nelg-password-input" type="text" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password">
           <button type="submit">GO</button>
         </form>
       </div>

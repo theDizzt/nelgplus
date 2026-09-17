@@ -27,7 +27,7 @@ function renderPasswordForm(): string {
     <form class="level-49__form" autocomplete="off">
       <input class="nelg-password-input" id="level-49-answer" name="nelg-level-forty-nine-answer"
         data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
-        type="text" maxlength="24" autocomplete="off" autocapitalize="off"
+        type="text" autocomplete="off" autocapitalize="off"
         aria-autocomplete="none" spellcheck="false" aria-label="Password" />
       ${buttons}
     </form>`;

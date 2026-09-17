@@ -154,7 +154,7 @@ export const level36: LevelDefinition = {
         <form class="level-36__form" autocomplete="off">
           <div class="level-36__controls">
             <input class="nelg-password-input" id="level-36-answer" name="nelg-level-thirty-six-answer" data-allow-select
-              data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text" maxlength="24"
+              data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
               autocomplete="off" autocapitalize="off" aria-autocomplete="none" spellcheck="false" aria-label="Password" />
             <button type="submit">GO</button>
           </div>

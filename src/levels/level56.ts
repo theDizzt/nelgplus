@@ -74,7 +74,7 @@ export const level56: LevelDefinition = {
       <form class="level-56__form" autocomplete="off">
         <input class="nelg-password-input" id="level-56-answer" name="nelg-level-fifty-six-answer"
           data-allow-select data-form-type="other" data-lpignore="true" data-1p-ignore="true"
-          type="text" maxlength="24" autocomplete="off" autocapitalize="off"
+          type="text" autocomplete="off" autocapitalize="off"
           aria-autocomplete="none" spellcheck="false" aria-label="Password" />
         <label for="level-56-answer">If you find the solution,<br />submit it here:</label>
         <button type="submit">GO</button>

@@ -40,7 +40,7 @@ export const level61: LevelDefinition = {
         </svg>
         ${["#fff", "#f00", "#0f0", "#00f"].map((color, i) => `
           <form class="level-08__form level-61__form" data-layer="${i + 1}" style="--input-color:${color};z-index:${4 - i}" autocomplete="off" ${i ? "inert aria-hidden=\"true\"" : ""}>
-            <input class="nelg-password-input" type="text" maxlength="40" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password ${i + 1}">
+            <input class="nelg-password-input" type="text" data-allow-select autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password ${i + 1}">
             <button type="submit">GO</button>
           </form>`).join("")}
       </section>

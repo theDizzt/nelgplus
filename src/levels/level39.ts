@@ -236,7 +236,7 @@ function launchFakeLevelWorld(
             <span class="level-39__fake-41-arrow">➜</span><b>?</b><i>⌜ ──── ⌝</i>
           </div>
           <form class="level-39__fake-password-form" data-fake-password-form="41" autocomplete="off">
-            <input data-fake-password="41" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="41" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 41 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -245,7 +245,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-42-code">5 ? g b / 6 y ? n / 3 ? d c</p>
           <form class="level-39__fake-password-form" data-fake-password-form="42" autocomplete="off">
-            <input data-fake-password="42" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="42" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 42 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -277,7 +277,7 @@ function launchFakeLevelWorld(
         return `
           <img class="level-39__fake-45-image" src="${assetUrl("images/level39fake45.png")}" alt="A hidden mathematical symbol" draggable="false" />
           <form class="level-39__fake-password-form" data-fake-password-form="45" autocomplete="off">
-            <input data-fake-password="45" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="45" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 45 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -293,7 +293,7 @@ function launchFakeLevelWorld(
           <div class="level-39__fake-47-forms">
             ${[1, 2, 3].map((slot) => `
               <form class="level-39__fake-password-form" data-fake-password-form="47-${slot}" autocomplete="off">
-                <input data-fake-password="47-${slot}" type="text" maxlength="16" autocomplete="off"
+                <input data-fake-password="47-${slot}" type="text" autocomplete="off"
                   spellcheck="false" aria-label="Fake Level 47 password ${slot}" />
                 <button type="submit" data-text="GO">GO</button>
               </form>`).join("")}
@@ -306,7 +306,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-49-clue" data-fake-49-clue>Password is hidden</p>
           <form class="level-39__fake-password-form" data-fake-password-form="49" autocomplete="off">
-            <input data-fake-password="49" type="text" maxlength="32" autocomplete="off"
+            <input data-fake-password="49" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 49 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -315,7 +315,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-50-morse">- .... . &nbsp;&nbsp; .--. .- ... ... .-- --- .-. -.. &nbsp;&nbsp; .. ... &nbsp;&nbsp; .- .--.</p>
           <form class="level-39__fake-password-form" data-fake-password-form="50" autocomplete="off">
-            <input data-fake-password="50" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="50" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 50 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -329,7 +329,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-52-formula">8 + 5 + 73 + 49 = ?<br /><small>(THINK AS SMALL AS POSSIBLE!!!)</small></p>
           <form class="level-39__fake-password-form" data-fake-password-form="52" autocomplete="off">
-            <input data-fake-password="52" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="52" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 52 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -370,7 +370,7 @@ function launchFakeLevelWorld(
             }).join("")}
           </div>
           <form class="level-39__fake-password-form" data-fake-password-form="59" autocomplete="off">
-            <input data-fake-password="59" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="59" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 59 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -380,7 +380,7 @@ function launchFakeLevelWorld(
           <textarea class="level-39__fake-60-ascii" data-fake-60-ascii data-allow-select
             readonly wrap="off" spellcheck="false" aria-label="Tiny selectable dynamic text"></textarea>
           <form class="level-39__fake-password-form" data-fake-password-form="60" autocomplete="off">
-            <input data-fake-password="60" type="text" maxlength="8" autocomplete="off"
+            <input data-fake-password="60" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 60 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -389,7 +389,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-61-clue">You cannot &quot;divide&quot; this, because it is hiding!</p>
           <form class="level-39__fake-password-form" data-fake-password-form="61" autocomplete="off">
-            <input data-fake-password="61" type="text" maxlength="24" autocomplete="off"
+            <input data-fake-password="61" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 61 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -407,7 +407,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-64-clue">STOP PLAYING THIS GAME</p>
           <form class="level-39__fake-password-form" data-fake-password-form="64" autocomplete="off">
-            <input data-fake-password="64" type="text" maxlength="40" autocomplete="off"
+            <input data-fake-password="64" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 64 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -416,7 +416,7 @@ function launchFakeLevelWorld(
         return `
           <img class="level-39__fake-65-image" src="${assetUrl("images/level39fake65.png")}" alt="The abbreviated game title with one differently colored letter" draggable="false" />
           <form class="level-39__fake-password-form" data-fake-password-form="65" autocomplete="off">
-            <input data-fake-password="65" type="text" maxlength="20" autocomplete="off"
+            <input data-fake-password="65" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 65 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -433,7 +433,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-68-clue">PW =</p>
           <form class="level-39__fake-password-form" data-fake-password-form="68" autocomplete="off">
-            <input data-fake-password="68" type="text" maxlength="24" autocomplete="off"
+            <input data-fake-password="68" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 68 password" />
             <button type="submit" data-fake-68-hold data-text="GO">GO</button>
           </form>`;
@@ -447,7 +447,7 @@ function launchFakeLevelWorld(
             37°02'59&quot; N 110°07'22&quot; W, May 5, 2016<br />
             52°28′43″N, 1°51′15″W, August 10, 2007</p>
           <form class="level-39__fake-password-form" data-fake-password-form="69" autocomplete="off">
-            <input data-fake-password="69" type="text" maxlength="20" autocomplete="off"
+            <input data-fake-password="69" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 69 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -460,7 +460,7 @@ function launchFakeLevelWorld(
           <button class="level-39__fake-70-control level-39__fake-70-control--pause" type="button"
             data-fake-70-pause aria-label="Pause changing text">Ⅱ</button>
           <form class="level-39__fake-password-form" data-fake-password-form="70" autocomplete="off">
-            <input data-fake-password="70" type="text" maxlength="20" autocomplete="off"
+            <input data-fake-password="70" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 70 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -469,7 +469,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-71-clue">EASIER THAN IT LOOKS</p>
           <form class="level-39__fake-password-form" data-fake-password-form="71" autocomplete="off">
-            <input data-fake-password="71" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="71" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 71 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -478,7 +478,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-74-clue">THE PASSWORD DOES NOT EXIST ON THIS SCREEN.</p>
           <form class="level-39__fake-password-form" data-fake-password-form="74" autocomplete="off">
-            <input data-fake-password="74" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="74" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 74 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -493,7 +493,7 @@ function launchFakeLevelWorld(
         return `
           <img class="level-39__fake-76-image" src="${assetUrl("images/level39fake76.png")}" alt="An extremely horizontally stretched text clue" draggable="false" />
           <form class="level-39__fake-password-form" data-fake-password-form="76" autocomplete="off">
-            <input data-fake-password="76" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="76" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 76 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -503,7 +503,7 @@ function launchFakeLevelWorld(
           <p class="level-39__fake-77-message">THE GAME IS COMPLETELY BROKEN...<br />PRESS REWIND AND START AGAIN FROM THE BEGINNING!</p>
           <div class="level-39__fake-77-buttons" data-fake-77-buttons aria-live="polite"></div>
           <form class="level-39__fake-password-form level-39__fake-77-form" data-fake-password-form="77" autocomplete="off">
-            <input data-fake-password="77" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="77" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 77 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -515,7 +515,7 @@ function launchFakeLevelWorld(
             ${Array.from({ length: 54 }, (_, index) => `<span style="--star-x:${(index * 47 + 13) % 96}%;--star-y:${(index * 71 + 19) % 82}%;--star-delay:${(index % 11) * -0.13}s;--star-size:${24 + (index % 6) * 8}px">*</span>`).join("")}
           </div>
           <form class="level-39__fake-password-form" data-fake-password-form="78" autocomplete="off">
-            <input data-fake-password="78" type="text" maxlength="4" autocomplete="off"
+            <input data-fake-password="78" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 78 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -524,7 +524,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-79-message">When you mix different elements together, you create a new mix of ideas. In the modern studio, audio engineers mix tracks with great care. They adjust the mix until the final mix sounds just right. You can mix vocals, guitars, and drums into a single mix. A good mix requires patience, just like a chef who likes to mix spices to create a rich mix of flavors. When ingredients mix, they form a delicious mix. If you mix red and blue, you get a mix of purple. Life is also a mix of choices. We mix work and play to find a healthy mix. Every daily mix of events brings a new mix of feelings. Do not mix up your priorities. Keep your mix balanced and clear.</p>
           <form class="level-39__fake-password-form" data-fake-password-form="79" autocomplete="off">
-            <input data-fake-password="79" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="79" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 79 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -533,7 +533,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-80-message">Finish the equation.</p>
           <form class="level-39__fake-password-form" data-fake-password-form="80" autocomplete="off">
-            <input data-fake-password="80" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="80" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 80 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -548,7 +548,7 @@ function launchFakeLevelWorld(
         return `
           <img class="level-39__fake-83-image" src="${assetUrl("images/level39fake83.png")}" alt="A visual clue about a number" draggable="false" />
           <form class="level-39__fake-password-form" data-fake-password-form="83" autocomplete="off" hidden>
-            <input data-fake-password="83" type="text" maxlength="24" autocomplete="off"
+            <input data-fake-password="83" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 83 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -557,7 +557,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-84-message">USE THE POWER OF THE HEXAGON...</p>
           <form class="level-39__fake-password-form" data-fake-password-form="84" autocomplete="off">
-            <input data-fake-password="84" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="84" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 84 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -570,7 +570,7 @@ function launchFakeLevelWorld(
         return `
           <div class="level-39__fake-86-objects">${debris}</div>
           <form class="level-39__fake-password-form" data-fake-password-form="86" autocomplete="off">
-            <input data-fake-password="86" type="text" maxlength="24" autocomplete="off"
+            <input data-fake-password="86" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 86 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -579,7 +579,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-87-clue">WELL KNOWN = A5Q7A2A2Q2Z5<br />PW = Q8A3</p>
           <form class="level-39__fake-password-form" data-fake-password-form="87" autocomplete="off">
-            <input data-fake-password="87" type="text" maxlength="12" autocomplete="off"
+            <input data-fake-password="87" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 87 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -603,7 +603,7 @@ function launchFakeLevelWorld(
           <p class="level-39__fake-94-error">${FAKE_LEVEL_94_ERROR}</p>
           <div class="level-39__fake-94-letters" data-fake-94-letters aria-live="polite"></div>
           <form class="level-39__fake-password-form" data-fake-password-form="94" autocomplete="off">
-            <input data-fake-password="94" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="94" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 94 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -612,7 +612,7 @@ function launchFakeLevelWorld(
         return `
           <p class="level-39__fake-95-message">JUST GIVE UP</p>
           <form class="level-39__fake-password-form" data-fake-password-form="95" autocomplete="off">
-            <input data-fake-password="95" type="text" maxlength="20" autocomplete="off"
+            <input data-fake-password="95" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 95 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -622,7 +622,7 @@ function launchFakeLevelWorld(
           <p class="level-39__fake-96-message">ABSOLUTELY IMPOSSIBLE!!!</p>
           <div class="level-39__fake-96-words" data-fake-96-words aria-hidden="true"></div>
           <form class="level-39__fake-password-form" data-fake-password-form="96" autocomplete="off">
-            <input data-fake-password="96" type="text" maxlength="16" autocomplete="off"
+            <input data-fake-password="96" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 96 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -640,7 +640,7 @@ function launchFakeLevelWorld(
           <p class="level-39__fake-99-message">GAME CRASHED</p>
           <img class="level-39__fake-99-image" src="${assetUrl("images/level39fake99.png")}" alt="A dead-face emoticon clue" draggable="false" />
           <form class="level-39__fake-password-form" data-fake-password-form="99" autocomplete="off">
-            <input data-fake-password="99" type="text" maxlength="12" autocomplete="off"
+            <input data-fake-password="99" type="text" autocomplete="off"
               spellcheck="false" aria-label="Fake Level 99 password" />
             <button type="submit" data-text="GO">GO</button>
           </form>`;
@@ -1756,7 +1756,7 @@ return void 0x000000;</code></pre>
         <div class="level-39__controls">
           <div class="level-39__broken-input">
             <input class="nelg-password-input" id="level-39-answer" name="nelg-level-thirty-nine-answer"
-              data-allow-select type="text" maxlength="64" autocomplete="off" autocapitalize="off"
+              data-allow-select type="text" autocomplete="off" autocapitalize="off"
               aria-autocomplete="none" data-form-type="other" data-lpignore="true" data-1p-ignore="true"
               spellcheck="false" aria-label="Damaged password input" />
             <i aria-hidden="true"></i>

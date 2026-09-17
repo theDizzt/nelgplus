@@ -93,7 +93,7 @@ passwordForm.onsubmit = () =&gt; trapForever("WRONG :(");`}</code></pre>
         <div class="level-24__controls">
           <input class="nelg-password-input" id="level-24-answer" data-allow-select
             data-form-type="other" data-lpignore="true" data-1p-ignore="true" type="text"
-            maxlength="40" autocomplete="off" autocapitalize="off" aria-autocomplete="none"
+            autocomplete="off" autocapitalize="off" aria-autocomplete="none"
             aria-label="Password" spellcheck="false" />
           <button type="submit">GO</button>
         </div>
