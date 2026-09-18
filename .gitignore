@@ -12,3 +12,5 @@ screenshots/
 dev_only/
 .vercel
 backups/
+*.psd
+public\assets\web\

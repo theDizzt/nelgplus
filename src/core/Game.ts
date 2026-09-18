@@ -11,10 +11,30 @@ import { getLevel, registeredLevelNumbers } from "../levels/registry";
 import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
 import { newgroundsService } from "../integrations/newgrounds/NewgroundsService";
 
-const DEVELOPMENT_PERIOD = "08/03/2026 – 09/16/2026";
-const GAME_VERSION = "1.1.94";
-const VERSION_DATE = "09/16/2026";
+const DEVELOPMENT_PERIOD = "08/03/2026 – 09/19/2026";
+const GAME_VERSION = "1.1.98";
+const VERSION_DATE = "09/18/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
+const PROGRESS_FLAME = '<span class="fire-slider__handle progress-flame" aria-hidden="true"><i></i><i></i><i></i></span>';
+const mainLogo = (revivalMode = false): string => `
+  <h1 class="game-logo-heading">
+    <a class="game-logo" href="https://dizzt3942.neocities.org/nelgplus/" target="_blank" rel="noopener noreferrer" aria-label="Never Ending Level Game ++ (opens in a new window)">
+      <img class="game-logo__title" src="${assetUrl("main/title-1.png")}" alt="Never Ending Level Game" width="663" height="66" fetchpriority="high">
+      <span class="game-logo__fire">
+        <svg class="game-logo__fire-filter" aria-hidden="true" width="0" height="0"><defs>
+          <filter id="logo-flame-texture" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency=".045 .09" numOctaves="2" seed="8" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" />
+            <feGaussianBlur stdDeviation=".45" />
+          </filter>
+        </defs></svg>
+        <span class="game-logo__flames" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="game-logo__embers" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <img class="game-logo__plus" src="${assetUrl(revivalMode ? "main/title-2a.png" : "main/title-2.png")}" alt="++" width="95" height="66" fetchpriority="high">
+      </span>
+    </a>
+  </h1>
+`;
 const DISCORD_HELP_SECTION_URL = "https://discord.com/channels/810337869960708107/1533840278056730674";
 const DISCORD_CHATBOT_URL = "https://discord.com/channels/810337869960708107/1545107072939724932";
 const WINNER_REPORT_API_URL = import.meta.env.VITE_WINNER_REPORT_API_URL?.trim() || "/api/winner-report";
@@ -40,7 +60,7 @@ interface AchievementData {
 const ADMIN_FONT_OPTIONS = [
   { id: "", label: "Default (level design)", family: "" },
   { id: "perpetua", label: "Perpetua", family: '"NELG Perpetua", Perpetua, serif' },
-  { id: "courier", label: "Courier", family: '"NELG Courier", Courier, monospace' },
+  { id: "courier", label: "Courier Prime", family: '"NELG Courier", Courier, monospace' },
   { id: "matisse", label: "Matisse", family: '"NELG Matisse", sans-serif' },
   { id: "arial", label: "Arial", family: '"NELG Arial", Arial, sans-serif' },
   { id: "arial-narrow", label: "Arial Narrow", family: '"NELG Arial Narrow", Arial, sans-serif' },
@@ -91,10 +111,10 @@ const PRELOAD_FONTS = [
   "/assets/fonts/perpetua/Perpetua-Bold.woff2",
   "/assets/fonts/perpetua/Perpetua-Italic.woff2",
   "/assets/fonts/perpetua/Perpetua-BoldItalic.woff2",
-  "/assets/fonts/courier/CourierStd.woff2",
-  "/assets/fonts/courier/CourierStd-Bold.woff2",
-  "/assets/fonts/courier/CourierStd-Oblique.woff2",
-  "/assets/fonts/courier/CourierStd-BoldOblique.woff2",
+  "/assets/fonts/courier/courier-prime-v11-latin_latin-ext-regular.woff2",
+  "/assets/fonts/courier/courier-prime-v11-latin_latin-ext-700.woff2",
+  "/assets/fonts/courier/courier-prime-v11-latin_latin-ext-italic.woff2",
+  "/assets/fonts/courier/courier-prime-v11-latin_latin-ext-700italic.woff2",
   "/assets/fonts/matisse/MatisseITC-Regular.woff2",
   "/assets/fonts/arial/ArialMT.woff2",
   "/assets/fonts/arial/Arial-BoldMT.woff2",
@@ -448,11 +468,11 @@ export class Game {
       <main class="game-frame preloader" aria-label="Loading Never Ending Level Game Plus Plus">
         <div class="preloader__content">
           <p class="preloader__kicker">WELCOME TO THE</p>
-          <h1>Never Ending Level Game <span>++</span></h1>
+          ${mainLogo()}
           <p class="preloader__status">LOADING GAME ASSETS</p>
           <div class="preloader__track" role="progressbar" aria-label="Loading progress"
             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="preloader__bar"></div>
+            <div class="preloader__bar">${PROGRESS_FLAME}</div>
           </div>
           <output class="preloader__percentage" aria-live="polite">0%</output>
         </div>
@@ -565,7 +585,6 @@ export class Game {
     const menuCopy = revivalMode
       ? {
           kicker: "WELCOME BACK. IT REMEMBERED YOU.",
-          title: "Never Ending Level Game <span>++</span>",
           description: `
             Your last run was not erased. It has been waiting underneath this screen, learning every click.
             There are no levels left to finish. There are only doors that remember how you failed.
@@ -583,16 +602,11 @@ export class Game {
         }
       : {
           kicker: "WELCOME TO THE",
-          title: "Never Ending Level Game <span>++</span>",
           description: `
             This game is a sequel to Clarence Ball’s <a href="https://www.newgrounds.com/portal/view/366111" target="_blank" rel="noopener noreferrer"><em>Never Ending Level Game</em></a>, which was released in 2005.
             It was created by blending elements from that game and its fan games (<a href="https://www.newgrounds.com/portal/view/756739" target="_blank" rel="noopener noreferrer"><em>Level Killer</em></a> and
-            <a href="https://www.newgrounds.com/portal/view/843894" target="_blank" rel="noopener noreferrer"><em>TEDNE</em></a>) to let players experience the thrill of the original once again. You must complete
-            150 levels while battling against the time and overcoming the game’s ruthless difficulty.
-          `,
-          continuation: `
-            This game is a continuation of the test of knowledge, patience and perhaps more stuff and I am
-            reflecting myself for making the difficulty of the things ruthless, of the puzzles, or not puzzles...
+            <a href="https://www.newgrounds.com/portal/view/843894" target="_blank" rel="noopener noreferrer"><em>TEDNE</em></a>) to let players experience the thrill of the original once again.\n
+            This game is designed to test your knowledge, patience, and more. The difficulty is quite high, and you’ll need to push your abilities to the limit to complete all 150 levels. The game is styled after the look and feel of Flash games from the 2000s.
           `,
           levelsLabel: "LEVELS INCLUDED",
           levelsValue: `${PUBLIC_LEVEL_COUNT} / ${MAXIMUM_LEVEL}`,
@@ -604,12 +618,11 @@ export class Game {
     this.root.innerHTML = `
       <main class="game-frame main-menu${revivalMode ? " main-menu--revival" : ""}" aria-label="Never Ending Level Game Plus Plus main menu">
         <div class="main-menu__glow" aria-hidden="true"></div>
+        ${revivalMode ? '<div class="main-menu__ichor" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' : ""}
         <section class="main-menu__identity">
           <p class="main-menu__kicker">${menuCopy.kicker}</p>
-          <h1>${menuCopy.title}</h1>
-          <div class="main-menu__parade" aria-hidden="true"></div>
+          ${mainLogo(revivalMode)}
           <p class="main-menu__description">${menuCopy.description}</p>
-          <p class="main-menu__continuation">${menuCopy.continuation}</p>
           <dl class="main-menu__facts">
             <div>
               <dt>${menuCopy.levelsLabel}</dt>
@@ -628,12 +641,12 @@ export class Game {
 
         <nav class="main-menu__buttons" aria-label="Main menu">
           <button class="menu-button menu-button--primary" data-menu-action="start" type="button">
-            START GAME
+            <span class="menu-button__label">START GAME</span>
           </button>
-          <button class="menu-button" data-menu-action="warp" type="button">
+          <button class="menu-button menu-button--secondary" data-menu-action="warp" type="button">
             ${revivalMode ? "WARP INTO THE WOUND" : "WARP ZONE"}
           </button>
-          <button class="menu-button" data-menu-action="achievements" type="button">
+          <button class="menu-button menu-button--secondary" data-menu-action="achievements" type="button">
             ${revivalMode ? "SINS REMEMBERED" : "ACHIEVEMENTS"}
           </button>
           <button class="menu-button" data-menu-action="hall" type="button">
@@ -652,6 +665,7 @@ export class Game {
             ? `<button class="menu-button" data-menu-action="newgrounds-login" type="button">NEWGROUNDS LOGIN</button>`
             : ""}
         </nav>
+        <div class="main-menu__parade" aria-hidden="true"></div>
       </main>
     `;
 
@@ -749,7 +763,7 @@ export class Game {
          <span>ACHIEVEMENT PROGRESS</span>
          <div class="achievement-progress__track" id="achievement-progress-track"
            role="progressbar" aria-label="Achievement completion rate" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
-           <i id="achievement-progress-fill"></i>
+           <i id="achievement-progress-fill">${PROGRESS_FLAME}</i>
          </div>
          <strong id="achievement-progress-value">0 / 0 · 0%</strong>
        </section>`,
@@ -1060,17 +1074,21 @@ export class Game {
       item.remove();
     };
 
-    const spawnSprite = (): void => {
-      if (disposed) return;
+    const spawnSprite = async (initialProgress = 0): Promise<void> => {
+      if (disposed || parade.childElementCount >= 5) return;
       const sprite = sprites[Math.floor(Math.random() * sprites.length)] ?? sprites[0];
       const item = document.createElement("span");
       const image = document.createElement("img");
       const movingRight = Math.random() >= 0.5;
       const facingRight = "reverseFacing" in sprite ? !movingRight : movingRight;
-      const spriteHeight = 38 + Math.round(Math.random() * 14);
+      const spriteHeight = 28 + Math.round(Math.random() * 8);
+      const speed = 38 + Math.random() * 22;
+      const strideDuration = 520 + (60 - speed) * 8;
 
       item.className = "main-menu__parade-item";
-      item.style.bottom = `${Math.round(Math.random() * 6)}px`;
+      item.style.bottom = "4px";
+      image.style.setProperty("--parade-stride", `${strideDuration}ms`);
+      image.style.setProperty("--parade-phase", `${-Math.random() * strideDuration}ms`);
       image.src = assetUrl(sprite.source);
       image.alt = sprite.label;
       image.draggable = false;
@@ -1078,8 +1096,12 @@ export class Game {
       image.style.setProperty("--main-menu-sprite-facing", facingRight ? "1" : "-1");
       if ("rolls" in sprite) {
         item.classList.add("main-menu__parade-item--gear");
+        image.style.animationDuration = `${Math.PI * spriteHeight / speed}s`;
         image.style.setProperty("--main-menu-gear-rotation", movingRight ? "1turn" : "-1turn");
       }
+      // Decode before entering the lane so the sprite does not pop in mid-step.
+      try { await image.decode(); } catch { return; }
+      if (disposed || !parade.isConnected || parade.childElementCount >= 5) return;
       item.append(image);
       parade.append(item);
 
@@ -1089,18 +1111,19 @@ export class Game {
         frameTimer = window.setInterval(() => {
           alternateFrame = !alternateFrame;
           image.src = assetUrl(alternateFrame ? sprite.alternateSource : sprite.source);
-        }, 180);
+        }, strideDuration / 2);
         intervalIds.add(frameTimer);
       }
 
       const padding = 72;
       const start = movingRight ? -padding : parade.clientWidth + padding;
       const end = movingRight ? parade.clientWidth + padding : -padding;
-      const duration = 4800 + Math.round(Math.random() * 4000);
+      const duration = Math.abs(end - start) / speed * 1000;
       const animation = item.animate(
         [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
         { duration, easing: "linear" },
       );
+      animation.currentTime = initialProgress * duration;
       animations.add(animation);
       void animation.finished
         .then(() => removeSprite(item, animation, frameTimer))
@@ -1111,9 +1134,9 @@ export class Game {
       if (disposed) return;
       const timeoutId = window.setTimeout(() => {
         timeoutIds.delete(timeoutId);
-        spawnSprite();
+        void spawnSprite();
         scheduleNextSprite();
-      }, 1800 + Math.round(Math.random() * 1600));
+      }, 4200 + Math.round(Math.random() * 1800));
       timeoutIds.add(timeoutId);
     };
 
@@ -1125,7 +1148,8 @@ export class Game {
       image.alt = sprite.label;
       parade.append(image);
     } else {
-      spawnSprite();
+      void spawnSprite(.22);
+      void spawnSprite(.68);
       scheduleNextSprite();
     }
 
@@ -1554,8 +1578,13 @@ export class Game {
                <input id="music-option" type="checkbox" ${this.audioManager.musicEnabled ? "checked" : ""} />
              </label>
              <span class="options-panel__volume-controls">
-               <input id="music-volume-range" type="range" min="0" max="100" step="1"
+               <span class="fire-slider" style="--volume: ${this.audioManager.musicVolume}%">
+                 <span class="fire-slider__track" aria-hidden="true"><span class="fire-slider__fill"></span>
+                   <span class="fire-slider__handle"><i></i><i></i><i></i></span>
+                 </span>
+                 <input id="music-volume-range" type="range" min="0" max="100" step="1"
                  value="${this.audioManager.musicVolume}" aria-label="Music volume" />
+               </span>
                <input id="music-volume-number" type="number" min="0" max="100" step="1"
                  value="${this.audioManager.musicVolume}" aria-label="Music volume percentage" autocomplete="off" />
                <span aria-hidden="true">%</span>
@@ -1567,8 +1596,13 @@ export class Game {
                <input id="effects-option" type="checkbox" ${this.audioManager.effectsEnabled ? "checked" : ""} />
              </label>
              <span class="options-panel__volume-controls">
-               <input id="effects-volume-range" type="range" min="0" max="100" step="1"
+               <span class="fire-slider" style="--volume: ${this.audioManager.effectsVolume}%">
+                 <span class="fire-slider__track" aria-hidden="true"><span class="fire-slider__fill"></span>
+                   <span class="fire-slider__handle"><i></i><i></i><i></i></span>
+                 </span>
+                 <input id="effects-volume-range" type="range" min="0" max="100" step="1"
                  value="${this.audioManager.effectsVolume}" aria-label="SFX volume" />
+               </span>
                <input id="effects-volume-number" type="number" min="0" max="100" step="1"
                  value="${this.audioManager.effectsVolume}" aria-label="SFX volume percentage" autocomplete="off" />
                <span aria-hidden="true">%</span>
@@ -1737,7 +1771,10 @@ export class Game {
         if (!Number.isFinite(value)) return;
         const normalizedVolume = Math.round(Math.min(100, Math.max(0, value)));
         setter(normalizedVolume);
-        if (range) range.value = String(normalizedVolume);
+        if (range) {
+          range.value = String(normalizedVolume);
+          range.closest<HTMLElement>(".fire-slider")?.style.setProperty("--volume", `${normalizedVolume}%`);
+        }
         if (number) number.value = String(normalizedVolume);
       };
       range?.addEventListener("input", () => applyVolume(range.valueAsNumber));
@@ -1880,7 +1917,7 @@ export class Game {
         <div class="menu-page__topline">NEVER ENDING LEVEL GAME ++</div>
         <h1>${title}</h1>
         <section class="menu-page__content">${content}</section>
-        <button class="menu-page__back" id="menu-back" type="button">← BACK</button>
+        <button class="menu-page__back" id="menu-back" type="button">BACK</button>
       </main>
     `;
     this.root
