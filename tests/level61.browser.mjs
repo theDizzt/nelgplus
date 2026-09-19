@@ -11,9 +11,11 @@ try {
     const { level61 } = await import("/src/levels/level61.ts");
     let cleanup, abort;
     window.music61 = [];
+    window.warps61 = [];
     window.mount61 = scene => {
       cleanup?.(); abort?.abort(); abort = new AbortController();
       cleanup = level61.mount({ screen: document.querySelector("#screen"), initialScene: scene,
+        goToWarpZone: number => window.warps61.push(number),
         audio: { playMusic: async (source, loop) => window.music61.push([source, loop]), stopMusic: () => window.music61.push("stop") },
         listen: (target, type, callback) => target.addEventListener(type, callback, { signal: abort.signal }) });
     };
@@ -64,8 +66,35 @@ try {
   await page.getByRole("textbox", { name: "Password 1", exact: true }).fill("test");
   await page.locator('[data-layer="1"] button').click();
   assert.equal(await page.locator("#screen").getAttribute("data-scene"), "4");
+  const setPassword = (layer, value) => page.locator(`[data-layer="${layer}"] input`).evaluate((input, value) => {
+    input.select();
+    input.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: value }));
+  }, value);
+  const submit = () => page.locator('[data-layer="1"]').evaluate(form => form.requestSubmit());
+  await setPassword(1, 'kukui1191');
+  await setPassword(2, 'ArchBear08');
+  await setPassword(3, 'matchoi');
+  await submit();
+  assert.deepEqual(await page.evaluate(() => window.warps61), [], 'all four answers are required');
+  await setPassword(4, 'zeram');
+  await submit();
+  assert.deepEqual(await page.evaluate(() => window.warps61), [], 'answers are case-sensitive');
+  await setPassword(3, 'Zeram');
+  await setPassword(4, 'matchoi');
+  await submit();
+  assert.deepEqual(await page.evaluate(() => window.warps61), [], 'green and blue answers cannot be swapped');
+  await setPassword(3, 'matchoi');
+  await setPassword(4, 'Zeram');
+  await setPassword(1, 'incorrect');
+  await submit();
+  assert.deepEqual(await page.evaluate(() => window.warps61), [], 'current values must all remain correct');
+  await setPassword(1, 'kukui1191');
+  await page.locator('[data-layer="1"] input').press('Enter');
+  assert.deepEqual(await page.evaluate(() => window.warps61), [15], 'correct answers enter Warp Zone 15');
+  await submit();
+  assert.deepEqual(await page.evaluate(() => window.warps61), [15], 'warp fires only once');
   await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.evaluate(() => document.fonts.check('27px "Mochiy Pop One"')), true);
   assert.deepEqual(errors, []);
-  console.log("PASS: Japanese copy, scene navigation, artwork/font, pulse, four stacked forms, nine rings at two scales, keyboard movement, deferred submission.");
+  console.log("PASS: scenes, artwork/font, music, rings, four case-sensitive color passwords, and Warp Zone 15.");
 } finally { await browser.close(); }

@@ -9,6 +9,7 @@ try {
   await page.route("**/maze-harness", route => route.fulfill({ contentType: "text/html", body: '<link rel="stylesheet" href="/src/styles/global.css"><section id="screen" style="position:relative;width:800px;height:600px;overflow:hidden;transform-origin:top left"></section>' }));
   await page.goto(`${base}/maze-harness`);
   await page.clock.install();
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
   const initialize = () => page.evaluate(async () => {
     const { level61 } = await import("/src/levels/level61.ts");
     let cleanup, abort;
@@ -30,7 +31,7 @@ try {
   };
   await start();
   const stage = await page.locator("#screen").boundingBox();
-  const maze = await page.locator(".level-61__maze-world img").boundingBox();
+  const maze = await page.locator(".level-61__maze-world img").first().boundingBox();
   assert.equal(maze.width, stage.width);
   await page.mouse.move(stage.x + 400, stage.y + 300);
   assert.equal(await scene(), "2", "transparent image pixels are safe");
@@ -61,7 +62,7 @@ try {
   await page.evaluate(() => window.dispatchEvent(new Event('blur')));
   assert.equal(await scene(), '2', 'invincibility also prevents exit and focus deaths');
   await page.mouse.move(stage.x + 400, stage.y + 300);
-  await page.clock.fastForward(100000);
+  await page.clock.fastForward(95000);
   await page.locator('.level-61__maze-goal').click();
   assert.equal(await scene(), '4', 'invincibility permits completing the real maze');
   // Re-enter within the same mount to verify Scene 4 cleared the cheat state.
@@ -79,19 +80,61 @@ try {
   const fixture = await page.evaluate(() => {
     const c = document.createElement('canvas'); c.width = 800; c.height = 20024;
     const ctx = c.getContext('2d'); ctx.fillStyle = '#f00'; ctx.fillRect(582, 10327, 40, 40);
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 11000, 800, 9024);
     return c.toDataURL('image/png').split(',')[1];
   });
   await page.route('**/assets/images/level61maze1.png', route => route.fulfill({ contentType: 'image/png', body: Buffer.from(fixture, 'base64') }));
+  const secondFixture = await page.evaluate(() => {
+    const c = document.createElement('canvas'); c.width = 800; c.height = 20000;
+    const ctx = c.getContext('2d'); ctx.fillRect(0, 0, 100, 20000);
+    return c.toDataURL('image/png').split(',')[1];
+  });
+  await page.route('**/assets/images/level61maze2.png', route => route.fulfill({ contentType: 'image/png', body: Buffer.from(secondFixture, 'base64') }));
   await page.reload();
   await initialize();
   await start();
-  await page.clock.fastForward(150000);
+  await page.clock.fastForward(95000);
   assert.equal(await scene(), "2");
   const goal = await page.locator('.level-61__maze-goal').boundingBox();
   assert.ok(Math.abs(goal.x + goal.width / 2 - stage.x - 602) < 1);
-  assert.ok(Math.abs(goal.y + goal.height / 2 - stage.y - 300) < 1, "goal scrolls with image");
+  const offset = await page.locator('.level-61__maze-world').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m42);
+  assert.ok(Math.abs(goal.y + goal.height / 2 - stage.y - 10347 - offset) < 1, "goal scrolls with image");
   await page.locator('.level-61__maze-goal').click();
   assert.equal(await scene(), "4", "clicking the circle covering the X enters Scene 4");
+
+  const scrollTo = async target => {
+    const current = await page.locator('.level-61__maze-world').evaluate(el => -new DOMMatrix(getComputedStyle(el).transform).m42);
+    await page.clock.fastForward(Math.ceil((target - current) / 105 * 1000) + 20);
+  };
+  const hoverFirstGoal = async () => {
+    await start();
+    await scrollTo(10000);
+    await page.locator('.level-61__maze-goal').hover();
+    assert.equal(await scene(), '2', 'hover does not enter Scene 4');
+    assert.ok(await page.locator('.level-61__maze-goal').evaluate(el => el.classList.contains('is-hovered')));
+    await page.mouse.move(stage.x + 400, stage.y + 300);
+  };
+  await start();
+  await scrollTo(12000);
+  assert.equal(await scene(), '3', 'first maze walls remain lethal without hovering');
+  await hoverFirstGoal();
+  await scrollTo(19000);
+  assert.equal(await scene(), '2', 'hover protection persists after leaving circle');
+  assert.equal(await page.locator('#screen').getAttribute('data-maze-part'), '1');
+  await scrollTo(19500);
+  assert.equal(await page.locator('#screen').getAttribute('data-maze-part'), '2', 'background changes as second image first appears');
+  assert.equal(await page.locator('#screen').evaluate(el => getComputedStyle(el).getPropertyValue('--pulse-color').trim()), '#f00');
+  await scrollTo(20100);
+  assert.equal(await scene(), '2', 'second maze transparent pixels remain safe');
+  await page.mouse.move(stage.x + 50, stage.y + 300);
+  assert.equal(await scene(), '3', 'first maze protection does not protect against second maze walls');
+  await hoverFirstGoal();
+  await scrollTo(50000);
+  assert.equal(await scene(), '2');
+  const endOffset = await page.locator('.level-61__maze-world').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m42);
+  assert.equal(endOffset, -(20024 + 20000 - 600), 'scroll stops with final image bottom flush with stage bottom');
+  await page.clock.fastForward(5000);
+  assert.equal(await page.locator('.level-61__maze-world').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m42), endOffset);
 
   for (const scale of [1, .65]) {
     await page.evaluate(scale => { window.mount61('4'); document.querySelector('#screen').style.transform = `scale(${scale})`; }, scale);
@@ -114,5 +157,5 @@ try {
     assert.equal(await page.getByRole('textbox', { name: 'Password 4', exact: true }).inputValue(), '****');
   }
   assert.deepEqual(errors, []);
-  console.log('PASS: real image alpha collision, scrolling, retry, exit/focus guards, goal transition, three draggable layers, fixed editable bottom, scaled coordinates.');
+  console.log('PASS: alpha collision, sequential mazes, hover protection, second-maze walls, red background, final scroll stop, cheat reset, goal click, draggable layers.');
 } finally { await browser.close(); }

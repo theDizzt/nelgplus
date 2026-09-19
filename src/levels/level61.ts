@@ -13,7 +13,7 @@ export const level61: LevelDefinition = {
     { id: "3", label: "Scene 3 - Failed" },
     { id: "4", label: "Scene 4 - Died" },
   ],
-  mount({ screen, initialScene, listen, audio }) {
+  mount({ screen, initialScene, listen, audio, goToWarpZone }) {
     screen.className = "level-screen level-61";
     screen.dataset.customCursorRoot = "";
     const colors = ["#f00", "url(#level61-gold)", "#0f0", "url(#level61-blue)", "#f0f", "#ff0", "url(#level61-silver)", "#f80", "#600"];
@@ -21,13 +21,14 @@ export const level61: LevelDefinition = {
       <div class="level-61__pulse" aria-hidden="true"></div>
       <header class="level-heading"><div class="level-heading__number">Level 61</div><h1>Labyrinth</h1></header>
       <section class="level-61__scene" data-panel="1">
-        <img class="level-61__art" src="${assetUrl("images/level59a.png")}" alt="" draggable="false">
+        <img class="level-61__art" src="${assetUrl("images/level61a.png")}" alt="" draggable="false">
         <p class="level-61__copy">そろそろ狂い始めています &gt;:D</p>
         <button class="level-61__action" type="button" data-start>Hajimari</button>
       </section>
       <section class="level-61__scene" data-panel="2" hidden>
         <div class="level-61__maze-world">
           <img src="${assetUrl("images/level61maze1.png")}" alt="" draggable="false">
+          <img src="${assetUrl("images/level61maze2.png")}" alt="" draggable="false">
           <button class="level-61__maze-goal" type="button" tabindex="-1" aria-label="Exit maze"></button>
         </div>
       </section>
@@ -121,9 +122,24 @@ export const level61: LevelDefinition = {
     });
     listen(screen.querySelector<HTMLElement>("[data-start]")!, "click", () => showScene("2"));
     listen(screen.querySelector<HTMLElement>("[data-retry]")!, "click", () => showScene("2"));
-    screen.querySelectorAll<HTMLFormElement>("form").forEach(form => {
-      attachStarMaskedInput(form.querySelector("input")!, listen);
-      listen(form, "submit", event => event.preventDefault());
+    // Layer order is white, red, green, blue. Answers are case-sensitive.
+    const answers = ["kukui1191", "ArchBear08", "matchoi", "Zeram"];
+    const passwordForms = [...screen.querySelectorAll<HTMLFormElement>("form")];
+    const passwords = passwordForms.map(form => attachStarMaskedInput(form.querySelector("input")!, listen));
+    let warped = false;
+    passwordForms.forEach(form => {
+      listen(form.querySelector("input")!, "keydown", event => {
+        if (event.key !== "Enter" || event.repeat || event.isComposing) return;
+        event.preventDefault();
+        form.requestSubmit();
+      });
+      listen(form, "submit", event => {
+        event.preventDefault();
+        if (warped || screen.dataset.scene !== "4") return;
+        if (!passwords.every((password, index) => password.getValue() === answers[index])) return;
+        warped = true;
+        goToWarpZone(15);
+      });
     });
     screen
   .querySelectorAll<HTMLElement>("[data-password-drag]")

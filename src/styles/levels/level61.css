@@ -26,12 +26,15 @@
   animation: level-61-pulse 5s ease-in-out infinite;
 }
 .level-61[data-scene="2"] { --pulse-color: #00f; }
+.level-61[data-scene="2"][data-maze-part="2"] { --pulse-color: #f00; }
 .level-61[data-scene="3"] { --pulse-color: #f00; }
 .level-61 [data-panel="2"] { overflow: hidden; }
 .level-61__maze-world { position: absolute; top: 0; left: 0; width: 100%; will-change: transform; }
 .level-61__maze-world img { display: block; width: 100%; height: auto; pointer-events: none; }
 .level-61__maze-goal { position: absolute; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, #0f0, #000); clip-path: circle(50%); }
 .level-61__maze-world:not([data-ready]) .level-61__maze-goal { display: none; }
+.level-61__maze-goal { transition: filter 160ms ease; }
+.level-61__maze-goal:hover, .level-61__maze-goal.is-hovered { filter: hue-rotate(110deg) brightness(1.4); }
 .level-61__art { position: absolute; right: -12px; bottom: 0; width: 465px; height: 465px; object-fit: contain; pointer-events: none; }
 .level-61__copy { position: absolute; top: 200px; left: 35px; width: 400px; margin: 0; font-family: "Mochiy Pop One", sans-serif; font-size: 27px; line-height: 1.65; }
 .level-61__action { position: absolute; bottom: 90px; left: 70px; padding: 12px 22px; border: 3px solid #000; background: #ff0; color: #000; font: 25px "NELG Arial", Arial, sans-serif; }
