@@ -27,6 +27,11 @@
 }
 .level-61[data-scene="2"] { --pulse-color: #00f; }
 .level-61[data-scene="3"] { --pulse-color: #f00; }
+.level-61 [data-panel="2"] { overflow: hidden; }
+.level-61__maze-world { position: absolute; top: 0; left: 0; width: 100%; will-change: transform; }
+.level-61__maze-world img { display: block; width: 100%; height: auto; pointer-events: none; }
+.level-61__maze-goal { position: absolute; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, #0f0, #000); clip-path: circle(50%); }
+.level-61__maze-world:not([data-ready]) .level-61__maze-goal { display: none; }
 .level-61__art { position: absolute; right: -12px; bottom: 0; width: 465px; height: 465px; object-fit: contain; pointer-events: none; }
 .level-61__copy { position: absolute; top: 200px; left: 35px; width: 400px; margin: 0; font-family: "Mochiy Pop One", sans-serif; font-size: 27px; line-height: 1.65; }
 .level-61__action { position: absolute; bottom: 90px; left: 70px; padding: 12px 22px; border: 3px solid #000; background: #ff0; color: #000; font: 25px "NELG Arial", Arial, sans-serif; }
@@ -39,10 +44,43 @@
 .level-61[data-scene="4"] { background: #0ff; }
 .level-61[data-scene="4"] .level-heading__number,
 .level-61[data-scene="4"] .level-heading h1 { color: #000; background: none; }
-.level-61__rings { position: absolute; inset: 0; width: 800px; height: 600px; pointer-events: none; }
+.level-61__rings {
+  position: absolute;
+  inset: 0;
+  width: 800px;
+  height: 600px;
+  pointer-events: none;
+  z-index: 10;
+}
 .level-61__ring { pointer-events: stroke; touch-action: none; }
 .level-61__ring:focus-visible { outline: none; filter: drop-shadow(0 0 3px #000); }
-.level-61 .level-61__form { left: 175px; bottom: 24px; width: 450px; height: 58px; margin: 0; background: #0ff; }
+
+.level-61__password-layer {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: 260px;
+  height: 58px;
+  background: #0ff;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  transform: translate(
+    calc(-50% + var(--drag-x, 0px)),
+    var(--drag-y, 0px)
+  );
+  box-sizing: border-box;
+}
+.level-61__password-layer[data-password-drag] { touch-action: none; }
+.level-61 .level-61__form {
+  left: 50%;
+  bottom: 14px;
+  width: 260px;
+  height: 33px;
+  margin: 0;
+  transform: translateX(-50%);
+  background: transparent;
+}
 .level-61 .level-61__form input { background: radial-gradient(ellipse at center, var(--input-color), #000); color: #fff; text-shadow: 1px 1px #000; }
 .level-61__cursor { width: 28px; height: 42px; translate: -50% -85%; filter: drop-shadow(0 0 5px #f60); }
 .level-61__cursor i { position: absolute; bottom: 0; left: 3px; width: 23px; height: 35px; border-radius: 65% 12% 55% 45%; background: linear-gradient(#ff2a00, #ff9800); transform-origin: 50% 100%; animation: level-61-flame .22s ease-in-out infinite alternate; }

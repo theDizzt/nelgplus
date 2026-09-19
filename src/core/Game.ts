@@ -12,8 +12,8 @@ import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
 import { newgroundsService } from "../integrations/newgrounds/NewgroundsService";
 
 const DEVELOPMENT_PERIOD = "08/03/2026 – 09/19/2026";
-const GAME_VERSION = "1.1.98";
-const VERSION_DATE = "09/18/2026";
+const GAME_VERSION = "1.1.99";
+const VERSION_DATE = "09/19/2026";
 const DISCORD_URL = "https://discord.gg/txQK3RFfwy";
 const PROGRESS_FLAME = '<span class="fire-slider__handle progress-flame" aria-hidden="true"><i></i><i></i><i></i></span>';
 const mainLogo = (revivalMode = false): string => `

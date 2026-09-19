@@ -45,7 +45,7 @@ try {
     const r = el.getBoundingClientRect(); return [r.x, r.y, r.width, r.height];
   }));
   forms.forEach(bounds => assert.deepEqual(bounds, forms[0]));
-  assert.equal(await page.locator("form[inert]").count(), 3);
+  assert.equal(await page.locator("[data-password-drag]").count(), 3);
   for (const scale of [1, .65]) {
     await page.evaluate(scale => { window.mount61("4"); document.querySelector("#screen").style.transform = `scale(${scale})`; }, scale);
     const bounds = await page.locator("#screen").boundingBox();
@@ -62,7 +62,7 @@ try {
   await page.keyboard.press("ArrowRight");
   assert.ok(Math.abs(Number(await page.locator("[data-ring='8']").getAttribute("cx")) - 420) < 1);
   await page.getByRole("textbox", { name: "Password 1", exact: true }).fill("test");
-  await page.getByRole("button", { name: "GO", exact: true }).click();
+  await page.locator('[data-layer="1"] button').click();
   assert.equal(await page.locator("#screen").getAttribute("data-scene"), "4");
   await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.evaluate(() => document.fonts.check('27px "Mochiy Pop One"')), true);
