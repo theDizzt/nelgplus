@@ -112,23 +112,28 @@ try {
     await page.locator('.level-61__maze-goal').hover();
     assert.equal(await scene(), '2', 'hover does not enter Scene 4');
     assert.ok(await page.locator('.level-61__maze-goal').evaluate(el => el.classList.contains('is-hovered')));
-    await page.mouse.move(stage.x + 400, stage.y + 300);
   };
   await start();
   await scrollTo(12000);
   assert.equal(await scene(), '3', 'first maze walls remain lethal without hovering');
   await hoverFirstGoal();
+  await page.mouse.move(stage.x + 400, stage.y + 300);
+  await scrollTo(12000);
+  assert.equal(await scene(), '3', 'hovering the goal does not make first-maze walls harmless');
+  await hoverFirstGoal();
+  await page.mouse.move(stage.x + stage.width + 10, stage.y + 300);
   await scrollTo(19000);
-  assert.equal(await scene(), '2', 'hover protection persists after leaving circle');
+  assert.equal(await scene(), '2', 'hovering the goal permits leaving the maze screen');
   assert.equal(await page.locator('#screen').getAttribute('data-maze-part'), '1');
   await scrollTo(19500);
   assert.equal(await page.locator('#screen').getAttribute('data-maze-part'), '2', 'background changes as second image first appears');
   assert.equal(await page.locator('#screen').evaluate(el => getComputedStyle(el).getPropertyValue('--pulse-color').trim()), '#f00');
   await scrollTo(20100);
-  assert.equal(await scene(), '2', 'second maze transparent pixels remain safe');
+  assert.equal(await scene(), '2', 'maze keeps scrolling while the pointer remains outside');
   await page.mouse.move(stage.x + 50, stage.y + 300);
-  assert.equal(await scene(), '3', 'first maze protection does not protect against second maze walls');
+  assert.equal(await scene(), '3', 'returning over a second-maze wall still fails');
   await hoverFirstGoal();
+  await page.mouse.move(stage.x + stage.width + 10, stage.y + 300);
   await scrollTo(50000);
   assert.equal(await scene(), '2');
   const endOffset = await page.locator('.level-61__maze-world').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m42);
@@ -157,5 +162,5 @@ try {
     assert.equal(await page.getByRole('textbox', { name: 'Password 4', exact: true }).inputValue(), '****');
   }
   assert.deepEqual(errors, []);
-  console.log('PASS: alpha collision, sequential mazes, hover protection, second-maze walls, red background, final scroll stop, cheat reset, goal click, draggable layers.');
+  console.log('PASS: alpha collision, sequential mazes, post-goal screen exit, continued offscreen scrolling, wall collisions, red background, final scroll stop, cheat reset, goal click, draggable layers.');
 } finally { await browser.close(); }

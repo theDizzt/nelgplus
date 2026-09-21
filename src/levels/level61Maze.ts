@@ -17,7 +17,7 @@ export function attachLevel61Maze(
   const goal = world.querySelector<HTMLButtonElement>("button")!;
   let maps: { pixels: Uint8ClampedArray; width: number; height: number; start: number; end: number; ratio: number }[] = [];
   let totalHeight = 0;
-  let firstMazeSafe = false;
+  let canLeaveMazeScreen = false;
   let active = false;
   let disposed = false;
   let loadFailed = false;
@@ -32,6 +32,10 @@ export function attachLevel61Maze(
     if (!active || !maps.length || !client) return false;
     const local = clientPointToLocal(screen, client.x, client.y);
     if (local.x < 0 || local.y < 0 || local.x >= screen.clientWidth || local.y >= screen.clientHeight) {
+      if (canLeaveMazeScreen) {
+        previous = undefined;
+        return true;
+      }
       fail();
       return false;
     }
@@ -39,7 +43,7 @@ export function attachLevel61Maze(
     const point = { x: local.x / scale, y: (local.y + scroll) / scale };
     goal.classList.toggle("is-hovered", atGoal(point.x, point.y));
     if (isInvincible()) {
-      if (atGoal(point.x, point.y)) firstMazeSafe = true;
+      if (atGoal(point.x, point.y)) canLeaveMazeScreen = true;
       previous = point;
       return true;
     }
@@ -49,9 +53,8 @@ export function attachLevel61Maze(
     for (let i = 0; i <= steps; i++) {
       const x = from.x + (point.x - from.x) * i / steps;
       const y = from.y + (point.y - from.y) * i / steps;
-      if (atGoal(x, y)) { firstMazeSafe = true; continue; }
+      if (atGoal(x, y)) { canLeaveMazeScreen = true; continue; }
       const map = maps.find(map => y >= map.start && y < map.end);
-      if (map === maps[0] && firstMazeSafe) continue;
       if (!map || x < 0 || x >= image.naturalWidth ||
         map.pixels[(Math.floor((y - map.start) * map.ratio) * map.width + Math.floor(x * map.ratio)) * 4 + 3] !== 0) {
         fail();
@@ -64,14 +67,14 @@ export function attachLevel61Maze(
   const tick = (time: number) => {
     if (!active || disposed) return;
     let ended = false;
-    if (maps.length && client) {
+    if (maps.length) {
       const scale = screen.clientWidth / image.naturalWidth;
       const maximum = Math.max(0, totalHeight * scale - screen.clientHeight);
       scroll = Math.min(maximum, scroll + Math.max(0, time - lastTime) / 1000 * SCROLL_SPEED);
       world.style.transform = `translateY(${-scroll}px)`;
       screen.dataset.mazePart = scroll + screen.clientHeight > image.naturalHeight * scale ? "2" : "1";
       ended = scroll >= maximum;
-      check();
+      if (client) check();
     }
     lastTime = time;
     if (active && !ended) frame = requestAnimationFrame(tick);
@@ -108,7 +111,12 @@ export function attachLevel61Maze(
     client = { x: event.clientX, y: event.clientY };
     check();
   });
-  listen(screen, "pointerleave", () => { client = undefined; goal.classList.remove("is-hovered"); if (active) fail(); });
+  listen(screen, "pointerleave", () => {
+    client = undefined;
+    previous = undefined;
+    goal.classList.remove("is-hovered");
+    if (active && !canLeaveMazeScreen) fail();
+  });
   listen(screen, "pointercancel", () => { if (active) fail(); });
   listen(screen, "contextmenu", event => { if (active) { event.preventDefault(); fail(); } });
   listen(window, "blur", () => { if (active) fail(); });
@@ -124,7 +132,7 @@ export function attachLevel61Maze(
       active = value;
       previous = undefined;
       if (!active) return;
-      firstMazeSafe = false;
+      canLeaveMazeScreen = false;
       goal.classList.remove("is-hovered");
       screen.dataset.mazePart = "1";
       if (loadFailed) { fail(); return; }
