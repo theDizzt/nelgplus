@@ -1,4 +1,5 @@
 import { SOUND_EFFECTS } from "../core/assets";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 import type { LevelDefinition } from "../core/types";
 
 const QUESTION_COUNT = 30;
@@ -18,8 +19,26 @@ export const level62: LevelDefinition = {
     { id: "3", label: "Scene 3 - Result" },
   ],
   mount({ screen, initialScene, audio, listen }) {
+    blockTabNavigation(listen);
     screen.className = "level-screen level-62";
     screen.innerHTML = `
+      <svg class="level-62__filters" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="level-62-cloth-texture" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.72 0.045" numOctaves="2" seed="62" result="warpThreads" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.045 0.72" numOctaves="2" seed="63" result="weftThreads" />
+            <feBlend in="warpThreads" in2="weftThreads" mode="multiply" result="wovenFibers" />
+            <feColorMatrix in="wovenFibers" type="saturate" values="0" result="grayFibers" />
+            <feComponentTransfer in="grayFibers" result="softFibers">
+              <feFuncR type="linear" slope="0.22" intercept="0.78" />
+              <feFuncG type="linear" slope="0.22" intercept="0.78" />
+              <feFuncB type="linear" slope="0.22" intercept="0.78" />
+            </feComponentTransfer>
+            <feComposite in="softFibers" in2="SourceAlpha" operator="in" result="clothGrain" />
+            <feBlend in="SourceGraphic" in2="clothGrain" mode="multiply" />
+          </filter>
+        </defs>
+      </svg>
       <div class="level-62__paper" aria-hidden="true"></div>
       <header class="level-heading">
         <div class="level-heading__number">Level 62</div>

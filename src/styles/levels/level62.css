@@ -2,7 +2,7 @@
   isolation: isolate;
   overflow: hidden;
   color: #fff;
-  background: #6b238e;
+  background: #390851;
   font-family: "NELG Darumadrop One", sans-serif;
 }
 
@@ -57,7 +57,6 @@
 .level-62 .level-heading__number,
 .level-62 .level-heading h1 {
   color: #0ff;
-  text-shadow: 3px 3px 0 #30103e, 0 0 12px rgb(0 255 255 / 35%);
 }
 
 .level-62__scene {
@@ -110,6 +109,25 @@
 .level-62__begin:active {
   translate: calc(-50% + 3px) 3px;
   box-shadow: 1px 2px 0 #291035;
+}
+
+.level-62__quiz {
+  font-family: "NELG Mochiy Pop One", sans-serif;
+  font-weight: 400;
+  -webkit-text-stroke: 0.3px currentColor;
+}
+
+.level-62__filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.level-62__question-number,
+.level-62__question,
+.level-62__answer > span:not(.level-62__diamond) {
+  filter: url(#level-62-cloth-texture);
 }
 
 .level-62__question-number {

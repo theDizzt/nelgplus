@@ -139,6 +139,7 @@ const PRELOAD_FONTS = [
   "/assets/fonts/gowunbatang/gowun-batang-v12-latin-regular.woff2",
   "/assets/fonts/gowunbatang/gowun-batang-v12-latin-700.woff2",
   "/assets/fonts/kristenict/ITC Kristen.woff2",
+  "/assets/fonts/mochiy-pop-one/mochiy-pop-one-v12-japanese_latin-regular.woff2",
   "/assets/fonts/nexa/Nexa-Regular.woff2",
   "/assets/fonts/nexa/Nexa-Bold.woff2",
   "/assets/fonts/wantedsans/WantedSansStd-Regular.woff2",
@@ -159,6 +160,7 @@ const PRELOAD_FONT_REQUESTS = [
   '400 32px "NELG Outfit"', '700 32px "NELG Outfit"',
   '400 32px "NELG Gowun Batang"', '700 32px "NELG Gowun Batang"',
   '400 32px "NELG ITC Kristen"',
+  '400 32px "NELG Mochiy Pop One"',
   '400 32px "NELG Nexa"', '700 32px "NELG Nexa"',
   '400 32px "NELG Wanted Sans"', '700 32px "NELG Wanted Sans"',
 ] as const;

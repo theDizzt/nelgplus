@@ -1,4 +1,12 @@
 @font-face {
+  font-family: "NELG Mochiy Pop One";
+  src: url("/assets/fonts/mochiy-pop-one/mochiy-pop-one-v12-japanese_latin-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "NELG Perpetua";
   src: url("/assets/fonts/perpetua/Perpetua.woff2") format("woff2");
   font-style: normal;

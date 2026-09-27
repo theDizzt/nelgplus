@@ -37,14 +37,70 @@ Whenever a level's mechanics, timing, password, scene flow, success condition, o
 
 ## Input and Passwords
 
+- Tab-key navigation must be disabled in every level. Use the shared `blockTabNavigation` helper so pressing Tab does not move focus between level controls or activate them.
 - Passwords are case-sensitive and preserve leading and trailing whitespace unless a level explicitly says otherwise.
 - Use `attachStarMaskedInput` for star-masked password fields.
 - Puzzles that distinguish direct typing from paste input must clearly separate the roles of `keydown`, `beforeinput`, and `paste`.
-- Unless a puzzle explicitly requires a different visual treatment, password controls must follow the Level 5 control design. The input is 174×43, uses a square three-pixel dark border, a white background, Perpetua text, and the shared star-masking behavior. The GO button is 52×40, yellow with a square three-pixel dark border and 25px Arial text; hover/focus turns it red, and active press uses the white-center-to-black radial gradient.
-- The instructional label above Level 5's input (`Type the background color`) is level content, not part of the reusable password-control design. Do not copy or reserve space for that label unless the new level specification explicitly requests one.
-- Level-specific colors may override the Level 5 palette when the specification requires them, but ordinary field and button dimensions, border proportions, font roles, and interaction states should remain consistent.
+- Password controls use the Level 8 design as their baseline. Follow the detailed specification below and apply additional user or level-specific requests to that baseline.
 - Record whether Enter submits the form in the level specification. When allowed, Enter and GO must use the same validation path.
 - An incorrect password must keep the player's entered value in the field while the wrong-answer animation, color, sound, and focus behavior play. Do not call `clear()` or assign an empty/default value in an incorrect-answer branch unless a level specification explicitly defines clearing the answer as part of that puzzle. Clearing after a successfully consumed answer in a multi-step password puzzle is still allowed.
+
+### Password Control Baseline — Level 8
+
+Build new password controls **using the Level 8 design as the baseline, then modify that design to reflect additional requests.** When a request specifies a different position, size, color, font, instructional text, or input behavior, change those properties and preserve the defaults below for properties that are not addressed. Keep level-specific changes local to that level unless the request explicitly changes the shared baseline.
+
+Reference implementations: `src/levels/level08.ts`, `src/styles/levels/level08.css`, `src/styles/components/password-input.css`, and `src/core/StarMaskedInput.ts`. All measurements below use the 800×600 logical screen. Dimensions include borders and padding through `box-sizing: border-box`.
+
+#### Layout
+
+- Arrange the input on the left and the GO button on the right in a single horizontal row.
+- Position the form near the bottom of the screen with `position: absolute; bottom: 33px; left: 0; width: 100%`.
+- Use `display: flex; align-items: center; justify-content: center; gap: 10px` to center the pair horizontally and align their vertical centers.
+- The combined width is 236px: a 174px input, a 10px gap, and a 52px button. On the baseline screen, the input's top-left corner is `(282, 524)` and the button's top-left corner is `(466, 525.5)`.
+- The default layout has no instructional label or placeholder. Add them only when requested, and do not reserve empty space for absent text. Level 8's pink screen background and mazes are not part of the shared password control baseline.
+
+#### Input Field
+
+| Property | Default |
+| --- | --- |
+| Shared class | `nelg-password-input` |
+| Dimensions | Width `174px`, height `43px` |
+| Padding | `4px` vertically, `8px` horizontally |
+| Text / background | Black `#000` / white `#fff` |
+| Border | `3px solid #111` |
+| Corners | Square, with `border-radius: 0` |
+| Inset shadow | `inset 1px 1px 2px rgb(0 0 0 / 18%)` |
+| Font family | `"NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif` |
+| Font size | `25px` |
+| Focus | `outline: none` in both default and focused states |
+| Transition | `background 80ms ease, translate 80ms ease` |
+
+Use `type="text"` with `attachStarMaskedInput` to display a string of `*` characters matching the actual value's length. Validate the value returned by `getValue()`, not the visible masked string. Preserve letter case and leading and trailing whitespace by default, and do not add an arbitrary length limit.
+
+Set `autocomplete="off"` on both the form and input. Set `autocapitalize="off"`, `aria-autocomplete="none"`, `spellcheck="false"`, `aria-label="Password"`, and `data-allow-select` on the input. As in Level 8, use `data-form-type="other"`, `data-lpignore="true"`, and `data-1p-ignore="true"` to discourage password manager interference, and assign a unique `id` and `name` for each level.
+
+#### GO Button
+
+| Property | Default |
+| --- | --- |
+| Element / label | `button type="submit"` / `GO` |
+| Dimensions / padding | Width `52px`, height `40px`, `padding: 0` |
+| Text / background | `#111` / yellow `#ffff00` |
+| Border / corners | `3px solid #111` / `border-radius: 0` |
+| Font family | `"NELG Arial", Arial, sans-serif` |
+| Font size / line height | `25px` / `1` |
+| Cursor | `pointer` |
+| Hover / keyboard focus | Background `#f01818` and no outline for `:hover` and `:focus-visible` on an enabled button |
+| While pressed | `radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%)` |
+| Disabled state | `cursor: wait; opacity: 0.65`; exclude hover and active color effects |
+
+#### Submission and Incorrect-Answer Feedback
+
+- Focus the input on entry by default. Enter and GO must use the same form submission path and prevent the browser's native navigation. Repeated key events from holding Enter must not resubmit the form.
+- Guard against duplicate execution and disable the button while processing a submission. Release the guard and re-enable the button after an ordinary incorrect answer that leaves the player on the current screen.
+- For an ordinary incorrect answer, preserve the entered value and return focus to the input. Apply `is-wrong` to change the background to `#ff6d87` and shift the field right with `translate: 6px 0`. Remove the state after `360ms` to restore the original position and white background.
+- Restart feedback on every incorrect submission, including rapid repeated submissions. This is a shared QA requirement; reusable implementations must clear the previous reset timer and state to guarantee it.
+- Explicitly requested puzzle rules, such as failure destinations, input clearing, or Enter restrictions, take precedence. Referencing the design does not mean copying Level 8's answer or special-mode logic.
 
 ## Repetition and Composite Levels
 

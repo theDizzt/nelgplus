@@ -90,8 +90,10 @@ enhanced level.
 Whenever a level is added or substantially changed, add or update its Korean
 solution in `walkthrough.md`.
 
-Unless a level specification explicitly requests a different password form,
-use Level 5 as the reference for the password input and GO button dimensions,
-spacing, typography, and screen position.
+Use Level 8 as the baseline for password input and GO button dimensions,
+spacing, typography, screen position, and interaction states, then modify that
+design to reflect additional user or level-specific requests. Preserve baseline
+properties that are not explicitly changed. The detailed specification is in
+[Level Design Rules](docs/LEVEL_DESIGN.md#password-control-baseline--level-8).
 
 Open `?debug=1` during development to display previous/next level controls.
