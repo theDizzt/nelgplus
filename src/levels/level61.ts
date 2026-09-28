@@ -13,7 +13,7 @@ export const level61: LevelDefinition = {
     { id: "3", label: "Scene 3 - Failed" },
     { id: "4", label: "Scene 4 - Died" },
   ],
-  mount({ screen, initialScene, listen, audio, goToWarpZone }) {
+  mount({ screen, initialScene, listen, audio, goToWarpZone, session, goToLevel }) {
     screen.className = "level-screen level-61";
     screen.dataset.customCursorRoot = "";
     const colors = ["#f00", "url(#level61-gold)", "#0f0", "url(#level61-blue)", "#f0f", "#ff0", "url(#level61-silver)", "#f80", "#600"];
@@ -103,7 +103,10 @@ export const level61: LevelDefinition = {
     const maze = attachLevel61Maze(
       { screen, listen },
       () => { if (!invincible) showScene("3"); },
-      () => showScene("4"),
+      () => {
+        if (session.hasFlag("level65-rewind")) goToLevel(65, "equation");
+        else showScene("4");
+      },
       () => invincible,
     );
     listen(document, "keydown", event => {

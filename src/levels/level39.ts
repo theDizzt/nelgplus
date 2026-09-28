@@ -1801,7 +1801,13 @@ return void 0x000000;</code></pre>
     listen(form, "submit", (event) => {
       event.preventDefault();
       const answer = maskedInput.getValue();
-      if (answer === "607") unlockAchievement(50);
+      if (answer === "607") {
+        unlockAchievement(50);
+        if (context.session.hasFlag("level65-rewind")) {
+          context.goToLevel(65, "circle");
+          return;
+        }
+      }
       if (answer === "hidden") {
         launchFakeLevelWorld(screen, listen, audio, goToMenu, complete, unlockAchievement);
         return;

@@ -2180,6 +2180,11 @@ export class Game {
     if (this.transitioning) return;
     this.transitioning = true;
     const enhancedRun = this.sessionFlags.has("level50-enhanced-run");
+    const relapseScene = ({ 16: "triangle", 21: "square", 52: "hexagram" } as Record<number, string>)[this.currentLevel];
+    if (this.sessionFlags.has("level65-rewind") && relapseScene) {
+      this.showLevel(65, relapseScene);
+      return;
+    }
     if (enhancedRun) this.revivalWrongAnswerStreak = 0;
     if ((!enhancedRun || this.currentLevel === 58) && WARP_CHECKPOINTS[this.currentLevel]) {
       this.renderWarpCheckpoint(this.currentLevel, true);

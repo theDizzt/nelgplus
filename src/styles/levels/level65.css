@@ -1,0 +1,27 @@
+.level-65 { color: #f0f; background: #ffd1ef; overflow: hidden; isolation: isolate; font-family: "NELG Papyrus", Papyrus, fantasy; }
+.level-65__background {
+  position: absolute;
+  inset: -200px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #fff 0%, #fff4fc 17%, #ffb5e9 45%, #ff78da 75%);
+  animation: level-65-orbit 14s linear infinite;
+}
+@keyframes level-65-orbit {
+  from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
+}
+.level-65__heading, .level-65__heading h1 { color: #f0f; }
+.level-65__copy { position: absolute; top: 475px; left: 100px; width: 600px; margin: 0; text-align: center; font-size: 27px; line-height: 1.55; transform: rotate(180deg); }
+.level-65__rewind { position: absolute; padding: 0; border: 0; background: transparent; cursor: default; line-height: 0; touch-action: manipulation; }
+.level-65__rewind img { display: block; width: 100%; height: auto; }
+.level-65__rewind--main { width: 270px; left: 265px; top: 180px; }
+.level-65__rewind--small { width: 95px; right: 28px; bottom: 26px; }
+.level-65__rewind.is-hovered, .level-65__rewind:focus-visible { transform: scale(1.12); cursor: pointer; }
+.level-65__rewind.is-pressed img { filter: brightness(0) saturate(100%) invert(91%) sepia(100%) saturate(7490%) hue-rotate(1deg); }
+.level-65__art { position: absolute; left: 140px; top: 180px; width: 520px; height: 305px; object-fit: contain; }
+.level-65__clue { position: absolute; left: 25px; bottom: 24px; width: 115px; height: 80px; object-fit: contain; }
+.level-65__form { width: 520px; left: 140px; }
+.level-65__form input { color: #f0f; border-color: #f0f; background: #fff0fa; }
+.level-65__form button { color: #f0f; border-color: #f0f; background: #ffd1ef; }
+.level-65__form button:hover:not(:disabled), .level-65__form button:focus-visible:not(:disabled) { background: #ff91df; }
