@@ -21,7 +21,7 @@ export const level61: LevelDefinition = {
       <div class="level-61__pulse" aria-hidden="true"></div>
       <header class="level-heading"><div class="level-heading__number">Level 61</div><h1>Labyrinth</h1></header>
       <section class="level-61__scene" data-panel="1">
-        <img class="level-61__art" src="${assetUrl("images/level61a.png")}" alt="" draggable="false">
+        <img class="level-61__art" src="${assetUrl("images/level61a-outline.png")}" alt="" draggable="false">
         <p class="level-61__copy">そろそろ狂い始めています &gt;:D</p>
         <button class="level-61__action" type="button" data-start>Hajimari</button>
       </section>

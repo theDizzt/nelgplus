@@ -54,7 +54,6 @@ export const level62: LevelDefinition = {
         <div class="level-62__answers" role="group" aria-label="Answer choices">
           ${OPTIONS.map((option, index) => `
             <button class="level-62__answer level-62__answer--${option.color}" type="button" data-answer="${index}">
-              <span class="level-62__diamond" aria-hidden="true"></span>
               <span>${option.label}</span>
             </button>
           `).join("")}
@@ -69,7 +68,8 @@ export const level62: LevelDefinition = {
     let questionIndex = 0;
 
     const updateQuestion = () => {
-      questionNumber.textContent = `QUESTION ${questionIndex + 1} / ${QUESTION_COUNT}`;
+      questionNumber.textContent = `${questionIndex + 1}.`;
+      questionNumber.setAttribute("aria-label", `Question ${questionIndex + 1} of ${QUESTION_COUNT}`);
     };
     const showScene = (scene: string) => {
       screen.dataset.scene = scene;

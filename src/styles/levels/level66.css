@@ -1,0 +1,40 @@
+.level-66 { isolation: isolate; overflow: hidden; background: radial-gradient(ellipse at center, #f00, #000); color: #000; font-family: "NELG Comic Sans", "Comic Sans MS", cursive; }
+.level-66 .level-heading { z-index: 20; color: #000; pointer-events: none; }
+.level-66 .level-heading__number, .level-66 .level-heading h1 { color: #000; }
+.level-66__giant { position: absolute; left: 50%; top: 50%; width: 450px; height: 580px; transform: translate(-50%, -50%); object-fit: contain; image-rendering: pixelated; opacity: .35; pointer-events: none; }
+.level-66__instructions { position: absolute; top: 192px; left: 70px; right: 60px; font-size: 20px; line-height: 1.45; }
+.level-66__mission { margin: 0 0 12px; padding-left: 31px; color: aqua; font-size: inherit; text-align: left; }
+.level-66__mission strong { font-weight: 700; }
+.level-66__rules { margin: 0; padding-left: 28px; list-style-type: "*  "; font-size: inherit; font-weight: 700; line-height: inherit; }
+.level-66__rules li { padding-left: 3px; margin-bottom: 6px; }
+.level-66__rules li:last-child { color: #f0f; }
+.level-66__button { position: absolute; z-index: 25; padding: 8px 24px; border: 3px solid #000; border-radius: 0; background: #ff0; color: #000; font: 26px "NELG Comic Sans", "Comic Sans MS", cursive; cursor: pointer; }
+.level-66__button:hover { background: #ffc400; }
+.level-66__button:focus-visible, .level-66 [data-allow-drag]:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.level-66__begin { right: 28px; bottom: 22px; }
+.level-66__puzzle-number { position: absolute; left: 25px; top: 165px; font-size: 30px; font-weight: 700; }
+.level-66__object { position: absolute; box-sizing: border-box; z-index: 3; }
+.level-66 [data-allow-drag] { cursor: grab; touch-action: none; user-select: none; }
+.level-66 .is-dragging { cursor: grabbing; z-index: 15; }
+.level-66[data-running="true"] [data-allow-drag] { cursor: default; }
+.level-66__ladder { border-left: 7px solid #b87828; border-right: 7px solid #b87828; background: repeating-linear-gradient(to bottom, transparent 0 13px, #e9ae57 13px 19px, #643d14 19px 22px, transparent 22px 30px); filter: drop-shadow(2px 2px 0 #000); }
+.level-66__spring { border-top: 6px solid #ff0; color: #000; text-align: center; font: bold 28px/15px "NELG Comic Sans", sans-serif; box-shadow: 0 4px 0 #730000; }
+.level-66__runner { position: absolute; z-index: 10; width: 64px; height: 82px; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
+.level-66 .level-66__form { z-index: 30; bottom: 12px; }
+.level-66 .level-66__form input { color: #000; border-color: #650000; background: linear-gradient(100deg, #ff6464, #ffb760, #fff16b, #7ee789, #80bdff, #c78aff, #ff6969); }
+.level-66 .level-66__form button { background: linear-gradient(#ff7777, #f00, #8c0000); border-color: #390000; color: #000; }
+.level-66 .level-66__form input:focus,
+.level-66 .level-66__form input:focus-visible { outline: none; }
+.level-66 .level-66__form input.is-wrong { background: #ff5050; }
+.level-66__finish { position: absolute; top: 275px; width: 100%; text-align: center; font-size: 38px; font-weight: 700; }
+.level-66__perished { position: absolute; z-index: 22; top: 188px; width: 100%; margin: 0; text-align: center; font-size: 68px; font-weight: 700; color: #f00; -webkit-text-stroke: 2px #000; text-shadow: 3px 3px #000; }
+.level-66__retry { bottom: 25px; left: 50%; transform: translateX(-50%); }
+.level-66__sinking { position: absolute; z-index: 4; left: 285px; top: 270px; width: 230px; height: 285px; animation: level-66-sink 4s 1s ease-in forwards; pointer-events: none; }
+.level-66__sinking img { width: 200px; height: 270px; object-fit: contain; image-rendering: pixelated; }
+.level-66__thumb { position: absolute; width: 67px; height: 120px; right: 0; top: 5px; transform: rotate(8deg); }
+.level-66__lava { position: absolute; z-index: 5; left: 0; right: 0; top: 450px; bottom: 0; border-top: 8px solid #ffb000; background: radial-gradient(ellipse at 20% 15%, #fff36b 0 2%, transparent 4%), radial-gradient(ellipse at 76% 25%, #ffda00 0 3%, transparent 6%), radial-gradient(ellipse at 35% 55%, #ffb000 0 7%, transparent 24%), radial-gradient(ellipse at 80% 80%, #690500 0 5%, transparent 27%), radial-gradient(ellipse at 8% 70%, #710500 0 4%, transparent 23%), linear-gradient(#ffb000, #ff4500 28%, #d20b00 70%, #650000); box-shadow: 0 -10px 28px #ff6500; pointer-events: none; }
+@keyframes level-66-sink { 0% { transform: translateY(0); } 30% { transform: translateY(32px); } 100% { transform: translateY(350px); } }
+@media (prefers-reduced-motion: reduce) { .level-66__sinking { animation-duration: .01s; animation-delay: 0s; } .level-66 .level-32__portal, .level-66 .level-32__portal i { animation: none; } }
+
+/* Face stays attached to the original sprite throughout the sinking animation. */
+.level-66__resentful-face { position: absolute; left: 64px; top: 28px; width: 60px; height: 48px; pointer-events: none; }

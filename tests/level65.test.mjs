@@ -10,10 +10,12 @@ function moduleUrl(path, replace = source => source) {
   });
   return `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`;
 }
+const tabNavigationUrl = moduleUrl("../src/core/blockTabNavigation.ts");
 const maskedInputUrl = moduleUrl("../src/core/StarMaskedInput.ts");
 const { level65 } = await import(moduleUrl("../src/levels/level65.ts", source => source
   .replace('import { assetUrl } from "../core/assets";', 'const assetUrl = path => path;')
-  .replace('"../core/StarMaskedInput"', JSON.stringify(maskedInputUrl))));
+  .replace('"../core/StarMaskedInput"', JSON.stringify(maskedInputUrl))
+  .replace('"../core/blockTabNavigation"', JSON.stringify(tabNavigationUrl))));
 
 function element() {
   const classes = new Set();

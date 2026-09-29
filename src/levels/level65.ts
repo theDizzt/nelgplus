@@ -1,4 +1,5 @@
 import { assetUrl } from "../core/assets";
+import { blockTabNavigation } from "../core/blockTabNavigation";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelDefinition } from "../core/types";
 
@@ -14,6 +15,7 @@ export const level65: LevelDefinition = {
     { id: "equation", label: "Scene 6 - Equation" },
   ],
   mount({ screen, initialScene, session, listen, timeout, goToMenu, complete, wrongAnswer }) {
+    blockTabNavigation(listen);
     const artwork: Record<string, number> = { triangle: 1, square: 2, circle: 3, hexagram: 4, equation: 5 };
     const scene = initialScene && artwork[initialScene] ? initialScene : "main";
     const main = scene === "main";
