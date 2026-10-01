@@ -1,57 +1,145 @@
-.test-level {
-  color: #070707;
-  background: #ff9900;
-}
+﻿/* testLevel.ts와 같은 번호의 주석을 함께 참고/복사한다.
+   선택자와 keyframes 이름에 레벨 접두사를 붙여 다른 레벨과 충돌하지 않게 한다.
+   기본 게임 좌표계는 800 × 600. 부모 screen 기준으로 배치한다. */
 
-.test-level__message {
+/* 01. background=배경, color=상속되는 기본 글자색. var의 두 번째 인수는 기본값.
+   TS의 style.setProperty로 실시간 변경할 수 있다. */
+.test-level { color: var(--test-ink, #111); background: var(--test-background, #ff9900); }
+/* 공통 level-heading의 숫자116px/부제목30px와 위치를 그대로 사용한다.
+   변경 예: .test-level .level-heading { top: 20px; }
+   제목만 색 변경: .test-level .level-heading h1 { color: #2475e8; } */
+.test-level [hidden] { display: none !important; }
+.test-level__tabs { position: absolute; top: 183px; left: 30px; display: flex; gap: 8px; }
+.test-level__panel {
   position: absolute;
-  top: 250px;
-  left: 103px;
-  margin: 0;
-  font-size: 25px;
+  inset: 232px 30px 78px;
+  padding: 12px 16px;
+  background: rgb(255 255 255 / 78%);
+  border: 2px solid #111;
 }
+.test-level__panel h2 { margin: 0 0 8px; font-size: 16px; }
+.test-level__panel h2:not(:first-child) { margin-top: 14px; }
+.test-level__panel p { margin: 8px 0 14px; font-size: 14px; }
+.test-level__row { display: flex; align-items: center; gap: 14px; }
+.test-level__row label { display: flex; align-items: center; gap: 6px; }
+.test-level input[type="color"] { width: 42px; height: 30px; padding: 1px; cursor: pointer; }
+.test-level__accent { color: #a31548; font-weight: bold; }
 
-.test-level__answer {
-  position: absolute;
-  bottom: 72px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-}
-
-.test-level__answer label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 19px;
-}
-
-.test-level__answer form {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.test-level__answer input {
-  width: 185px;
-  height: 36px;
-  padding: 3px 7px;
-  background: #fff;
-  border: 2px inset #ddd;
-  font-size: 20px;
-}
-
-.test-level__answer button {
-  height: 31px;
-  padding: 0 8px;
-  background: #ffff00;
-  border: 2px outset #bbb;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-#test-level-feedback {
-  min-height: 20px;
-  margin: 7px 0 0;
-  color: #7b0000;
+/* 02. 정지점의 %로 색상 전환 위치를 조절한다. 선형은 각도, 원형은 중심을 바꾼다.
+   글자는 배경을 글자 모양으로 자르고 글자색을 투명하게 만들어 그라데이션을 보인다. */
+.test-level__linear, .test-level__radial {
+  display: grid;
+  place-items: center;
+  width: 205px;
+  height: 48px;
+  color: #111;
+  border: 2px solid #111;
   font-size: 14px;
 }
+.test-level__linear { background: linear-gradient(90deg, #ff86b5 0%, #ffe86b 50%, #56d3c2 100%); }
+.test-level__radial { background: radial-gradient(circle at 35% 40%, #fff 0%, #90d5ff 40%, #7259d9 100%); }
+.test-level__gradient-text {
+  background: linear-gradient(90deg, #b00020, #985a00, #177236, #175ac2, #882db5);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 26px;
+}
+
+/* 03. 원은 border-radius:50%. 이미지 URL은 assetUrl로 생성해 배포 경로에 대응한다.
+   object-fit:contain은 종횡비를 유지한다. SVG 경로는 viewBox 내부 좌표로 지정한다. */
+.test-level__circle { width: 48px; height: 48px; border-radius: 50%; background: #ff86b5; border: 3px solid #111; }
+.test-level__objects img { width: 115px; height: 58px; object-fit: contain; }
+.test-level__objects [data-clue] { font-family: monospace; font-weight: bold; }
+
+/* 04. transform/opacity는 레이아웃을 변경하지 않고 움직임을 표현한다.
+   1.6s=편도 시간, infinite=무한 반복, alternate=왕복. 클래스 토글로 일시 정지한다. */
+.test-level__track { position: relative; width: 210px; height: 42px; background: #fff; overflow: hidden; }
+.test-level__ball {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #2475e8;
+  animation: test-level-bounce 1.6s ease-in-out infinite alternate;
+}
+@keyframes test-level-bounce {
+  from { transform: translateX(0) scale(0.8); opacity: 0.45; }
+  to { transform: translateX(168px) scale(1); opacity: 1; }
+}
+.test-level--paused .test-level__ball { animation-play-state: paused; }
+.test-level .test-level__hover { transition: transform 180ms ease, background 180ms ease; }
+.test-level .test-level__hover:hover { transform: rotate(-4deg) scale(1.05); }
+/* 사용자가 OS에서 동작 줄이기를 선택했다면 반복 애니메이션을 생략한다. */
+@media (prefers-reduced-motion: reduce) {
+  .test-level__ball { animation: none; }
+  .test-level .test-level__hover { transition: none; }
+}
+
+/* 05. relative 부모 안에 absolute로 배치. touch-action:none으로 터치 드래그를 허용.
+   부모는 border 대신 outline을 써서 포인터 좌표와 내부 좌표 사이의 테두리 오차를 없앤다. */
+.test-level__drag-area { position: relative; height: 65px; background: #fff; outline: 1px dashed #555; }
+.test-level__draggable {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 44px;
+  color: #111;
+  background: #ffe86b;
+  border: 3px solid #111;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.test-level__draggable.is-dragging { cursor: grabbing; background: #ff86b5; }
+
+/* 08. 기본/hover/키보드 focus/누름/disabled 상태.
+   form 안의 일반 버튼에는 type=button을 지정해 의도치 않은 제출을 막는다. */
+.test-level button { padding: 6px 10px; color: #111; background: #ffff00; border: 2px solid #111; border-radius: 0; cursor: pointer; font-size: 14px; }
+.test-level button:hover:not(:disabled) { background: #ff86b5; }
+.test-level button:focus-visible { outline: 3px solid #2475e8; outline-offset: 2px; }
+.test-level button:active:not(:disabled) { background: #fff; }
+.test-level button:disabled { opacity: 0.5; cursor: not-allowed; }
+.test-level__tabs button[aria-pressed="true"] { color: #fff; background: #111; }
+
+/* 07. Level 8 입력/GO 디자인. 원본 클래스에 의존하지 않도록 독립 복사한다.
+   공통 nelg-password-input이 너비174px/높이43px를 제공한다.
+   원본은 화면 하단 absolute 배치지만 여기서는 패널 안에서 flex로 배치한다. */
+.test-level__form { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 16px 0 22px; }
+.test-level__form input {
+  padding: 4px 8px;
+  color: #000;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 18%);
+  outline: none;
+  font-family: "NELG Perpetua", Perpetua, Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  transition: background 80ms ease, translate 80ms ease;
+}
+.test-level__form input.is-wrong { background: #ff6d87; translate: 6px 0; }
+.test-level .test-level__form button {
+  width: 52px;
+  height: 40px;
+  padding: 0;
+  border: 3px solid #111;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+.test-level .test-level__form button:hover:not(:disabled),
+.test-level .test-level__form button:focus-visible:not(:disabled) { background: #f01818; outline: none; }
+.test-level .test-level__form button:active:not(:disabled) { background: radial-gradient(circle at center, #fff 0 30%, #777 54%, #111 76%, #000 100%); }
+.test-level .test-level__form button:disabled { cursor: wait; opacity: 0.65; }
+
+/* 메뉴는 screen 직속 자식. z-index로 패널보다 앞에 표시하고 위치는 공통 함수로 계산. */
+.test-level__menu { position: absolute; z-index: 20; width: 210px; padding: 4px; background: #eee; border: 2px solid #111; box-shadow: 3px 3px 0 rgb(0 0 0 / 30%); }
+.test-level__menu button { display: block; width: 100%; text-align: left; background: #eee; border: 0; }
+.test-level__feedback { position: absolute; bottom: 39px; left: 30px; right: 30px; margin: 0; font-size: 14px; }
+.test-level__source { position: absolute; bottom: 15px; left: 30px; margin: 0; font-size: 12px; }

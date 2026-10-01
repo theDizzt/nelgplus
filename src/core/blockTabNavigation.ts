@@ -5,6 +5,6 @@ export function blockTabNavigation(listen: LevelContext["listen"]): void {
   listen(document, "keydown", event => {
     if (event.key !== "Tab") return;
     event.preventDefault();
-    (event.target as HTMLElement | null)?.blur();
+    if (event.target instanceof HTMLElement) event.target.blur();
   }, { capture: true });
 }

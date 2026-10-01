@@ -1,0 +1,96 @@
+.level-69 {
+  color: #fff;
+  background: #1343a6;
+  font-family: "NELG Courier", Courier, "Courier New", monospace;
+  text-shadow: 1px 2px 2px #000, 0 0 4px #000;
+  isolation: isolate;
+}
+.level-69__water { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+/* Each rainbow cycle spans two screen heights, giving each color twice the space.
+   Two identical cycles translate downward seamlessly at the original flow speed. */
+.level-69__rainbow {
+  position: absolute;
+  inset: -200% 0 -100%;
+  background: repeating-linear-gradient(to bottom, #cb274c 0%, #d47521 8.333%, #b8a529 16.667%, #20844c 25%, #176aa5 33.333%, #4240a1 41.667%, #cb274c 50%);
+  animation: level-69-flow 44s linear infinite;
+}
+@keyframes level-69-flow { to { transform: translateY(50%); } }
+.level-69__bubbles { position: absolute; inset: 0; }
+.level-69__bubbles i {
+  position: absolute;
+  left: var(--x);
+  top: 100%;
+  width: var(--size);
+  height: var(--size);
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, rgb(255 255 255 / 32%), transparent 23%, transparent 62%, rgb(220 245 255 / 12%));
+  box-shadow: inset -2px -2px 4px rgb(255 255 255 / 12%);
+  animation: level-69-rise var(--duration) var(--delay) linear infinite;
+}
+@keyframes level-69-rise {
+  0% { transform: translate(0, 45px); opacity: 0; }
+  12% { opacity: 0.75; }
+  85% { opacity: 0.65; }
+  100% { transform: translate(var(--sway), -680px); opacity: 0; }
+}
+.level-69 .level-heading { pointer-events: none; color: #fff; }
+/* Keep the shared Perpetua level title and its standard size; do not override them. */
+.level-69__scene { position: absolute; inset: 174px 0 0; }
+.level-69__intro { position: absolute; inset: 2px 44px 88px; font-size: 16px; line-height: 1.45; }
+.level-69__intro p { margin: 0 0 16px; }
+.level-69__intro .level-69__welcome { color: #35ff55; font-family: "NELG Arial", Arial, sans-serif; font-size: 24px; text-align: center; }
+.level-69__text-button {
+  padding: 4px 12px;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-family: "NELG Arial", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.1;
+  cursor: pointer;
+  text-shadow: 2px 2px 3px #000, 0 0 4px rgb(0 0 0 / 65%);
+}
+.level-69__text-button:hover { color: #ffff00; }
+.level-69__text-button:active { color: #0000ff; }
+.level-69__start { position: absolute; bottom: 30px; left: 50%; translate: -50% 0; font-size: 38px; }
+.level-69__back { position: absolute; bottom: 18px; left: 50%; translate: -50% 0; }
+.level-69__index { position: absolute; inset: 0 30px 66px; }
+.level-69__index figure { position: absolute; margin: 0; pointer-events: none; will-change: transform; }
+.level-69__index img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: auto; cursor: inherit; will-change: transform; }
+.level-69__fish-name { position: absolute; top: 0; left: 0; right: 0; margin: 0; text-align: center; color: #008cff; font-family: "NELG Perpetua", Perpetua, serif; font-style: italic; font-weight: 400; font-size: 49px; line-height: 1.1; }
+.level-69__portrait { position: absolute; top: 67px; left: 24px; width: 316px; height: 270px; object-fit: contain; }
+.level-69__article {
+  position: absolute;
+  top: 67px;
+  right: 30px;
+  bottom: 76px;
+  width: 416px;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scrollbar-color: #ffdda0 rgb(0 0 0 / 25%);
+  scrollbar-width: auto;
+  scrollbar-gutter: stable;
+  padding: 0 16px 12px 12px;
+  background: rgb(0 0 0 / 18%);
+  font-size: 16px;
+  line-height: 1.35;
+  touch-action: pan-y;
+}
+.level-69__article h3 { margin: 12px 0 4px; font-size: 17px; }
+.level-69__article p { margin: 0 0 12px; }
+.level-69__article a { color: #fff; }
+.level-69__article::-webkit-scrollbar { width: 12px; }
+.level-69__article::-webkit-scrollbar-track { background: rgb(0 0 0 / 25%); }
+.level-69__article::-webkit-scrollbar-thumb { background: #ffdda0; border: 2px solid #875d25; border-radius: 6px; }
+.level-69__article .level-69__note, .level-69__sources { font-size: 12px; }
+.level-69__revelation { position: absolute; inset: 10px 65px 75px; text-align: center; font-family: "NELG Perpetua", Perpetua, serif; font-style: italic; font-size: 32px; line-height: 1.6; }
+.level-69__revelation h2 { margin: 0; font-size: 60px; font-weight: 400; }
+.level-69__revelation p { margin: 10px 0; }
+.level-69__secret-title { margin: 20px 0 0; text-align: center; font-size: 70px; font-weight: 400; }
+.level-69 .level-69__form input { color: #ff9900; border-color: #ff9900; background: transparent; box-shadow: none; font-family: "NELG Courier", Courier, monospace; }
+.level-69 .level-69__form input.is-wrong { background: transparent; translate: 6px 0; }
+/* No filled button hitbox: only the visible SVG stroke accepts pointer events. */
+.level-69__go { flex: none; overflow: visible; pointer-events: none; }
+.level-69__go rect { pointer-events: stroke; cursor: pointer; }

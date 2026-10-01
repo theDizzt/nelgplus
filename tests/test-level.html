@@ -1,0 +1,49 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level 255, Test</title>
+  <link rel="stylesheet" href="/src/styles/global.css" />
+</head>
+<body>
+  <!-- 개발 서버 전용 미리보기. 정규 레벨 목록/저장 데이터에는 영향을 주지 않는다. -->
+  <main id="game-root">
+    <div class="game-frame"><section id="screen" aria-label="Level 255, Test"></section></div>
+  </main>
+  <script type="module">
+    import { testLevel } from "/src/levels/testLevel.ts";
+    import { LevelScope } from "/src/core/LevelScope.ts";
+    import { AudioManager } from "/src/core/AudioManager.ts";
+    import { InteractionGuard } from "/src/core/InteractionGuard.ts";
+
+    // 본 게임과 동일한 수명 관리/오디오/기본 우클릭 차단을 적용한다.
+    const root = document.querySelector("#game-root");
+    const screen = document.querySelector("#screen");
+    const guard = new InteractionGuard();
+    guard.enable();
+    const audio = new AudioManager();
+    const scope = new LevelScope({
+      screen, levelNumber: testLevel.number, audio, now: () => new Date(),
+      complete: () => {}, wrongAnswer: () => false, unlockAchievement: () => {},
+      restart: () => location.reload(), goToLevel: () => {}, goToWarpZone: () => {},
+      goToMenu: () => {}, hasSessionFlag: () => false, setSessionFlag: () => {},
+    });
+    scope.setCustomCleanup(testLevel.mount(scope.context));
+    function resize() {
+      const scale = Math.min(root.clientWidth / 800, root.clientHeight / 600);
+      root.style.setProperty("--game-scale", String(scale));
+      root.style.setProperty("--game-offset-x", `${(root.clientWidth - 800 * scale) / 2}px`);
+      root.style.setProperty("--game-offset-y", `${(root.clientHeight - 600 * scale) / 2}px`);
+    }
+    const observer = new ResizeObserver(resize);
+    observer.observe(root);
+    resize();
+    window.addEventListener("pagehide", () => {
+      scope.dispose();
+      guard.disable();
+      observer.disconnect();
+    }, { once: true });
+  </script>
+</body>
+</html>

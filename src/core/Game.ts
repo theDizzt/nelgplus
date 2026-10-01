@@ -358,17 +358,17 @@ const WARP_CHECKPOINTS: Readonly<Record<number, { message: string; password: str
   61: {
     message:
       "61",
-    password: "dsfsddsdfssdfsafasfddasfadsf",
+    password: "p|us 39",
   },
   65: {
     message:
       "65",
-    password: "dsfsddsdfssdfsafasfddasfadsf",
+    password: "Himalayan salt",
   },
   69: {
     message:
-      "69",
-    password: "dsfsddsdfssdfsafasfddasfadsf",
+      "Level 69 was actually made on January 6, 2020, while I was working on Level Killer. I suddenly started craving sushi that evening, so I went out to get some, and somehow this level ended up being the result! The inspiration came from “salmon of capistrano.” I really like salmon sushi, after all. I brought back Level Killer’s Level 69 here as a slightly more player-friendly remake. Even when the original level was first released, it caught people completely off guard with its bizarre appearance combined with the fantastic MIDI version of TLC’s “Waterfalls.” It was definitely one of those levels people remembered. Level 68 also comes from Level Killer, specifically a modified version of Level 168. Honestly, it was way too easy for a level numbered 168, so it got demoted all the way down to Level 68 ;( Level 66 and Level 67 were probably a bit unfamiliar compared to what you’ve seen so far. Neither type ever appeared in NELG, and both are original levels made specifically for this game. For this section, I wanted to put together a collection of generally weird and unusual levels, kind of like the Level 36–39 section. Congratulations on making it through them with only a few hints and a whole lot of trial and error. You’ve earned a little break, so let’s take some time to relax before moving on... (Sushi Killer - Zora: https://www.youtube.com/watch?v=I36sQtb9oiU)",
+    password: "Sushi Killer",
   },
 };
 const WARP_CHECKPOINT_ACHIEVEMENTS: Readonly<Record<number, number>> = {
@@ -1341,13 +1341,16 @@ export class Game {
          </section>
          <section class="credits-section">
            <h2>MUSIC USED</h2>
-           <p>Due to copyright issues, background music does not play in the Newgrounds version, except in Levels 34, 35, and 47.</p>
-           <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly</strong></article>
+           <p>Due to copyright issues, background music does not play in the itch.io version, except in Levels 34, 35, and 47.</p>
+           <article class="credits-track"><span>LEVEL 32</span><strong>Final Doom — M08: Into the Beast's Belly (NELG 200 Theme)</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Final Doom — M05: More</strong></article>
            <article class="credits-track"><span>LEVEL 39</span><strong>Animal Company Soundtrack — Old Map Music | The End | ERROR</strong></article>
-           <article class="credits-track"><span>LEVEL 42</span><strong>Final Doom — M20: Horizon</strong></article>
+           <article class="credits-track"><span>LEVEL 42</span><strong>Final Doom — M20: Horizon (NELG 297 Theme)</strong></article>
            <article class="credits-track"><span>LEVEL 47</span><strong>Snowy Weather SFX</strong></article>
-           <article class="credits-track"><span>LEVEL 50</span><strong>GMP Music — Horror Village</strong></article>
+           <article class="credits-track"><span>LEVEL 50</span><strong>GMP Music — Horror Village (NELG 250 Theme)</strong></article>
+           <article class="credits-track"><span>LEVEL 61</span><strong>cazok - Symphony of the Demon (NELG 160 Theme)</strong></article>
+           <article class="credits-track"><span>LEVEL 62</span><strong>The Go! Team - Get It Together (The Impossible Quiz Theme)</strong></article>
+           <article class="credits-track"><span>LEVEL 69</span><strong>TLC - Waterfalls (Midi version)</strong></article>
          </section>
        </div>`,
     );
