@@ -1,0 +1,25 @@
+.level-67 { background: #000; color: #fff; isolation: isolate; }
+.level-67--1 { background: #1e90ff; color: #000; }
+.level-67__decoration, .level-67__matrix { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.level-67__decoration { object-fit: fill; }
+/* The common level title retains its Perpetua font and standard geometry. */
+.level-67 .level-heading { z-index: 1; }
+.level-67--2 .level-heading { text-shadow: 2px 2px 3px #000, 0 0 6px #000; }
+.level-67__form { z-index: 1; }
+.level-67 .level-67__form input { background: #333; color: #f00; }
+.level-67__form button { opacity: .76; }
+.level-67__back {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
+  padding: 4px 12px;
+  border: 0;
+  background: transparent;
+  color: #0f0;
+  font-family: "NELG Courier", Courier, monospace;
+  font-size: 28px;
+  text-shadow: 2px 2px 3px #000, 0 0 5px #000;
+  cursor: pointer;
+}

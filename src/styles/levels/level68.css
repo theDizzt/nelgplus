@@ -1,0 +1,28 @@
+.level-68 { background: #000; color: #fff; isolation: isolate; }
+.level-68__background { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.level-68__paint { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.level-68__stars { position: absolute; object-fit: fill; }
+.level-68__stars--1 { left: -45px; top: 83px; width: 470px; height: 160px; transform: rotate(-27deg) skewX(24deg); }
+.level-68__stars--2 { right: -75px; top: 85px; width: 395px; height: 225px; transform: rotate(37deg) skewY(-19deg); }
+.level-68__stars--3 { left: -80px; bottom: 28px; width: 540px; height: 190px; transform: rotate(17deg) skew(-21deg, 7deg); }
+.level-68__stars--4 { left: 280px; top: 235px; width: 325px; height: 135px; transform: rotate(-59deg) skewX(32deg); }
+.level-68__symbols, .level-68__clue { position: absolute; top: 14px; font-size: 18px; line-height: 1; }
+.level-68__symbols { left: 18px; font-family: "NELG Perpetua", Perpetua, serif; letter-spacing: 3px; }
+.level-68__clue { right: 18px; font-family: "NELG Courier", Courier, monospace; }
+.level-68__figure { position: absolute; right: -12px; bottom: -20px; width: 330px; height: 370px; object-fit: contain; filter: brightness(0) invert(1); }
+/* Both corner clues and the four star fields sit underneath this black veil. */
+.level-68__shade { position: absolute; inset: 0; z-index: 1; background: #000; opacity: .64; pointer-events: none; }
+.level-68__foreground { position: absolute; left: 30px; top: 183px; width: 740px; height: 320px; object-fit: contain; z-index: 2; pointer-events: none; }
+.level-68 .level-heading { z-index: 3; color: #fff; }
+/* Inherit the shared Perpetua title. A stationary wrapper prevents hover flicker. */
+.level-68__eight, .level-68__eight > span { display: inline-block; }
+.level-68__eight > span {
+  color: transparent;
+  background: linear-gradient(0deg, #2c8dff 0%, #d9ecff 34%, #fff 43%, #8b6500 47%, #ffd900 65%, #fff7cc 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  transform-origin: 50% 55%;
+  pointer-events: none;
+}
+.level-68__eight:hover > span { transform: rotate(90deg); }
+.level-68__form { z-index: 3; opacity: .76; }
