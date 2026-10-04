@@ -131,11 +131,21 @@
   z-index: 3;
   top: 225px;
   left: 50%;
+  width: max-content;
+  padding: 12px;
+  background: #fff;
+  translate: -50% 0;
+}
+
+.level-49__ink-filter { position: absolute; pointer-events: none; }
+
+/* Darken the original gray ink and strengthen its alpha without replacing notes. */
+.level-49__sheet-music img {
   display: block;
   max-width: 500px;
   max-height: 300px;
   object-fit: contain;
-  translate: -50% 0;
+  filter: url(#level-49-ink);
 }
 
 .level-49__return {

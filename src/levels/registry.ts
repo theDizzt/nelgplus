@@ -1,4 +1,5 @@
 import type { LevelDefinition } from "../core/types";
+import { testLevel } from "./testLevel";
 import { levelMinus01 } from "./levelMinus01";
 import { levelMinus02 } from "./levelMinus02";
 import { levelMinus03 } from "./levelMinus03";
@@ -164,7 +165,9 @@ const levels: LevelDefinition[] = [
 const levelMap = new Map(levels.map((level) => [level.number, level]));
 
 export const registeredLevelNumbers = levels.map((level) => level.number).sort((a, b) => a - b);
+export const TEST_LEVEL_NUMBER = testLevel.number;
 
 export function getLevel(levelNumber: number): LevelDefinition | undefined {
+  if (levelNumber === TEST_LEVEL_NUMBER) return testLevel;
   return levelMap.get(levelNumber);
 }

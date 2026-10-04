@@ -8,6 +8,7 @@ export const level63: LevelDefinition = {
   scenes: [{ id: "main", label: "Main" }],
   mount({ screen, listen, complete }) {
     screen.className = "level-screen level-63";
+    screen.style.setProperty("--level-63-cursor", `url("${assetUrl("cursor/level63-retro.svg")}") 1 1`);
     screen.innerHTML = `
       <header class="level-heading level-63__heading">
         <div class="level-heading__number">Level 63</div>
@@ -16,14 +17,14 @@ export const level63: LevelDefinition = {
       <div class="level-63__content">
         <div class="level-63__copy">
           <p class="level-63__lead">You've come a long way, climbing all the way up here from the very bottom.</p>
-          <p>Along the way, you've faced countless hardships,<br>
-            been torn apart, bruised, and wounded.<br>
-            So for your sake,<br>
-            let's take a little time to rest.<br>
+          <p>Along the way, you've faced countless hardships,
+            been torn apart, bruised, and wounded.
+            So for your sake,
+            let's take a little time to rest.
             Please make yourself comfortable and enjoy your visit.</p>
           <a class="level-63__link" href="https://dizzt3942.neocities.org/" target="_blank" rel="noopener noreferrer">https://dizzt3942.neocities.org/</a>
-          <p>If you look carefully,<br>
-            I've hidden something nice here just for you.<br>
+          <p>If you look carefully,
+            I've hidden something nice here just for you.
             See if you can find out what's waiting for you...</p>
         </div>
         <img class="level-63__art" src="${assetUrl("images/level63a.png")}" alt="A hidden night scene illustration" draggable="false">
@@ -47,5 +48,6 @@ export const level63: LevelDefinition = {
       event.preventDefault();
       form.requestSubmit();
     });
+    return () => screen.style.removeProperty("--level-63-cursor");
   },
 };

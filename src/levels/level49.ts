@@ -58,8 +58,18 @@ export const level49: LevelDefinition = {
           ${renderPasswordForm()}
         ` : `
           <p class="level-49__measure-number">${sceneIndex} / 8</p>
-          <img class="level-49__sheet-music" src="${assetUrl(`images/level49a${sceneIndex}.png`)}"
-            alt="Sheet music measure ${sceneIndex} of 8" draggable="false" />
+          <svg class="level-49__ink-filter" aria-hidden="true" width="0" height="0"><defs>
+            <filter id="level-49-ink" color-interpolation-filters="sRGB">
+              <feComponentTransfer>
+                <feFuncR type="linear" slope="0"/><feFuncG type="linear" slope="0"/><feFuncB type="linear" slope="0"/>
+                <feFuncA type="linear" slope="1.6"/>
+              </feComponentTransfer>
+            </filter>
+          </defs></svg>
+          <div class="level-49__sheet-music">
+            <img src="${assetUrl(`images/level49a${sceneIndex}.png`)}"
+              alt="Sheet music measure ${sceneIndex} of 8" draggable="false" />
+          </div>
           <button class="level-49__return" type="button" aria-label="Return to Scene 1"></button>
         `}
       `;

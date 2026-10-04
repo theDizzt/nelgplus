@@ -1,8 +1,10 @@
-import { SOUND_EFFECTS } from "../core/assets";
+import { assetUrl, SOUND_EFFECTS } from "../core/assets";
 import { blockTabNavigation } from "../core/blockTabNavigation";
+import { setHandwritingText } from "../core/HandwritingText";
 import type { LevelDefinition } from "../core/types";
+import { getLevel62Result, LEVEL62_QUESTIONS } from "./level62Questions";
 
-const QUESTION_COUNT = 30;
+const QUESTION_COUNT = LEVEL62_QUESTIONS.length;
 const OPTIONS = [
   { color: "red", label: "RED ANSWER" },
   { color: "yellow", label: "YELLOW ANSWER" },
@@ -50,7 +52,10 @@ export const level62: LevelDefinition = {
       </section>
       <section class="level-62__scene level-62__quiz" data-panel="2" hidden>
         <p class="level-62__question-number" aria-live="polite"></p>
-        <p class="level-62__question">QUIZ CONTENT COMING SOON</p>
+        <div class="level-62__question-content">
+          <p class="level-62__question"></p>
+          <img class="level-62__question-image" hidden />
+        </div>
         <div class="level-62__answers" role="group" aria-label="Answer choices">
           ${OPTIONS.map((option, index) => `
             <button class="level-62__answer level-62__answer--${option.color}" type="button" data-answer="${index}">
@@ -60,16 +65,44 @@ export const level62: LevelDefinition = {
         </div>
       </section>
       <section class="level-62__scene level-62__result" data-panel="3" hidden>
-        <p>SCENE 3<br><span>COMING SOON</span></p>
+        <div class="level-62__result-content" aria-live="polite">
+          <p class="level-62__score"></p>
+          <h2 class="level-62__result-title"></h2>
+          <p class="level-62__result-message"></p>
+          <button class="level-62__retry" type="button">TRY AGAIN</button>
+        </div>
       </section>
     `;
 
     const questionNumber = screen.querySelector<HTMLElement>(".level-62__question-number")!;
+    const questionText = screen.querySelector<HTMLElement>(".level-62__question")!;
+    const questionContent = screen.querySelector<HTMLElement>(".level-62__question-content")!;
+    const questionImage = screen.querySelector<HTMLImageElement>(".level-62__question-image")!;
+    const answerLabels = screen.querySelectorAll<HTMLElement>(".level-62__answer > span");
     let questionIndex = 0;
+    let totalScore = 0;
 
     const updateQuestion = () => {
-      questionNumber.textContent = `${questionIndex + 1}.`;
+      const question = LEVEL62_QUESTIONS[questionIndex]!;
+      setHandwritingText(questionNumber, `${questionIndex + 1}.`);
       questionNumber.setAttribute("aria-label", `Question ${questionIndex + 1} of ${QUESTION_COUNT}`);
+      setHandwritingText(questionText, question.text);
+      answerLabels.forEach((label, index) => setHandwritingText(label, question.choices[index]!.text));
+      questionContent.classList.toggle("has-image", Boolean(question.image));
+      questionImage.hidden = !question.image;
+      questionImage.alt = question.imageAlt ?? question.text;
+      if (question.image) questionImage.src = assetUrl(`images/${question.image}`);
+      else questionImage.removeAttribute("src");
+      questionContent.scrollTop = 0;
+      answerLabels.forEach(label => { label.scrollTop = 0; });
+    };
+    const updateResult = () => {
+      const result = getLevel62Result(totalScore);
+      screen.dataset.result = result.id;
+      screen.dataset.score = String(totalScore);
+      setHandwritingText(screen.querySelector<HTMLElement>(".level-62__score")!, `SCORE ${totalScore}`);
+      setHandwritingText(screen.querySelector<HTMLElement>(".level-62__result-title")!, result.title);
+      setHandwritingText(screen.querySelector<HTMLElement>(".level-62__result-message")!, result.message);
     };
     const showScene = (scene: string) => {
       screen.dataset.scene = scene;
@@ -81,14 +114,23 @@ export const level62: LevelDefinition = {
         updateQuestion();
         screen.querySelector<HTMLButtonElement>(".level-62__answer")?.focus({ preventScroll: true });
       }
+      if (scene === "3") updateResult();
     };
 
-    listen(screen.querySelector<HTMLButtonElement>(".level-62__begin")!, "click", () => {
+    const startQuiz = () => {
       questionIndex = 0;
+      totalScore = 0;
+      delete screen.dataset.result;
+      delete screen.dataset.score;
       showScene("2");
-    });
+    };
+    listen(screen.querySelector<HTMLButtonElement>(".level-62__begin")!, "click", startQuiz);
+    listen(screen.querySelector<HTMLButtonElement>(".level-62__retry")!, "click", startQuiz);
     screen.querySelectorAll<HTMLButtonElement>(".level-62__answer").forEach(button => {
       listen(button, "click", () => {
+        if (screen.dataset.scene !== "2" || questionIndex >= QUESTION_COUNT) return;
+        const answerIndex = Number(button.dataset.answer);
+        totalScore += LEVEL62_QUESTIONS[questionIndex]!.choices[answerIndex]!.score;
         audio.playEffect(SOUND_EFFECTS.smack);
         questionIndex += 1;
         if (questionIndex >= QUESTION_COUNT) showScene("3");
@@ -100,6 +142,10 @@ export const level62: LevelDefinition = {
     const scene = ["1", "2", "3"].includes(initialScene ?? "") ? initialScene! : "1";
     questionIndex = scene === "3" ? QUESTION_COUNT : 0;
     showScene(scene);
-    return () => audio.stopMusic();
+    return () => {
+      delete screen.dataset.result;
+      delete screen.dataset.score;
+      audio.stopMusic();
+    };
   },
 };

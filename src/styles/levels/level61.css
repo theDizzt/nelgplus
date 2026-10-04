@@ -31,6 +31,11 @@
 .level-61 [data-panel="2"] { overflow: hidden; }
 .level-61__maze-world { position: absolute; top: 0; left: 0; width: 100%; will-change: transform; }
 .level-61__maze-world img { display: block; width: 100%; height: auto; pointer-events: none; }
+/* Start with the background pulse, before part 2 scrolls into view, to stay in sync.
+   Only visual opacity changes; collision still reads the original image pixels. */
+.level-61[data-scene="2"] .level-61__maze-world img:nth-of-type(2) {
+  animation: level-61-pulse 5s ease-in-out infinite;
+}
 .level-61__maze-goal { position: absolute; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, #0f0, #000); clip-path: circle(50%); }
 .level-61__maze-world:not([data-ready]) .level-61__maze-goal { display: none; }
 .level-61__maze-goal { transition: filter 160ms ease; }

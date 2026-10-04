@@ -5,7 +5,8 @@ import type { LevelDefinition } from "../core/types";
 
 /**
  * 레벨 제작 참고용: Level 255, Test
- * 실행: 개발 서버에서 /tests/test-level.html. 정규 진행 목록에는 등록하지 않는다.
+ * 실행: 어드민 패널에서 255 선택 또는 개발 서버의 /tests/test-level.html.
+ * 테스트 전용 진입으로 제공하며 정규 진행 목록에는 포함하지 않는다.
  * 스타일: ../styles/levels/test-level.css의 같은 번호 주석을 함께 참고/복사한다.
  * 원본: Level 8(입력/드래그), Level 9(우클릭 메뉴), LevelScope(이벤트/타이머 정리).
  *

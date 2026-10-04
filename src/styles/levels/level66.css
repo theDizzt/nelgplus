@@ -14,11 +14,16 @@
 .level-66__begin { right: 28px; bottom: 22px; }
 .level-66__puzzle-number { position: absolute; left: 25px; top: 165px; font-size: 30px; font-weight: 700; }
 .level-66__object { position: absolute; box-sizing: border-box; z-index: 3; }
+.level-66__fixed-floor {
+  background:
+    linear-gradient(90deg, transparent 0 14%, rgb(255 255 255 / 22%) 28%, transparent 44% 68%, rgb(255 255 255 / 18%) 82%, transparent),
+    linear-gradient(180deg, #919fff 0%, #344dff 43%, #071b9c 48%, #263dcc 100%);
+}
 .level-66 [data-allow-drag] { cursor: grab; touch-action: none; user-select: none; }
 .level-66 .is-dragging { cursor: grabbing; z-index: 15; }
 .level-66[data-running="true"] [data-allow-drag] { cursor: default; }
-.level-66__ladder { border-left: 7px solid #b87828; border-right: 7px solid #b87828; background: repeating-linear-gradient(to bottom, transparent 0 13px, #e9ae57 13px 19px, #643d14 19px 22px, transparent 22px 30px); filter: drop-shadow(2px 2px 0 #000); }
-.level-66__spring { border-top: 6px solid #ff0; color: #000; text-align: center; font: bold 28px/15px "NELG Comic Sans", sans-serif; box-shadow: 0 4px 0 #730000; }
+.level-66__ladder { border-left: 5.6px solid #b87828; border-right: 5.6px solid #b87828; background: repeating-linear-gradient(to bottom, transparent 0 10.4px, #e9ae57 10.4px 15.2px, #643d14 15.2px 17.6px, transparent 17.6px 24px); filter: drop-shadow(2px 2px 0 #000); }
+.level-66__spring { border-top: 5px solid #ff0; color: #000; text-align: center; font: bold 22px/12px "NELG Comic Sans", sans-serif; box-shadow: 0 3px 0 #730000; }
 .level-66__runner { position: absolute; z-index: 10; width: 64px; height: 82px; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
 .level-66 .level-66__form { z-index: 30; bottom: 12px; }
 .level-66 .level-66__form input { color: #000; border-color: #650000; background: linear-gradient(100deg, #ff6464, #ffb760, #fff16b, #7ee789, #80bdff, #c78aff, #ff6969); }
@@ -38,3 +43,25 @@
 
 /* Face stays attached to the original sprite throughout the sinking animation. */
 .level-66__resentful-face { position: absolute; left: 64px; top: 28px; width: 60px; height: 48px; pointer-events: none; }
+
+/* Percentage insets keep every portal ring inside the resized frame. */
+.level-66 .level-32__portal { border-width: 3px; }
+.level-66 .level-32__portal i { border-width: 2px; }
+.level-66 .level-32__portal i:nth-child(1) { inset: 7%; }
+.level-66 .level-32__portal i:nth-child(2) { inset: 20%; }
+.level-66 .level-32__portal i:nth-child(3) { inset: 33%; }
+.level-66 .level-32__portal i:nth-child(4) { inset: 45%; border: 0; }
+
+.level-66[data-scene="9"] { background: radial-gradient(ellipse at center, #430000, #000); cursor: none; }
+.level-66[data-scene="9"] .level-66__retry { cursor: pointer; }
+.level-66__cursor-explosion { position: absolute; z-index: 21; width: 0; height: 0; pointer-events: none; }
+.level-66__exploding-arrow { position: absolute; width: 24px; height: 32px; transform-origin: 0 0; animation: level-66-cursor-burst 400ms ease-out forwards; }
+.level-66__blast-ring { position: absolute; left: -12px; top: -12px; width: 24px; height: 24px; box-sizing: border-box; border: 5px solid #ffe779; border-radius: 50%; box-shadow: 0 0 20px #ff4000; animation: level-66-blast 750ms ease-out forwards; }
+.level-66__cursor-explosion i { position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; background: #ffce37; box-shadow: 0 0 9px #f40; animation: level-66-fragment 950ms ease-out forwards; }
+.level-66__cursor-explosion i:nth-of-type(even) { background: #ff3c00; }
+@keyframes level-66-cursor-burst { 0%, 15% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(2.5) rotate(35deg); } }
+@keyframes level-66-blast { from { opacity: 1; transform: scale(.2); } to { opacity: 0; transform: scale(7); } }
+@keyframes level-66-fragment { from { opacity: 1; transform: translate(0, 0) scale(1); } to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--turn)) scale(.15); } }
+@media (prefers-reduced-motion: reduce) {
+  .level-66__exploding-arrow, .level-66__blast-ring, .level-66__cursor-explosion i { animation-duration: 1ms; }
+}

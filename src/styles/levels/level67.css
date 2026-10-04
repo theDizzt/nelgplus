@@ -1,13 +1,40 @@
 .level-67 { background: #000; color: #fff; isolation: isolate; }
-.level-67--1 { background: #1e90ff; color: #000; }
-.level-67__decoration, .level-67__matrix { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.level-67__decoration { object-fit: fill; }
+.level-67__matrix { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 /* The common level title retains its Perpetua font and standard geometry. */
-.level-67 .level-heading { z-index: 1; }
-.level-67--2 .level-heading { text-shadow: 2px 2px 3px #000, 0 0 6px #000; }
-.level-67__form { z-index: 1; }
+.level-67 .level-heading { z-index: 2; color: #fff; text-shadow: none; pointer-events: none; }
+.level-67__form { z-index: 2; pointer-events: none; }
+.level-67__form input, .level-67__form button { pointer-events: auto; }
+.level-67__counters { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .level-67 .level-67__form input { background: #333; color: #f00; }
 .level-67__form button { opacity: .76; }
+.level-67__counter {
+  position: absolute; width: 182px; height: 125px; z-index: 4; pointer-events: auto;
+  border: 2px solid color-mix(in srgb, var(--counter-color), #000 50%);
+  border-radius: 48%;
+  background: linear-gradient(155deg, color-mix(in srgb, var(--counter-color), #fff 45%), var(--counter-color) 45%, color-mix(in srgb, var(--counter-color), #000 55%));
+  box-shadow: inset 0 3px 3px #ffffff80, inset 0 -4px 5px #0008, 2px 4px 6px #000b;
+  cursor: grab; touch-action: none;
+}
+.level-67__counter:active { cursor: grabbing; }
+.level-67__display {
+  position: absolute; left: 18px; top: 23px; width: 142px; height: 35px;
+  padding: 3px 5px; border: 2px solid #222; border-radius: 5px;
+  background: #333; color: var(--counter-color); outline: none;
+  font-family: "NELG Courier", Courier, monospace; font-size: 23px;
+  text-align: right; box-shadow: inset 1px 2px 3px #0009;
+}
+.level-67__counter button {
+  position: absolute; top: 73px; width: 33px; height: 33px;
+  padding: 0; border: 2px solid #222; border-radius: 50%;
+  background: #333; color: #fff; font: 24px "NELG Courier", Courier, monospace;
+  text-shadow: 0 -1px #000; box-shadow: inset 0 1px 2px #777; cursor: pointer;
+}
+.level-67__counter button[data-step="-1"] { left: 25px; }
+.level-67__counter button[data-step="1"] { right: 25px; }
+.level-67__counter .level-67__reset { left: 75px; width: 28px; opacity: .01; }
+.level-67__menu { z-index: 10000; }
+.level-67__menu [data-radices] { width: 155px; }
+.level-67__world { position: absolute; inset: 0; transform-origin: top left; }
 .level-67__back {
   position: absolute;
   bottom: 24px;

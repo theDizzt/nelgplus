@@ -14,8 +14,8 @@ try {
     const {level66}=await import('/src/levels/level66.ts');
     window.raf=null;window.time=0;
     window.requestAnimationFrame=cb=>(window.raf=cb,1);window.cancelAnimationFrame=()=>{window.raf=null};
-    let dispose,abort;window.destinations=[];
-    window.mount66=scene=>{dispose?.();abort?.abort();abort=new AbortController();dispose=level66.mount({screen:document.querySelector('#screen'),initialScene:scene,listen:(el,type,cb,opts)=>el.addEventListener(type,cb,{...opts,signal:abort.signal}),wrongAnswer:()=>false,goToLevel:n=>window.destinations.push(n)});};
+    let dispose,abort;window.destinations=[];window.effects66=[];
+    window.mount66=scene=>{dispose?.();abort?.abort();abort=new AbortController();dispose=level66.mount({screen:document.querySelector('#screen'),initialScene:scene,audio:{playMusic:async()=>{},stopMusic:()=>{},playEffect:source=>window.effects66.push(source)},listen:(el,type,cb,opts)=>el.addEventListener(type,cb,{...opts,signal:abort.signal}),wrongAnswer:()=>false,goToLevel:n=>window.destinations.push(n)});};
     window.advance66=seconds=>{for(let i=0;i<seconds*120;i++){window.time+=1000/120;window.raf?.(window.time);}};
     window.mount66('1');
   });
@@ -26,18 +26,109 @@ try {
   await page.locator('[data-begin]').click();
   assert.equal(await page.locator('#screen').getAttribute('data-scene'),'2');
   for(const scale of [1,.65]){
-    await page.evaluate(scale=>{window.mount66('2');document.querySelector('#screen').style.transform=`scale(${scale})`;document.querySelector('#screen').style.transformOrigin='top left';},scale);
+    await page.evaluate(scale=>{window.mount66('5');document.querySelector('#screen').style.transform=`scale(${scale})`;document.querySelector('#screen').style.transformOrigin='top left';},scale);
     const obj=page.locator('[data-object="1"]');const b=await obj.boundingBox();
     await page.mouse.move(b.x+b.width/2,b.y+b.height/2);await page.mouse.down();await page.mouse.move(b.x+b.width/2-30*scale,b.y+b.height/2,{steps:4});await page.mouse.up();
-    assert.ok(Math.abs(await obj.evaluate(el=>parseFloat(el.style.left))-235)<1);
+    assert.ok(Math.abs(await obj.evaluate(el=>parseFloat(el.style.left))-178)<1);
   }
   await page.evaluate(()=>{window.mount66('2');document.querySelector('#screen').style.transform='none'});
-  const staticBefore=await page.locator('[data-object="6"]').getAttribute('style');
-  const hot=await page.locator('[data-object="6"]').boundingBox();await page.mouse.move(hot.x+10,hot.y+10);await page.mouse.down();await page.mouse.move(hot.x+80,hot.y+10);await page.mouse.up();
-  assert.equal(await page.locator('[data-object="6"]').getAttribute('style'),staticBefore);
+  for(const hazard of [6,7]){
+    await page.evaluate(()=>window.mount66('5'));
+    const box=await page.locator(`[data-object="${hazard}"]`).boundingBox();
+    const before=await page.evaluate(()=>window.effects66.length);
+    await page.mouse.move(box.x+box.width/2,box.y+box.height/2);
+    assert.equal(await page.locator('#screen').getAttribute('data-scene'),'9');
+    assert.equal(await page.locator('.level-66__perished').textContent(),'PERISHED');
+    assert.equal(await page.locator('.level-66__cursor-explosion i').count(),16);
+    assert.deepEqual(await page.evaluate(n=>window.effects66.slice(n),before),['sounds/explosion.mp3']);
+    await page.mouse.move(780,580);
+    assert.equal(await page.evaluate(()=>window.effects66.length),before+1);
+    await page.locator('[data-retry]').click();
+    assert.equal(await page.locator('#screen').getAttribute('data-scene'),'5');
+  }
+  // Admin preview includes the new scene and plays the same effect.
+  await page.evaluate(()=>window.mount66('9'));
+  await page.locator('.level-66__cursor-explosion').evaluate(el=>el.getAnimations({subtree:true}).forEach(a=>{a.pause();a.currentTime=180;}));
+  await page.locator('#screen').screenshot({path:'tmp/level66/cursor-perished.png'});
+  await page.evaluate(()=>window.mount66('2'));
+  assert.ok(await page.locator('.level-32__portal').evaluate(el=>{
+    const outer=el.getBoundingClientRect();
+    return [...el.children].every(child=>{const r=child.getBoundingClientRect();return r.width>0&&r.height>0&&r.left>=outer.left&&r.right<=outer.right&&r.top>=outer.top&&r.bottom<=outer.bottom;});
+  }),'Portal rings remain positive and inside the frame');
+  const fixed=page.locator('.level-66__fixed-floor');
+  assert.equal(await fixed.getAttribute('data-allow-drag'),null);
+  const fixedStyle=await fixed.getAttribute('style');
+  await fixed.dispatchEvent('keydown',{key:'ArrowRight',bubbles:true});
+  assert.equal(await fixed.getAttribute('style'),fixedStyle);
+  const floorBox=await fixed.boundingBox();
+  const runnerBox=await page.locator('.level-66__runner').boundingBox();
+  assert.ok(Math.abs(runnerBox.y+runnerBox.height-floorBox.y)<1,'Red guy starts on blue floor');
+  // Arrange Scene 2 with real pointer drags, keeping the cursor away from the red wall.
+  for(const [index,dx,dy] of [[0,288,-32],[1,-329.6,24],[4,32,6.4],[5,-198.4,-51.2]]){
+    await page.mouse.move(950,750);
+    const box=await page.locator(`[data-object="${index}"]`).boundingBox();
+    await page.mouse.move(box.x+box.width/2,box.y+3);
+    await page.mouse.down();
+    await page.mouse.move(box.x+box.width/2+dx,box.y+3+dy,{steps:8});
+    await page.mouse.up();
+    assert.equal(await page.locator('#screen').getAttribute('data-scene'),'2');
+  }
+  await page.locator('#screen').screenshot({path:'tmp/level66/scene2-solved.png'});
+  await page.mouse.move(950,750);
+  await page.locator('.level-66__form button').click();
+  await page.evaluate(()=>window.advance66(15));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'3');
+  await page.locator('#screen').screenshot({path:'tmp/level66/scene3.png'});
+  assert.equal(await page.locator('.level-66__ladder').count(),2);
+  assert.equal(await page.locator('.level-66__spring').count(),4);
+  const pieces=await page.locator('[data-allow-drag]').evaluateAll(els=>els.map(el=>({index:el.dataset.object,x:parseFloat(el.style.left),y:parseFloat(el.style.top),floor:el.classList.contains('level-32__platform')&&!el.classList.contains('level-66__spring')})));
+  let floorIndex=0;
+  for(const piece of pieces){
+    const target=piece.floor?{x:200+70*floorIndex++,y:240}:{x:20,y:440};
+    await page.locator(`[data-object="${piece.index}"]`).focus();
+    for(const [delta,negative,positive] of [[target.x-piece.x,'ArrowLeft','ArrowRight'],[target.y-piece.y,'ArrowUp','ArrowDown']]){
+      const key=delta<0?negative:positive;
+      for(let n=0;n<Math.floor(Math.abs(delta)/20);n++)await page.keyboard.press(`Shift+${key}`);
+      for(let n=0;n<Math.round(Math.abs(delta)%20/5);n++)await page.keyboard.press(key);
+    }
+  }
+  await page.locator('.level-66__form button').click();
+  await page.evaluate(()=>window.advance66(15));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'4');
+  await page.evaluate(()=>window.mount66('4'));
+  await page.mouse.move(950,750);
+  await page.locator('#screen').screenshot({path:'tmp/level66/scene4.png'});
+  const steveStart=await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left));
+  await page.evaluate(()=>window.advance66(1));
+  const steveMoved=await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left));
+  assert.ok(steveMoved<steveStart-40,'Steve patrols before GO');
+  // Put the mouse ahead of Steve and keep it still: movement must trigger Scene 9.
+  const screenBox=await page.locator('#screen').boundingBox();
+  await page.mouse.move(screenBox.x+235,screenBox.y+450);
+  await page.evaluate(()=>window.advance66(3));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'9');
+  await page.locator('[data-retry]').click();
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'4');
+  assert.ok(Math.abs(await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left))-steveStart)<1,'Retry resets patrol');
+  await page.mouse.move(950,750);
+  const fourthPieces=await page.locator('[data-allow-drag]').evaluateAll(els=>els.map(el=>({index:Number(el.dataset.object),x:parseFloat(el.style.left),y:parseFloat(el.style.top)})));
+  const fourthTargets={7:{x:225,y:385},9:{x:295,y:385},10:{x:365,y:385},11:{x:435,y:385},12:{x:495,y:385},21:{x:200,y:365}};
+  for(const piece of fourthPieces){
+    const target=fourthTargets[piece.index]??{x:20,y:195};
+    await page.locator(`[data-object="${piece.index}"]`).focus();
+    for(const [delta,negative,positive] of [[target.x-piece.x,'ArrowLeft','ArrowRight'],[target.y-piece.y,'ArrowUp','ArrowDown']]){
+      const key=delta<0?negative:positive;
+      for(let n=0;n<Math.floor(Math.abs(delta)/20);n++)await page.keyboard.press(`Shift+${key}`);
+      for(let n=0;n<Math.round(Math.abs(delta)%20/5);n++)await page.keyboard.press(key);
+    }
+  }
+  await page.locator('#screen').screenshot({path:'tmp/level66/scene4-route.png'});
+  await page.locator('.level-66__form button').click();
+  await page.evaluate(()=>window.advance66(20));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'5');
   // Continuous path built by keyboard dragging; all five portals advance in order.
-  for(let scene=2;scene<=6;scene++){
-    for(const [index,steps] of [[1,6],[2,13]]) {await page.locator(`[data-object="${index}"]`).focus();for(let n=0;n<steps;n++)await page.keyboard.press('ArrowLeft');}
+  for(let scene=5;scene<=6;scene++){
+    for(const [index,steps] of [[1,4],[2,8]]) {await page.locator(`[data-object="${index}"]`).focus();for(let n=0;n<steps;n++)await page.keyboard.press('ArrowLeft');}
     await page.locator('.level-66__form button').click();
     await page.evaluate(()=>window.advance66(.25));
     assert.match(await page.locator('.level-66__runner').getAttribute('src'),/red_[23]\.png/);
@@ -45,7 +136,7 @@ try {
     assert.equal(await page.locator('#screen').getAttribute('data-scene'),String(scene+1));
   }
   assert.match(await page.locator('.level-66__finish').textContent(),/redguy must GO!!!/);
-  await page.evaluate(()=>window.mount66('4'));
+  await page.evaluate(()=>window.mount66('5'));
   // Remove the starting floor so redguy falls; retry preserves the placement.
   await page.locator('[data-object="0"]').focus();for(let i=0;i<12;i++)await page.keyboard.press('Shift+ArrowRight');
   const saved=await page.locator('[data-object="0"]').evaluate(el=>el.style.cssText);
@@ -53,7 +144,7 @@ try {
   assert.equal(await page.locator('#screen').getAttribute('data-scene'),'8');
   await page.locator('#screen').screenshot({path:'tmp/level66/failed.png'});
   assert.equal(await page.locator('.level-66__sinking').evaluate(el=>getComputedStyle(el).animationIterationCount),'1');
-  await page.locator('[data-retry]').click();assert.equal(await page.locator('#screen').getAttribute('data-scene'),'4');
+  await page.locator('[data-retry]').click();assert.equal(await page.locator('#screen').getAttribute('data-scene'),'5');
   assert.equal(await page.locator('[data-object="0"]').evaluate(el=>el.style.cssText),saved);
   await page.locator('.level-66__form button').click();await page.evaluate(()=>window.advance66(1));
   assert.ok(await page.locator('.level-66__sinking').evaluate(el=>el.getAnimations()[0].currentTime)<1000);

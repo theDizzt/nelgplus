@@ -1,6 +1,7 @@
 @import "./fonts.css";
 @import "./base.css";
 @import "./components/password-input.css";
+@import "./components/handwriting-text.css";
 @import "./components/custom-cursor.css";
 @import "./components/red-guy.css";
 @import "./components/buttons.css";

@@ -1,0 +1,18 @@
+.handwriting-source {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.handwriting-render { display: block; max-width: 100%; white-space: normal; }
+.handwriting-word { display: inline-block; white-space: nowrap; }
+.handwriting-glyph {
+  display: inline-block; margin-right: .055em; background-color: currentColor;
+  -webkit-mask-image: var(--handwriting-sheet);
+  mask-image: var(--handwriting-sheet);
+  -webkit-mask-size: 5.4545454545em 5.4545454545em;
+  mask-size: 5.4545454545em 5.4545454545em;
+  -webkit-mask-position: var(--glyph-x) var(--glyph-y);
+  mask-position: var(--glyph-x) var(--glyph-y);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.handwriting-glyph:last-child { margin-right: 0; }

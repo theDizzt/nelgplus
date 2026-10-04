@@ -1,6 +1,6 @@
 .level-62 {
   isolation: isolate;
-  overflow: hidden;
+  overflow: clip;
   color: #fff;
   background: #390851;
   font-family: "NELG Darumadrop One", sans-serif;
@@ -126,7 +126,8 @@
 
 .level-62__question,
 .level-62__answer > span {
-  filter: url(#level-62-cloth-texture);
+  /* The sprite already contains the original pen texture. */
+  filter: none;
 }
 
 .level-62__question-number {
@@ -159,11 +160,16 @@
   pointer-events: none;
 }
 
-.level-62__question {
+.level-62__question-content {
   position: absolute;
   top: 198px;
   left: 138px;
   right: 40px;
+  height: 140px;
+  overflow: auto;
+}
+
+.level-62__question {
   display: grid;
   place-items: center;
   min-height: 140px;
@@ -175,6 +181,17 @@
   overflow-wrap: anywhere;
   rotate: -1deg;
 }
+
+.level-62__question-content.has-image {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  align-items: center;
+  gap: 16px;
+}
+.level-62__question-content.has-image .level-62__question { font-size: 28px; }
+.level-62__question-image { width: 180px; height: 136px; object-fit: contain; }
+.level-62__question-image[hidden] { display: none; }
+.level-62__answer > span { max-height: 66px; overflow: auto; max-width: 100%; }
 
 .level-62__answers {
   position: absolute;
@@ -200,6 +217,9 @@
   border-radius: 8px 4px 10px 5px / 5px 8px 4px 9px;
   color: #171021;
   background: #f4c2fa;
+  background-image: linear-gradient(to bottom, #ffffff45, transparent 48%, #b979cd20);
+  box-shadow: 0 4px 0 #261034, inset 0 2px 0 #ffffff80;
+  transition: translate 80ms ease, box-shadow 80ms ease, background-color 80ms ease;
   font: inherit;
   font-size: 25px;
   line-height: 1.3;
@@ -243,7 +263,9 @@
 .level-62__answer:nth-child(even)::after { left: calc(100% + 12px); }
 
 .level-62__answer:hover {
-  background: #ffe0ff;
+  background-color: #ffe0ff;
+  translate: 0 -2px;
+  box-shadow: 0 6px 0 #261034, inset 0 2px 0 #ffffffa0;
 }
 
 .level-62__answer:focus-visible {
@@ -252,7 +274,9 @@
 }
 
 .level-62__answer:active {
-  background: #df9fea;
+  background-color: #df9fea;
+  translate: 0 3px;
+  box-shadow: 0 1px 0 #261034, inset 0 2px 3px #68267540;
 }
 
 .level-62__result {
@@ -271,10 +295,17 @@
   text-shadow: 4px 4px 0 #30103e;
 }
 
-.level-62__result span {
-  color: #fff;
-  font-size: 30px;
+.level-62__result-content { width: 680px; max-height: 380px; overflow: auto; }
+.level-62__result .level-62__score { color: #0ff; font-size: 42px; }
+.level-62__result-title { margin: 20px 0; font-size: 34px; font-weight: normal; }
+.level-62__result .level-62__result-message { color: #fff; font-size: 26px; line-height: 1.5; }
+.level-62__retry {
+  margin-top: 24px; padding: 8px 20px; border: 4px solid #654dff;
+  border-radius: 6px; background: #f4c2fa; color: #171021;
+  font: 24px Courier, monospace; cursor: pointer;
+  box-shadow: 0 4px 0 #261034;
 }
+.level-62__retry:hover { background: #ffe0ff; }
 
 @keyframes level-62-paper-shift {
   0% { transform: translate(0, 0) rotate(0deg); }

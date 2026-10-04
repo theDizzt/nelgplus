@@ -7,7 +7,7 @@ import { MobileControls } from "./MobileControls";
 import { UtilityTools } from "./UtilityTools";
 import { attachStarMaskedInput } from "./StarMaskedInput";
 import type { LevelContext } from "./types";
-import { getLevel, registeredLevelNumbers } from "../levels/registry";
+import { getLevel, registeredLevelNumbers, TEST_LEVEL_NUMBER } from "../levels/registry";
 import GENERATED_PRELOAD_ASSETS from "virtual:preload-assets";
 import { newgroundsService } from "../integrations/newgrounds/NewgroundsService";
 
@@ -1681,8 +1681,8 @@ export class Game {
            <p>ADMIN CONSOLE</p>
            <form id="admin-level-form">
              <label><span>LEVEL</span>
-               <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${MAXIMUM_LEVEL}"
-                 step="1" placeholder="-8 to 150" aria-label="Admin level number" autocomplete="off" />
+               <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${TEST_LEVEL_NUMBER}"
+                 step="1" placeholder="${MINIMUM_LEVEL} to ${MAXIMUM_LEVEL}, ${TEST_LEVEL_NUMBER}: Test" aria-label="Admin level number" autocomplete="off" />
              </label>
              <label><span>SCENE</span>
                <select id="admin-scene" aria-label="Admin scene" disabled>
@@ -1867,8 +1867,13 @@ export class Game {
       if (!adminInput || !adminFeedback) return;
 
       const levelNumber = adminInput.valueAsNumber;
-      if (!Number.isInteger(levelNumber) || levelNumber < MINIMUM_LEVEL || levelNumber > MAXIMUM_LEVEL) {
-        adminFeedback.textContent = `ENTER A WHOLE NUMBER FROM ${MINIMUM_LEVEL} TO ${MAXIMUM_LEVEL}.`;
+      if (!Number.isInteger(levelNumber) || levelNumber < MINIMUM_LEVEL || levelNumber > TEST_LEVEL_NUMBER) {
+        adminFeedback.textContent = `ENTER A WHOLE NUMBER FROM ${MINIMUM_LEVEL} TO ${MAXIMUM_LEVEL}, OR ${TEST_LEVEL_NUMBER} FOR TEST.`;
+        adminInput.select();
+        return;
+      }
+      if (levelNumber > MAXIMUM_LEVEL && levelNumber < TEST_LEVEL_NUMBER) {
+        adminFeedback.textContent = `LEVEL ${levelNumber} DOES NOT EXIST.`;
         adminInput.select();
         return;
       }

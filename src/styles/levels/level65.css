@@ -1,15 +1,48 @@
 .level-65 { color: #f0f; background: #ffd1ef; overflow: hidden; isolation: isolate; font-family: "NELG Papyrus", Papyrus, fantasy; }
 .level-65__background {
   position: absolute;
-  inset: -200px;
+  inset: -18%;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(circle at center, #fff 0%, #fff4fc 17%, #ffb5e9 45%, #ff78da 75%);
-  animation: level-65-orbit 14s linear infinite;
+  overflow: hidden;
+  background: #ffc1e9;
 }
-@keyframes level-65-orbit {
-  from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
-  to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
+.level-65__background::before,
+.level-65__background::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  filter: blur(24px);
+  will-change: transform;
+}
+/* Soft pink currents stretch and cross at different speeds, like diluted ink. */
+.level-65__background::before {
+  background:
+    radial-gradient(ellipse at 25% 35%, #ff82cfb3, transparent 49%),
+    radial-gradient(ellipse at 72% 65%, #fff1faa6, transparent 46%),
+    radial-gradient(ellipse at 80% 18%, #f898d899, transparent 42%);
+  animation: level-65-current 19s ease-in-out infinite;
+}
+.level-65__background::after {
+  background:
+    radial-gradient(ellipse at 30% 75%, #ffeaf6cc, transparent 43%),
+    radial-gradient(ellipse at 65% 30%, #f47fc480, transparent 46%),
+    radial-gradient(ellipse at 85% 80%, #ffdff5b3, transparent 40%);
+  animation: level-65-mixing 27s ease-in-out infinite;
+}
+@keyframes level-65-current {
+  0%, 100% { transform: translate(-4%, -3%) rotate(-8deg) scale(1.04, .96); }
+  33% { transform: translate(5%, 2%) rotate(7deg) scale(.94, 1.09); }
+  66% { transform: translate(-1%, 5%) rotate(-3deg) scale(1.1, .97); }
+}
+@keyframes level-65-mixing {
+  0%, 100% { transform: translate(4%, 2%) rotate(9deg) scale(.98, 1.06); }
+  35% { transform: translate(-5%, 4%) rotate(-6deg) scale(1.12, .94); }
+  70% { transform: translate(2%, -5%) rotate(3deg) scale(.95, 1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .level-65__background::before,
+  .level-65__background::after { animation: none; will-change: auto; }
 }
 .level-65__heading, .level-65__heading h1 { color: #f0f; }
 .level-65__copy { position: absolute; top: 475px; left: 100px; width: 600px; margin: 0; text-align: center; font-size: 27px; line-height: 1.55; transform: rotate(180deg); }
