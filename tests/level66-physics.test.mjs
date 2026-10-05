@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 const {outputText}=ts.transpileModule(readFileSync(new URL('../src/levels/level66Physics.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}});
-const {createRunner,stepRunner,draggable,PUZZLES,scalePuzzle,MINIGAME_SCALE,updatePatrol}=await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+const {createRunner,stepRunner,draggable,PUZZLES,scalePuzzle,MINIGAME_SCALE,updatePatrol,lavaSurface}=await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 const portal={x:740,y:420,width:50,height:90};
 const floor={kind:'floor',x:0,y:510,width:800,height:24};
 const wall={kind:'wall',x:180,y:300,width:24,height:210};
@@ -47,7 +47,7 @@ test('Scene 3 fixed diagram, scattered inventory and a buildable route',()=>{
   assert.equal(advance(createRunner(layout.start,MINIGAME_SCALE),layout.objects,15,layout.portal),'clear');
 });
 
-test('Scene 4 patrol reverses, stays in bounds and allows a constructed route',()=>{
+test('Scene 4 diagram route clears with patrolling Steve and rising lava',()=>{
   const layout=scalePuzzle(PUZZLES[2],MINIGAME_SCALE);
   const steve=layout.objects.find(o=>o.patrol);
   const duration=(steve.patrol.maxX-steve.patrol.minX)/steve.patrol.speed;
@@ -55,15 +55,19 @@ test('Scene 4 patrol reverses, stays in bounds and allows a constructed route',(
   assert.equal(steve.x,steve.patrol.maxX);
   assert.equal(updatePatrol(steve,duration),1);
   assert.ok(Math.abs(steve.x-steve.patrol.minX)<.001);
-  for(const o of layout.objects)if(draggable(o))Object.assign(o,{x:20,y:195});
-  for(const [index,x] of [[7,225],[9,295],[10,365],[11,435],[12,495]])Object.assign(layout.objects[index],{x,y:385});
-  Object.assign(layout.objects[21],{x:200,y:365});
+  const drawing=[[294,215],[508,300],[666,252],[121,472],[589,361],[787,130],[199,269],[433,300],[288,578],[520,510],[710,253]];
+  const movable=layout.objects.filter(draggable);
+  drawing.forEach(([x,y],i)=>Object.assign(movable[i],{x:100+x*.62,y:120+y*.62}));
+  assert.equal(layout.objects.filter(o=>o.fixed).length,4);
+  assert.equal(lavaSurface(layout,0),590);
+  assert.equal(lavaSurface(layout,10),560);
   const p=createRunner(layout.start,MINIGAME_SCALE);
   let result='running';
   for(let i=0;i<20*120&&result==='running';i++){
     updatePatrol(steve,i/120);
     assert.ok(steve.x>=steve.patrol.minX&&steve.x<=steve.patrol.maxX);
     result=stepRunner(p,layout.objects,layout.portal,1/120);
+    if(p.y+p.height>=lavaSurface(layout,i/120))result='dead';
   }
   assert.equal(result,'clear');
 });

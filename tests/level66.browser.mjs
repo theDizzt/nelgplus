@@ -7,6 +7,7 @@ await server.listen();
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try {
   const page=await browser.newPage({viewport:{width:1000,height:800}});
+  page.setDefaultTimeout(5000);
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/level66-harness',route=>route.fulfill({contentType:'text/html',body:'<link rel="stylesheet" href="/src/styles/global.css"><section id="screen" style="position:relative;width:800px;height:600px"></section>'}));
   await page.goto('http://127.0.0.1:5186/level66-harness');
@@ -98,21 +99,37 @@ try {
   await page.evaluate(()=>window.mount66('4'));
   await page.mouse.move(950,750);
   await page.locator('#screen').screenshot({path:'tmp/level66/scene4.png'});
-  const steveStart=await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left));
+  const steveStart=await page.locator('[data-object="5"]').evaluate(el=>parseFloat(el.style.left));
   await page.evaluate(()=>window.advance66(1));
-  const steveMoved=await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left));
-  assert.ok(steveMoved<steveStart-40,'Steve patrols before GO');
+  const steveMoved=await page.locator('[data-object="5"]').evaluate(el=>parseFloat(el.style.left));
+  assert.ok(steveMoved<steveStart-35,'Steve patrols before GO');
+  assert.equal(await page.locator('.level-66__rising-lava').evaluate(el=>parseFloat(el.style.top)),590,'Lava waits for GO');
   // Put the mouse ahead of Steve and keep it still: movement must trigger Scene 9.
   const screenBox=await page.locator('#screen').boundingBox();
-  await page.mouse.move(screenBox.x+235,screenBox.y+450);
+  await page.mouse.move(screenBox.x+130,screenBox.y+260);
   await page.evaluate(()=>window.advance66(3));
   assert.equal(await page.locator('#screen').getAttribute('data-scene'),'9');
   await page.locator('[data-retry]').click();
   assert.equal(await page.locator('#screen').getAttribute('data-scene'),'4');
-  assert.ok(Math.abs(await page.locator('[data-object="6"]').evaluate(el=>parseFloat(el.style.left))-steveStart)<1,'Retry resets patrol');
+  assert.ok(Math.abs(await page.locator('[data-object="5"]').evaluate(el=>parseFloat(el.style.left))-steveStart)<1,'Retry resets patrol');
+  await page.locator('.level-66__form button').click();
+  await page.mouse.move(screenBox.x+780,screenBox.y+588);
+  await page.evaluate(()=>window.advance66(.25));
+  assert.ok(await page.locator('.level-66__rising-lava').evaluate(el=>parseFloat(el.style.top))<590,'Lava rises after GO');
+  await page.evaluate(()=>window.advance66(.5));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'9','Rising lava hits stationary cursor');
+  await page.locator('[data-retry]').click();
+  assert.equal(await page.locator('.level-66__rising-lava').evaluate(el=>parseFloat(el.style.top)),590,'Retry resets lava');
+  await page.mouse.move(950,750);
+  await page.locator('.level-66__form button').click();
+  await page.mouse.move(950,750);
+  await page.evaluate(()=>window.advance66(5));
+  assert.equal(await page.locator('#screen').getAttribute('data-scene'),'8','Unsolved runner falls into lava');
+  await page.locator('[data-retry]').click();
   await page.mouse.move(950,750);
   const fourthPieces=await page.locator('[data-allow-drag]').evaluateAll(els=>els.map(el=>({index:Number(el.dataset.object),x:parseFloat(el.style.left),y:parseFloat(el.style.top)})));
-  const fourthTargets={7:{x:225,y:385},9:{x:295,y:385},10:{x:365,y:385},11:{x:435,y:385},12:{x:495,y:385},21:{x:200,y:365}};
+  const fourthDrawing=[[294,215],[508,300],[666,252],[121,472],[589,361],[787,130],[199,269],[433,300],[288,578],[520,510],[710,253]];
+  const fourthTargets=Object.fromEntries(fourthDrawing.map(([x,y],i)=>[i+9,{x:100+x*.62,y:120+y*.62}]));
   for(const piece of fourthPieces){
     const target=fourthTargets[piece.index]??{x:20,y:195};
     await page.locator(`[data-object="${piece.index}"]`).focus();
@@ -121,9 +138,21 @@ try {
       for(let n=0;n<Math.floor(Math.abs(delta)/20);n++)await page.keyboard.press(`Shift+${key}`);
       for(let n=0;n<Math.round(Math.abs(delta)%20/5);n++)await page.keyboard.press(key);
     }
+    // Finish fractional diagram coordinates with a small, real pointer drag.
+    await page.mouse.move(950,750);
+    const el=page.locator(`[data-object="${piece.index}"]`);
+    const current=await el.evaluate(el=>({x:parseFloat(el.style.left),y:parseFloat(el.style.top)}));
+    const box=await el.boundingBox();
+    await page.mouse.move(box.x+3,box.y+3);
+    await page.mouse.down();
+    await page.mouse.move(box.x+3+target.x-current.x,box.y+3+target.y-current.y);
+    await page.mouse.up();
+    assert.equal(await page.locator('#screen').getAttribute('data-scene'),'4');
   }
   await page.locator('#screen').screenshot({path:'tmp/level66/scene4-route.png'});
+  await page.mouse.move(950,750);
   await page.locator('.level-66__form button').click();
+  await page.mouse.move(950,750);
   await page.evaluate(()=>window.advance66(20));
   assert.equal(await page.locator('#screen').getAttribute('data-scene'),'5');
   // Continuous path built by keyboard dragging; all five portals advance in order.

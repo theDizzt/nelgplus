@@ -4,7 +4,7 @@ const {outputText}=ts.transpileModule(readFileSync('src/levels/level66Physics.ts
 const {createRunner,stepRunner,draggable,PUZZLES,scalePuzzle,MINIGAME_SCALE,updatePatrol,overlaps}=await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 const placements={
   3:[[126,552],[201,307],[284,456],[406,458],[454,335],[504,214],[612,602],[258,107],[438,107],[685,111],[302,228],[84,472],[525,355],[388,480],[567,480],[685,358],[897,356],[266,583],[732,602],[820,479],[800,316],[468,336],[516,215]],
-  4:[[90,336],[214,145],[470,146],[592,146],[368,334],[173,581],[564,454],[503,578],[51,215],[689,332],[302,144],[296,334],[492,453],[295,581],[171,146],[579,454]],
+  4:[[294,215],[508,300],[666,252],[121,472],[589,361],[787,130],[199,269],[433,300],[288,578],[520,510],[710,253]],
 };
 const reports=[];
 for(const scene of [3,4]){

@@ -2,12 +2,15 @@ export type ObjectKind = "floor" | "wall" | "ladder" | "spring" | "hot" | "steve
 export interface Rect { x: number; y: number; width: number; height: number }
 export interface PuzzleObject extends Rect {
   kind: ObjectKind; fixed?: boolean;
+  launchSpeed?: number;
+  launchHorizontalSpeed?: number;
   /** Horizontal patrol bounds refer to the sprite's left edge. */
   patrol?: { minX: number; maxX: number; speed: number };
 }
-export interface PuzzleLayout { start: { x: number; y: number }; portal: Rect; objects: PuzzleObject[] }
+export interface PuzzleLayout { start: { x: number; y: number }; portal: Rect; objects: PuzzleObject[]; lava?: { startY: number; riseSpeed: number } }
 export interface Runner extends Rect {
   scale: number;
+  jumpSpeed?: number;
   direction: 1 | -1; vy: number; grounded: boolean; boosted: boolean;
   ladder: PuzzleObject | null; mode: "idle" | "walking" | "climbing" | "jumping" | "falling";
 }
@@ -20,8 +23,10 @@ export const createRunner = (start: PuzzleLayout["start"], scale = 1): Runner =>
 export function scalePuzzle(layout: PuzzleLayout, scale: number): PuzzleLayout {
   const point = (p: { x: number; y: number }) => ({ x: 400 + (p.x - 400) * scale, y: 510 + (p.y - 510) * scale });
   const rect = (r: Rect) => ({ ...point(r), width: r.width * scale, height: r.height * scale });
-  return { start: point(layout.start), portal: rect(layout.portal), objects: layout.objects.map(o => ({ ...o, ...rect(o), ...(o.patrol ? {patrol:{minX:400+(o.patrol.minX-400)*scale,maxX:400+(o.patrol.maxX-400)*scale,speed:o.patrol.speed*scale}} : {}) })) };
+  return { start: point(layout.start), portal: rect(layout.portal), ...(layout.lava ? {lava:{startY:510+(layout.lava.startY-510)*scale,riseSpeed:layout.lava.riseSpeed*scale}} : {}), objects: layout.objects.map(o => ({ ...o, ...rect(o), ...(o.patrol ? {patrol:{minX:400+(o.patrol.minX-400)*scale,maxX:400+(o.patrol.maxX-400)*scale,speed:o.patrol.speed*scale}} : {}) })) };
 }
+
+export const lavaSurface = (layout: PuzzleLayout, elapsed: number): number => layout.lava ? Math.max(0, layout.lava.startY - Math.max(0, elapsed) * layout.lava.riseSpeed) : Infinity;
 
 /** Deterministic ping-pong motion, used by both rendering and collision detection. */
 export function updatePatrol(object: PuzzleObject, seconds: number): 1 | -1 {
@@ -111,21 +116,25 @@ PUZZLES[1] = createSecondPuzzle();
 
 function createThirdPuzzle(): PuzzleLayout {
   const rect = (x:number,y:number,width:number,height:number):Rect => ({x:100+x*.62,y:120+y*.62,width:width*.62,height:height*.62});
-  const blue: PuzzleObject = {kind:"floor",fixed:true,...rect(51,581,122,42)};
-  const portal=rect(758,460,82,103);
-  const steve: PuzzleObject = {kind:"steve",...rect(424,506,76,74),patrol:{minX:100+197*.62,maxX:100+424*.62,speed:45}};
+  const blue: PuzzleObject = {kind:"floor",fixed:true,...rect(42,429,122,42)};
+  const portal=rect(102,103,82,103);
+  const steve: PuzzleObject = {kind:"steve",...rect(211,191,76,74),patrol:{minX:100+23*.62,maxX:100+211*.62,speed:40}};
   const hazards: PuzzleObject[] = [
-    ...[[403,106],[849,89],[689,210],[689,453],[856,450]].map(([x,y])=>({kind:"hot" as const,...rect(x!,y!,42,122)})),
+    // Small clearance adjustment leaves room below the upper hazard and behind a leftward jump.
+    ...[[362,221],[565,83],[829,362],[616,511]].map(([x,y])=>({kind:"hot" as const,...rect(x!,y!,42,122)})),
     steve,
+    ...[[164,578],[398,510],[631,441]].map(([x,y])=>({kind:"floor" as const,fixed:true,...rect(x!,y!,122,42)})),
   ];
   const pieces: PuzzleObject[] = [
-    ...[[90,336,122],[214,145,82],[470,146,122],[592,146,122],[368,334,122],[173,581,122],[564,454,122],[503,578,122]].map(([x,y,w])=>({kind:"floor" as const,...rect(x!,y!,w!,42)})),
-    ...[[51,215],[689,332]].map(([x,y])=>({kind:"wall" as const,...rect(x!,y!,42,122)})),
-    ...[[302,144],[296,334],[492,453],[295,581]].map(([x,y])=>({kind:"spring" as const,...rect(x!,y!,72,42)})),
-    {kind:"ladder",...rect(171,146,42,190)},
-    {kind:"ladder",...rect(579,454,42,124)},
+    ...[[294,215],[508,300],[666,252]].map(([x,y])=>({kind:"floor" as const,...rect(x!,y!,122,42)})),
+    ...[[121,472],[589,361],[787,130]].map(([x,y])=>({kind:"wall" as const,...rect(x!,y!,42,122)})),
+    ...[[199,269],[433,300],[288,578],[520,510]].map(([x,y])=>({kind:"spring" as const,launchSpeed:450,launchHorizontalSpeed:155,...rect(x!,y!,72,42)})),
+    {kind:"ladder",...rect(710,253,42,188)},
   ];
-  return scatterDrawing(blue,portal,hazards,pieces,[{x:steve.patrol!.minX,y:steve.y,width:steve.patrol!.maxX-steve.patrol!.minX+steve.width,height:steve.height}]);
+  const layout = scatterDrawing(blue,portal,hazards,pieces,[{x:steve.patrol!.minX,y:steve.y,width:steve.patrol!.maxX-steve.patrol!.minX+steve.width,height:steve.height}]);
+  // Leave the GO form accessible before starting; rise only after an empty GO.
+  layout.lava = {startY:510+(590-510)/MINIGAME_SCALE,riseSpeed:3/MINIGAME_SCALE};
+  return layout;
 }
 PUZZLES[2] = createThirdPuzzle();
 
@@ -151,9 +160,9 @@ export function stepRunner(p: Runner, objects: PuzzleObject[], portal: Rect, dt:
       p.ladder = null;
     }
   } else {
-    p.x += p.direction * 115 * p.scale * dt;
+    p.x += p.direction * (p.boosted ? p.jumpSpeed ?? 115 : 115) * p.scale * dt;
     const pad = objects.find(o => o.kind === "spring" && p.grounded && overlaps(p, o));
-    if (pad) { p.y = pad.y - p.height; p.vy = -530 * p.scale; p.boosted = true; p.grounded = false; }
+    if (pad) { p.y = pad.y - p.height; p.vy = -(pad.launchSpeed ?? 530) * p.scale; p.jumpSpeed = pad.launchHorizontalSpeed; p.boosted = true; p.grounded = false; }
     if (!p.boosted) {
       const wall = objects.find(o => o.kind === "wall" && overlaps(p, o));
       if (wall) {
@@ -169,8 +178,9 @@ export function stepRunner(p: Runner, objects: PuzzleObject[], portal: Rect, dt:
     const land = objects.filter(o => (o.kind === "floor" || o.kind === "spring") && p.vy >= 0 && p.x + p.width > o.x && p.x < o.x + o.width && feet <= o.y + .5 && p.y + p.height >= o.y).sort((a, b) => a.y - b.y || Number(b.kind === "spring") - Number(a.kind === "spring"))[0];
     if (land) {
       p.y = land.y - p.height;
-      p.vy = land.kind === "spring" ? -530 * p.scale : 0;
+      p.vy = land.kind === "spring" ? -(land.launchSpeed ?? 530) * p.scale : 0;
       p.boosted = land.kind === "spring";
+      p.jumpSpeed = land.launchHorizontalSpeed;
       p.grounded = land.kind === "floor";
     }
     p.mode = p.grounded ? "walking" : p.vy < 0 ? "jumping" : "falling";

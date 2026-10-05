@@ -43,6 +43,7 @@
 
 /* Face stays attached to the original sprite throughout the sinking animation. */
 .level-66__resentful-face { position: absolute; left: 64px; top: 28px; width: 60px; height: 48px; pointer-events: none; }
+.level-66__rising-lava { z-index: 19; border-top-width: 4px; box-shadow: 0 -4px 16px #ff6500; }
 
 /* Percentage insets keep every portal ring inside the resized frame. */
 .level-66 .level-32__portal { border-width: 3px; }

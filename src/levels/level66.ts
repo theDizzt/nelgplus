@@ -3,7 +3,7 @@ import { blockTabNavigation } from "../core/blockTabNavigation";
 import { clientPointToLocal } from "../core/floatingPosition";
 import { attachStarMaskedInput } from "../core/StarMaskedInput";
 import type { LevelContext, LevelDefinition } from "../core/types";
-import { createRunner, draggable, MINIGAME_SCALE, PUZZLES, scalePuzzle, stepRunner, updatePatrol, type PuzzleObject } from "./level66Physics";
+import { createRunner, draggable, lavaSurface, MINIGAME_SCALE, PUZZLES, scalePuzzle, stepRunner, updatePatrol, type PuzzleObject } from "./level66Physics";
 
 const NAMES = ["Main", "I", "II", "III", "IV", "V", "Finish", "Failed", "Cursor Perished"];
 const PASSWORD = "redguy must GO!!!";
@@ -19,6 +19,7 @@ export const level66: LevelDefinition = {
     let scene = 1, lastPuzzle = 2, running = false, leaving = false;
     let player = createRunner(layouts[0]!.start, MINIGAME_SCALE);
     let clock = 0, previousTime = 0, accumulator = 0, frame = 0;
+    let lavaElapsed = 0;
     let sceneEvents = new AbortController();
     let previousCursor: { x: number; y: number } | null = null;
     let explosionPoint = { x: 400, y: 350 };
@@ -46,6 +47,7 @@ export const level66: LevelDefinition = {
       endDrag();
       sceneEvents.abort(); sceneEvents = new AbortController();
       scene = next; running = false; accumulator = 0; clock = 0;
+      lavaElapsed = 0;
       previousCursor = null;
       screen.className = "level-screen level-66";
       screen.dataset.scene = String(scene);
@@ -87,7 +89,8 @@ export const level66: LevelDefinition = {
             return o.kind === "steve" ? `<img ${attributes} src="${assetUrl("images/Steve.gif")}" alt="Steve" draggable="false">` : `<div ${attributes}>${o.kind === "spring" ? "&uarr;" : ""}</div>`;
           }).join("")}
           <div class="level-32__portal" style="${boxStyle(layout.portal)}" aria-label="Portal"><i></i><i></i><i></i><i></i></div>
-          <img class="level-66__runner" src="${assetUrl("images/red_1.png")}" alt="redguy" draggable="false">${formMarkup}`;
+          <img class="level-66__runner" src="${assetUrl("images/red_1.png")}" alt="redguy" draggable="false">
+          ${layout.lava ? `<div class="level-66__lava level-66__rising-lava" style="top:${lavaSurface(layout,0)}px" aria-label="Rising lava"></div>` : ""}${formMarkup}`;
         paintPlayer();
       }
       const form = screen.querySelector<HTMLFormElement>("form");
@@ -123,7 +126,7 @@ export const level66: LevelDefinition = {
       for (let i = 0; i <= steps; i++) {
         const x = from.x + (point.x - from.x) * i / steps;
         const y = from.y + (point.y - from.y) * i / steps;
-        if (hazards.some(o => x >= o.x && x <= o.x + o.width && y >= o.y && y <= o.y + o.height)) {
+        if ((x >= 0 && x <= 800 && y >= lavaSurface(layouts[scene - 2]!, lavaElapsed) && y <= 600) || hazards.some(o => x >= o.x && x <= o.x + o.width && y >= o.y && y <= o.y + o.height)) {
           explosionPoint = { x, y };
           show(9);
           return true;
@@ -185,6 +188,11 @@ export const level66: LevelDefinition = {
           accumulator -= 1 / 120;
           clock += 1 / 120;
           const layout = layouts[scene - 2]!;
+          if (running && layout.lava) {
+            lavaElapsed += 1 / 120;
+            const lava = screen.querySelector<HTMLElement>(".level-66__rising-lava");
+            if (lava) lava.style.top = `${lavaSurface(layout,lavaElapsed)}px`;
+          }
           layout.objects.forEach((object, index) => {
             if (!object.patrol) return;
             const direction = updatePatrol(object, clock);
@@ -197,8 +205,9 @@ export const level66: LevelDefinition = {
           // A moving Steve can hit a stationary cursor, even before GO is pressed.
           if (previousCursor && checkCursorPoint(previousCursor)) break;
           if (running) {
-            const result = stepRunner(player, layout.objects, layout.portal, 1 / 120);
-            if (result === "dead") show(8);
+            const surface = lavaSurface(layout,lavaElapsed);
+            const result = player.y + player.height >= surface ? "dead" : stepRunner(player, layout.objects, layout.portal, 1 / 120);
+            if (result === "dead" || player.y + player.height >= surface) show(8);
             else if (result === "clear") show(scene + 1);
           }
         }
