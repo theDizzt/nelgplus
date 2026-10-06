@@ -25,7 +25,7 @@ function startMatrix(canvas: HTMLCanvasElement, continuousRed: boolean, message 
   const mask = document.createElement("canvas");
   mask.width = width; mask.height = height;
   const ink = mask.getContext("2d")!;
-  ink.font = `bold ${message === "67" ? 340 : 260}px monospace`;
+  ink.font = message === "67" ? "bold 340px monospace" : 'bold 260px "Courier New", Courier, monospace';
   ink.textAlign = "center"; ink.textBaseline = "middle";
   ink.fillText(message, 400, 335);
   ink.lineWidth = 8;
@@ -44,7 +44,11 @@ function startMatrix(canvas: HTMLCanvasElement, continuousRed: boolean, message 
     const dt = Math.min((now - previous) / 1000, .05);
     previous = now;
     ctx.clearRect(0, 0, width, height);
-    ctx.font = '18px "NELG Courier", Courier, monospace';
+    // Use the same unslashed-zero font for every Scene 2 character, so the
+    // hidden word is conveyed only by the characters, not a different weight.
+    ctx.font = continuousRed && message !== "67"
+      ? '18px "Courier New", Courier, monospace'
+      : '18px "NELG Courier", Courier, monospace';
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     streams.forEach((stream, column) => {
@@ -66,8 +70,9 @@ function startMatrix(canvas: HTMLCanvasElement, continuousRed: boolean, message 
         const x = (column + .5) * width / COLUMNS;
         const inMask = message && pixels[(Math.min(599, Math.max(0, Math.floor(y + 9))) * width + Math.floor(x)) * 4 + 3]! > 0;
         ctx.fillStyle = message === "67" ? (inMask ? "#bbffbb" : "#004d12")
-          : message ? (inMask ? "#ff5555" : "#440000") : cell.color;
-        ctx.fillText(message === "ZER0" && inMask ? "0" : message === "ZER0" && cell.text === "0" ? "O" : cell.text, x, y);
+          : continuousRed ? "#ff0000" : cell.color;
+        const text = message === "ZER0" && inMask ? "0" : message === "ZER0" && cell.text === "0" ? "O" : cell.text;
+        ctx.fillText(text, x, y);
       });
     });
     frame = requestAnimationFrame(draw);
@@ -115,9 +120,16 @@ export const level67: LevelDefinition = {
       if (scene === 1) {
         const form = screen.querySelector<HTMLFormElement>("form")!;
         const input = form.querySelector("input")!;
-        attachStarMaskedInput(input, listen);
-        // Password, completion and scene-entry rules will be specified later.
-        listen(form, "submit", event => event.preventDefault());
+        const masked = attachStarMaskedInput(input, listen);
+        listen(input, "keydown", event => {
+          if (event.key !== "Enter" || event.repeat || event.isComposing) return;
+          event.preventDefault();
+          form.requestSubmit();
+        });
+        listen(form, "submit", event => {
+          event.preventDefault();
+          if (masked.getValue() === "ZER0") context.goToLevel(68);
+        });
         input.focus();
         stopCounters = mountCounters(context, listen, show);
       } else {

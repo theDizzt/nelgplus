@@ -22,20 +22,35 @@ try {
       setMusicEnabled(v) { this.musicEnabled = v; }, setEffectsEnabled(v) { this.effectsEnabled = v; },
       setMusicVolume(v) { this.musicVolume = v; }, setEffectsVolume(v) { this.effectsVolume = v; } };
     window.menuVisits67 = 0;
+    window.destinations67 = [];
     window.mount67 = (scene = 1) => {
       window.scope67?.dispose();
-      window.scope67 = new LevelScope({ screen: document.querySelector('#screen'), initialScene: String(scene), levelNumber: 67, audio: window.audio67, goToMenu: () => window.menuVisits67++, now: () => new Date(window.time67) });
+      window.scope67 = new LevelScope({ screen: document.querySelector('#screen'), initialScene: String(scene), levelNumber: 67, audio: window.audio67, goToLevel: n => window.destinations67.push(n), goToMenu: () => window.menuVisits67++, now: () => new Date(window.time67) });
       window.scope67.setCustomCleanup(level67.mount(window.scope67.context));
     };
     const draw = CanvasRenderingContext2D.prototype.fillText;
     window.colors67 = new Set(); window.zeros67 = 0;
     CanvasRenderingContext2D.prototype.fillText = function(text, ...args) {
-      if (this.canvas.isConnected) { window.colors67.add(this.fillStyle); if (this.fillStyle === '#ff5555' && text === '0') window.zeros67++; }
+      if (this.canvas.isConnected) { window.colors67.add(this.fillStyle); if (document.querySelector('#screen').dataset.optimal === 'true' && this.fillStyle === '#ff0000' && text === '0') window.zeros67++; }
       return draw.call(this, text, ...args);
     };
     window.mount67(); await document.fonts.ready;
   });
   const counter = name => page.locator(`[data-counter="${name}"]`);
+  for (const method of ['Enter', 'GO']) {
+    await page.evaluate(() => window.mount67());
+    const password = page.locator('.level-67__form input');
+    await password.focus();
+    await page.keyboard.type('ZERO');
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => window.destinations67.length), method === 'Enter' ? 0 : 1);
+    await page.keyboard.press('Control+a');
+    await page.keyboard.type('ZER0');
+    if (method === 'Enter') await page.keyboard.press('Enter');
+    else await page.locator('.level-67__form button').click();
+  }
+  assert.deepEqual(await page.evaluate(() => window.destinations67), [68, 68]);
+  await page.evaluate(() => window.mount67());
   const display = name => counter(name).locator('input');
   const scene = () => page.locator('#screen').getAttribute('data-scene');
   const click = async (name, delta, count) => { for (let i = 0; i < count; i++) await counter(name).locator(`[data-step="${delta}"]`).click(); };

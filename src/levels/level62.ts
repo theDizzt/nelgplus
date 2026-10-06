@@ -82,6 +82,15 @@ export const level62: LevelDefinition = {
     let questionIndex = 0;
     let totalScore = 0;
 
+    // Wrap sprite text first, then shrink only when it exceeds its allotted space.
+    const fitText = (host: HTMLElement, maximumSize: number, height: number) => {
+      const visual = host.querySelector<HTMLElement>(".handwriting-render")!;
+      for (let size = maximumSize; size >= 1; size--) {
+        host.style.fontSize = `${size}px`;
+        if (visual.offsetHeight <= height && visual.scrollWidth <= host.clientWidth) break;
+      }
+    };
+
     const updateQuestion = () => {
       const question = LEVEL62_QUESTIONS[questionIndex]!;
       setHandwritingText(questionNumber, `${questionIndex + 1}.`);
@@ -93,8 +102,8 @@ export const level62: LevelDefinition = {
       questionImage.alt = question.imageAlt ?? question.text;
       if (question.image) questionImage.src = assetUrl(`images/${question.image}`);
       else questionImage.removeAttribute("src");
-      questionContent.scrollTop = 0;
-      answerLabels.forEach(label => { label.scrollTop = 0; });
+      fitText(questionText, question.image ? 28 : 39, 136);
+      answerLabels.forEach(label => fitText(label, 25, 56));
     };
     const updateResult = () => {
       const result = getLevel62Result(totalScore);

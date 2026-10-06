@@ -166,13 +166,14 @@
   left: 138px;
   right: 40px;
   height: 140px;
-  overflow: auto;
+  overflow: visible;
 }
 
 .level-62__question {
   display: grid;
   place-items: center;
-  min-height: 140px;
+  height: 140px;
+  min-width: 0;
   margin: 0;
   color: #fff;
   font-size: 39px;
@@ -191,7 +192,10 @@
 .level-62__question-content.has-image .level-62__question { font-size: 28px; }
 .level-62__question-image { width: 180px; height: 136px; object-fit: contain; }
 .level-62__question-image[hidden] { display: none; }
-.level-62__answer > span { max-height: 66px; overflow: auto; max-width: 100%; }
+.level-62__answer > span { min-width: 0; width: 100%; max-width: 100%; }
+.level-62__question .handwriting-render,
+.level-62__answer .handwriting-render { min-width: 0; width: 100%; }
+.level-62__quiz .handwriting-word { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 
 .level-62__answers {
   position: absolute;
@@ -209,7 +213,7 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
-  min-height: 96px;
+  height: 96px;
   box-sizing: border-box;
   padding: 12px 14px 16px;
   border: 6px solid #654dff;
