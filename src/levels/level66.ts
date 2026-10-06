@@ -56,7 +56,7 @@ export const level66: LevelDefinition = {
       const heading = `<header class="level-heading"><div class="level-heading__number">Level 66</div><h1>GO</h1></header>`;
       if (scene === 1) {
         screen.innerHTML = `${heading}<img class="level-66__giant" src="${assetUrl("images/red_1.png")}" alt="" draggable="false"><div class="level-66__instructions"><p class="level-66__mission"><strong>Get the broken artificial RED GUY to the portal!!!</strong></p><ul class="level-66__rules">
-          <li>Drag floors, black walls, ladders and jump pads into place.</li>
+          <li>Drag floors, ladders and jump pads. Black walls are fixed.</li>
           <li>Leave the password empty and press GO to start redguy.</li>
           <li>He starts walking right. Black walls make him turn around.</li>
           <li>He always climbs ladders up, never down.</li>

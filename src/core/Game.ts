@@ -42,6 +42,7 @@ const ADMIN_OPTION_CODE = "melonsoda84";
 const COMPLETED_ACHIEVEMENTS_KEY = "nelg-completed-achievements-v2";
 const MOBILE_CONTROLS_KEY = "nelg-mobile-controls-enabled";
 const UTILITY_TOOLS_KEY = "nelg-utility-tools-enabled";
+const RELOAD_POSITION_KEY = "nelg-admin-keep-reload-position";
 const CLOCK_ENABLED_KEY = "nelg-clock-enabled";
 const CLOCK_SHOW_DATE_KEY = "nelg-clock-show-date";
 const CLOCK_HOUR_CYCLE_KEY = "nelg-clock-hour-cycle";
@@ -410,6 +411,7 @@ export class Game {
   private readonly mobileControls: MobileControls;
   private readonly utilityTools = new UtilityTools();
   private utilityToolsEnabled = this.loadStoredBoolean(UTILITY_TOOLS_KEY, false);
+  private keepReloadPosition = this.loadStoredBoolean(RELOAD_POSITION_KEY, false);
   private mobileControlsEnabled = this.loadMobileControlsEnabled();
   private clockEnabled = this.loadStoredBoolean(CLOCK_ENABLED_KEY, false);
   private clockShowDate = this.loadStoredBoolean(CLOCK_SHOW_DATE_KEY, false);
@@ -462,6 +464,42 @@ export class Game {
 
   start(): void {
     this.interactionGuard.enable();
+    // Restoring the current level is an opt-in admin convenience.
+    {
+      const key = `nelg-dev-screen:${location.pathname}`;
+      window.addEventListener("pagehide", () => {
+        try {
+          const screen = this.root.querySelector<HTMLElement>("#level-screen");
+          if (!this.keepReloadPosition || !this.scope || !screen) {
+            sessionStorage.removeItem(key);
+            return;
+          }
+          sessionStorage.setItem(key, JSON.stringify({
+            level: this.currentLevel,
+            scene: screen.dataset.scene || this.scope.context.initialScene,
+            flags: [...this.sessionFlags],
+          }));
+        } catch {
+          // Storage can be disabled by browser settings.
+        }
+      });
+      let saved: { level?: unknown; scene?: unknown; flags?: unknown } | undefined;
+      try {
+        saved = JSON.parse(sessionStorage.getItem(key) ?? "null") ?? undefined;
+        sessionStorage.removeItem(key);
+      } catch {
+        // An invalid snapshot falls back to the normal startup.
+      }
+      if (this.keepReloadPosition && typeof saved?.level === "number" && Number.isInteger(saved.level) && getLevel(saved.level)) {
+        if (Array.isArray(saved.flags)) {
+          saved.flags.forEach((flag: unknown) => {
+            if (typeof flag === "string") this.sessionFlags.add(flag);
+          });
+        }
+        this.showLevel(saved.level, typeof saved.scene === "string" ? saved.scene : undefined);
+        return;
+      }
+    }
     void this.runPreloader();
   }
 
@@ -1679,6 +1717,11 @@ export class Game {
          </section>
          <section class="admin-panel" id="admin-panel" hidden>
            <p>ADMIN CONSOLE</p>
+           <label class="options-panel__setting-row" for="admin-keep-reload-position">
+             <span><strong>KEEP POSITION ON RELOAD</strong>
+               <small>Restore the current level and scene after reloading. Puzzle progress resets.</small></span>
+             <input id="admin-keep-reload-position" type="checkbox" ${this.keepReloadPosition ? "checked" : ""} />
+           </label>
            <form id="admin-level-form">
              <label><span>LEVEL</span>
                <input id="admin-level-number" type="number" min="${MINIMUM_LEVEL}" max="${TEST_LEVEL_NUMBER}"
@@ -1794,6 +1837,15 @@ export class Game {
     );
 
     const adminPanel = this.root.querySelector<HTMLElement>("#admin-panel");
+    this.root.querySelector<HTMLInputElement>("#admin-keep-reload-position")?.addEventListener("change", (event) => {
+      this.keepReloadPosition = (event.currentTarget as HTMLInputElement).checked;
+      try {
+        localStorage.setItem(RELOAD_POSITION_KEY, String(this.keepReloadPosition));
+        if (!this.keepReloadPosition) sessionStorage.removeItem(`nelg-dev-screen:${location.pathname}`);
+      } catch {
+        // Keep the selection in memory when browser storage is unavailable.
+      }
+    });
     const adminForm = this.root.querySelector<HTMLFormElement>("#admin-level-form");
     const adminInput = this.root.querySelector<HTMLInputElement>("#admin-level-number");
     const adminScene = this.root.querySelector<HTMLSelectElement>("#admin-scene");

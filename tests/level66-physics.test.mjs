@@ -14,13 +14,13 @@ test('boosted player still dies on hot walls and Steve',()=>{for(const kind of [
 test('ladder always climbs upward and releases at the top',()=>{const p=createRunner({x:100,y:438});const ladder={kind:'ladder',x:100,y:340,width:46,height:170};advance(p,[floor,ladder],.5);assert.equal(p.mode,'climbing');assert.ok(p.y<438);advance(p,[floor,ladder],1.3);assert.equal(p.ladder,null);assert.ok(p.x>=146);});
 test('leaving any screen edge kills player',()=>{for(const start of [{x:-1,y:300},{x:763,y:300},{x:30,y:-1},{x:30,y:529}])assert.equal(advance(createRunner(start),[]),'dead');});
 test('portal clears only when reached alive',()=>{const p=createRunner({x:710,y:438});assert.equal(advance(p,[floor]),'clear');assert.equal(advance(createRunner({x:710,y:438}),[{kind:'hot',...portal}]),'dead');});
-test('only construction pieces can move and provisional maps are independent',()=>{assert.deepEqual(['floor','wall','ladder','spring','hot','steve'].map(kind=>draggable({kind})),[true,true,true,true,false,false]);assert.equal(PUZZLES.length,5);assert.notEqual(PUZZLES[0].objects[0],PUZZLES[1].objects[0]);});
+test('only construction pieces can move and provisional maps are independent',()=>{assert.deepEqual(['floor','wall','ladder','spring','hot','steve'].map(kind=>draggable({kind})),[true,false,true,true,false,false]);assert.equal(PUZZLES.length,5);assert.notEqual(PUZZLES[0].objects[0],PUZZLES[1].objects[0]);});
 
 test('walking into a jump pad resting on a floor triggers a launch',()=>{const p=createRunner({x:100,y:438});advance(p,[floor,{kind:'spring',x:145,y:486,width:64,height:24}],.2);assert.equal(p.boosted,true);assert.ok(p.vy<0);});
 
 test('Scene 2 diagram route clears after arranging pieces; blue floor is fixed',()=>{
   const layout=structuredClone(PUZZLES[0]);
-  for(const [index,x,y] of [[0,424,230],[1,148,510],[4,110,398],[5,352,356]])Object.assign(layout.objects[index],{x,y});
+  for(const [index,x,y] of [[0,424,230],[1,148,510],[5,352,356]])Object.assign(layout.objects[index],{x,y});
   assert.equal(draggable(layout.objects[2]),false);
   const scaled=scalePuzzle(layout,MINIGAME_SCALE);
   const p=createRunner(scaled.start,MINIGAME_SCALE);
@@ -29,33 +29,30 @@ test('Scene 2 diagram route clears after arranging pieces; blue floor is fixed',
   assert.equal(advance(createRunner(unsolved.start,MINIGAME_SCALE),unsolved.objects,15,unsolved.portal),'dead');
 });
 
-test('Scene 3 fixed diagram, scattered inventory and a buildable route',()=>{
+test('Scene 3 fixed diagram and scattered inventory',()=>{
   const layout=scalePuzzle(PUZZLES[1],MINIGAME_SCALE);
-  assert.equal(layout.objects.filter(o=>o.kind==='hot').length,6);
+  assert.equal(layout.objects.filter(o=>o.kind==='hot').length,5);
   assert.equal(layout.objects.filter(o=>o.kind==='ladder').length,2);
   assert.equal(layout.objects.filter(o=>o.kind==='spring').length,4);
   const blue=layout.objects.find(o=>o.fixed);
   assert.ok(Math.abs(layout.start.y+72*MINIGAME_SCALE-blue.y)<.001);
   assert.equal(advance(createRunner(layout.start,MINIGAME_SCALE),layout.objects,15,layout.portal),'dead');
-  let floorIndex=0;
   for(const object of layout.objects){
     assert.ok(object.x>=0&&object.y>=175&&object.x+object.width<=800&&object.y+object.height<=540);
-    if(!draggable(object))continue;
-    if(object.kind==='floor'){object.x=200+70*floorIndex++;object.y=240;}
-    else{object.x=20;object.y=440;}
+    if(object.kind==='wall')assert.equal(draggable(object),false);
   }
-  assert.equal(advance(createRunner(layout.start,MINIGAME_SCALE),layout.objects,15,layout.portal),'clear');
+  // The previously tested shortcut moved black walls; it is no longer a legal solution.
 });
 
-test('Scene 4 diagram route clears with patrolling Steve and rising lava',()=>{
-  const layout=scalePuzzle(PUZZLES[2],MINIGAME_SCALE);
+test('Scene 5 diagram route clears with patrolling Steve and rising lava',()=>{
+  const layout=scalePuzzle(PUZZLES[3],MINIGAME_SCALE);
   const steve=layout.objects.find(o=>o.patrol);
   const duration=(steve.patrol.maxX-steve.patrol.minX)/steve.patrol.speed;
   assert.equal(updatePatrol(steve,0),-1);
   assert.equal(steve.x,steve.patrol.maxX);
   assert.equal(updatePatrol(steve,duration),1);
   assert.ok(Math.abs(steve.x-steve.patrol.minX)<.001);
-  const drawing=[[294,215],[508,300],[666,252],[121,472],[589,361],[787,130],[199,269],[433,300],[288,578],[520,510],[710,253]];
+  const drawing=[[294,215],[508,300],[666,252],[199,269],[433,300],[288,578],[520,510],[710,253]];
   const movable=layout.objects.filter(draggable);
   drawing.forEach(([x,y],i)=>Object.assign(movable[i],{x:100+x*.62,y:120+y*.62}));
   assert.equal(layout.objects.filter(o=>o.fixed).length,4);

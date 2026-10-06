@@ -15,7 +15,7 @@ export interface Runner extends Rect {
   ladder: PuzzleObject | null; mode: "idle" | "walking" | "climbing" | "jumping" | "falling";
 }
 export const overlaps = (a: Rect, b: Rect) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
-export const draggable = (o: PuzzleObject) => !o.fixed && ["floor", "wall", "ladder", "spring"].includes(o.kind);
+export const draggable = (o: PuzzleObject) => !o.fixed && ["floor", "ladder", "spring"].includes(o.kind);
 export const MINIGAME_SCALE = .8;
 export const createRunner = (start: PuzzleLayout["start"], scale = 1): Runner => ({ ...start, scale, width: 38 * scale, height: 72 * scale, direction: 1, vy: 0, grounded: false, boosted: false, ladder: null, mode: "idle" });
 
@@ -67,7 +67,7 @@ PUZZLES[0] = {
     { kind: "floor", fixed: true, x: 240, y: 356, width: 112, height: 30 },
     // Upper turn-around wall: bottom aligns with the upper route's floor height.
     { kind: "wall", x: 544, y: 118, width: 38, height: 112 },
-    { kind: "wall", x: 70, y: 390, width: 38, height: 112 },
+    { kind: "wall", x: 110, y: 398, width: 38, height: 112 },
     { kind: "spring", x: 600, y: 420, width: 64, height: 30 },
     { kind: "hot", x: 416, y: 246, width: 38, height: 112 },
   ],
@@ -80,23 +80,32 @@ function createSecondPuzzle(): PuzzleLayout {
     x: 100 + x * drawingScale, y: 120 + y * drawingScale,
     width: width * drawingScale, height: height * drawingScale,
   });
-  const blue = { kind: "floor" as const, fixed: true, ...fromDrawing(42, 187, 122, 42) };
-  const portal = fromDrawing(800, 117, 82, 103);
-  const hazards: PuzzleObject[] = [[1,229],[42,350],[258,349],[396,230],[570,255],[731,233]].map(([x,y]) => ({ kind: "hot", ...fromDrawing(x!,y!,42,122) }));
+  // Outer bounds traced from 66-2.png, including the black outlines.
+  // Keep individual dimensions: the red wall beside the upper ladder is shorter.
+  const blue = { kind: "floor" as const, fixed: true, ...fromDrawing(41, 185, 124, 45) };
+  const portal = fromDrawing(799, 115, 84, 107);
+  const drawingObjects = (kind: ObjectKind, bounds: readonly (readonly [number, number, number, number])[]): PuzzleObject[] =>
+    bounds.map(([x,y,width,height]) => ({kind,...fromDrawing(x,y,width,height)}));
+  const hazards = drawingObjects("hot", [
+    [0,228,44,124], [41,349,44,124], [257,348,46,125],
+    [569,255,45,101], [730,232,45,124],
+  ]);
   const pieces: PuzzleObject[] = [
-    ...[[126,552],[201,307],[284,456],[406,458],[454,335],[504,214],[612,602]].map(([x,y]) => ({ kind: "floor" as const, ...fromDrawing(x!,y!,122,42) })),
-    ...[[258,107],[438,107],[685,111],[302,228],[84,472],[525,355],[388,480],[567,480],[685,358],[897,356]].map(([x,y]) => ({ kind: "wall" as const, ...fromDrawing(x!,y!,42,122) })),
-    ...[[266,583],[732,602],[820,479],[800,316]].map(([x,y]) => ({ kind: "spring" as const, ...fromDrawing(x!,y!,72,42) })),
-    ...[[468,336],[516,215]].map(([x,y]) => ({ kind: "ladder" as const, ...fromDrawing(x!,y!,42,122) })),
+    ...drawingObjects("floor", [[125,551,120,45],[200,305,124,45],[283,455,125,45],[405,457,124,45],[453,334,124,45],[503,213,124,45],[611,600,124,45]]),
+    ...drawingObjects("wall", [[257,106,46,124],[437,106,45,124],[684,110,45,125],[301,227,44,125],[83,471,45,125],[524,354,44,125],[387,479,45,125],[566,479,45,125],[684,356,45,125],[896,355,45,124]]),
+    ...drawingObjects("spring", [[265,582,75,45],[731,600,74,45],[819,477,75,45],[799,315,75,45]]),
+    ...drawingObjects("ladder", [[467,334,45,125],[515,213,45,123]]),
   ];
   return scatterDrawing(blue, portal, hazards, pieces);
 }
 
 function scatterDrawing(blue: PuzzleObject, portal: Rect, hazards: PuzzleObject[], pieces: PuzzleObject[], reserved: Rect[] = []): PuzzleLayout {
   const start = { x: blue.x + 12, y: blue.y - 72 * MINIGAME_SCALE };
-  const occupied: Rect[] = [blue, portal, ...hazards, ...reserved, { ...start, width: 38 * MINIGAME_SCALE, height: 72 * MINIGAME_SCALE }];
+  const occupied: Rect[] = [blue, portal, ...hazards, ...reserved, ...pieces.filter(piece => !draggable(piece)), { ...start, width: 38 * MINIGAME_SCALE, height: 72 * MINIGAME_SCALE }];
   // Deterministic scattered inventory: no piece covers another piece or a fixed hazard.
   pieces.forEach((piece, index) => {
+    // Fixed walls stay at their diagram positions, outside the scattered inventory.
+    if (!draggable(piece)) return;
     const candidates: Rect[] = [];
     for (let y = 195; y + piece.height <= 525; y += 10) {
       for (let x = 20; x + piece.width <= 780; x += 10) candidates.push({ ...piece, x, y });
@@ -114,14 +123,14 @@ function scatterDrawing(blue: PuzzleObject, portal: Rect, hazards: PuzzleObject[
 }
 PUZZLES[1] = createSecondPuzzle();
 
-function createThirdPuzzle(): PuzzleLayout {
+function createFourthPuzzle(): PuzzleLayout {
   const rect = (x:number,y:number,width:number,height:number):Rect => ({x:100+x*.62,y:120+y*.62,width:width*.62,height:height*.62});
   const blue: PuzzleObject = {kind:"floor",fixed:true,...rect(42,429,122,42)};
   const portal=rect(102,103,82,103);
   const steve: PuzzleObject = {kind:"steve",...rect(211,191,76,74),patrol:{minX:100+23*.62,maxX:100+211*.62,speed:40}};
   const hazards: PuzzleObject[] = [
     // Small clearance adjustment leaves room below the upper hazard and behind a leftward jump.
-    ...[[362,221],[565,83],[829,362],[616,511]].map(([x,y])=>({kind:"hot" as const,...rect(x!,y!,42,122)})),
+    ...[[362,221],[565,43],[829,362],[616,511]].map(([x,y])=>({kind:"hot" as const,...rect(x!,y!,42,122)})),
     steve,
     ...[[164,578],[398,510],[631,441]].map(([x,y])=>({kind:"floor" as const,fixed:true,...rect(x!,y!,122,42)})),
   ];
@@ -135,6 +144,26 @@ function createThirdPuzzle(): PuzzleLayout {
   // Leave the GO form accessible before starting; rise only after an empty GO.
   layout.lava = {startY:510+(590-510)/MINIGAME_SCALE,riseSpeed:3/MINIGAME_SCALE};
   return layout;
+}
+PUZZLES[3] = createFourthPuzzle();
+
+function createThirdPuzzle(): PuzzleLayout {
+  const rect = (x:number,y:number,width:number,height:number):Rect => ({x:100+x*.62,y:120+y*.62,width:width*.62,height:height*.62});
+  const blue: PuzzleObject = {kind:"floor",fixed:true,...rect(51,581,122,42)};
+  const portal=rect(758,460,82,103);
+  const steve: PuzzleObject = {kind:"steve",...rect(424,506,76,74),patrol:{minX:100+197*.62,maxX:100+424*.62,speed:45}};
+  const hazards: PuzzleObject[] = [
+    ...[[403,106],[849,89],[689,210],[689,453],[856,450]].map(([x,y])=>({kind:"hot" as const,...rect(x!,y!,42,122)})),
+    steve,
+  ];
+  const pieces: PuzzleObject[] = [
+    ...[[90,336,122],[214,145,82],[470,146,122],[592,146,122],[368,334,122],[173,581,122],[564,454,122],[503,578,122]].map(([x,y,w])=>({kind:"floor" as const,...rect(x!,y!,w!,42)})),
+    ...[[51,215],[689,332]].map(([x,y])=>({kind:"wall" as const,...rect(x!,y!,42,122)})),
+    ...[[302,144],[296,334],[492,453],[295,581]].map(([x,y])=>({kind:"spring" as const,...rect(x!,y!,72,42)})),
+    {kind:"ladder",...rect(171,146,42,190)},
+    {kind:"ladder",...rect(579,454,42,124)},
+  ];
+  return scatterDrawing(blue,portal,hazards,pieces,[{x:steve.patrol!.minX,y:steve.y,width:steve.patrol!.maxX-steve.patrol!.minX+steve.width,height:steve.height}]);
 }
 PUZZLES[2] = createThirdPuzzle();
 
