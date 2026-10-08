@@ -149,7 +149,7 @@
 
 .main-menu {
   display: grid;
-  grid-template-rows: 390px 204px;
+  grid-template-rows: 345px 249px;
   box-sizing: border-box;
   overflow: hidden;
   color: #e8ded0;
@@ -2929,3 +2929,100 @@
   .main-menu__ichor i::before { animation: none; transform: scaleY(.7); }
   .main-menu__ichor i::after { animation: none; opacity: 0; }
 }
+
+/* The menu rests on the rock ceiling above a sunken prison corridor. */
+.main-menu__buttons { grid-template-rows: repeat(2, 52px); gap: 8px 10px; padding-top: 6px; }
+.main-menu .menu-button { min-height: 52px; font-size: 18px; letter-spacing: .025em; }
+.main-menu .menu-button--secondary { font-size: 22px; }
+.game-frame.main-menu .menu-button--primary { position: relative; font-size: 32px; }
+.game-frame.main-menu .menu-button--primary .menu-button__label {
+  position: relative; z-index: 1; color: #fff5c6; background: none;
+  -webkit-text-fill-color: #fff5c6; letter-spacing: .035em;
+  text-shadow: 0 2px 2px #391000, 0 0 8px #ff7300, 0 -5px 18px #f43b0b;
+}
+.game-frame.main-menu .menu-button--primary::before {
+  content: ''; position: absolute; z-index: -1; inset: 6px 4px 2px; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 70%, #ff741b55, #ef3e081c 45%, transparent 72%);
+  filter: blur(5px);
+}
+.game-frame.main-menu .menu-button--primary::after {
+  content: ''; position: absolute; z-index: -1; left: 7%; right: 7%; bottom: 4px; height: 57px;
+  pointer-events: none; transform-origin: bottom;
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 25%, transparent 75%);
+  background: linear-gradient(0deg, #ffcf58bb, #ff691ba6 35%, #e9340755 65%, transparent);
+  clip-path: polygon(0 100%, 3% 55%, 9% 72%, 14% 19%, 20% 61%, 27% 43%, 32% 74%, 40% 9%, 46% 62%, 54% 40%, 61% 72%, 68% 17%, 74% 57%, 82% 34%, 89% 70%, 96% 22%, 100% 100%);
+  animation: menu-fire-breathe 1.7s ease-in-out infinite alternate;
+}
+.game-frame.main-menu .menu-button--primary:focus-visible { outline: 2px solid #fff4c8; outline-offset: 4px; }
+.game-frame.main-menu .menu-button--primary:is(:hover, :focus-visible)::before { filter: blur(5px) brightness(1.5); }
+.main-menu__dungeon {
+  position: absolute; z-index: 2; inset: auto 0 0; height: 118px; overflow: visible; pointer-events: none;
+  background: linear-gradient(#0009, #0002 40%, #0006), url("/assets/main/wall.jpeg") center / 230px 230px repeat;
+  box-shadow: 0 -14px 25px 4px #080807, inset 0 18px 22px #000, inset 0 -8px 14px #000;
+}
+.main-menu__dungeon::before {
+  content: ''; position: absolute; z-index: 4; inset: -32px 0 auto; height: 52px;
+  /* Feather the rock into the menu; keep its underside rough and in shadow. */
+  background: linear-gradient(#08080799, #17161355 58%, #080807bb),
+    url("/assets/main/wall.jpeg") center bottom / 230px 230px repeat-x;
+  mask-image: linear-gradient(transparent, #0004 24%, #000c 52%, #000 72%);
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 96% 91%, 90% 82%, 84% 94%, 78% 85%, 71% 97%, 65% 88%, 58% 93%, 52% 84%, 45% 96%, 39% 87%, 32% 93%, 26% 84%, 19% 96%, 12% 85%, 6% 93%, 0 86%);
+}
+.main-menu__dungeon::after {
+  content: ''; position: absolute; z-index: 4; inset: auto 0 -8px; height: 22px;
+  background: url("/assets/main/floor.png") left top / 90px 32px repeat-x;
+  filter: brightness(.65) drop-shadow(0 -2px 2px #0008);
+}
+.main-menu__pillar {
+  position: absolute; z-index: 2; top: 9px; bottom: 10px; width: 35px;
+  background: url("/assets/main/pillar.png") center bottom / contain no-repeat;
+  filter: brightness(.62) sepia(.12) drop-shadow(5px 1px 3px #000b);
+}
+.main-menu__pillar:nth-of-type(1) { left: 3%; } .main-menu__pillar:nth-of-type(2) { left: 32%; }
+.main-menu__pillar:nth-of-type(3) { right: 32%; } .main-menu__pillar:nth-of-type(4) { right: 3%; }
+.main-menu__cell {
+  position: absolute; top: 23px; bottom: 12px; width: 43px; left: 22%;
+  background: url("/assets/main/door.png") center bottom / contain no-repeat;
+  filter: brightness(.8) drop-shadow(0 0 4px #000);
+}
+.main-menu__cell:nth-child(2) {
+  left: auto; right: 22%;
+}
+.main-menu__torch { position: absolute; z-index: 3; top: 49px; left: 13%; width: 6px; height: 26px; background: linear-gradient(90deg, #28140b, #94704a, #352116); transform: rotate(-8deg); box-shadow: 2px 3px 3px #000; }
+.main-menu__torch:nth-last-child(2) { left: 50%; transform: rotate(5deg); }
+.main-menu__torch:last-child { left: 86%; }
+.main-menu__torch::before { content: ''; position: absolute; width: 150px; height: 110px; left: -72px; top: -52px; background: radial-gradient(ellipse, #ffb23d38, #e75e081c 40%, transparent 70%); }
+.main-menu__torch::after { content: ''; position: absolute; left: -5px; top: 1px; width: 16px; height: 9px; background: linear-gradient(#88735a, #29231d); border-radius: 2px 2px 7px 7px; }
+.main-menu__torch i { position: absolute; left: -5px; top: -23px; width: 17px; height: 28px; border-radius: 65% 20% 50% 50%; background: radial-gradient(ellipse at 50% 90%, #fff4af 5%, #ffd044 30%, #ff7514 60%, #d43807 85%); transform-origin: bottom; box-shadow: 0 0 9px #ff892d99; animation: menu-fire-breathe 850ms ease-in-out infinite alternate; }
+.main-menu__torch:nth-last-child(2) i { animation-delay: -430ms; } .main-menu__torch:last-child i { animation-delay: -170ms; }
+.main-menu__parade { bottom: 8px; height: 65px; }
+.main-menu__parade::after { display: none; }
+@keyframes menu-fire-breathe { from { transform: scale(.97, .9) skewX(-4deg); opacity: .8; } to { transform: scale(1.03, 1.08) skewX(4deg); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .game-frame.main-menu .menu-button--primary::after, .main-menu__torch i { animation: none; }
+}
+
+/* Obsidian slabs with molten seams, kept behind the readable information. */
+.game-frame.main-menu .main-menu__facts div {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-image: none;
+  border-radius: 7px 3px 8px 4px;
+  background: linear-gradient(165deg, #29201e, #130f0f 55%, #29150e);
+  box-shadow: inset 0 1px 2px #ffb24b88, inset 0 -2px 5px #ff510b99, 0 3px 9px #000;
+}
+.game-frame.main-menu .main-menu__facts div::before {
+  content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(126deg, transparent 0 13%, #ff601c 13.5%, #ffc562 14%, #a6290b 14.6%, transparent 15.5% 82%, #ff8a2a 83%, transparent 84%),
+    linear-gradient(24deg, transparent 0 19%, #bd320c 20%, #ffab36 20.7%, transparent 22% 86%, #ff6320 87%, transparent 88%),
+    radial-gradient(ellipse at 50% 130%, #ff830cbb, #db310735 48%, transparent 72%);
+  mask-image: linear-gradient(#000, #0003 30% 70%, #000);
+  animation: menu-magma-glow 3.6s ease-in-out infinite alternate;
+}
+.game-frame.main-menu .main-menu__facts div:nth-child(2)::before { transform: scaleX(-1); animation-delay: -1.3s; }
+.game-frame.main-menu .main-menu__facts div:nth-child(3)::before { animation-delay: -2.5s; }
+.game-frame.main-menu .main-menu__facts dt { color: #e4c5ab; text-shadow: 0 1px 3px #000; }
+.game-frame.main-menu .main-menu__facts dd { color: #ffda96; background: none; -webkit-text-fill-color: #ffda96; text-shadow: 0 1px 3px #000; }
+@keyframes menu-magma-glow { from { opacity: .65; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .game-frame.main-menu .main-menu__facts div::before { animation: none; } }

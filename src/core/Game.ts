@@ -705,6 +705,11 @@ export class Game {
             ? `<button class="menu-button" data-menu-action="newgrounds-login" type="button">NEWGROUNDS LOGIN</button>`
             : ""}
         </nav>
+        <div class="main-menu__dungeon" aria-hidden="true">
+          <div class="main-menu__cell"></div><div class="main-menu__cell"></div>
+          <span class="main-menu__pillar"></span><span class="main-menu__pillar"></span><span class="main-menu__pillar"></span><span class="main-menu__pillar"></span>
+          <span class="main-menu__torch"><i></i></span><span class="main-menu__torch"><i></i></span><span class="main-menu__torch"><i></i></span>
+        </div>
         <div class="main-menu__parade" aria-hidden="true"></div>
       </main>
     `;
